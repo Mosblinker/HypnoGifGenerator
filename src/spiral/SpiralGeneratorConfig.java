@@ -1006,39 +1006,6 @@ public class SpiralGeneratorConfig {
     public void setImageHeight(int value){
         getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
     }
-    
-    
-    
-    protected Preferences getTestNode(){
-        return node.node("test");
-    }
-    
-    public double getTestDouble(int index){
-        return getTestNode().getDouble("double"+index, 0.0);
-    }
-    
-    public void setTestDouble(int index, double value){
-        getTestNode().putDouble("double"+index, value);
-    }
-    
-    public int getTestInt(int index){
-        return getTestNode().getInt("integer"+index, 0);
-    }
-    
-    public void setTestInt(int index, int value){
-        getTestNode().putInt("integer"+index, value);
-    }
-    
-    public boolean getTestBoolean(int index){
-        return getTestNode().getBoolean("boolean"+index, false);
-    }
-    
-    public void setTestBoolean(int index, boolean value){
-        getTestNode().putBoolean("boolean"+index, value);
-    }
-    
-    
-    
     /**
      * 
      * @param comp
