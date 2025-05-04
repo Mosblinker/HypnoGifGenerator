@@ -481,7 +481,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler11, gridBagConstraints);
 
-        loadMaskButton.setText("Load Mask");
+        loadMaskButton.setText("Load Mask Image");
         loadMaskButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loadMaskButtonActionPerformed(evt);
