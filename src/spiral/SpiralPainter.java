@@ -46,6 +46,18 @@ public class SpiralPainter extends ListenedPainter<Double>{
     public static final String BALANCE_PROPERTY_CHANGED ="BalancePropertyChanged";
     
     public static final String CLOCKWISE_PROPERTY_CHANGED ="ClockwisePropertyChanged";
+    /**
+     * This method bounds the given angle to be within the range of 0 and 
+     * {@value MAXIMUM_ANGLE}, exclusive. If the given angle is negative, then 
+     * it will loop back to being positive.
+     * @param p The angle to bound.
+     * @return The angle, limited to a range of 0 and {@value MAXIMUM_ANGLE}, 
+     * exclusive.
+     * @see MAXIMUM_ANGLE
+     */
+    public static double boundAngle(double p){
+        return ((p%MAXIMUM_ANGLE)+MAXIMUM_ANGLE)%MAXIMUM_ANGLE;
+    }
     
     private double radius = 100.0;
     
@@ -253,9 +265,6 @@ public class SpiralPainter extends ListenedPainter<Double>{
         g.dispose();
     }
     
-    protected double boundAngle(double p){
-        return ((p%MAXIMUM_ANGLE)+MAXIMUM_ANGLE)%MAXIMUM_ANGLE;
-    }
     
     protected Point2D polarToImageCoord(double x, double y, double r, double p, 
             Point2D point){
