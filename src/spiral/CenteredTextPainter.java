@@ -67,7 +67,7 @@ public class CenteredTextPainter extends ListenedPainter<String>{
      * @see Font#getSize2D() 
      */
     protected double getLineSpacing(double size){
-        return lineSpacing * (size / 10.0);
+        return getLineSpacing() * (size / 10.0);
     }
     /**
      * This calculates and returns the spacing to add between the lines of text, 
@@ -83,7 +83,7 @@ public class CenteredTextPainter extends ListenedPainter<String>{
     protected double getLineSpacing(Font font){
             // If the font is null
         if (font == null)
-            return lineSpacing;
+            return getLineSpacing();
         return getLineSpacing(font.getSize2D());
     }
     @Override
@@ -157,12 +157,12 @@ public class CenteredTextPainter extends ListenedPainter<String>{
             // Enable/Disable antialiasing depending on whether text should be 
             // antialiased
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                (antialiasing) ? RenderingHints.VALUE_ANTIALIAS_ON : 
+                (isAntialiasingEnabled()) ? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
             // Enable/Disable antialiasing for text depending on whether text 
             // should be antialiased
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
-                (antialiasing) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : 
+                (isAntialiasingEnabled()) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : 
                         RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
             // Prioritize rendering quality over speed
         g.setRenderingHint(RenderingHints.KEY_RENDERING, 
@@ -181,5 +181,11 @@ public class CenteredTextPainter extends ListenedPainter<String>{
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, 
                 RenderingHints.VALUE_STROKE_PURE);
         return g;
+    }
+    @Override
+    protected String paramString(){
+        return "lineSpacing="+getLineSpacing()+
+                    // If the text is antialiased, say so
+                ((isAntialiasingEnabled())?",antialiased":"");
     }
 }
