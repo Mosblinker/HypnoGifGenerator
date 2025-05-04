@@ -200,11 +200,23 @@ public class SpiralPainter extends ListenedPainter<Double>{
             angle = MAXIMUM_ANGLE - angle;
         angle = (angle + (thickness / 2.0)*MAXIMUM_ANGLE) % MAXIMUM_ANGLE;
         
+            // This gets the amount by which to scale the target smallest radius 
+            // for the spiral
+        double rScale = 1.0;
+            // Get the transform for the graphics
+        AffineTransform tx = g.getTransform();
+            // If there is a non-null transform applied to the graphics
+        if (tx != null){
+                // Get the larger of the scale factors applied to the graphics, 
+                // or 1 if both scale factors are less than 1
+            rScale = Math.max(Math.max(tx.getScaleX(), tx.getScaleY()),1.0);
+        }
+        
+        double p0 = getLogSpiralAzimuth(a,k,STARTING_RADIUS/rScale,angle,true);
+        p0 -= p0 % QUARTER_ANGLE;
         double p1 = getLogSpiralAzimuth(radius, k, 
                 Math.sqrt(width*width+height*height)/2.0, angle,true);
         p1 += (QUARTER_ANGLE - (p1 % QUARTER_ANGLE)) % QUARTER_ANGLE;
-        double p0 = getLogSpiralAzimuth(a, k, STARTING_RADIUS, angle, true);
-        p0 -= p0 % QUARTER_ANGLE;
         
         double pR = getLogSpiralAzimuth(radius, k, radius, angle,true);
         double m0 = getLogSpiralRadius(radius,k,pR+INTERPOLATION_ANGLE,angle,true);
