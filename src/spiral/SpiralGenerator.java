@@ -258,18 +258,18 @@ public class SpiralGenerator extends javax.swing.JFrame {
         saveFC = new javax.swing.JFileChooser();
         maskDialog = new javax.swing.JDialog(this);
         maskTabbedPane = new javax.swing.JTabbedPane();
-        jPanel7 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        textMaskCtrlPanel = new javax.swing.JPanel();
+        maskTextScrollPane = new javax.swing.JScrollPane();
         maskTextArea = new javax.swing.JTextArea();
         fontButton = new javax.swing.JButton();
         boldToggle = new javax.swing.JCheckBox();
         italicToggle = new javax.swing.JCheckBox();
         fontAntialiasingToggle = new javax.swing.JCheckBox();
-        jLabel7 = new javax.swing.JLabel();
+        lineSpacingLabel = new javax.swing.JLabel();
         lineSpacingSpinner = new javax.swing.JSpinner();
-        jPanel9 = new javax.swing.JPanel();
+        maskImageCtrlPanel = new javax.swing.JPanel();
         loadMaskButton = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
+        maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
         framesPanel = new javax.swing.JPanel();
@@ -290,39 +290,39 @@ public class SpiralGenerator extends javax.swing.JFrame {
         frameLastButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler13 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        jPanel3 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        previewPanel = new javax.swing.JPanel();
+        previewSpiralPanel = new javax.swing.JPanel();
         previewLabel = new components.JThumbnailLabel();
-        jPanel4 = new javax.swing.JPanel();
+        previewMaskPanel = new javax.swing.JPanel();
         maskPreviewLabel = new components.JThumbnailLabel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        spiralCtrlPanel = new javax.swing.JPanel();
+        radiusLabel = new javax.swing.JLabel();
         radiusSpinner = new javax.swing.JSpinner();
-        jLabel2 = new javax.swing.JLabel();
+        baseLabel = new javax.swing.JLabel();
         baseSpinner = new javax.swing.JSpinner();
-        jLabel3 = new javax.swing.JLabel();
+        balanceLabel = new javax.swing.JLabel();
         balanceSpinner = new javax.swing.JSpinner();
-        jLabel4 = new javax.swing.JLabel();
+        dirLabel = new javax.swing.JLabel();
         dirCombo = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
+        angleLabel = new javax.swing.JLabel();
         angleSpinner = new javax.swing.JSpinner();
-        jPanel8 = new javax.swing.JPanel();
+        spiralColorPanel = new javax.swing.JPanel();
         color1Button = new javax.swing.JButton();
         color2Button = new javax.swing.JButton();
         color3Button = new javax.swing.JButton();
         color4Button = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
+        spinLabel = new javax.swing.JLabel();
         spinDirCombo = new javax.swing.JComboBox<>();
         maskEditButton = new javax.swing.JButton();
-        jPanel10 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
+        imageSizePanel = new javax.swing.JPanel();
+        widthLabel = new javax.swing.JLabel();
         javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         widthSpinner = new javax.swing.JSpinner();
         javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        jLabel10 = new javax.swing.JLabel();
+        heightLabel = new javax.swing.JLabel();
         javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         heightSpinner = new javax.swing.JSpinner();
-        jPanel5 = new javax.swing.JPanel();
+        ctrlButtonPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         alwaysScaleToggle = new javax.swing.JCheckBox();
@@ -373,7 +373,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskTextArea.setColumns(20);
         maskTextArea.setRows(5);
         maskTextArea.setComponentPopupMenu(maskPopup);
-        jScrollPane1.setViewportView(maskTextArea);
+        maskTextScrollPane.setViewportView(maskTextArea);
 
         fontButton.setText("Select Font");
         fontButton.addActionListener(new java.awt.event.ActionListener() {
@@ -404,8 +404,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setLabelFor(lineSpacingSpinner);
-        jLabel7.setText("Line Spacing:");
+        lineSpacingLabel.setLabelFor(lineSpacingSpinner);
+        lineSpacingLabel.setText("Line Spacing:");
 
         lineSpacingSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
         lineSpacingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -414,15 +414,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout textMaskCtrlPanelLayout = new javax.swing.GroupLayout(textMaskCtrlPanel);
+        textMaskCtrlPanel.setLayout(textMaskCtrlPanelLayout);
+        textMaskCtrlPanelLayout.setHorizontalGroup(
+            textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(maskTextScrollPane)
+                    .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                         .addComponent(fontButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(boldToggle)
@@ -431,31 +431,31 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(fontAntialiasingToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(lineSpacingLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 30, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        textMaskCtrlPanelLayout.setVerticalGroup(
+            textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
                     .addComponent(boldToggle)
                     .addComponent(italicToggle)
                     .addComponent(fontAntialiasingToggle)
-                    .addComponent(jLabel7)
+                    .addComponent(lineSpacingLabel)
                     .addComponent(lineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        maskTabbedPane.addTab("Text", jPanel7);
+        maskTabbedPane.addTab("Text", textMaskCtrlPanel);
 
-        jPanel9.setLayout(new java.awt.GridBagLayout());
+        maskImageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
         loadMaskButton.setText("Load Mask");
         loadMaskButton.addActionListener(new java.awt.event.ActionListener() {
@@ -468,12 +468,12 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(104, 136, 115, 146);
-        jPanel9.add(loadMaskButton, gridBagConstraints);
+        maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
 
-        maskTabbedPane.addTab("Image", jPanel9);
+        maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
-        jLabel8.setLabelFor(maskScaleSpinner);
-        jLabel8.setText("Mask Scale:");
+        maskScaleLabel.setLabelFor(maskScaleSpinner);
+        maskScaleLabel.setText("Mask Scale:");
 
         maskScaleSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0001d, 10.0d, 0.01d));
         maskScaleSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(maskScaleSpinner, "0.##%"));
@@ -492,7 +492,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maskTabbedPane)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskDialogLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
+                        .addComponent(maskScaleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -505,7 +505,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 .addComponent(maskTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 244, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
+                    .addComponent(maskScaleLabel)
                     .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -640,34 +640,34 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.weightx = 0.3;
         framesPanel.add(filler13, gridBagConstraints);
 
-        jPanel3.setLayout(new java.awt.GridLayout(1, 2, 6, 0));
+        previewPanel.setLayout(new java.awt.GridLayout(1, 2, 6, 0));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Preview"));
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        previewSpiralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Preview"));
+        previewSpiralPanel.setLayout(new java.awt.BorderLayout());
 
         previewLabel.setComponentPopupMenu(debugPopup);
-        jPanel1.add(previewLabel, java.awt.BorderLayout.CENTER);
+        previewSpiralPanel.add(previewLabel, java.awt.BorderLayout.CENTER);
 
-        jPanel3.add(jPanel1);
+        previewPanel.add(previewSpiralPanel);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Message Mask Preview"));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-        jPanel4.add(maskPreviewLabel, java.awt.BorderLayout.CENTER);
+        previewMaskPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Message Mask Preview"));
+        previewMaskPanel.setLayout(new java.awt.BorderLayout());
+        previewMaskPanel.add(maskPreviewLabel, java.awt.BorderLayout.CENTER);
 
-        jPanel3.add(jPanel4);
+        previewPanel.add(previewMaskPanel);
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Controls"));
-        jPanel6.setLayout(new java.awt.GridBagLayout());
+        spiralCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Controls"));
+        spiralCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
-        jLabel1.setLabelFor(radiusSpinner);
-        jLabel1.setText("Radius:");
+        radiusLabel.setLabelFor(radiusSpinner);
+        radiusLabel.setText("Radius:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel1, gridBagConstraints);
+        spiralCtrlPanel.add(radiusLabel, gridBagConstraints);
 
         radiusSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 100000.0d, 1.0d));
         radiusSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(radiusSpinner, "0.00######"));
@@ -683,16 +683,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(radiusSpinner, gridBagConstraints);
+        spiralCtrlPanel.add(radiusSpinner, gridBagConstraints);
 
-        jLabel2.setLabelFor(baseSpinner);
-        jLabel2.setText("Base:");
+        baseLabel.setLabelFor(baseSpinner);
+        baseLabel.setText("Base:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel2, gridBagConstraints);
+        spiralCtrlPanel.add(baseLabel, gridBagConstraints);
 
         baseSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 1000.0d, 0.1d));
         baseSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(baseSpinner, "0.000#####"));
@@ -706,16 +706,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(baseSpinner, gridBagConstraints);
+        spiralCtrlPanel.add(baseSpinner, gridBagConstraints);
 
-        jLabel3.setLabelFor(balanceSpinner);
-        jLabel3.setText("Balance:");
+        balanceLabel.setLabelFor(balanceSpinner);
+        balanceLabel.setText("Balance:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel3, gridBagConstraints);
+        spiralCtrlPanel.add(balanceLabel, gridBagConstraints);
 
         balanceSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, -1.0d, 1.0d, 0.01d));
         balanceSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(balanceSpinner, "0.000#########"));
@@ -729,16 +729,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(balanceSpinner, gridBagConstraints);
+        spiralCtrlPanel.add(balanceSpinner, gridBagConstraints);
 
-        jLabel4.setLabelFor(dirCombo);
-        jLabel4.setText("Direction:");
+        dirLabel.setLabelFor(dirCombo);
+        dirLabel.setText("Direction:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel4, gridBagConstraints);
+        spiralCtrlPanel.add(dirLabel, gridBagConstraints);
 
         dirCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clockwise", "Counter-Clockwise" }));
         dirCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -751,16 +751,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(dirCombo, gridBagConstraints);
+        spiralCtrlPanel.add(dirCombo, gridBagConstraints);
 
-        jLabel5.setLabelFor(angleSpinner);
-        jLabel5.setText("Rotation:");
+        angleLabel.setLabelFor(angleSpinner);
+        angleLabel.setText("Rotation:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel5, gridBagConstraints);
+        spiralCtrlPanel.add(angleLabel, gridBagConstraints);
 
         angleSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 360.0d, 1.0d));
         angleSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(angleSpinner, "0.00###"));
@@ -774,9 +774,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(angleSpinner, gridBagConstraints);
+        spiralCtrlPanel.add(angleSpinner, gridBagConstraints);
 
-        jPanel8.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
+        spiralColorPanel.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
 
         color1Button.setText("Color 1");
         color1Button.setToolTipText("This is the first color of the main spiral");
@@ -784,44 +784,44 @@ public class SpiralGenerator extends javax.swing.JFrame {
         color1Button.setIconTextGap(8);
         color1Button.setMargin(new java.awt.Insets(5, 0, 5, 0));
         color1Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel8.add(color1Button);
+        spiralColorPanel.add(color1Button);
 
         color2Button.setText("Color 2");
         color2Button.setToolTipText("This is the second color of the main spiral");
         color2Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color2Button.setIconTextGap(8);
         color2Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel8.add(color2Button);
+        spiralColorPanel.add(color2Button);
 
         color3Button.setText("Color 3");
         color3Button.setToolTipText("This is the first color of the message over the spiral");
         color3Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color3Button.setIconTextGap(8);
         color3Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel8.add(color3Button);
+        spiralColorPanel.add(color3Button);
 
         color4Button.setText("Color 4");
         color4Button.setToolTipText("This is the second color of the message over the spiral");
         color4Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color4Button.setIconTextGap(8);
         color4Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
-        jPanel8.add(color4Button);
+        spiralColorPanel.add(color4Button);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(jPanel8, gridBagConstraints);
+        spiralCtrlPanel.add(spiralColorPanel, gridBagConstraints);
 
-        jLabel6.setLabelFor(spinDirCombo);
-        jLabel6.setText("Spin:");
+        spinLabel.setLabelFor(spinDirCombo);
+        spinLabel.setText("Spin:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel6.add(jLabel6, gridBagConstraints);
+        spiralCtrlPanel.add(spinLabel, gridBagConstraints);
 
         spinDirCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clockwise", "Counter-Clockwise" }));
         spinDirCombo.setToolTipText("This controls the direction in which the spiral will spin in the animation.");
@@ -835,7 +835,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel6.add(spinDirCombo, gridBagConstraints);
+        spiralCtrlPanel.add(spinDirCombo, gridBagConstraints);
 
         maskEditButton.setText("Edit Message Mask");
         maskEditButton.addActionListener(new java.awt.event.ActionListener() {
@@ -847,14 +847,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 2;
-        jPanel6.add(maskEditButton, gridBagConstraints);
+        spiralCtrlPanel.add(maskEditButton, gridBagConstraints);
 
-        jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.X_AXIS));
+        imageSizePanel.setLayout(new javax.swing.BoxLayout(imageSizePanel, javax.swing.BoxLayout.X_AXIS));
 
-        jLabel9.setLabelFor(widthSpinner);
-        jLabel9.setText("Width:");
-        jPanel10.add(jLabel9);
-        jPanel10.add(filler1);
+        widthLabel.setLabelFor(widthSpinner);
+        widthLabel.setText("Width:");
+        imageSizePanel.add(widthLabel);
+        imageSizePanel.add(filler1);
 
         widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
         widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -862,13 +862,13 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 widthSpinnerStateChanged(evt);
             }
         });
-        jPanel10.add(widthSpinner);
-        jPanel10.add(filler2);
+        imageSizePanel.add(widthSpinner);
+        imageSizePanel.add(filler2);
 
-        jLabel10.setLabelFor(heightSpinner);
-        jLabel10.setText("Height:");
-        jPanel10.add(jLabel10);
-        jPanel10.add(filler3);
+        heightLabel.setLabelFor(heightSpinner);
+        heightLabel.setText("Height:");
+        imageSizePanel.add(heightLabel);
+        imageSizePanel.add(filler3);
 
         heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
         heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -876,9 +876,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 heightSpinnerStateChanged(evt);
             }
         });
-        jPanel10.add(heightSpinner);
+        imageSizePanel.add(heightSpinner);
 
-        jPanel5.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+        ctrlButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
 
         saveButton.setText("Save");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -886,7 +886,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 saveButtonActionPerformed(evt);
             }
         });
-        jPanel5.add(saveButton);
+        ctrlButtonPanel.add(saveButton);
 
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -894,7 +894,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 resetButtonActionPerformed(evt);
             }
         });
-        jPanel5.add(resetButton);
+        ctrlButtonPanel.add(resetButton);
 
         alwaysScaleToggle.setText("Scale Preview");
         alwaysScaleToggle.addActionListener(new java.awt.event.ActionListener() {
@@ -911,15 +911,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(imageSizePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(alwaysScaleToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -928,17 +928,17 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(framesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(imageSizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -1557,8 +1557,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private UndoManagerCommands undoCommands;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
+    private javax.swing.JLabel angleLabel;
     private javax.swing.JSpinner angleSpinner;
+    private javax.swing.JLabel balanceLabel;
     private javax.swing.JSpinner balanceSpinner;
+    private javax.swing.JLabel baseLabel;
     private javax.swing.JSpinner baseSpinner;
     private javax.swing.JCheckBox boldToggle;
     private javax.swing.JButton color1Button;
@@ -1566,8 +1569,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JButton color3Button;
     private javax.swing.JButton color4Button;
     private components.JColorSelector colorSelector;
+    private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JPopupMenu debugPopup;
     private javax.swing.JComboBox<String> dirCombo;
+    private javax.swing.JLabel dirLabel;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton frameFirstButton;
@@ -1580,48 +1585,43 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JSlider frameSlider;
     private javax.swing.JButton frameStopButton;
     private javax.swing.JPanel framesPanel;
+    private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
+    private javax.swing.JPanel imageSizePanel;
     private javax.swing.JCheckBox italicToggle;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadMaskButton;
     private javax.swing.JDialog maskDialog;
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
     private components.JFileDisplayPanel maskFCPreview;
+    private javax.swing.JPanel maskImageCtrlPanel;
     private javax.swing.JPopupMenu maskPopup;
     private components.JThumbnailLabel maskPreviewLabel;
+    private javax.swing.JLabel maskScaleLabel;
     private javax.swing.JSpinner maskScaleSpinner;
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextArea maskTextArea;
+    private javax.swing.JScrollPane maskTextScrollPane;
     private components.JThumbnailLabel previewLabel;
+    private javax.swing.JPanel previewMaskPanel;
+    private javax.swing.JPanel previewPanel;
+    private javax.swing.JPanel previewSpiralPanel;
     private javax.swing.JCheckBoxMenuItem printFPSToggle;
     private javax.swing.JMenuItem printTestButton;
+    private javax.swing.JLabel radiusLabel;
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
     private javax.swing.JComboBox<String> spinDirCombo;
+    private javax.swing.JLabel spinLabel;
+    private javax.swing.JPanel spiralColorPanel;
+    private javax.swing.JPanel spiralCtrlPanel;
+    private javax.swing.JPanel textMaskCtrlPanel;
+    private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
     
