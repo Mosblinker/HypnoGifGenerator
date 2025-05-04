@@ -58,6 +58,48 @@ public class SpiralPainter extends ListenedPainter<Double>{
     public static double boundAngle(double p){
         return ((p%MAXIMUM_ANGLE)+MAXIMUM_ANGLE)%MAXIMUM_ANGLE;
     }
+    /**
+     * This returns a {@code Point2D} object with the given point on a polar 
+     * coordinate system converted to Cartesian coordinates with the origin at 
+     * ({@code x}, {@code y}).
+     * @param r The radius of the point on the polar coordinate system.
+     * @param p The azimuth of the point on the polar coordinate system, in 
+     * degrees.
+     * @param x The x-coordinate of the origin.
+     * @param y The y-coordinate of the origin.
+     * @param point A {@code Point2D} object to reuse to store the resulting 
+     * coordinate, or null.
+     * @return A {@code Point2D} object with the given polar coordinate 
+     * converted into Cartesian coordinates.
+     */
+    public Point2D polarToCartesianCoords(double r, double p,double x,double y, 
+            Point2D point){
+            // If the given point is null
+        if (point == null)
+            point = new Point2D.Double();
+            // Get the bounded azimuth in radians
+        double theta = Math.toRadians(boundAngle(p));
+            // Add the radius multiplied by the cosine of the azimuth to the 
+            // x-coordinate of the origin, and add the radius multiplied by the 
+            // sine of the azimuth to the y-coordinate of the origin
+        point.setLocation(x + r*Math.cos(theta), y + r*Math.sin(theta));
+        return point;
+    }
+    /**
+     * This returns a {@code Point2D} object with the given point on a polar 
+     * coordinate system converted to Cartesian coordinates with the origin at 
+     * ({@code 0}, {@code 0}).
+     * @param r The radius of the point on the polar coordinate system.
+     * @param p The azimuth of the point on the polar coordinate system, in 
+     * degrees.
+     * @param point A {@code Point2D} object to reuse to store the resulting 
+     * coordinate, or null.
+     * @return A {@code Point2D} object with the given polar coordinate 
+     * converted into Cartesian coordinates.
+     */
+    public Point2D polarToCartesianCoords(double r, double p, Point2D point){
+        return polarToCartesianCoords(r,p,0,0,point);
+    }
     
     private double radius = 100.0;
     
@@ -266,16 +308,7 @@ public class SpiralPainter extends ListenedPainter<Double>{
     }
     
     
-    protected Point2D polarToImageCoord(double x, double y, double r, double p, 
-            Point2D point){
-        if (point == null)
-            point = new Point2D.Double();
-        double theta = Math.toRadians(boundAngle(p));
-        x += r*Math.cos(theta);
-        y += r*Math.sin(theta);
-        point.setLocation(x, y);
-        return point;
-    }
+    
     
     protected double getLogSpiralPitchRad(double k){
         return Math.atan(k);
@@ -365,16 +398,16 @@ public class SpiralPainter extends ListenedPainter<Double>{
         p0 = Math.min(p0, p1);
         p1 = Math.max(temp, p1);
         
-        point1 = polarToImageCoord(x,y,startR,startP,point1);
+        point1 = polarToCartesianCoords(startR,startP,x,y,point1);
         if (path.getCurrentPoint() == null)
             path.moveTo(point1.getX(), point1.getY());
         else
             path.lineTo(point1.getX(), point1.getY());
         
         for (double r = startR, p = startP; (p > p0 && p < p1) || p == startP; r*=m2, p+=n2){
-            point2 = polarToImageCoord(x,y,r*m0,p+n0,point2);
-            point3 = polarToImageCoord(x,y,r*m1,p+n1,point3);
-            point4 = polarToImageCoord(x,y,r*m2,p+n2,point4);
+            point2 = polarToCartesianCoords(r*m0,p+n0,x,y,point2);
+            point3 = polarToCartesianCoords(r*m1,p+n1,x,y,point3);
+            point4 = polarToCartesianCoords(r*m2,p+n2,x,y,point4);
             GeometryMath.getCubicBezierControlPoints(point1, point2, point3, 
                     point4, point2, point3);
             path.curveTo(point2.getX(), point2.getY(), 
