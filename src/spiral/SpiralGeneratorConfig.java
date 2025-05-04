@@ -881,36 +881,65 @@ public class SpiralGeneratorConfig {
     }
     
     public Font getMaskFont(Font defaultValue){
+            // This gets the font to be returned
         Font font = null;
-        String familyName = getMaskFontFamily(null);
+            // Get the name for the font family for the font to return, 
+        String familyName = getMaskFontFamily(null);    // defaulting to null
+            // If a non-null font family name was retrieved
         if (familyName != null){
+                // Get the font family with the name
             FontFamily family = FontFamilies.getInstance().get(familyName);
+                // If there is actually a font family with that name
             if (family != null){
+                    // Get the logical name for the font, defaulting to null
                 String fontName = getMaskFontName(null);
+                    // Get an iterator to go through the fonts in the font 
+                    // family to find a matching font
                 Iterator<Font> fontItr = family.iterator();
-                Font firstFont = null;
+                    // This gets the first font in the iterator, used as a 
+                    // fall-back in case the font name does not match any of the 
+                Font firstFont = null;      // fonts
+                    // While the iterator still has elements and the font with 
+                    // the matching name has not been found
                 while (fontItr.hasNext() && font == null){
+                        // Get the current font
                     Font temp = fontItr.next();
+                        // If the stored font name is null (use the first font 
+                        // in the iterator) or the current font's name matches 
+                        // the stored font name
                     if (fontName == null || fontName.equals(temp.getName()))
+                            // Use this font
                         font = temp;
+                        // If the first font is null (this will be false for all 
+                        // fonts after this)
                     if (firstFont == null)
                         firstFont = temp;
-                }
-                if (font == null)
+                }   // If the font is still null (no font with a matching name 
+                if (font == null)       // was found)
                     font = firstFont;
             }
-        }
+        }   // If the font is null (the selected font was not found)
         if (font == null)
+                // Use the given font
             font = defaultValue;
+            // This will get the size of the font
         float size;
+            // This will get the style of the font
         int style;
+            // If the given default font is null
         if (defaultValue == null){
+                // Get the size and style, defaulting to their respective values
             size = getMaskFontSize();
             style = getMaskFontStyle();
+                // If the font is still null at this point (the selected font 
+                // was not found and the given default font is null)
             if (font == null)
+                    // Use Sans Serif as the font with the style and size
                 return new Font(Font.SANS_SERIF,style,0).deriveFont(size);
         } else {
+                // Get the size, defaulting to the size of the given font
             size = getMaskFontSize(defaultValue.getSize2D());
+                // Get the style, defaulting to the style of the given font
             style = getMaskFontStyle(defaultValue.getStyle());
         }
         return font.deriveFont(style, size);
