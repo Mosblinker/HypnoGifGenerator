@@ -834,9 +834,12 @@ public class SpiralGeneratorConfig {
     }
     
     public void setMaskFontStyle(boolean bold, boolean italic){
+            // Get the style, but without the bold and italic flags
         int value = getMaskFontStyle() & ~(Font.BOLD | Font.ITALIC);
+            // If the font's style is bold
         if (bold)
             value |= Font.BOLD;
+            // If the font's style is italic
         if (italic)
             value |= Font.ITALIC;
         setMaskFontStyle(value);
