@@ -154,11 +154,13 @@ public class CenteredTextPainter extends ListenedPainter<String>{
      * @see #paint 
      */
     protected Graphics2D configureGraphics(Graphics2D g){
-            // Enable/Disable antialiasing
+            // Enable/Disable antialiasing depending on whether text should be 
+            // antialiased
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                 (antialiasing) ? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
-            // Enable/Disable antialiasing for text
+            // Enable/Disable antialiasing for text depending on whether text 
+            // should be antialiased
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
                 (antialiasing) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : 
                         RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
