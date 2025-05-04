@@ -1767,7 +1767,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
         double scale = getMaskScale();
         double centerX = width/2.0;
         double centerY = height/2.0;
-        if (!isOverlayMaskImage() && (solidColor || overlayMask == null || 
+        boolean useImage = isOverlayMaskImage();
+        if (!useImage && (solidColor || overlayMask == null || 
                 overlayMask.getWidth() != width || overlayMask.getHeight() != height)
                 && text != null && !text.isBlank()){
             Graphics2D gTemp;
@@ -1789,7 +1790,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             gTemp.dispose();
         }
         BufferedImage mask;
-        if (isOverlayMaskImage()){
+        if (useImage){
             if (overlayImageMask == null || overlayImageMask.getWidth() != width || 
                     overlayImageMask.getHeight() != height){
                 overlayImageMask = overlayImage;
@@ -1820,9 +1821,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
             imgG.scale(scale, scale);
             imgG.translate(-centerX, -centerY);
             imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                (fontAntialiasingToggle.isSelected()) ? 
-                        RenderingHints.VALUE_ANTIALIAS_ON : 
-                        RenderingHints.VALUE_ANTIALIAS_OFF);
+                    ((useImage)?scale!=1.0:fontAntialiasingToggle.isSelected())? 
+                            RenderingHints.VALUE_ANTIALIAS_ON : 
+                            RenderingHints.VALUE_ANTIALIAS_OFF);
             maskImage(imgG,mask);
             imgG.dispose();
             g.drawImage(overlay, 0, 0, null);
