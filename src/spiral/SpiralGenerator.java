@@ -46,6 +46,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import net.coobird.thumbnailator.Thumbnailator;
+import spiral.painter.SpiralPainter;
 
 /**
  *
@@ -75,7 +76,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * This is the amount that the spiral will rotate per frame.
      */
     private static final double SPIRAL_FRAME_ROTATION = 
-            LogarithmicSpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
+            SpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
     /**
      * This is the duration for each frame of animation.
      */
@@ -1342,10 +1343,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // If the spin direction is the same as the spiral's direction
         if (isSpinClockwise() == spiralPainter.isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
-            angle = LogarithmicSpiralPainter.MAXIMUM_ANGLE - angle;
+            angle = SpiralPainter.MAXIMUM_ANGLE - angle;
             // Add the angle spinner's value and bound it by 360
         return (angle + (double) angleSpinner.getValue()) % 
-                LogarithmicSpiralPainter.MAXIMUM_ANGLE;
+                SpiralPainter.MAXIMUM_ANGLE;
     }
     /**
      * @param args the command line arguments

@@ -1,0 +1,182 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package spiral.painter;
+
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.*;
+import java.util.Objects;
+import swing.ListenedPainter;
+
+/**
+ *
+ * @author Mosblinker
+ */
+public abstract class SpiralPainter extends ListenedPainter<Double>{
+    /**
+     * This is the maximum angle for a circle. In other words, 360 degrees.
+     */
+    public static final double MAXIMUM_ANGLE = 360.0;
+    /**
+     * This is is the angle for quarter of a circle. In other words, 90 degrees.
+     */
+    public static final double QUARTER_ANGLE = 90.0;
+    
+    public static final String CLOCKWISE_PROPERTY_CHANGED = 
+            "ClockwisePropertyChanged";
+    /**
+     * This method bounds the given angle to be within the range of 0 and 
+     * {@value MAXIMUM_ANGLE}, exclusive. If the given angle is negative, then 
+     * it will loop back to being positive.
+     * @param p The angle to bound.
+     * @return The angle, limited to a range of 0 and {@value MAXIMUM_ANGLE}, 
+     * exclusive.
+     * @see MAXIMUM_ANGLE
+     */
+    public static double boundAngle(double p){
+        return ((p%MAXIMUM_ANGLE)+MAXIMUM_ANGLE)%MAXIMUM_ANGLE;
+    }
+    /**
+     * This returns a {@code Point2D} object with the given point on a polar 
+     * coordinate system converted to Cartesian coordinates with the origin at 
+     * ({@code x}, {@code y}).
+     * @param r The radius of the point on the polar coordinate system.
+     * @param p The azimuth of the point on the polar coordinate system, in 
+     * degrees.
+     * @param x The x-coordinate of the origin.
+     * @param y The y-coordinate of the origin.
+     * @param point A {@code Point2D} object to reuse to store the resulting 
+     * coordinate, or null.
+     * @return A {@code Point2D} object with the given polar coordinate 
+     * converted into Cartesian coordinates.
+     */
+    public Point2D polarToCartesianCoords(double r, double p,double x,double y, 
+            Point2D point){
+            // If the given point is null
+        if (point == null)
+            point = new Point2D.Double();
+            // Get the bounded azimuth in radians
+        double theta = Math.toRadians(boundAngle(p));
+            // Add the radius multiplied by the cosine of the azimuth to the 
+            // x-coordinate of the origin, and add the radius multiplied by the 
+            // sine of the azimuth to the y-coordinate of the origin
+        point.setLocation(x + r*Math.cos(theta), y + r*Math.sin(theta));
+        return point;
+    }
+    /**
+     * This returns a {@code Point2D} object with the given point on a polar 
+     * coordinate system converted to Cartesian coordinates with the origin at 
+     * ({@code 0}, {@code 0}).
+     * @param r The radius of the point on the polar coordinate system.
+     * @param p The azimuth of the point on the polar coordinate system, in 
+     * degrees.
+     * @param point A {@code Point2D} object to reuse to store the resulting 
+     * coordinate, or null.
+     * @return A {@code Point2D} object with the given polar coordinate 
+     * converted into Cartesian coordinates.
+     */
+    public Point2D polarToCartesianCoords(double r, double p, Point2D point){
+        return polarToCartesianCoords(r,p,0,0,point);
+    }
+    /**
+     * This stores whether this spiral is clockwise or counter-clockwise.
+     */
+    private boolean clockwise = true;
+    /**
+     * This sets whether this spiral is clockwise or counter-clockwise.
+     * @param value {@code true} if this spiral is clockwise, {@code false} if 
+     * this spiral is counter-clockwise.
+     * @see #isClockwise() 
+     */
+    public void setClockwise(boolean value){
+            // If the clockwise value would change
+        if (this.clockwise != value){
+            this.clockwise = value;
+            firePropertyChange(CLOCKWISE_PROPERTY_CHANGED,!clockwise,clockwise);
+        }
+    }
+    /**
+     * This returns whether this spiral is clockwise or counter-clockwise.
+     * @return {@code true} if this spiral is clockwise, {@code false} if 
+     * this spiral is counter-clockwise.
+     */
+    public boolean isClockwise(){
+        return clockwise;
+    }
+    @Override
+    public void paint(Graphics2D g, Double angle, int width, int height) {
+            // Check if the graphics context is null
+        Objects.requireNonNull(g);
+            // If either the width or height are less than or equal to zero 
+            // (nothing would be rendered anyway)
+        if (width <= 0 || height <= 0)
+            return;
+            // Create a copy of the given graphics context and configure it to 
+            // render the spiral
+        g = configureGraphics((Graphics2D)g.create());
+            // Clip the graphics context to only include the rendered area
+        g.clipRect(0, 0, width, height);
+            // Paint the spiral. If the angle is null, then default to 0. 
+            // Otherwise, keep in in range of (-360, 360), exclusive.
+        paintSpiral(g,(angle!=null)?(angle%MAXIMUM_ANGLE):0.0,width,height,
+                width/2.0,height/2.0,isClockwise());
+        g.dispose();
+    }
+    /**
+     * This is used to paint the spiral. This is given a copy of the graphics 
+     * context that is clipped to the painted region.
+     * @param g The graphics context to render to.
+     * @param angle The angle for the spiral. This is in the range of -{@value 
+     * MAXIMUM_ANGLE}, exclusive, to {@value MAXIMUM_ANGLE}, exclusive.
+     * @param width This is the width of the area to fill with the spiral.
+     * @param height This is the height of the area to fill with the spiral.
+     * @param centerX This is the x-coordinate of the center of the area.
+     * @param centerY This is the y-coordinate of the center of the area.
+     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
+     * if the spiral is counter-clockwise.
+     * @see #paint
+     * @see #isClockwise() 
+     */
+    protected abstract void paintSpiral(Graphics2D g, double angle, 
+            int width, int height, double centerX, double centerY, 
+            boolean clockwise);
+    /**
+     * This is used to configure the graphics context used to render the spiral. 
+     * It's assumed that the returned graphics context is the same as the given 
+     * graphics context, or at least that the returned graphics context 
+     * references the given graphics context in some way. 
+     * @param g The graphics context to render to.
+     * @return The given graphics context, now configured for rendering the 
+     * spiral.
+     * @see #paint 
+     */
+    protected Graphics2D configureGraphics(Graphics2D g){
+            // Enable antialiasing
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+            // Prioritize rendering quality over speed
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
+                RenderingHints.VALUE_RENDER_QUALITY);
+            // Prioritize quality over speed for alpha interpolation
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            // Enable dithering
+        g.setRenderingHint(RenderingHints.KEY_DITHERING, 
+                RenderingHints.VALUE_DITHER_ENABLE);
+            // Prioritize color rendering quality over speed
+        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
+                RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            // Set the stroke normalization to be pure, i.e. geometry should be 
+            // left unmodified
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, 
+                RenderingHints.VALUE_STROKE_PURE);
+        return g;
+    }
+    @Override
+    protected String paramString(){
+            // If the spiral is counter-clockwise, say so
+        return ((isClockwise())?"":"counter-")+"clockwise";
+    }
+}
