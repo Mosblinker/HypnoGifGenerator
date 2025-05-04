@@ -277,6 +277,9 @@
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="maskScaleSpinner"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Mask Scale:"/>
           </Properties>
         </Component>
@@ -999,6 +1002,9 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="widthSpinner"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Width:"/>
           </Properties>
         </Component>
@@ -1046,6 +1052,9 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="heightSpinner"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Height:"/>
           </Properties>
         </Component>

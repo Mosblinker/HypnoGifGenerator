@@ -472,6 +472,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
         maskTabbedPane.addTab("Image", jPanel9);
 
+        jLabel8.setLabelFor(maskScaleSpinner);
         jLabel8.setText("Mask Scale:");
 
         maskScaleSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0001d, 10.0d, 0.01d));
@@ -850,6 +851,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
         jPanel10.setLayout(new javax.swing.BoxLayout(jPanel10, javax.swing.BoxLayout.X_AXIS));
 
+        jLabel9.setLabelFor(widthSpinner);
         jLabel9.setText("Width:");
         jPanel10.add(jLabel9);
         jPanel10.add(filler1);
@@ -863,6 +865,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         jPanel10.add(widthSpinner);
         jPanel10.add(filler2);
 
+        jLabel10.setLabelFor(heightSpinner);
         jLabel10.setText("Height:");
         jPanel10.add(jLabel10);
         jPanel10.add(filler3);
