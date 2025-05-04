@@ -790,6 +790,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         jPanel8.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
 
         color1Button.setText("Color 1");
+        color1Button.setToolTipText("This is the first color of the main spiral");
         color1Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color1Button.setIconTextGap(8);
         color1Button.setMargin(new java.awt.Insets(5, 0, 5, 0));
@@ -797,18 +798,21 @@ public class SpiralGenerator extends javax.swing.JFrame {
         jPanel8.add(color1Button);
 
         color2Button.setText("Color 2");
+        color2Button.setToolTipText("This is the second color of the main spiral");
         color2Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color2Button.setIconTextGap(8);
         color2Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel8.add(color2Button);
 
         color3Button.setText("Color 3");
+        color3Button.setToolTipText("This is the first color of the message over the spiral");
         color3Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color3Button.setIconTextGap(8);
         color3Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
         jPanel8.add(color3Button);
 
         color4Button.setText("Color 4");
+        color4Button.setToolTipText("This is the second color of the message over the spiral");
         color4Button.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         color4Button.setIconTextGap(8);
         color4Button.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
@@ -831,6 +835,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         jPanel6.add(jLabel6, gridBagConstraints);
 
         spinDirCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clockwise", "Counter-Clockwise" }));
+        spinDirCombo.setToolTipText("This controls the direction in which the spiral will spin in the animation.");
         spinDirCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spinDirComboActionPerformed(evt);
@@ -1339,7 +1344,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void updateFrameNumberDisplayed(){
         String text = String.format("Frame: %d / %d", frameSlider.getValue()+1,
                 SPIRAL_FRAME_COUNT);
-        frameSlider.setToolTipText(text);
         frameNumberLabel.setText(text);
     }
     /**

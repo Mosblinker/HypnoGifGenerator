@@ -918,6 +918,7 @@
             <Component class="javax.swing.JButton" name="color1Button">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Color 1"/>
+                <Property name="toolTipText" type="java.lang.String" value="This is the first color of the main spiral"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="iconTextGap" type="int" value="8"/>
                 <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
@@ -929,6 +930,7 @@
             <Component class="javax.swing.JButton" name="color2Button">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Color 2"/>
+                <Property name="toolTipText" type="java.lang.String" value="This is the second color of the main spiral"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="iconTextGap" type="int" value="8"/>
                 <Property name="verticalTextPosition" type="int" value="1"/>
@@ -937,6 +939,7 @@
             <Component class="javax.swing.JButton" name="color3Button">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Color 3"/>
+                <Property name="toolTipText" type="java.lang.String" value="This is the first color of the message over the spiral"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="iconTextGap" type="int" value="8"/>
                 <Property name="verticalTextPosition" type="int" value="1"/>
@@ -945,6 +948,7 @@
             <Component class="javax.swing.JButton" name="color4Button">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Color 4"/>
+                <Property name="toolTipText" type="java.lang.String" value="This is the second color of the message over the spiral"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="iconTextGap" type="int" value="8"/>
                 <Property name="verticalTextPosition" type="int" value="1"/>
@@ -973,6 +977,7 @@
                 <StringItem index="1" value="Counter-Clockwise"/>
               </StringArray>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value="This controls the direction in which the spiral will spin in the animation."/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spinDirComboActionPerformed"/>
