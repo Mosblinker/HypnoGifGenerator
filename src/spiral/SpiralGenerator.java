@@ -75,7 +75,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * This is the amount that the spiral will rotate per frame.
      */
     private static final double SPIRAL_FRAME_ROTATION = 
-            SpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
+            LogarithmicSpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
     /**
      * This is the duration for each frame of animation.
      */
@@ -145,7 +145,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(SpiralGenerator.class.getName()).log(Level.WARNING, null, ex);
         }
-        SpiralPainter iconPainter = new SpiralPainter();
+        LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
         for (int size : ICON_SIZES){
             if (iconImg != null){
@@ -1342,10 +1342,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // If the spin direction is the same as the spiral's direction
         if (isSpinClockwise() == spiralPainter.isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
-            angle = SpiralPainter.MAXIMUM_ANGLE - angle;
+            angle = LogarithmicSpiralPainter.MAXIMUM_ANGLE - angle;
             // Add the angle spinner's value and bound it by 360
         return (angle + (double) angleSpinner.getValue()) % 
-                SpiralPainter.MAXIMUM_ANGLE;
+                LogarithmicSpiralPainter.MAXIMUM_ANGLE;
     }
     /**
      * @param args the command line arguments
@@ -1655,7 +1655,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     /**
      * This is the painter used to paint the spiral.
      */
-    private SpiralPainter spiralPainter = new SpiralPainter();
+    private LogarithmicSpiralPainter spiralPainter = new LogarithmicSpiralPainter();
     /**
      * This is the painter used to paint the text used as the mask for the 
      * message when text is being used for the mask.
@@ -1985,7 +1985,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height, SpiralPainter spiralPainter){
+            int width, int height, LogarithmicSpiralPainter spiralPainter){
         if (width <= 0 || height <= 0)
             return;
         if (hasNoColor(color1,color2))
@@ -2075,16 +2075,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         public void propertyChange(PropertyChangeEvent evt) {
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
-                case(SpiralPainter.RADIUS_PROPERTY_CHANGED):
+                case(LogarithmicSpiralPainter.RADIUS_PROPERTY_CHANGED):
                     config.setSpiralRadius(spiralPainter.getRadius());
                     break;
-                case(SpiralPainter.BASE_PROPERTY_CHANGED):
+                case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
                     config.setSpiralBase(spiralPainter.getBase());
                     break;
-                case(SpiralPainter.BALANCE_PROPERTY_CHANGED):
+                case(LogarithmicSpiralPainter.BALANCE_PROPERTY_CHANGED):
                     config.setSpiralBalance(spiralPainter.getBalance());
                     break;
-                case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
+                case(LogarithmicSpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                     config.setSpiralClockwise(spiralPainter.isClockwise());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):

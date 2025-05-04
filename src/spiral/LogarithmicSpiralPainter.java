@@ -16,7 +16,7 @@ import swing.ListenedPainter;
  *
  * @author Mosblinker
  */
-public class SpiralPainter extends ListenedPainter<Double>{
+public class LogarithmicSpiralPainter extends ListenedPainter<Double>{
     /**
      * This is the maximum angle for a circle. In other words, 360 degrees.
      */
