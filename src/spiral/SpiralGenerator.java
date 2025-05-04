@@ -1269,9 +1269,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // If the spin direction is the same as the spiral's direction
         if (isSpinClockwise() == spiralPainter.isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
-            angle = 360.0 - angle;
+            angle = SpiralPainter.MAXIMUM_ANGLE - angle;
             // Add the angle spinner's value and bound it by 360
-        return (angle + (double) angleSpinner.getValue()) % 360.0;
+        return (angle + (double) angleSpinner.getValue()) % 
+                SpiralPainter.MAXIMUM_ANGLE;
     }
     /**
      * @param args the command line arguments
