@@ -256,7 +256,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
         saveFCPreview = new components.JFileDisplayPanel();
         maskFC = new javax.swing.JFileChooser();
         saveFC = new javax.swing.JFileChooser();
-        jPanel2 = new javax.swing.JPanel();
         maskDialog = new javax.swing.JDialog(this);
         maskTabbedPane = new javax.swing.JTabbedPane();
         jPanel7 = new javax.swing.JPanel();
@@ -356,17 +355,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
         saveFC.setAccessory(saveFCPreview);
         saveFC.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         saveFC.setFileFilter(ImageExtensions.GIF_FILTER);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
 
         maskDialog.setTitle("Edit Message Mask");
         maskDialog.setMinimumSize(new java.awt.Dimension(640, 480));
@@ -1606,7 +1594,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
