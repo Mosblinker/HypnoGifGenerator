@@ -888,11 +888,16 @@ public class SpiralGeneratorConfig {
             if (family != null){
                 String fontName = getMaskFontName(null);
                 Iterator<Font> fontItr = family.iterator();
+                Font firstFont = null;
                 while (fontItr.hasNext() && font == null){
                     Font temp = fontItr.next();
                     if (fontName == null || fontName.equals(temp.getName()))
                         font = temp;
+                    if (firstFont == null)
+                        firstFont = temp;
                 }
+                if (font == null)
+                    font = firstFont;
             }
         }
         if (font == null)
