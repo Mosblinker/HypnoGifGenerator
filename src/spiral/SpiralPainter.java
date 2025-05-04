@@ -264,8 +264,8 @@ public class SpiralPainter extends ListenedPainter<Double>{
             // Alter the angle based off the thickness of the spiral
         angle = (angle + (thickness / 2.0)*MAXIMUM_ANGLE) % MAXIMUM_ANGLE;
         
-            // This gets the amount by which to scale the target smallest radius 
-            // for the spiral
+            // This gets the amount by which to scale the starting radius for 
+            // the spiral
         double rScale = 1.0;
             // Get the transform for the graphics
         AffineTransform tx = g.getTransform();
@@ -276,8 +276,17 @@ public class SpiralPainter extends ListenedPainter<Double>{
             rScale = Math.max(Math.max(tx.getScaleX(), tx.getScaleY()),1.0);
         }
         
+            // This gets the smallest azimuth for the spiral. This uses the 
+            // multiplier for the secondary curve and ignores whether the spiral 
+            // is clockwise or not, treating it as if it was always clockwise.
+            // This divides the starting radius by the scale in order to ensure 
+            // that the spiral appears as if it is infinitely getting smaller 
+            // the closer it gets to the center
         double p0 = getLogSpiralAzimuth(a,k,STARTING_RADIUS/rScale,angle,true);
+            // Subtract the smallest azimuth by it mod 90 degrees to ensure it 
+            // ends at a multiple of 90 degrees.
         p0 -= p0 % QUARTER_ANGLE;
+            
         double p1 = getLogSpiralAzimuth(radius, k, 
                 Math.sqrt(width*width+height*height)/2.0, angle,true);
         p1 += (QUARTER_ANGLE - (p1 % QUARTER_ANGLE)) % QUARTER_ANGLE;
