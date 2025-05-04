@@ -191,13 +191,13 @@ public class SpiralPainter extends ListenedPainter<Double>{
         else
             a *= lim;
         
-        if (angle == null)
-            angle = 0.0;
-        angle %= MAXIMUM_ANGLE;
-        if (angle < 0)
-            angle += MAXIMUM_ANGLE;
+            // Bound the given angle, defaulting to an angle of 0.0 if there 
+            // isn't one
+        angle = boundAngle((angle!=null)?angle:0.0);
+            // If the spiral is going clockwise and the angle is not zero
         if (clockwise && angle > 0)
             angle = MAXIMUM_ANGLE - angle;
+            // Alter the angle based off the thickness of the spiral
         angle = (angle + (thickness / 2.0)*MAXIMUM_ANGLE) % MAXIMUM_ANGLE;
         
             // This gets the amount by which to scale the target smallest radius 
