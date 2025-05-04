@@ -1852,86 +1852,136 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height){
+            // If the width or height are less than or equal to zero (nothing 
+            // would be drawn)
         if (width <= 0 || height <= 0)
             return;
+            // Determine if the overlay is being rendered in a solid color
         boolean solidColor = frameIndex < 0 || Objects.equals(color1, color2);
+            // If the overlay is a solid color
         if (solidColor){
+                // If the first color is non-existant
             if (hasNoColor(color1))
                 return;
-        } 
+        }   // If both colors are non-existant
         else if (hasNoColor(color1,color2))
             return;
-        String text = maskTextArea.getText();
-        double scale = getMaskScale();
-        double centerX = width/2.0;
-        double centerY = height/2.0;
-        boolean useImage = isOverlayMaskImage();
-        if (!useImage && (solidColor || overlayMask == null || 
-                overlayMask.getWidth() != width || overlayMask.getHeight() != height)
-                && text != null && !text.isBlank()){
-            Graphics2D gTemp;
-            if (solidColor){
-                gTemp = (Graphics2D)g.create();
-                gTemp.setColor(color1);
-                scaleMaintainLocation(gTemp,centerX,centerY,scale,scale);
-            }
-            else {
-                overlayMask = new BufferedImage(width, height, 
-                        BufferedImage.TYPE_INT_ARGB);
-                gTemp = overlayMask.createGraphics();
-                gTemp.setColor(Color.WHITE);
-            }
-            gTemp.setFont(maskTextArea.getFont());
-            maskPainter.paint(gTemp, text, width, height);
-            gTemp.dispose();
-        }
+            // This is the image that will get the mask to use
         BufferedImage mask;
+            // This gets the scale for the mask
+        double scale = getMaskScale();
+            // This gets the x-coordinate for the center of the area
+        double centerX = width/2.0;
+            // This gets the y-coordinate for the center of the area
+        double centerY = height/2.0;
+            // This gets whether the mask is using the overlay image mask 
+            // instead of the text mask
+        boolean useImage = isOverlayMaskImage();
+            // If a loaded image is being used as the overlay mask
         if (useImage){
-            if (overlayImageMask == null || overlayImageMask.getWidth() != width || 
-                    overlayImageMask.getHeight() != height){
+                // If there is no image loaded for the overlay mask
+            if (overlayImage == null)
+                return;
+                // If the mask version of the overlay image is null
+            if (overlayImageMask == null)
                 overlayImageMask = overlayImage;
-                if (overlayImageMask != null && 
-                        (overlayImageMask.getWidth() != width || 
-                        overlayImageMask.getHeight() != height)){
-                    overlayImageMask = Thumbnailator.createThumbnail(
-                            overlayImageMask, width, height);
-                }
-            }
+                // If the mask version of the overlay image doesn't match the 
+                // size of the area being rendered
+                // TODO: Work on implementing user control over the overlay 
+                // image's size and stuff
+            if (overlayImageMask.getWidth() != width || 
+                    overlayImageMask.getHeight() != height){
+                    // Scale the overlay image
+                overlayImageMask = Thumbnailator.createThumbnail(overlayImage,
+                        width,height);
+            }   // Use the mask version of the overlay image as the mask
             mask = overlayImageMask;
-        }
-        else if (!solidColor)
+        } else {
+                // Get the text for the mask 
+            String text = maskTextArea.getText();
+                // If the text is null or blank
+            if (text == null || text.isBlank())
+                return;
+                // If the overlay is a solid color or the overlay mask is null 
+                // (needs to be refreshed) or the overlay mask's size does not 
+                // match the size of the area being rendered
+            if (solidColor || overlayMask == null || 
+                    overlayMask.getWidth() != width || 
+                    overlayMask.getHeight() != height){
+                    // This is a temporary graphics context to render the 
+                    // overlay mask to
+                Graphics2D gTemp;
+                    // If the overlay is one solid color
+                if (solidColor){
+                        // Since we're rendering it as a single color, we don't 
+                        // actually need to use a mask for this one. We can just 
+                        // render it to the given graphics context.
+                    
+                        // Create a copy of the given graphics context
+                    gTemp = (Graphics2D)g.create();
+                        // Set the color to the first color
+                    gTemp.setColor(color1);
+                        // Scale the graphics, maintaining the center
+                    scaleMaintainLocation(gTemp,centerX,centerY,scale,scale);
+                } else {
+                        // Create a new image for the overlay mask
+                    overlayMask = new BufferedImage(width, height, 
+                            BufferedImage.TYPE_INT_ARGB);
+                        // Create the graphics context for the image
+                    gTemp = overlayMask.createGraphics();
+                }   // Set the graphics context font to the mask font
+                gTemp.setFont(maskTextArea.getFont());
+                    // Paint the mask's text to the graphics context
+                maskPainter.paint(gTemp, text, width, height);
+                    // Dispose of the graphics context
+                gTemp.dispose();
+            }   // If the overlay is a solid color
+            if (solidColor)
+                    // We just finished rendering it
+                return;
+                // Use the overlay text mask as the mask
             mask = overlayMask;
-        else
-            return;
-        if (mask != null){
-            BufferedImage overlay = new BufferedImage(width, height, 
-                    BufferedImage.TYPE_INT_ARGB);
-            Graphics2D imgG = overlay.createGraphics();
-                // Configure the image graphics
-            imgG = configureGraphics(imgG);
-            if (solidColor){
-                imgG.setColor(color1);
-                imgG.fillRect(0, 0, width, height);
-            } else {
-                paintSpiral(imgG,frameIndex,color1,color2,width,height);
-            }
-            scaleMaintainLocation(imgG,centerX,centerY,scale,scale);
-                // Enable or disable the antialiasing, depending on whether the 
-                // mask should be antialiased
-            imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                        // If the mask is an image, use whether the image 
-                        // antialiasing toggle is selected. Otherwise, use 
-                        // whether the mask painter has antialiasing enabled
-                    (((useImage)?imgMaskAntialiasingToggle.isSelected():
-                            maskPainter.isAntialiasingEnabled()))? 
-                            RenderingHints.VALUE_ANTIALIAS_ON : 
-                            RenderingHints.VALUE_ANTIALIAS_OFF);
-            maskImage(imgG,mask);
-            imgG.dispose();
-            g = configureGraphics((Graphics2D) g.create());
-            g.drawImage(overlay, 0, 0, null);
-            g.dispose();
         }
+            // If the mask is somehow null at this point
+        if (mask == null)
+            return;
+            // Create an image to render the overlay to
+        BufferedImage overlay = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create a graphics context for the image
+        Graphics2D imgG = overlay.createGraphics();
+            // Configure the image graphics
+        imgG = configureGraphics(imgG);
+            // If the overlay is being rendered in a solid color
+        if (solidColor){
+                // Fill the image with the first color
+            imgG.setColor(color1);
+            imgG.fillRect(0, 0, width, height);
+        } else {
+                // Paint a spiral with the two colors
+            paintSpiral(imgG,frameIndex,color1,color2,width,height);
+        }   // Scale the image, maintaining its center
+        scaleMaintainLocation(imgG,centerX,centerY,scale,scale);
+            // Enable or disable the antialiasing, depending on whether the mask 
+            // should be antialiased
+        imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                    // If the mask is an image, use whether the image 
+                    // antialiasing toggle is selected. Otherwise, use whether 
+                    // the mask painter has antialiasing enabled
+                (((useImage)?imgMaskAntialiasingToggle.isSelected():
+                        maskPainter.isAntialiasingEnabled()))? 
+                        RenderingHints.VALUE_ANTIALIAS_ON : 
+                        RenderingHints.VALUE_ANTIALIAS_OFF);
+            // Mask the overlay image pixels with the mask image
+        maskImage(imgG,mask);
+            // Dispose of the image graphics
+        imgG.dispose();
+            // Create a copy of the given graphics context and configure it
+        g = configureGraphics((Graphics2D) g.create());
+            // Draw the overlay image
+        g.drawImage(overlay, 0, 0, null);
+            // Dispose of the copy of the graphics context
+        g.dispose();
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
