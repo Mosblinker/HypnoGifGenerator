@@ -55,36 +55,57 @@ public class CenteredTextPainter extends ListenedPainter<String>{
     public void paint(Graphics2D g, String text, int width, int height) {
             // Check if the graphics context is null
         Objects.requireNonNull(g);
-            // If either the width or height are less than or equal to zero 
-            // (nothing would be rendered anyway)
-        if (width <= 0 || height <= 0 || text.isBlank())
+            // If either the width or height are less than or equal to zero or 
+            // the given String is null or blank (nothing would be rendered 
+            // anyway)
+        if (width <= 0 || height <= 0 || text == null || text.isBlank())
             return;
+            // Configure a copy of the graphics context
         g = configureGraphics((Graphics2D) g.create());
+            // Clip the graphics context region to only fill the area
         g.clipRect(0, 0, width, height);
-        
+            // Get the font metrics for the font set for the graphics
         FontMetrics metrics = g.getFontMetrics();
+            // A list to contain all the lines of text in the given String
         ArrayList<String> lines = new ArrayList<>();
+            // A list to contain the bounds of each line of text
         ArrayList<Rectangle2D> lineBounds = new ArrayList<>();
+            // This gets the height of all of the text
         double textHeight = 0;
+            // This is the x-coordinate for the center of the area
         double centerX = width/2.0;
+            // This is the spacing to use between each line of text
         double spacing = lineSpacing * (g.getFont().getSize2D()/10.0);
+            // Go through each line of text in the given String
         for (Object temp : text.lines().toArray()){
+                // Get the current line of text
             String t = temp.toString();
             lines.add(t);
+                // Get the bounds of the line of text
             Rectangle2D bounds = metrics.getStringBounds(t, g);
             lineBounds.add(bounds);
+                // Add the height of the text along with spacing for the next 
+                // line of text
             textHeight += bounds.getHeight() + spacing;
-            bounds.setFrameFromCenter(centerX, bounds.getCenterY(), (width-bounds.getWidth())/2.0, bounds.getY());
-        }
+                // Center the line of text in the x-axis (y-axis will come later)
+            bounds.setFrameFromCenter(centerX, bounds.getCenterY(), 
+                    (width-bounds.getWidth())/2.0, bounds.getY());
+        }   // Remove the last line spacing from the height
         textHeight -= spacing;
-        
+            // This is the y-coordinate for the top corner of the current line 
+            // of text
         double y = (height - textHeight) / 2.0;
+            // Go through each line of text
         for (int i = 0; i < lines.size(); i++){
+                // Get the bounds for the text
             Rectangle2D bounds = lineBounds.get(i);
+                // Draw the line of text using the centered x-coordinate, and 
+                // subtracting the negative y-coordinate from the top corner for 
+                // the current line to get the y-coordinate for the baseline 
             g.drawString(lines.get(i), (float)bounds.getX(), (float)(y-bounds.getY()));
+                // Get the y-coordinate for the next line of text
             y += bounds.getHeight() + spacing;
         }
-        
         g.dispose();
     }
     /**
@@ -102,7 +123,7 @@ public class CenteredTextPainter extends ListenedPainter<String>{
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                 (antialiasing) ? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
-            // Enable/Disable antialiasing
+            // Enable/Disable antialiasing for text
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, 
                 (antialiasing) ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : 
                         RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
