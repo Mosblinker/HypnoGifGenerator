@@ -1026,7 +1026,7 @@ public class SpiralGeneratorConfig {
     }
     
     public int getImageWidth(){
-        return getImageWidth(SpiralGenerator.SPIRAL_WIDTH);
+        return getImageWidth(SpiralGenerator.DEFAULT_SPIRAL_WIDTH);
     }
     
     public void setImageWidth(int value){
@@ -1038,7 +1038,7 @@ public class SpiralGeneratorConfig {
     }
     
     public int getImageHeight(){
-        return getImageHeight(SpiralGenerator.SPIRAL_HEIGHT);
+        return getImageHeight(SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
     }
     
     public void setImageHeight(int value){

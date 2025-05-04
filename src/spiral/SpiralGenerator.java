@@ -59,11 +59,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private static final int[] ICON_SIZES = {16, 24, 32, 48, 64, 96, 128, 256, 512};
     
     private static final String ICON_FILE_IMAGE = "/images/icon.png";
-    
-    protected static final int SPIRAL_WIDTH = 450;
-    
-    protected static final int SPIRAL_HEIGHT = 450;
-    
+    /**
+     * This is the default width for the spiral image.
+     */
+    protected static final int DEFAULT_SPIRAL_WIDTH = 450;
+    /**
+     * This is the default height for the spiral image.
+     */
+    protected static final int DEFAULT_SPIRAL_HEIGHT = 450;
     private static final int SPIRAL_FRAME_COUNT = 64;
     
     private static final double SPIRAL_FRAME_ROTATION = 
@@ -1190,8 +1193,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
             config.setSpiralColor(i, null);
             colorButtons.get(colorIcons[i]).repaint();
         }
-        widthSpinner.setValue(SPIRAL_WIDTH);
-        heightSpinner.setValue(SPIRAL_HEIGHT);
+        widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
+        heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
         radiusSpinner.setValue(100.0);
         baseSpinner.setValue(2.0);
         balanceSpinner.setValue(0.0);
