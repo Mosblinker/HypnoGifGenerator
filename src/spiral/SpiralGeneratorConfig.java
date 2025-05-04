@@ -1,0 +1,1062 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package spiral;
+
+import io.github.dheid.fontchooser.FontFamilies;
+import io.github.dheid.fontchooser.FontFamily;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.Window;
+import java.io.File;
+import java.nio.*;
+import java.util.*;
+import java.util.prefs.Preferences;
+import javax.swing.JFileChooser;
+
+/**
+ *
+ * @author Mosblinker
+ */
+public class SpiralGeneratorConfig {
+    /**
+     * 
+     */
+    public static final String PROGRAM_BOUNDS_KEY = "ProgramBounds";
+    /**
+     * 
+     */
+    public static final String FILE_CHOOSER_SIZE_KEY_SUFFIX = "FileChooserSize";
+    /**
+     * 
+     */
+    public static final String FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX = 
+            "CurrentDirectory";
+    /**
+     * 
+     */
+    public static final String FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX = 
+            "SelectedFile";
+    /**
+     * 
+     */
+    public static final String COMPONENT_SIZE_KEY = "Size";
+    
+    public static final String SPIRAL_NODE_NAME = "Spiral";
+    
+    public static final String MASK_NODE_NAME = "Mask";
+    
+    public static final String SPIRAL_RADIUS_KEY = "Radius";
+    
+    public static final String SPIRAL_BASE_KEY = "Base";
+    
+    public static final String SPIRAL_BALANCE_KEY = "Balance";
+    
+    public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
+    
+    public static final String SPIRAL_ANGLE_KEY = "Angle";
+    
+    public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
+    
+    public static final String SPIRAL_COLOR_KEY_PREFIX = "SpiralColor";
+    /**
+     * 
+     */
+    public static final String ALWAYS_SCALE_KEY = "AlwaysScale";
+    
+    public static final String IMAGE_WIDTH_KEY = "ImageWidth";
+    
+    public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
+    
+    public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
+    
+    public static final String MASK_LINE_SPACING_KEY = "LineSpacing";
+    
+    public static final String MASK_FONT_SIZE_KEY = "FontSize";
+    
+    public static final String MASK_FONT_STYLE_KEY = "FontStyle";
+    
+    public static final String MASK_FONT_FAMILY_KEY = "FontFamily";
+    
+    public static final String MASK_FONT_NAME_KEY = "FontName";
+    
+    public static final String MASK_TEXT_KEY = "MaskText";
+    
+    public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
+    
+    public static final String MASK_SCALE_KEY = "MaskScale";
+    /**
+     * This is a preference node to store the settings for this program.
+     */
+    private final Preferences node;
+    
+    private final Preferences spiralNode;
+    
+    private final Preferences maskNode;
+    /**
+     * 
+     */
+    private final Map<Component, String> compNames;
+    /**
+     * 
+     * @param node 
+     */
+    public SpiralGeneratorConfig(Preferences node) {
+        this.node = Objects.requireNonNull(node);
+        spiralNode = node.node(SPIRAL_NODE_NAME);
+        maskNode = node.node(MASK_NODE_NAME);
+        compNames = new HashMap<>();
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getPreferences(){
+        return node;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getSpiralPreferences(){
+        return spiralNode;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Map<Component, String> getComponentNames(){
+        return compNames;
+    }
+    /**
+     * 
+     * @param comp
+     * @param name
+     * @return 
+     */
+    public String setComponentName(Component comp, String name){
+        return compNames.put(comp, name);
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public String getComponentName(Component comp){
+        return compNames.getOrDefault(comp, comp.getName());
+    }
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public Dimension getDimension(String key, Dimension defaultValue){
+        try{    // Get the byte array representing the dimenison, or null
+            byte[] arr = node.getByteArray(key, null);
+                // If the byte array is null
+            if (arr == null)
+                return defaultValue;
+                // Get an IntBuffer to go through the integers in the array
+            IntBuffer buffer = ByteBuffer.wrap(arr).asIntBuffer();
+                // If there are less than 2 integers in the array
+            if (buffer.remaining() < 2)
+                return defaultValue;
+            return new Dimension(buffer.get(),buffer.get());
+        } catch (IllegalStateException ex){
+            System.out.println("Node has been removed: " + ex);
+            return defaultValue;
+        }
+    }
+    /**
+     * 
+     * @param key
+     * @return 
+     */
+    public Dimension getDimension(String key){
+        return getDimension(key,null);
+    }
+    /**
+     * 
+     * @param key
+     * @param width
+     * @param height 
+     */
+    public void putDimension(String key, int width, int height){
+        try{    // Create a byte array to store the two integers
+            byte[] arr = new byte[Integer.BYTES*2];
+                // Create a byte buffer to write the two integers to the array
+            ByteBuffer buffer = ByteBuffer.wrap(arr);
+                // Put the width into the array
+            buffer.putInt(width);
+                // Put the height into the array
+            buffer.putInt(height);
+                // Put the resulting byte array into the preference node
+            node.putByteArray(key, arr);
+        } catch (IllegalStateException ex){
+            System.out.println("Node has been removed: " + ex);
+        }
+    }
+    /**
+     * 
+     * @param key
+     * @param dim 
+     */
+    public void putDimension(String key, Dimension dim){
+            // If the dimension object is null
+        if (dim == null){
+            try{    // Remove the key
+                node.remove(key);
+            } catch (IllegalStateException ex){
+                System.out.println("Node has been removed: " + ex);
+            }
+        } else {
+            putDimension(key,dim.width,dim.height);
+        }
+    }
+    /**
+     * 
+     * @param key
+     * @param comp 
+     */
+    public void putDimension(String key, Component comp){
+        putDimension(key,comp.getWidth(),comp.getHeight());
+    }
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public Rectangle getRectangle(String key, Rectangle defaultValue){
+        try{    // Get the byte array representing the dimenison, or null
+            byte[] arr = node.getByteArray(key, null);
+                // If the byte array is null
+            if (arr == null)
+                return defaultValue;
+                // Get an IntBuffer to go through the integers in the array
+            IntBuffer buffer = ByteBuffer.wrap(arr).asIntBuffer();
+                // If there are less than 4 integers in the array
+            if (buffer.remaining() < 4){
+                    // If there are less than 2 integers in the array
+                if (buffer.remaining() < 2)
+                    return defaultValue;
+                return new Rectangle(buffer.get(),buffer.get());
+            }
+            return new Rectangle(buffer.get(),buffer.get(),
+                    buffer.get(),buffer.get());
+        } catch (IllegalStateException ex){
+            System.out.println("Node has been removed: " + ex);
+        }
+        return defaultValue;
+    }
+    /**
+     * 
+     * @param key
+     * @return 
+     */
+    public Rectangle getRectangle(String key){
+        return getRectangle(key,null);
+    }
+    /**
+     * 
+     * @param key
+     * @param x
+     * @param y
+     * @param width
+     * @param height 
+     */
+    public void putRectangle(String key, int x, int y, int width, int height){
+        try{    // Create a byte array to store the 4 integers
+            byte[] arr = new byte[Integer.BYTES*4];
+                // Create a byte buffer to write the 4 integers to the array
+            ByteBuffer buffer = ByteBuffer.wrap(arr);
+                // Put the x-coordinate into the array
+            buffer.putInt(x);
+                // Put the y-coordinate into the array
+            buffer.putInt(y);
+                // Put the width into the array
+            buffer.putInt(width);
+                // Put the height into the array
+            buffer.putInt(height);
+                // Put the resulting byte array into the preference node
+            node.putByteArray(key, arr);
+        } catch (IllegalStateException ex){
+            System.out.println("Node has been removed: " + ex);
+        }
+    }
+    /**
+     * 
+     * @param key
+     * @param width
+     * @param height 
+     */
+    public void putRectangle(String key, int width, int height){
+        putRectangle(key,0,0,width,height);
+    }
+    /**
+     * 
+     * @param key
+     * @param value 
+     */
+    public void putRectangle(String key, Rectangle value){
+            // If the rectangle object is null
+        if (value == null){
+            try{    // Remove the key
+                node.remove(key);
+            } catch (IllegalStateException ex){
+                System.out.println("Node has been removed: " + ex);
+            }
+        } else {
+            putRectangle(key,value.x,value.y,value.width,value.height);
+        }
+    }
+    /**
+     * 
+     * @param key
+     * @param comp 
+     */
+    public void putRectangle(String key, Component comp){
+        putRectangle(key,comp.getX(),comp.getY(),comp.getWidth(),comp.getHeight());
+    }
+    /**
+     * 
+     * @param key
+     * @param defaultFile
+     * @return 
+     */
+    public File getFile(String key, File defaultFile){
+            // Get the name of the file from the preference node, or null
+        String name = node.get(key, null);
+            // If there is no value set for that key
+        if (name == null)
+            return defaultFile;
+        return new File(name);
+    }
+    /**
+     * 
+     * @param key
+     * @return 
+     */
+    public File getFile(String key){
+        return getFile(key,null);
+    }
+    /**
+     * 
+     * @param key
+     * @param value 
+     */
+    public void putFile(String key, File value){
+        if (value == null)
+            node.remove(key);
+        else
+            node.put(key, value.toString());
+    }
+    /**
+     * This returns the color mapped to the given key in the preference node, or 
+     * null if no color is mapped to that key.
+     * @param key The key to get the associated color for.
+     * @param defaultValue
+     * @return The color associated with the given key in the preference node, 
+     * or null if no color is associated with the given key.
+     * @throws IllegalStateException If the preference node is not available, 
+     * either due to not being available when the program started up or due to 
+     * the preference node being removed.
+     * @throws IllegalArgumentException If the key contains the null control 
+     * character.
+     */
+    public Color getColor(String key, Color defaultValue){
+            // Get the String with the color information
+        String colorStr = node.get(key, null);
+            // If there was no String mapped to the given key
+        if (colorStr == null)
+            return defaultValue;
+            // Try to parse the hexadecimal string and get the color from it. If 
+            // there are more than 6 characters in the string, then the alpha 
+        try{// component was specified 
+            return new Color(Integer.parseUnsignedInt(colorStr,16),
+                    colorStr.length()>6);
+        } catch(NumberFormatException ex){ }
+        return defaultValue;
+    }
+    
+    public Color getColor(String key){
+        return getColor(key,null);
+    }
+    /**
+     * This maps the given key to the given color in the preference node. If the 
+     * given color is null, then the key will be removed.
+     * @param key The key to map the color to.
+     * @param color The color to map to the key.
+     * @throws IllegalStateException If the preference node is not available, 
+     * either due to not being available when the program started up or due to 
+     * the preference node being removed.
+     * @throws IllegalArgumentException If the key either contains the null 
+     * control character or is too long to be stored in the preference node. 
+     * @throws NullPointerException If the key is null.
+     */
+    public void putColor(String key, Color color){
+        if (color != null)  // If the color is not null
+            node.put(key,String.format("%08X", color.getRGB()));
+        else
+            node.remove(key);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Rectangle getProgramBounds(){
+        return getRectangle(PROGRAM_BOUNDS_KEY);
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public Rectangle getProgramBounds(SpiralGenerator comp){
+        Rectangle rect = getProgramBounds();
+        if (rect != null){
+                // Get the minimum size for the component
+            Dimension min = comp.getMinimumSize();
+                // Make sure the size is not smaller than the minimum size
+            rect.width = Math.max(rect.width, min.width);
+            rect.height = Math.max(rect.height, min.height);
+            comp.setBounds(rect);
+        }
+        return rect;
+    }
+    /**
+     * 
+     * @param comp 
+     */
+    public void setProgramBounds(SpiralGenerator comp){
+        putRectangle(PROGRAM_BOUNDS_KEY,comp);
+    }
+    /**
+     * 
+     * @param fc
+     * @param defaultValue
+     * @return 
+     */
+    public File getSelectedFile(JFileChooser fc, File defaultValue){
+        return getFile(getComponentName(fc)+FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX,
+                defaultValue);
+    }
+    /**
+     * 
+     * @param fc
+     * @return 
+     */
+    public File getSelectedFile(JFileChooser fc){
+        return getSelectedFile(fc,null);
+    }
+    /**
+     * 
+     * @param fc
+     * @param file 
+     */
+    public void setSelectedFile(JFileChooser fc, File file){
+        putFile(getComponentName(fc)+FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX,file);
+    }
+    /**
+     * 
+     * @param fc 
+     */
+    public void setSelectedFile(JFileChooser fc){
+        setSelectedFile(fc,fc.getSelectedFile());
+    }
+    /**
+     * 
+     * @param fc
+     * @return 
+     */
+    public Dimension getFileChooserSize(JFileChooser fc){
+        return getDimension(getComponentName(fc)+FILE_CHOOSER_SIZE_KEY_SUFFIX);
+    }
+    /**
+     * 
+     * @param fc
+     */
+    public void setFileChooserSize(JFileChooser fc){
+        putDimension(getComponentName(fc)+FILE_CHOOSER_SIZE_KEY_SUFFIX,fc);
+    }
+    /**
+     * 
+     * @param fc
+     * @return 
+     */
+    public File getCurrentDirectory(JFileChooser fc){
+        return getFile(getComponentName(fc)+FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX);
+    }
+    /**
+     * 
+     * @param fc 
+     */
+    public void setCurrentDirectory(JFileChooser fc){
+        putFile(getComponentName(fc)+FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX,
+                fc.getCurrentDirectory());
+    }
+    /**
+     * 
+     * @param fc 
+     */
+    public void storeFileChooser(JFileChooser fc){
+            // Put the file chooser's size in the preference node
+        setFileChooserSize(fc);
+            // Put the file chooser's current directory in the preference node
+        setCurrentDirectory(fc);
+    }
+    /**
+     * 
+     * @param fc 
+     */
+    public void loadFileChooser(JFileChooser fc){
+            // Get the current directory for the file chooser
+        File dir = getCurrentDirectory(fc);
+            // If there is a current directory for the file chooser and it exists
+        if (dir != null && dir.exists()){
+                // Set the file chooser's current directory
+            fc.setCurrentDirectory(dir);
+        }   // Get the selected file for the file chooser, or null
+        File file = getSelectedFile(fc);
+            // If there is a selected file for the file chooser
+        if (file != null){
+                // Select that file in the file chooser
+            fc.setSelectedFile(file);
+        }   // Load the file chooser's size from the preference node
+        setSizeOfComponent(fc,getFileChooserSize(fc));
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public Dimension getComponentSize(Component comp){
+        return getDimension(getComponentName(comp)+COMPONENT_SIZE_KEY);
+    }
+    /**
+     * 
+     * @param comp
+     * @param key
+     * @return 
+     */
+    public Dimension loadComponentSize(Component comp, String key){
+        Dimension dim = getDimension(key);
+        setSizeOfComponent(comp,dim);
+        return dim;
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public Dimension loadComponentSize(Component comp){
+        Dimension dim = getComponentSize(comp);
+        setSizeOfComponent(comp,dim);
+        return dim;
+    }
+    /**
+     * 
+     * @param comp 
+     */
+    public void setComponentSize(Component comp){
+        putDimension(getComponentName(comp)+COMPONENT_SIZE_KEY,comp);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralRadius(double defaultValue){
+        return getSpiralPreferences().getDouble(SPIRAL_RADIUS_KEY,defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getSpiralRadius(){
+        return getSpiralRadius(100.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpiralRadius(double value){
+        getSpiralPreferences().putDouble(SPIRAL_RADIUS_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralBase(double defaultValue){
+        return getSpiralPreferences().getDouble(SPIRAL_BASE_KEY,defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getSpiralBase(){
+        return getSpiralBase(2.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpiralBase(double value){
+        getSpiralPreferences().putDouble(SPIRAL_BASE_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralBalance(double defaultValue){
+        return getSpiralPreferences().getDouble(SPIRAL_BALANCE_KEY,defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getSpiralBalance(){
+        return getSpiralBalance(0.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpiralBalance(double value){
+        getSpiralPreferences().putDouble(SPIRAL_BALANCE_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isSpiralClockwise(boolean defaultValue){
+        return getSpiralPreferences().getBoolean(SPIRAL_CLOCKWISE_KEY, defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public boolean isSpiralClockwise(){
+        return isSpiralClockwise(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpiralClockwise(boolean value){
+        getSpiralPreferences().putBoolean(SPIRAL_CLOCKWISE_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralAngle(double defaultValue){
+        return getSpiralPreferences().getDouble(SPIRAL_ANGLE_KEY,defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getSpiralAngle(){
+        return getSpiralAngle(0.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpiralAngle(double value){
+        getSpiralPreferences().putDouble(SPIRAL_ANGLE_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isSpinClockwise(boolean defaultValue){
+        return getPreferences().getBoolean(SPIN_CLOCKWISE_KEY, defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public boolean isSpinClockwise(){
+        return isSpinClockwise(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSpinClockwise(boolean value){
+        getPreferences().putBoolean(SPIN_CLOCKWISE_KEY, value);
+    }
+    /**
+     * 
+     * @param index
+     * @param defaultValue
+     * @return 
+     */
+    public Color getSpiralColor(int index, Color defaultValue){
+        return getColor(SPIRAL_COLOR_KEY_PREFIX+index,defaultValue);
+    }
+    /**
+     * 
+     * @param index
+     * @return 
+     */
+    public Color getSpiralColor(int index){
+        return getSpiralColor(index,null);
+    }
+    /**
+     * 
+     * @param index
+     * @param value 
+     */
+    public void setSpiralColor(int index, Color value){
+        putColor(SPIRAL_COLOR_KEY_PREFIX+index,value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public boolean isImageAlwaysScaled(){
+        return node.getBoolean(ALWAYS_SCALE_KEY, false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setImageAlwaysScaled(boolean value){
+        node.putBoolean(ALWAYS_SCALE_KEY, value);
+    }
+    
+    public Preferences getMaskPreferences(){
+        return maskNode;
+    }
+    
+    public boolean isMaskTextAntialiased(boolean defaultValue){
+        return getMaskPreferences().getBoolean(MASK_TEXT_ANTIALIASING_KEY, defaultValue);
+    }
+    
+    public boolean isMaskTextAntialiased(){
+        return isMaskTextAntialiased(true);
+    }
+    
+    public void setMaskTextAntialiased(boolean value){
+        getMaskPreferences().putBoolean(MASK_TEXT_ANTIALIASING_KEY, value);
+    }
+    
+    public double getMaskLineSpacing(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_LINE_SPACING_KEY, defaultValue);
+    }
+    
+    public double getMaskLineSpacing(){
+        return getMaskLineSpacing(0.0);
+    }
+    
+    public void setMaskLineSpacing(double value){
+        getMaskPreferences().putDouble(MASK_LINE_SPACING_KEY, value);
+    }
+    
+    public float getMaskFontSize(float defaultValue){
+        return getMaskPreferences().getFloat(MASK_FONT_SIZE_KEY, defaultValue);
+    }
+    
+    public float getMaskFontSize(){
+        return getMaskFontSize(11.0f);
+    }
+    
+    public void setMaskFontSize(float value){
+        getMaskPreferences().putFloat(MASK_FONT_SIZE_KEY, value);
+    }
+    
+    public void setMaskFontSize(Font font){
+        if (font == null)
+            getMaskPreferences().remove(MASK_FONT_SIZE_KEY);
+        else
+            setMaskFontSize(font.getSize2D());
+    }
+    
+    public int getMaskFontStyle(int defaultValue){
+        return getMaskPreferences().getInt(MASK_FONT_STYLE_KEY, defaultValue);
+    }
+    
+    public int getMaskFontStyle(){
+        return getMaskFontStyle(Font.PLAIN);
+    }
+    
+    public void setMaskFontStyle(int value){
+        getMaskPreferences().putInt(MASK_FONT_STYLE_KEY, value);
+    }
+    
+    public void setMaskFontStyle(Font font){
+        if (font == null)
+            getMaskPreferences().remove(MASK_FONT_STYLE_KEY);
+        else
+            setMaskFontStyle(font.getStyle());
+    }
+    
+    protected boolean getMaskFontStyleValue(int flag){
+        return (getMaskFontStyle() & flag) != 0;
+    }
+    
+    protected void setMaskFontStyleValue(int flag, boolean value){
+        int style = getMaskFontStyle();
+        if (value)
+            style |= flag;
+        else
+            style &= ~flag;
+        setMaskFontStyle(style);
+    }
+    
+    public boolean isMaskFontBold(){
+        return getMaskFontStyleValue(Font.BOLD);
+    }
+    
+    public void setMaskFontBold(boolean value){
+        setMaskFontStyleValue(Font.BOLD,value);
+    }
+    
+    public boolean isMaskFontItalic(){
+        return getMaskFontStyleValue(Font.ITALIC);
+    }
+    
+    public void setMaskFontItalic(boolean value){
+        setMaskFontStyleValue(Font.ITALIC,value);
+    }
+    
+    public void setMaskFontStyle(boolean bold, boolean italic){
+        int value = getMaskFontStyle() & ~(Font.BOLD | Font.ITALIC);
+        if (bold)
+            value |= Font.BOLD;
+        if (italic)
+            value |= Font.ITALIC;
+        setMaskFontStyle(value);
+    }
+    
+    public String getMaskFontFamily(String defaultValue){
+        return getMaskPreferences().get(MASK_FONT_FAMILY_KEY, defaultValue);
+    }
+    
+    public String getMaskFontFamily(){
+        return getMaskFontFamily(Font.SANS_SERIF);
+    }
+    
+    public void setMaskFontFamily(String value){
+        if (value == null)
+            getMaskPreferences().remove(MASK_FONT_FAMILY_KEY);
+        else
+            getMaskPreferences().put(MASK_FONT_FAMILY_KEY, value);
+    }
+    
+    public void setMaskFontFamily(Font font){
+        setMaskFontFamily((font != null) ? font.getFamily() : null);
+    }
+    
+    public String getMaskFontName(String defaultValue){
+        return getMaskPreferences().get(MASK_FONT_NAME_KEY, defaultValue);
+    }
+    
+    public String getMaskFontName(){
+        return getMaskFontName(null);
+    }
+    
+    public void setMaskFontName(String value){
+        if (value == null)
+            getMaskPreferences().remove(MASK_FONT_NAME_KEY);
+        else
+            getMaskPreferences().put(MASK_FONT_NAME_KEY, value);
+    }
+    
+    public void setMaskFontName(Font font){
+        setMaskFontName((font != null) ? font.getName() : null);
+    }
+    
+    public Font getMaskFont(Font defaultValue){
+        Font font = defaultValue;
+        String familyName = getMaskFontFamily(null);
+        if (familyName != null){
+            FontFamily family = FontFamilies.getInstance().get(familyName);
+            if (family != null){
+                String fontName = getMaskFontName(null);
+                Iterator<Font> fontItr = family.iterator();
+                Font selFont = null;
+                while (fontItr.hasNext() && selFont == null){
+                    Font temp = fontItr.next();
+                    if (fontName == null || fontName.equals(temp.getName()))
+                        selFont = temp;
+                }
+                if (selFont != null)
+                    font = selFont;
+            }
+        }
+        float size;
+        int style;
+        if (defaultValue == null){
+            size = getMaskFontSize();
+            style = getMaskFontStyle();
+        } else {
+            size = getMaskFontSize(defaultValue.getSize2D());
+            style = getMaskFontStyle(defaultValue.getStyle());
+        }
+        return font.deriveFont(style, size);
+    }
+    
+    public void setMaskFont(Font value){
+        setMaskFontSize(value);
+        setMaskFontStyle(value);
+        setMaskFontFamily(value);
+        setMaskFontName(value);
+    }
+    
+    public String getMaskText(String defaultValue){
+        return getMaskPreferences().get(MASK_TEXT_KEY, defaultValue);
+    }
+    
+    public String getMaskText(){
+        return getMaskText("");
+    }
+    
+    public void setMaskText(String value){
+        if (value == null)
+            getMaskPreferences().remove(MASK_TEXT_KEY);
+        else
+            getMaskPreferences().put(MASK_TEXT_KEY, value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Dimension getMaskFontSelectorSize(){
+        return getDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY);
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public Dimension loadMaskFontSelectorSize(Component comp){
+        Dimension dim = getMaskFontSelectorSize();
+        setSizeOfComponent(comp,dim);
+        return dim;
+    }
+    /**
+     * 
+     * @param width
+     * @param height
+     */
+    public void setMaskFontSelectorSize(int width, int height){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,width,height);
+    }
+    /**
+     * 
+     * @param dim 
+     */
+    public void setMaskFontSelectorSize(Dimension dim){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,dim);
+    }
+    /**
+     * 
+     * @param comp 
+     */
+    public void setMaskFontSelectorSize(Component comp){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,comp);
+    }
+    
+    public double getMaskScale(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
+    }
+    
+    public double getMaskScale(){
+        return getMaskScale(1.0);
+    }
+    
+    public void setMaskScale(double value){
+        getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
+    }
+    
+    public int getImageWidth(int defaultValue){
+        return getPreferences().getInt(IMAGE_WIDTH_KEY, defaultValue);
+    }
+    
+    public int getImageWidth(){
+        return getImageWidth(SpiralGenerator.SPIRAL_WIDTH);
+    }
+    
+    public void setImageWidth(int value){
+        getPreferences().putInt(IMAGE_WIDTH_KEY, value);
+    }
+    
+    public int getImageHeight(int defaultValue){
+        return getPreferences().getInt(IMAGE_HEIGHT_KEY, defaultValue);
+    }
+    
+    public int getImageHeight(){
+        return getImageHeight(SpiralGenerator.SPIRAL_HEIGHT);
+    }
+    
+    public void setImageHeight(int value){
+        getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
+    }
+    
+    
+    
+    protected Preferences getTestNode(){
+        return node.node("test");
+    }
+    
+    public double getTestDouble(int index){
+        return getTestNode().getDouble("double"+index, 0.0);
+    }
+    
+    public void setTestDouble(int index, double value){
+        getTestNode().putDouble("double"+index, value);
+    }
+    
+    public int getTestInt(int index){
+        return getTestNode().getInt("integer"+index, 0);
+    }
+    
+    public void setTestInt(int index, int value){
+        getTestNode().putInt("integer"+index, value);
+    }
+    
+    public boolean getTestBoolean(int index){
+        return getTestNode().getBoolean("boolean"+index, false);
+    }
+    
+    public void setTestBoolean(int index, boolean value){
+        getTestNode().putBoolean("boolean"+index, value);
+    }
+    
+    
+    
+    /**
+     * 
+     * @param comp
+     * @param dim 
+     */
+    public static void setSizeOfComponent(Component comp, Dimension dim){
+            // If there isn't a size set
+        if (dim == null)
+            return;
+            // Get the minimum size for the component
+        Dimension min = comp.getMinimumSize();
+            // Make sure the size is not smaller than the minimum size
+        dim.width = Math.max(dim.width, min.width);
+        dim.height = Math.max(dim.height, min.height);
+            // If the component is a window
+        if (comp instanceof Window)
+            comp.setSize(dim);
+        else
+            comp.setPreferredSize(dim);
+    }
+}
