@@ -101,8 +101,18 @@ public class SpiralPainter extends ListenedPainter<Double>{
         return polarToCartesianCoords(r,p,0,0,point);
     }
     
-    private double radius = 100.0;
     
+    
+    /**
+     * This is the radius used to control the logarithmic spiral. This will be 
+     * the radius for the point on the logarithmic spiral that is 90 degrees 
+     * ahead of the point at 0 degrees, not factoring in balance or angle of 
+     * rotation.
+     */
+    private double radius = 100.0;
+    /**
+     * 
+     */
     private double base = 2.0;
     
     private double balance = 0.0;
@@ -306,7 +316,38 @@ public class SpiralPainter extends ListenedPainter<Double>{
         
         g.dispose();
     }
-    
+    /**
+     * This is used to configure the graphics context used to render the spiral. 
+     * It's assumed that the returned graphics context is the same as the given 
+     * graphics context, or at least that the returned graphics context 
+     * references the given graphics context in some way. 
+     * @param g The graphics context to render to.
+     * @return The given graphics context, now configured for rendering the 
+     * spiral.
+     * @see #paint 
+     */
+    protected Graphics2D configureGraphics(Graphics2D g){
+            // Enable antialiasing
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+            // Prioritize rendering quality over speed
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
+                RenderingHints.VALUE_RENDER_QUALITY);
+            // Prioritize quality over speed for alpha interpolation
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            // Enable dithering
+        g.setRenderingHint(RenderingHints.KEY_DITHERING, 
+                RenderingHints.VALUE_DITHER_ENABLE);
+            // Prioritize color rendering quality over speed
+        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
+                RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+            // Set the stroke normalization to be pure, i.e. geometry should be 
+            // left unmodified
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, 
+                RenderingHints.VALUE_STROKE_PURE);
+        return g;
+    }
     
     
     
@@ -417,36 +458,5 @@ public class SpiralPainter extends ListenedPainter<Double>{
         }
         return path;
     }
-    /**
-     * This is used to configure the graphics context used to render the spiral. 
-     * It's assumed that the returned graphics context is the same as the given 
-     * graphics context, or at least that the returned graphics context 
-     * references the given graphics context in some way. 
-     * @param g The graphics context to render to.
-     * @return The given graphics context, now configured for rendering the 
-     * spiral.
-     * @see #paint 
-     */
-    protected Graphics2D configureGraphics(Graphics2D g){
-            // Enable antialiasing
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                RenderingHints.VALUE_ANTIALIAS_ON);
-            // Prioritize rendering quality over speed
-        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
-                RenderingHints.VALUE_RENDER_QUALITY);
-            // Prioritize quality over speed for alpha interpolation
-        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
-                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-            // Enable dithering
-        g.setRenderingHint(RenderingHints.KEY_DITHERING, 
-                RenderingHints.VALUE_DITHER_ENABLE);
-            // Prioritize color rendering quality over speed
-        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
-                RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-            // Set the stroke normalization to be pure, i.e. geometry should be 
-            // left unmodified
-        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, 
-                RenderingHints.VALUE_STROKE_PURE);
-        return g;
-    }
+    
 }
