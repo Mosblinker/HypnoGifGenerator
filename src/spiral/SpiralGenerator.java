@@ -1013,8 +1013,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void framePlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_framePlayButtonActionPerformed
         updateFrameControls();
         updateControlsEnabled();
-        time = System.currentTimeMillis();
-        frameAvg = 0;
+        frameTime = System.currentTimeMillis();
+        frameTimeTotal = 0;
         frameTotal = 0;
         if (framePlayButton.isSelected()){
             animationTimer.restart();
@@ -1346,13 +1346,13 @@ public class SpiralGenerator extends javax.swing.JFrame {
      */
     private void progressAnimation(java.awt.event.ActionEvent evt){
         long temp = System.currentTimeMillis();
-        long diff = temp - time;
-        frameAvg += diff;
+        long diff = temp - frameTime;
+        frameTimeTotal += diff;
         frameTotal++;
-        time = temp;
+        frameTime = temp;
         if (printFPSToggle.isSelected()){
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
-                    diff, frameAvg/frameTotal,SPIRAL_FRAME_DURATION);
+                    diff, frameTimeTotal/((double)frameTotal), SPIRAL_FRAME_DURATION);
         }
         try{
             frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
@@ -1521,10 +1521,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private Dimension fontDim = null;
     
-    private long time = System.currentTimeMillis();
-    
-    private double frameAvg = 0;
-    
+    /**
+    /**
     private int frameTotal = 0;
     
     private Icon spiralIcon;
