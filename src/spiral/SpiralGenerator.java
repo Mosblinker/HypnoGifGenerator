@@ -221,6 +221,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         angleSpinner.setValue(config.getSpiralAngle());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(maskPainter.isAntialiasingEnabled());
+        imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
         lineSpacingSpinner.setValue(maskPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
         
@@ -287,6 +288,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         imgMaskNoteLabel1 = new javax.swing.JLabel();
         imgMaskNoteLabel2 = new javax.swing.JLabel();
         imgMaskNoteLabel3 = new javax.swing.JLabel();
+        imgMaskAntialiasingToggle = new javax.swing.JCheckBox();
+        javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -488,8 +492,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -502,13 +507,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
         maskImageCtrlPanel.add(imgMaskNoteLabel1, gridBagConstraints);
 
         imgMaskNoteLabel2.setText("All opaque pixels, regardless of color will be opaque in the mask.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 4;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         maskImageCtrlPanel.add(imgMaskNoteLabel2, gridBagConstraints);
 
@@ -516,7 +523,32 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 4;
         maskImageCtrlPanel.add(imgMaskNoteLabel3, gridBagConstraints);
+
+        imgMaskAntialiasingToggle.setSelected(true);
+        imgMaskAntialiasingToggle.setText("Antialiasing");
+        imgMaskAntialiasingToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgMaskAntialiasingToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        maskImageCtrlPanel.add(imgMaskAntialiasingToggle, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        maskImageCtrlPanel.add(filler14, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.5;
+        maskImageCtrlPanel.add(filler15, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -1249,6 +1281,12 @@ public class SpiralGenerator extends javax.swing.JFrame {
         spiralPainter.setClockwise(true);
         angleSpinner.setValue(0.0);
     }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
+        config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
+        maskPreviewLabel.repaint();
+        refreshPreview(false);
+    }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1706,6 +1744,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageSizePanel;
+    private javax.swing.JCheckBox imgMaskAntialiasingToggle;
     private javax.swing.JLabel imgMaskNoteLabel1;
     private javax.swing.JLabel imgMaskNoteLabel2;
     private javax.swing.JLabel imgMaskNoteLabel3;
@@ -1859,7 +1898,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             imgG.scale(scale, scale);
             imgG.translate(-centerX, -centerY);
             imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    ((useImage)?scale!=1.0:fontAntialiasingToggle.isSelected())? 
+                    (((useImage)?imgMaskAntialiasingToggle:fontAntialiasingToggle).isSelected())? 
                             RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
             maskImage(imgG,mask);

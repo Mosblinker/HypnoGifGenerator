@@ -74,6 +74,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
     
+    public static final String MASK_IMAGE_ANTIALIASING_KEY = "ImageAntialiasing";
+    
     public static final String MASK_LINE_SPACING_KEY = "LineSpacing";
     
     public static final String MASK_FONT_SIZE_KEY = "FontSize";
@@ -1019,6 +1021,18 @@ public class SpiralGeneratorConfig {
     
     public void setMaskScale(double value){
         getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
+    }
+    
+    public boolean isMaskImageAntialiased(boolean defaultValue){
+        return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
+    }
+    
+    public boolean isMaskImageAntialiased(){
+        return isMaskImageAntialiased(true);
+    }
+    
+    public void setMaskImageAntialiased(boolean value){
+        getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){
