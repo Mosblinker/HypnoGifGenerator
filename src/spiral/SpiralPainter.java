@@ -25,9 +25,18 @@ public class SpiralPainter extends ListenedPainter<Double>{
      * This is is the angle for quarter of a circle. In other words, 90 degrees.
      */
     public static final double QUARTER_ANGLE = 90.0;
-    
+    /**
+     * This is the angle to use for interpolating the spiral curve. The end of 
+     * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
+     * of the curve.
+     */
     protected static final double INTERPOLATION_ANGLE = 45.0;
-    
+    /**
+     * This is the target radius for the start of the spiral. This is set to 0.1 
+     * to ensure that the spiral is properly formed in the center of the image 
+     * with a pitch that makes it appear that it infinitely gets smaller as it 
+     * gets closer to the center of the image.
+     */
     private static final double STARTING_RADIUS = 0.1;
     
     public static final String RADIUS_PROPERTY_CHANGED ="RadiusPropertyChanged";
@@ -157,13 +166,26 @@ public class SpiralPainter extends ListenedPainter<Double>{
         if (point4 == null)
             point4 = new Point2D.Double();
         
+            // This gets the x-coordinate for the center of the area
         double centerX = width / 2.0;
+            // This gets the y-coordinate for the center of the area
         double centerY = height / 2.0;
-        double thickness = (1.0 + balance) / 2.0;
         
+            // This gets the thickness of the spiral
+        double thickness = (1.0 + balance) / 2.0;
+            // This gets the amount by which to multiply the angle when 
+            // computing the logarithmic spiral. This is equal to the tangent 
+            // of the pitch of the spiral.
         double k = Math.log(base);
+            // This is the value by which to adjust the radius to get the other 
+            // spiral that completes the shape
         double lim = Math.exp(k * (1-thickness));
+            // This is the value to use to calculate the other logarithmic 
+            // spiral that completes the path. This is used for the outer spiral 
+            // curve when clockwise and the inner spiral curve when 
+            // counter-clockwise 
         double a = radius;
+            // When the spiral is going clockwise
         if (clockwise)
             a /= lim;
         else
