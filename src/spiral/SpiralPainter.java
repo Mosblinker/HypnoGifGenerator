@@ -183,6 +183,17 @@ public class SpiralPainter extends ListenedPainter<Double>{
     public boolean isClockwise(){
         return clockwise;
     }
+    /**
+     * This returns the k value for a logarithmic spiral using the equation 
+     * {@code r=a*e^(k*p)}, with {@code r} being the radius, {@code p} being the 
+     * azimuth, and {@code a} being some constant.
+     * @return The value multiplied with the azimuth before it is used as the 
+     * exponent for Eular's number.
+     * @see #getBase() 
+     */
+    protected double getLogarithmicK(){
+        return Math.log(getBase());
+    }
 
     @Override
     public void paint(Graphics2D g, Double angle, int width, int height) {
