@@ -17,8 +17,14 @@ import swing.ListenedPainter;
  * @author Mosblinker
  */
 public class SpiralPainter extends ListenedPainter<Double>{
-    
+    /**
+     * This is the maximum angle for a circle. In other words, 360 degrees.
+     */
     public static final double MAXIMUM_ANGLE = 360.0;
+    /**
+     * This is is the angle for quarter of a circle. In other words, 90 degrees.
+     */
+    public static final double QUARTER_ANGLE = 90.0;
     
     protected static final double INTERPOLATION_ANGLE = 45.0;
     
@@ -174,9 +180,9 @@ public class SpiralPainter extends ListenedPainter<Double>{
         
         double p1 = getLogSpiralAzimuth(radius, k, 
                 Math.sqrt(width*width+height*height)/2.0, angle,true);
-        p1 += (90.0 - (p1 % 90.0)) % 90.0;
+        p1 += (QUARTER_ANGLE - (p1 % QUARTER_ANGLE)) % QUARTER_ANGLE;
         double p0 = getLogSpiralAzimuth(a, k, STARTING_RADIUS, angle, true);
-        p0 -= p0 % 90.0;
+        p0 -= p0 % QUARTER_ANGLE;
         
         double pR = getLogSpiralAzimuth(radius, k, radius, angle,true);
         double m0 = getLogSpiralRadius(radius,k,pR+INTERPOLATION_ANGLE,angle,true);
