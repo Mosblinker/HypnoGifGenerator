@@ -67,11 +67,18 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * This is the default height for the spiral image.
      */
     protected static final int DEFAULT_SPIRAL_HEIGHT = 450;
+    /**
+     * This is the number of frames in the animation.
+     */
     private static final int SPIRAL_FRAME_COUNT = 64;
-    
+    /**
+     * This is the amount that the spiral will rotate per frame.
+     */
     private static final double SPIRAL_FRAME_ROTATION = 
             SpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
-    
+    /**
+     * This is the duration for each frame of animation.
+     */
     private static final int SPIRAL_FRAME_DURATION = 20;
     /**
      * This is the name of the preference node used to store the settings for 
@@ -79,7 +86,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
      */
     private static final String PREFERENCE_NODE_NAME = 
             "milo/spiral/jack/HypnoGifGenerator";
-    
+    /**
+     * This is an array that contains the default colors used for the spiral.
+     */
     private static final Color[] DEFAULT_SPIRAL_COLORS = {
         Color.WHITE,
         Color.BLACK,
@@ -111,6 +120,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
         config = new SpiralGeneratorConfig(node);
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
+            // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, DEFAULT_SPIRAL_COLORS[i]));
         }
@@ -1204,46 +1214,65 @@ public class SpiralGenerator extends javax.swing.JFrame {
         spiralPainter.setClockwise(true);
         angleSpinner.setValue(0.0);
     }//GEN-LAST:event_resetButtonActionPerformed
-    
+    /**
+     * This returns the width for the image.
+     * @return The width for the image.
+     */
     private int getImageWidth(){
         return (int)widthSpinner.getValue();
     }
-    
+    /**
+     * This returns the height for the image.
+     * @return The height for the image.
+     */
     private int getImageHeight(){
         return (int)heightSpinner.getValue();
     }
-    
+    /**
+     * This returns the scale used for the mask for the message.
+     * @return The scale factor for the message mask.
+     */
     private double getMaskScale(){
         return (double)maskScaleSpinner.getValue();
     }
-    
+    /**
+     * This returns whether the mask for the overlay message is created using an 
+     * image.
+     * @return Whether the message mask is created using an image.
+     */
     private boolean isOverlayMaskImage(){
         return maskTabbedPane != null && maskTabbedPane.getSelectedIndex() == 1;
     }
-    
+    /**
+     * This returns the style set for the font.
+     * @return The style for the font.
+     */
     private int getFontStyle(){
         return ((boldToggle.isSelected())?Font.BOLD:0) | 
                 ((italicToggle.isSelected())?Font.ITALIC:0);
     }
-    
+    /**
+     * This returns whether the spiral will spin clockwise.
+     * @return Whether the spiral will spin clockwise.
+     */
     private boolean isSpinClockwise(){
         return spinDirCombo.getSelectedIndex() == 0;
     }
-    
-    private void refreshMaskText(){
-        config.setMaskText(maskTextArea.getText());
-        refreshPreview(true);
+    /**
+     * This returns the rotation for the frame with the given index.
+     * @param frameIndex The index of the frame.
+     * @return The rotation to apply to the spiral for the frame.
+     */
+    private double getFrameRotation(int frameIndex){
+            // Get the angle to use for the rotation
+        double angle = SPIRAL_FRAME_ROTATION*frameIndex;
+            // If the spin direction is the same as the spiral's direction
+        if (isSpinClockwise() == spiralPainter.isClockwise())
+                // Invert the angle, so as to make it spin in the right direction
+            angle = 360.0 - angle;
+            // Add the angle spinner's value and bound it by 360
+        return (angle + (double) angleSpinner.getValue()) % 360.0;
     }
-    
-    private void refreshPreview(boolean maskChanged){
-        if (maskChanged){
-            overlayMask = null;
-            if (!isOverlayMaskImage())
-                maskPreviewLabel.repaint();
-        }
-        previewLabel.repaint();
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -1273,11 +1302,18 @@ public class SpiralGenerator extends javax.swing.JFrame {
         });
     }
     
-    private double getFrameRotation(int frameIndex){
-        double angle = SPIRAL_FRAME_ROTATION*frameIndex;
-        if (isSpinClockwise() == spiralPainter.isClockwise())
-            angle = 360.0 - angle;
-        return (angle + (double) angleSpinner.getValue()) % 360.0;
+    private void refreshMaskText(){
+        config.setMaskText(maskTextArea.getText());
+        refreshPreview(true);
+    }
+    
+    private void refreshPreview(boolean maskChanged){
+        if (maskChanged){
+            overlayMask = null;
+            if (!isOverlayMaskImage())
+                maskPreviewLabel.repaint();
+        }
+        previewLabel.repaint();
     }
     /**
      * 
@@ -1518,35 +1554,80 @@ public class SpiralGenerator extends javax.swing.JFrame {
         while (option == JFileChooser.APPROVE_OPTION && file == null);
         return file;
     }
-    
-    private Dimension fontDim = null;
-    
     /**
+     * This is the time it was when the most recent frame was displayed when the 
+     * animation is playing.
+     */
+    private long frameTime = 0;
     /**
+     * This is a running total of the time it takes between each frame in order 
+     * to get the average duration of a frame when the animation is playing.
+     */
+    private long frameTimeTotal = 0;
+    /**
+     * This is the total number of frames that have been played since the 
+     * animation started playing.
+     */
     private int frameTotal = 0;
-    
+    /**
+     * This is a scratch dimension object used to store the dimensions of the 
+     * font chooser dialog.
+     */
+    private Dimension fontDim = null;
+    /**
+     * This is the icon used to display the sprial.
+     */
     private Icon spiralIcon;
-    
+    /**
+     * This is the painter used to paint the spiral.
+     */
     private SpiralPainter spiralPainter = new SpiralPainter();
-    
+    /**
+     * This is the painter used to paint the text used as the mask for the 
+     * message when text is being used for the mask.
+     */
     private CenteredTextPainter maskPainter = new CenteredTextPainter();
-    
+    /**
+     * This is the image used as a mask for the overlay when text is being used 
+     * as a mask. When this is null, then the mask will be generated the next 
+     * time it is used.
+     */
     private BufferedImage overlayMask = null;
-    
+    /**
+     * This is the image used to create the mask for the overlay when a loaded 
+     * image is used for the mask. This is the raw image, and is null when no 
+     * image has been loaded for the mask.
+     */
     private BufferedImage overlayImage = null;
-    
+    /**
+     * This is the image used as as a mask for the overlay when a loaded image 
+     * is used for the mask. This is null when the mask needs to be recreated 
+     * from {@code overlayImage}, either due to another image being loaded in or 
+     * the resulting image's size being changed.
+     */
     private BufferedImage overlayImageMask = null;
     /**
      * This is a timer used to animate the animation.
      */
     private javax.swing.Timer animationTimer;
-    
+    /**
+     * An array that contains the icons used to display the colors for the 
+     * spiral.
+     */
     private ColorBoxIcon[] colorIcons;
-    
-    private HashMap<ColorBoxIcon, JButton> colorButtons;
-    
-    private HashMap<JButton, Integer> colorIndexes;
-    
+    /**
+     * A map that maps the color box icons to the buttons they are displayed on 
+     * and used to set the colors with.
+     */
+    private Map<ColorBoxIcon, JButton> colorButtons;
+    /**
+     * A map that maps the buttons for set the colors to the index for their 
+     * respective color box icons.
+     */
+    private Map<JButton, Integer> colorIndexes;
+    /**
+     * A configuration object to store the configuration for the program.
+     */
     private SpiralGeneratorConfig config;
     /**
      * The text edit commands for the message mask field.
