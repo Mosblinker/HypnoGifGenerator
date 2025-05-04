@@ -316,11 +316,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskEditButton = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         widthSpinner = new javax.swing.JSpinner();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         jLabel10 = new javax.swing.JLabel();
-        filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         heightSpinner = new javax.swing.JSpinner();
         jPanel5 = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
@@ -1568,9 +1568,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private components.JColorSelector colorSelector;
     private javax.swing.JPopupMenu debugPopup;
     private javax.swing.JComboBox<String> dirCombo;
-    private javax.swing.Box.Filler filler1;
-    private javax.swing.Box.Filler filler2;
-    private javax.swing.Box.Filler filler3;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton frameFirstButton;
