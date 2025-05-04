@@ -907,6 +907,8 @@ public class SpiralGeneratorConfig {
         if (defaultValue == null){
             size = getMaskFontSize();
             style = getMaskFontStyle();
+            if (font == null)
+                return new Font(Font.SANS_SERIF,style,0).deriveFont(size);
         } else {
             size = getMaskFontSize(defaultValue.getSize2D());
             style = getMaskFontStyle(defaultValue.getStyle());
