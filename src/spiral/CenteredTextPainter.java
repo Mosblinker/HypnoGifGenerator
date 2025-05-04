@@ -62,9 +62,6 @@ public class CenteredTextPainter extends ListenedPainter<String>{
         g = configureGraphics((Graphics2D) g.create());
         g.clipRect(0, 0, width, height);
         
-//        g.drawLine(0, 0, width, height);
-//        g.drawLine(width, 0, 0, height);
-        
         FontMetrics metrics = g.getFontMetrics();
         ArrayList<String> lines = new ArrayList<>();
         ArrayList<Rectangle2D> lineBounds = new ArrayList<>();
@@ -78,7 +75,6 @@ public class CenteredTextPainter extends ListenedPainter<String>{
             lineBounds.add(bounds);
             textHeight += bounds.getHeight() + spacing;
             bounds.setFrameFromCenter(centerX, bounds.getCenterY(), (width-bounds.getWidth())/2.0, bounds.getY());
-//            GeometryMath.printShape(t, bounds);
         }
         textHeight -= spacing;
         
