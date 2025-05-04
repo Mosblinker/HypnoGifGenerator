@@ -1785,6 +1785,27 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
     
+    private void scaleMaintainLocation(Graphics2D g, double x, double y, 
+            double scaleX, double scaleY){
+            // Translate the graphics context to the given point
+        g.translate(x, y);
+            // Scale the graphics context
+        g.scale(scaleX, scaleY);
+            // Translate the graphics context back to where would be before 
+            // scaling it
+        g.translate(-x, -y);
+    }
+    
+    private Graphics2D configureGraphics(Graphics2D g){
+            // Prioritize rendering quality over speed
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
+                RenderingHints.VALUE_RENDER_QUALITY);
+            // Prioritize quality over speed for alpha interpolation
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        return g;
+    }
+    
     private void maskImage(BufferedImage img, BufferedImage mask){
         int width = img.getWidth();
         int height = img.getHeight();
@@ -1852,9 +1873,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             if (solidColor){
                 gTemp = (Graphics2D)g.create();
                 gTemp.setColor(color1);
-                gTemp.translate(centerX, centerY);
-                gTemp.scale(scale, scale);
-                gTemp.translate(-centerX, -centerY);
+                scaleMaintainLocation(gTemp,centerX,centerY,scale,scale);
             }
             else {
                 overlayMask = new BufferedImage(width, height, 
@@ -1888,22 +1907,30 @@ public class SpiralGenerator extends javax.swing.JFrame {
             BufferedImage overlay = new BufferedImage(width, height, 
                     BufferedImage.TYPE_INT_ARGB);
             Graphics2D imgG = overlay.createGraphics();
+                // Configure the image graphics
+            imgG = configureGraphics(imgG);
             if (solidColor){
                 imgG.setColor(color1);
                 imgG.fillRect(0, 0, width, height);
             } else {
                 paintSpiral(imgG,frameIndex,color1,color2,width,height);
             }
-            imgG.translate(centerX, centerY);
-            imgG.scale(scale, scale);
-            imgG.translate(-centerX, -centerY);
+            scaleMaintainLocation(imgG,centerX,centerY,scale,scale);
+                // Enable or disable the antialiasing, depending on whether the 
+                // mask should be antialiased
             imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    (((useImage)?imgMaskAntialiasingToggle:fontAntialiasingToggle).isSelected())? 
+                        // If the mask is an image, use whether the image 
+                        // antialiasing toggle is selected. Otherwise, use 
+                        // whether the mask painter has antialiasing enabled
+                    (((useImage)?imgMaskAntialiasingToggle.isSelected():
+                            maskPainter.isAntialiasingEnabled()))? 
                             RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
             maskImage(imgG,mask);
             imgG.dispose();
+            g = configureGraphics((Graphics2D) g.create());
             g.drawImage(overlay, 0, 0, null);
+            g.dispose();
         }
     }
     
