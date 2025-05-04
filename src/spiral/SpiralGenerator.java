@@ -281,7 +281,12 @@ public class SpiralGenerator extends javax.swing.JFrame {
         lineSpacingLabel = new javax.swing.JLabel();
         lineSpacingSpinner = new javax.swing.JSpinner();
         maskImageCtrlPanel = new javax.swing.JPanel();
+        javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         loadMaskButton = new javax.swing.JButton();
+        javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        imgMaskNoteLabel1 = new javax.swing.JLabel();
+        imgMaskNoteLabel2 = new javax.swing.JLabel();
+        imgMaskNoteLabel3 = new javax.swing.JLabel();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -469,6 +474,12 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskTabbedPane.addTab("Text", textMaskCtrlPanel);
 
         maskImageCtrlPanel.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.weighty = 0.5;
+        maskImageCtrlPanel.add(filler11, gridBagConstraints);
 
         loadMaskButton.setText("Load Mask");
         loadMaskButton.addActionListener(new java.awt.event.ActionListener() {
@@ -478,10 +489,34 @@ public class SpiralGenerator extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(104, 136, 115, 146);
+        gridBagConstraints.gridy = 1;
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.weighty = 0.5;
+        maskImageCtrlPanel.add(filler10, gridBagConstraints);
+
+        imgMaskNoteLabel1.setText("Note: Mask only considers the alpha component of the source image's pixels.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        maskImageCtrlPanel.add(imgMaskNoteLabel1, gridBagConstraints);
+
+        imgMaskNoteLabel2.setText("All opaque pixels, regardless of color will be opaque in the mask.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        maskImageCtrlPanel.add(imgMaskNoteLabel2, gridBagConstraints);
+
+        imgMaskNoteLabel3.setText("In other words, the alpha channel of the source is used as the mask.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        maskImageCtrlPanel.add(imgMaskNoteLabel3, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -515,7 +550,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(maskDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 244, Short.MAX_VALUE)
+                .addComponent(maskTabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maskScaleLabel)
@@ -1671,6 +1706,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageSizePanel;
+    private javax.swing.JLabel imgMaskNoteLabel1;
+    private javax.swing.JLabel imgMaskNoteLabel2;
+    private javax.swing.JLabel imgMaskNoteLabel3;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
