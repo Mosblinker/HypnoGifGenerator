@@ -21,9 +21,14 @@ public class CenteredTextPainter extends ListenedPainter<String>{
     
     public static final String ANTIALIASING_PROPERTY_CHANGED = 
             "AntialiasingPropertyChanged";
-    
+    /**
+     * This is the amount by which to separate the lines of text. This is just 
+     * the base value and is scaled to account for the font size.
+     */
     private double lineSpacing = 0.0;
-    
+    /**
+     * This is whether the text will be rendered with antialiasing.
+     */
     private boolean antialiasing = true;
     
     public double getLineSpacing(){
@@ -50,7 +55,37 @@ public class CenteredTextPainter extends ListenedPainter<String>{
         }
         return this;
     }
-
+    /**
+     * This calculates and returns the spacing to add between the lines of text, 
+     * given the size of the text. This allows for the line spacing to scale 
+     * with the text size instead of being a fixed distance for all sizes.
+     * @param size The point size of the font.
+     * @return The line spacing for the text.
+     * @see #getLineSpacing() 
+     * @see #setLineSpacing(double) 
+     * @see #getLineSpacing(java.awt.Font) 
+     * @see Font#getSize2D() 
+     */
+    protected double getLineSpacing(double size){
+        return lineSpacing * (size / 10.0);
+    }
+    /**
+     * This calculates and returns the spacing to add between the lines of text, 
+     * given the size of the font. This allows for the line spacing to scale 
+     * with the font size instead of being a fixed distance for all fonts.
+     * @param font The font to use.
+     * @return The line spacing for the text.
+     * @see #getLineSpacing() 
+     * @see #setLineSpacing(double) 
+     * @see #getLineSpacing(double) 
+     * @see Font#getSize2D() 
+     */
+    protected double getLineSpacing(Font font){
+            // If the font is null
+        if (font == null)
+            return lineSpacing;
+        return getLineSpacing(font.getSize2D());
+    }
     @Override
     public void paint(Graphics2D g, String text, int width, int height) {
             // Check if the graphics context is null
@@ -74,8 +109,8 @@ public class CenteredTextPainter extends ListenedPainter<String>{
         double textHeight = 0;
             // This is the x-coordinate for the center of the area
         double centerX = width/2.0;
-            // This is the spacing to use between each line of text
-        double spacing = lineSpacing * (g.getFont().getSize2D()/10.0);
+            // This is the spacing to use between each line of text.
+        double spacing = getLineSpacing(g.getFont());
             // Go through each line of text in the given String
         for (Object temp : text.lines().toArray()){
                 // Get the current line of text
