@@ -1070,27 +1070,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void loadMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMaskButtonActionPerformed
         File file = showOpenFileChooser(maskFC);
         if (file != null){
-            overlayMask.imgMask = null;
-            try{
-                overlayImage = ImageIO.read(file);
-                if (overlayImage.getWidth() != overlayImage.getHeight()){
-                    BufferedImage img = overlayImage;
-                    int size = Math.max(img.getWidth(), img.getHeight());
-                    overlayImage = new BufferedImage(size, size, 
-                            BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g = overlayImage.createGraphics();
-                    g.drawImage(img, 
-                            Math.max(0, Math.floorDiv(size-img.getWidth(), 2)), 
-                            Math.max(0, Math.floorDiv(size-img.getHeight(), 2)), 
-                            null);
-                    g.dispose();
-                }
-            } catch (IOException ex){
-                System.out.println("Error: "+ ex);
-                overlayImage = null;
-            }
-            maskPreviewLabel.repaint();
-            refreshPreview(false);
+            fileWorker = new ImageLoader(file);
+            fileWorker.execute();
         }
     }//GEN-LAST:event_loadMaskButtonActionPerformed
 
@@ -2850,6 +2831,63 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public String getProgressString(){
             return "Saving Animation";
+        }
+    }
+    /**
+     * 
+     */
+    private class ImageLoader extends FileLoader{
+        /**
+         * 
+         */
+        private BufferedImage img = null;
+        /**
+         * 
+         * @param file 
+         */
+        ImageLoader(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean loadFile(File file) throws IOException {
+            img = ImageIO.read(file);
+            if (img != null && img.getWidth() != img.getHeight()){
+                BufferedImage temp = img;
+                int size = Math.max(img.getWidth(), img.getHeight());
+                img = new BufferedImage(size, size,BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g = img.createGraphics();
+                g.drawImage(temp, 
+                        Math.max(0, Math.floorDiv(size-temp.getWidth(), 2)), 
+                        Math.max(0, Math.floorDiv(size-temp.getHeight(), 2)), 
+                        null);
+                g.dispose();
+            }
+            return img != null;
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Image Failed To Load";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "The image failed to load."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Loading Image Mask";
+        }
+        @Override
+        protected void done(){
+            if (success){
+                overlayMask.imgMask = null;
+                overlayImage = img;
+            }
+            maskPreviewLabel.repaint();
+            refreshPreview(false);
+            super.done();
         }
     }
 }
