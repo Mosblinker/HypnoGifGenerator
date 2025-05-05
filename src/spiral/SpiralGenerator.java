@@ -1865,6 +1865,30 @@ public class SpiralGenerator extends javax.swing.JFrame {
         painter.paint(g, text, width, height);
     }
     
+    private BufferedImage getTextMaskImage(int width, int height, String text, 
+            BufferedImage mask, CenteredTextPainter painter){
+            // If the text is null or blank
+        if (text == null || text.isBlank())
+            return mask;
+            // If the overlay mask is not null and is the same width and height 
+            // as the given width and height
+        if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
+            return mask;
+        
+            // Overlay mask needs to be refreshed
+            
+            // Create a new image for the overlay mask
+        mask = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create the graphics context for the image
+        Graphics2D g = mask.createGraphics();
+            // Paint the mask's text
+        paintTextMask(g,width,height,text,painter);
+            // Dispose of the graphics context
+        g.dispose();
+        return mask;
+    }
+    
     private boolean getOverlayAntialiased(){
             // If the mask is an image, use whether the image  antialiasing 
             // toggle is selected.
@@ -1983,24 +2007,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 // If the text is null or blank
             if (text == null || text.isBlank())
                 return;
-                // If the overlay is a solid color or the overlay mask is null 
-                // (needs to be refreshed) or the overlay mask's size does not 
-                // match the size of the area being rendered
-            if (overlayMask == null || 
-                    overlayMask.getWidth() != width || 
-                    overlayMask.getHeight() != height){
-                    // Create a new image for the overlay mask
-                overlayMask = new BufferedImage(width, height, 
-                        BufferedImage.TYPE_INT_ARGB);
-                    // Create the graphics context for the image
-                Graphics2D gTemp = overlayMask.createGraphics();
-                    // Paint the mask's text
-                paintTextMask(gTemp,width,height,text,painter);
-                    // Dispose of the graphics context
-                gTemp.dispose();
-            }
-                // Use the overlay text mask as the mask
-            mask = overlayMask;
+                // Use the text mask, creating it if it needs to be made
+            overlayMask = getTextMaskImage(width,height,text,overlayMask,painter);
         }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
