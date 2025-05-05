@@ -1965,7 +1965,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height,SpiralPainter spiralPainter, 
-            CenteredTextPainter painter){
+            OverlayMask mask){
             // If the width or height are less than or equal to zero (nothing 
             // would be drawn)
         if (width <= 0 || height <= 0)
@@ -1982,7 +1982,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
             return;
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
-                height,overlayMask.getMask(width, height),spiralPainter,painter);
+                height,mask.getMask(width, height),spiralPainter,
+                mask.textPainter);
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
@@ -2019,8 +2020,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
             int height, Color color1, SpiralPainter spiralPainter){
-        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,spiralPainter);
-        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,spiralPainter,overlayMask.textPainter);
+        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,
+                spiralPainter);
+        paintOverlay(g,frameIndex,
+                colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,
+                spiralPainter,overlayMask);
     }
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
@@ -2057,7 +2061,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
             paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
-                    spiralPainter,overlayMask.textPainter);
+                    spiralPainter,overlayMask);
         }
         @Override
         public int getIconWidth() {
