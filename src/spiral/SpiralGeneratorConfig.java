@@ -54,7 +54,7 @@ public class SpiralGeneratorConfig {
     
     public static final String SPIRAL_BASE_KEY = "Base";
     
-    public static final String SPIRAL_BALANCE_KEY = "Balance";
+    public static final String SPIRAL_THICKNESS_KEY = "Thickness";
     
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
@@ -617,22 +617,22 @@ public class SpiralGeneratorConfig {
      * @param defaultValue
      * @return 
      */
-    public double getSpiralBalance(double defaultValue){
-        return getSpiralPreferences().getDouble(SPIRAL_BALANCE_KEY,defaultValue);
+    public double getSpiralThickness(double defaultValue){
+        return getSpiralPreferences().getDouble(SPIRAL_THICKNESS_KEY,defaultValue);
     }
     /**
      * 
      * @return 
      */
-    public double getSpiralBalance(){
-        return getSpiralBalance(0.0);
+    public double getSpiralThickness(){
+        return getSpiralThickness(0.5);
     }
     /**
      * 
      * @param value 
      */
-    public void setSpiralBalance(double value){
-        getSpiralPreferences().putDouble(SPIRAL_BALANCE_KEY, value);
+    public void setSpiralThickness(double value){
+        getSpiralPreferences().putDouble(SPIRAL_THICKNESS_KEY, value);
     }
     /**
      * 
