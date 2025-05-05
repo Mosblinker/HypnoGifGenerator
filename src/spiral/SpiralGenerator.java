@@ -2146,4 +2146,37 @@ public class SpiralGenerator extends javax.swing.JFrame {
             refreshMaskText();
         }
     }
+    
+    private class OverlayMask{
+        /**
+         * This is the image used as a mask for the overlay when text is being 
+         * used as a mask. When this is null, then the mask will be generated 
+         * the next time it is used.
+         */
+        public BufferedImage textMask = null;
+        /**
+         * This is the image used as as a mask for the overlay when a loaded 
+         * image is used for the mask. This is null when the mask needs to be 
+         * recreated from {@code overlayImage}, either due to another image 
+         * being loaded in or the resulting image's size being changed.
+         */
+        public BufferedImage imgMask = null;
+        /**
+         * This is the painter used to paint the text used as the mask for the 
+         * message when text is being used for the mask.
+         */
+        public CenteredTextPainter textPainter;
+        
+        protected OverlayMask(){
+            textPainter = new CenteredTextPainter();
+        }
+        
+        protected OverlayMask(CenteredTextPainter painter){
+            textPainter = new CenteredTextPainter(painter);
+        }
+        
+        protected OverlayMask(OverlayMask mask){
+            this(mask.textPainter);
+        }
+    }
 }
