@@ -2002,13 +2002,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }   // Use the mask version of the overlay image as the mask
             mask = overlayImageMask;
         } else if (!solidColor){
-                // Get the text for the mask 
-            String text = maskTextArea.getText();
-                // If the text is null or blank
-            if (text == null || text.isBlank())
-                return;
                 // Use the text mask, creating it if it needs to be made
-            overlayMask = getTextMaskImage(width,height,text,overlayMask,painter);
+            mask = overlayMask = getTextMaskImage(width,height,maskTextArea.getText(),overlayMask,painter);
         }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
