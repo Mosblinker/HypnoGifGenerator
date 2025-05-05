@@ -1497,6 +1497,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         heightSpinner.setEnabled(enabled);
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
+        resetButton.setEnabled(enabled);
     }
     /**
      * 
