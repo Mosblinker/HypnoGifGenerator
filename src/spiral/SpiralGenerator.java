@@ -37,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -1060,33 +1061,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         File file = showSaveFileChooser(saveFC);
-        if (file == null)
-            return;
-        try(FileOutputStream fileOut = new FileOutputStream(file);
-                BufferedOutputStream buffOut = new BufferedOutputStream(fileOut)){
-            AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-                // Get the image width
-            int width = getImageWidth();
-                // Get the image height
-            int height = getImageHeight();
-            encoder.start(buffOut);
-            encoder.setRepeat(0);
-            encoder.setDelay(SPIRAL_FRAME_DURATION);
-            encoder.setSize(width, height);
-            Color bg = colorIcons[0].getColor();
-            boolean transparency = bg.getAlpha() < 255;
-            bg = new Color(bg.getRGB());
-            encoder.setBackground(bg);
-            if (transparency)
-                encoder.setTransparent(bg);
-            SpiralPainter painter = new LogarithmicSpiralPainter(spiralPainter);
-            OverlayMask mask = new OverlayMask(overlayMask);
-            for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
-                encoder.addFrame(createSpiralFrame(i,width,height,painter,mask));
-            }
-            encoder.finish();
-        } catch (IOException ex){
-            System.out.println("Error: "+ ex);
+        if (file != null){
+            fileWorker = new AnimationSaver(file);
+            fileWorker.execute();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -1772,6 +1749,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * amount.
      */
     private String progressString = null;
+    /**
+     * This is the file worker currently being used.
+     */
+    private FileWorker fileWorker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
@@ -2756,6 +2737,119 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 exitProgram();      // Exit the program
             saving = false;
             super.done();
+        }
+    }
+    /**
+     * 
+     */
+    private class AnimationSaver extends FileSaver{
+        /**
+         * 
+         */
+        private List<BufferedImage> frames = null;
+        /**
+         * 
+         */
+        private SpiralPainter painter = null;
+        /**
+         * 
+         */
+        private OverlayMask mask = null;
+        /**
+         * 
+         * @param file 
+         */
+        AnimationSaver(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean saveFile(File file) throws IOException {
+            progressBar.setIndeterminate(true);
+                // Create the necessary file output streams for writing to the 
+                // file, and a buffered output stream to write to the file stream
+            try(FileOutputStream fileOut = new FileOutputStream(file);
+                    BufferedOutputStream buffOut = new BufferedOutputStream(fileOut)){
+                    // If the frame list is null
+                if (frames == null)
+                    frames = new ArrayList<>();
+                    // If the spiral painter copy is null
+                if (painter == null)
+                    painter = new LogarithmicSpiralPainter(spiralPainter);
+                    // If the overlay mask copy is null
+                if (mask == null)
+                    mask = new OverlayMask(overlayMask);
+                progressBar.setValue(0);
+                progressBar.setIndeterminate(false);
+                    // Create an encoder to encode the gif
+                AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+                    // Get the image width
+                int width = getImageWidth();
+                    // Get the image height
+                int height = getImageHeight();
+                    // Start encoding to the buffered output stream
+                encoder.start(buffOut);
+                    // Repeat infinitely
+                encoder.setRepeat(0);
+                    // Use the spiral frame duration for the frames
+                encoder.setDelay(SPIRAL_FRAME_DURATION);
+                    // Set the size for the image
+                encoder.setSize(width, height);
+                    // Get the background color for the spiral
+                Color bg = colorIcons[0].getColor();
+                    // Get if the background has transparency
+                boolean transparency = bg.getAlpha() < 255;
+                    // Get the background without an alpha
+                bg = new Color(bg.getRGB());
+                    // Set the background for the gif
+                encoder.setBackground(bg);
+                    // If the background is transparent
+                if (transparency)
+                    encoder.setTransparent(bg);
+                    // A for loop to go through and add all the frames to the 
+                    // gif
+                for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
+                        // This gets the current frame
+                    BufferedImage frame;
+                        // If the frame is in the frames list
+                    if (i < frames.size())
+                        frame = frames.get(i);
+                    else {
+                            // Create the frame
+                        frame = createSpiralFrame(i,width,height,painter,mask);
+                        frames.add(frame);
+                        progressBar.setValue(progressBar.getValue()+1);
+                    }   // Add the frame to the gif
+                    encoder.addFrame(frame);
+                }
+                progressBar.setIndeterminate(true);
+                    // Finish encoding the gif
+                encoder.finish();
+            }
+            return true;
+        }
+        @Override
+        protected String getSuccessTitle(File file){
+            return "Animation Saved Successfully";
+        }
+        @Override
+        protected String getSuccessMessage(File file){
+            return "The animation was successfully saved.";
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Animation Failed To Save";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "There was an error saving the animation to file\n"+
+                    "\""+file+"\"."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving Animation";
         }
     }
 }
