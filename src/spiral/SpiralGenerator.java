@@ -1997,11 +1997,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
             return;
             // This is the image that will get the mask to use
         BufferedImage mask = null;
-            // This gets whether the mask is using the overlay image mask 
-            // instead of the text mask
-        boolean useImage = isOverlayMaskImage();
             // If a loaded image is being used as the overlay mask
-        if (useImage){
+        if (isOverlayMaskImage()){
                 // Use the mask version of the overlay image as the mask
             mask = overlayImageMask = getImageMaskImage(width,height,overlayImage,overlayImageMask);
         } else if (!solidColor){
@@ -2059,12 +2056,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
         paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor());
     }
     
-    private void paintMaskPreview(Graphics2D g, int width, int height){
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
-        paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,spiralPainter,maskPainter);
-    }
-    
     private class SpiralIcon implements Icon2D{
 
         @Override
@@ -2086,7 +2077,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-            paintMaskPreview(g, getIconWidth(), getIconHeight());
+            g.setColor(Color.BLACK);
+                // Get the width of the icon
+            int width = getIconWidth();
+                // Get the height of the icon
+            int height = getIconHeight();
+            g.fillRect(0, 0, width, height);
+            paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
+                    spiralPainter,maskPainter);
         }
         @Override
         public int getIconWidth() {
