@@ -46,7 +46,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import net.coobird.thumbnailator.Thumbnailator;
-import spiral.painter.SpiralPainter;
+import spiral.painter.*;
 
 /**
  *
@@ -126,9 +126,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, DEFAULT_SPIRAL_COLORS[i]));
         }
         
-        spiralPainter.setRadius(config.getSpiralRadius(spiralPainter.getRadius()));
+        spiralPainter = new LogarithmicSpiralPainter();
+        
+        spiralPainter.setSpiralRadius(config.getSpiralRadius(spiralPainter.getSpiralRadius()));
         spiralPainter.setBase(config.getSpiralBase(spiralPainter.getBase()));
-        spiralPainter.setBalance(config.getSpiralBalance(spiralPainter.getBalance()));
+        spiralPainter.setThickness(config.getSpiralThickness(spiralPainter.getThickness()));
         spiralPainter.setClockwise(config.isSpiralClockwise(spiralPainter.isClockwise()));
         
         maskPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(maskPainter.isAntialiasingEnabled()));
@@ -152,7 +154,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             if (iconImg != null){
                 iconImages.add(Thumbnailator.createThumbnail(iconImg, size, size));
             } else {
-                iconPainter.setRadius(size/3.0);
+                iconPainter.setSpiralRadius(size/3.0);
                 BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = img.createGraphics();
                 int offset = (int)Math.floorDiv(size, 128);
@@ -215,7 +217,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
 //        config.loadComponentSize(fontSelector);
         
         config.getProgramBounds(SpiralGenerator.this);
-        radiusSpinner.setValue(spiralPainter.getRadius());
+        radiusSpinner.setValue(spiralPainter.getSpiralRadius());
         baseSpinner.setValue(spiralPainter.getBase());
         balanceSpinner.setValue(spiralPainter.getBalance());
         dirCombo.setSelectedIndex((spiralPainter.isClockwise())?0:1);
@@ -1159,8 +1161,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
     private void radiusSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiusSpinnerStateChanged
         double value = (double) radiusSpinner.getValue();
-        if (value != spiralPainter.getRadius())
-            spiralPainter.setRadius(value);
+        if (value != spiralPainter.getSpiralRadius())
+            spiralPainter.setSpiralRadius(value);
     }//GEN-LAST:event_radiusSpinnerStateChanged
 
     private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
@@ -1656,7 +1658,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     /**
      * This is the painter used to paint the spiral.
      */
-    private LogarithmicSpiralPainter spiralPainter = new LogarithmicSpiralPainter();
+    private LogarithmicSpiralPainter spiralPainter;
     /**
      * This is the painter used to paint the text used as the mask for the 
      * message when text is being used for the mask.
@@ -2076,16 +2078,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         public void propertyChange(PropertyChangeEvent evt) {
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
-                case(LogarithmicSpiralPainter.RADIUS_PROPERTY_CHANGED):
-                    config.setSpiralRadius(spiralPainter.getRadius());
+                case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
+                    config.setSpiralRadius(spiralPainter.getSpiralRadius());
                     break;
                 case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
                     config.setSpiralBase(spiralPainter.getBase());
                     break;
-                case(LogarithmicSpiralPainter.BALANCE_PROPERTY_CHANGED):
-                    config.setSpiralBalance(spiralPainter.getBalance());
+                case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
+                    config.setSpiralThickness(spiralPainter.getThickness());
                     break;
-                case(LogarithmicSpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
+                case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                     config.setSpiralClockwise(spiralPainter.isClockwise());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
