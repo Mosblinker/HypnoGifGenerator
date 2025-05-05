@@ -133,8 +133,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
         spiralPainter.setThickness(config.getSpiralThickness(spiralPainter.getThickness()));
         spiralPainter.setClockwise(config.isSpiralClockwise(spiralPainter.isClockwise()));
         
-        maskPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(maskPainter.isAntialiasingEnabled()));
-        maskPainter.setLineSpacing(config.getMaskLineSpacing(maskPainter.getLineSpacing()));
+        overlayMask.textPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled()));
+        overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(overlayMask.textPainter.getLineSpacing()));
         
         colorButtons = new HashMap<>();
         colorIndexes = new HashMap<>();
@@ -223,9 +223,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         dirCombo.setSelectedIndex((spiralPainter.isClockwise())?0:1);
         angleSpinner.setValue(config.getSpiralAngle());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
-        fontAntialiasingToggle.setSelected(maskPainter.isAntialiasingEnabled());
+        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
-        lineSpacingSpinner.setValue(maskPainter.getLineSpacing());
+        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
         
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
@@ -243,7 +243,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskTextArea.setText(config.getMaskText());
         
         spiralPainter.addPropertyChangeListener(handler);
-        maskPainter.addPropertyChangeListener(handler);
+        overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
     }
     
@@ -1058,7 +1058,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void loadMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMaskButtonActionPerformed
         File file = showOpenFileChooser(maskFC);
         if (file != null){
-            overlayImageMask = null;
+            overlayMask.imgMask = null;
             try{
                 overlayImage = ImageIO.read(file);
                 if (overlayImage.getWidth() != overlayImage.getHeight()){
@@ -1229,11 +1229,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }//GEN-LAST:event_styleToggleActionPerformed
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
-        maskPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
+        overlayMask.textPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
     }//GEN-LAST:event_fontAntialiasingToggleActionPerformed
 
     private void lineSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lineSpacingSpinnerStateChanged
-        maskPainter.setLineSpacing((double)lineSpacingSpinner.getValue());
+        overlayMask.textPainter.setLineSpacing((double)lineSpacingSpinner.getValue());
     }//GEN-LAST:event_lineSpacingSpinnerStateChanged
 
     private void maskEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskEditButtonActionPerformed
@@ -1263,9 +1263,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        overlayMask = null;
         overlayImage = null;
-        overlayImageMask = null;
+        overlayMask.reset();
         maskTextArea.setText("");
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
@@ -1386,7 +1385,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void refreshPreview(boolean maskChanged){
         if (maskChanged){
-            overlayMask = null;
+            overlayMask.textMask = null;
             if (!isOverlayMaskImage())
                 maskPreviewLabel.repaint();
         }
@@ -1664,29 +1663,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
      */
     private LogarithmicSpiralPainter spiralPainter;
     /**
-     * This is the painter used to paint the text used as the mask for the 
-     * message when text is being used for the mask.
-     */
-    private CenteredTextPainter maskPainter = new CenteredTextPainter();
-    /**
-     * This is the image used as a mask for the overlay when text is being used 
-     * as a mask. When this is null, then the mask will be generated the next 
-     * time it is used.
-     */
-    private BufferedImage overlayMask = null;
-    /**
      * This is the image used to create the mask for the overlay when a loaded 
      * image is used for the mask. This is the raw image, and is null when no 
      * image has been loaded for the mask.
      */
     private BufferedImage overlayImage = null;
     /**
-     * This is the image used as as a mask for the overlay when a loaded image 
-     * is used for the mask. This is null when the mask needs to be recreated 
-     * from {@code overlayImage}, either due to another image being loaded in or 
-     * the resulting image's size being changed.
+     * This contains the masks and painter used for the overlay.
      */
-    private BufferedImage overlayImageMask = null;
+    private OverlayMask overlayMask = new OverlayMask();
     /**
      * This is a timer used to animate the animation.
      */
@@ -1912,7 +1897,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // toggle is selected.
         if (isOverlayMaskImage())
             return imgMaskAntialiasingToggle.isSelected();
-        return maskPainter.isAntialiasingEnabled();
+        return overlayMask.textPainter.isAntialiasingEnabled();
     }
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
@@ -2000,10 +1985,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // If a loaded image is being used as the overlay mask
         if (isOverlayMaskImage()){
                 // Use the mask version of the overlay image as the mask
-            mask = overlayImageMask = getImageMaskImage(width,height,overlayImage,overlayImageMask);
+            mask = overlayMask.imgMask = getImageMaskImage(width,height,overlayImage,overlayMask.imgMask);
         } else if (!solidColor){
                 // Use the text mask, creating it if it needs to be made
-            mask = overlayMask = getTextMaskImage(width,height,maskTextArea.getText(),overlayMask,painter);
+            mask = overlayMask.textMask = getTextMaskImage(width,height,maskTextArea.getText(),overlayMask.textMask,painter);
         }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
@@ -2048,8 +2033,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height, Color color1){
-        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height);
-        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,spiralPainter,maskPainter);
+        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,spiralPainter);
+        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,spiralPainter,overlayMask.textPainter);
     }
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height){
@@ -2084,7 +2069,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
             paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
-                    spiralPainter,maskPainter);
+                    spiralPainter,overlayMask.textPainter);
         }
         @Override
         public int getIconWidth() {
@@ -2115,11 +2100,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
                     config.setSpiralClockwise(spiralPainter.isClockwise());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
-                    config.setMaskTextAntialiased(maskPainter.isAntialiasingEnabled());
+                    config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
                     maskChanged = true;
                     break;
                 case(CenteredTextPainter.LINE_SPACING_PROPERTY_CHANGED):
-                    config.setMaskLineSpacing(maskPainter.getLineSpacing());
+                    config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
                     maskChanged = true;
                     break;
             }
