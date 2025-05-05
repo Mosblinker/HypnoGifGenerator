@@ -35,6 +35,19 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      */
     private Rectangle2D rect = null;
     /**
+     * Implicit constructor.
+     */
+    protected GEGLSpiralPainter(){}
+    /**
+     * Copy constructor for the class.
+     * @param painter The GEGLSpiralPainter to copy.
+     */
+    protected GEGLSpiralPainter(GEGLSpiralPainter painter){
+        super(painter);
+        this.radius = painter.radius;
+        this.thickness = painter.thickness;
+    }
+    /**
      * 
      * @param radius 
      */
