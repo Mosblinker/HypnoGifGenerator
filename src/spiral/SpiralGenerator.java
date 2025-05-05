@@ -1857,6 +1857,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
         return hasNoColor(color1) && hasNoColor(color2);
     }
     
+    private void paintTextMask(Graphics2D g, int width, int height, String text, 
+            CenteredTextPainter painter){
+            // Set the graphics context font to the mask font
+        g.setFont(maskTextArea.getFont());
+            // Paint the mask's text to the graphics context
+        painter.paint(g, text, width, height);
+    }
+    
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
             boolean antialiasing){
