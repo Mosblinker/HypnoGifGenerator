@@ -59,6 +59,19 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     private Point2D point4 = null;
     /**
      * 
+     */
+    public LogarithmicSpiralPainter(){
+    }
+    /**
+     * 
+     * @param painter The LogarithmicSpiralPainter to copy.
+     */
+    public LogarithmicSpiralPainter(LogarithmicSpiralPainter painter){
+        super(painter);
+        this.base = painter.base;
+    }
+    /**
+     * 
      * @param base 
      */
     public void setBase(double base){

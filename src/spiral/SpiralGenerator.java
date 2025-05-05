@@ -10,6 +10,7 @@ import components.JColorSelector;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
+import files.FilesExtended;
 import files.extensions.ImageExtensions;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
@@ -18,6 +19,7 @@ import io.github.dheid.fontchooser.FontDialog;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -30,10 +32,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -133,8 +137,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
         spiralPainter.setThickness(config.getSpiralThickness(spiralPainter.getThickness()));
         spiralPainter.setClockwise(config.isSpiralClockwise(spiralPainter.isClockwise()));
         
-        maskPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(maskPainter.isAntialiasingEnabled()));
-        maskPainter.setLineSpacing(config.getMaskLineSpacing(maskPainter.getLineSpacing()));
+        overlayMask.textPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled()));
+        overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(overlayMask.textPainter.getLineSpacing()));
         
         colorButtons = new HashMap<>();
         colorIndexes = new HashMap<>();
@@ -200,6 +204,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
         
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
+        progressBar.setMaximum(SPIRAL_FRAME_DURATION);
         updateFrameNumberDisplayed();
         animationTimer = new javax.swing.Timer(SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
             progressAnimation(e);
@@ -223,9 +228,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         dirCombo.setSelectedIndex((spiralPainter.isClockwise())?0:1);
         angleSpinner.setValue(config.getSpiralAngle());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
-        fontAntialiasingToggle.setSelected(maskPainter.isAntialiasingEnabled());
+        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
-        lineSpacingSpinner.setValue(maskPainter.getLineSpacing());
+        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
         
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
@@ -243,15 +248,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskTextArea.setText(config.getMaskText());
         
         spiralPainter.addPropertyChangeListener(handler);
-        maskPainter.addPropertyChangeListener(handler);
+        overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
     }
     
-    private BufferedImage createSpiralFrame(int frameIndex, int width, int height){
+    private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
+            SpiralPainter spiralPainter,OverlayMask mask){
         BufferedImage img = new BufferedImage(width, height, 
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
-        paintSpiralDesign(g,frameIndex,width,height);
+        paintSpiralDesign(g,frameIndex,width,height,spiralPainter,mask);
         g.dispose();
         return img;
     }
@@ -268,6 +274,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         debugPopup = new javax.swing.JPopupMenu();
         printTestButton = new javax.swing.JMenuItem();
         printFPSToggle = new javax.swing.JCheckBoxMenuItem();
+        inputEnableToggle = new javax.swing.JCheckBoxMenuItem();
         colorSelector = new components.JColorSelector();
         maskFCPreview = new components.JFileDisplayPanel();
         saveFCPreview = new components.JFileDisplayPanel();
@@ -351,6 +358,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         saveButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         alwaysScaleToggle = new javax.swing.JCheckBox();
+        progressBar = new javax.swing.JProgressBar();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -367,6 +375,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
         debugPopup.add(printFPSToggle);
+
+        inputEnableToggle.setSelected(true);
+        inputEnableToggle.setText("Input Enabled");
+        inputEnableToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputEnableToggleActionPerformed(evt);
+            }
+        });
+        debugPopup.add(inputEnableToggle);
 
         colorSelector.setClearButtonShown(true);
 
@@ -986,6 +1003,17 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
 
+        progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                progressBarStateChanged(evt);
+            }
+        });
+        progressBar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                progressBarPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -996,13 +1024,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
                     .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(imageSizePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(alwaysScaleToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1022,7 +1051,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -1031,54 +1061,17 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         File file = showSaveFileChooser(saveFC);
-        if (file == null)
-            return;
-        try(FileOutputStream fileOut = new FileOutputStream(file);
-                BufferedOutputStream buffOut = new BufferedOutputStream(fileOut)){
-            AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-            encoder.start(buffOut);
-            encoder.setRepeat(0);
-            encoder.setDelay(SPIRAL_FRAME_DURATION);
-            encoder.setSize(getImageWidth(), getImageHeight());
-            Color bg = colorIcons[0].getColor();
-            boolean transparency = bg.getAlpha() < 255;
-            bg = new Color(bg.getRGB());
-            encoder.setBackground(bg);
-            if (transparency)
-                encoder.setTransparent(bg);
-            for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
-                encoder.addFrame(createSpiralFrame(i,getImageWidth(), getImageHeight()));
-            }
-            encoder.finish();
-        } catch (IOException ex){
-            System.out.println("Error: "+ ex);
+        if (file != null){
+            fileWorker = new AnimationSaver(file);
+            fileWorker.execute();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void loadMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMaskButtonActionPerformed
         File file = showOpenFileChooser(maskFC);
         if (file != null){
-            overlayImageMask = null;
-            try{
-                overlayImage = ImageIO.read(file);
-                if (overlayImage.getWidth() != overlayImage.getHeight()){
-                    BufferedImage img = overlayImage;
-                    int size = Math.max(img.getWidth(), img.getHeight());
-                    overlayImage = new BufferedImage(size, size, 
-                            BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D g = overlayImage.createGraphics();
-                    g.drawImage(img, 
-                            Math.max(0, Math.floorDiv(size-img.getWidth(), 2)), 
-                            Math.max(0, Math.floorDiv(size-img.getHeight(), 2)), 
-                            null);
-                    g.dispose();
-                }
-            } catch (IOException ex){
-                System.out.println("Error: "+ ex);
-                overlayImage = null;
-            }
-            maskPreviewLabel.repaint();
-            refreshPreview(false);
+            fileWorker = new ImageLoader(file);
+            fileWorker.execute();
         }
     }//GEN-LAST:event_loadMaskButtonActionPerformed
 
@@ -1229,11 +1222,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }//GEN-LAST:event_styleToggleActionPerformed
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
-        maskPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
+        overlayMask.textPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
     }//GEN-LAST:event_fontAntialiasingToggleActionPerformed
 
     private void lineSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lineSpacingSpinnerStateChanged
-        maskPainter.setLineSpacing((double)lineSpacingSpinner.getValue());
+        overlayMask.textPainter.setLineSpacing((double)lineSpacingSpinner.getValue());
     }//GEN-LAST:event_lineSpacingSpinnerStateChanged
 
     private void maskEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskEditButtonActionPerformed
@@ -1263,9 +1256,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        overlayMask = null;
         overlayImage = null;
-        overlayImageMask = null;
+        overlayMask.reset();
         maskTextArea.setText("");
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
@@ -1290,6 +1282,34 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskPreviewLabel.repaint();
         refreshPreview(false);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
+    /**
+     * 
+     * @param evt 
+     */
+    private void progressBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarStateChanged
+        updateProgressString();
+    }//GEN-LAST:event_progressBarStateChanged
+    /**
+     * 
+     * @param evt 
+     */
+    private void progressBarPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_progressBarPropertyChange
+            // If the property name is not null
+        if (evt.getPropertyName() != null){
+                // Determine what to do with the property name
+            switch(evt.getPropertyName()){
+                    // If the progress bar's indeterminate state or the string 
+                    // painted get changed
+                case("indeterminate"):
+                case("stringPainted"):
+                    updateProgressString();
+            }
+        }
+    }//GEN-LAST:event_progressBarPropertyChange
+
+    private void inputEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputEnableToggleActionPerformed
+        setInputEnabled(inputEnableToggle.isSelected());
+    }//GEN-LAST:event_inputEnableToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1386,7 +1406,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void refreshPreview(boolean maskChanged){
         if (maskChanged){
-            overlayMask = null;
+            overlayMask.textMask = null;
             if (!isOverlayMaskImage())
                 maskPreviewLabel.repaint();
         }
@@ -1437,6 +1457,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         heightSpinner.setEnabled(enabled);
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
+        resetButton.setEnabled(enabled);
     }
     /**
      * 
@@ -1664,29 +1685,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
      */
     private LogarithmicSpiralPainter spiralPainter;
     /**
-     * This is the painter used to paint the text used as the mask for the 
-     * message when text is being used for the mask.
-     */
-    private CenteredTextPainter maskPainter = new CenteredTextPainter();
-    /**
-     * This is the image used as a mask for the overlay when text is being used 
-     * as a mask. When this is null, then the mask will be generated the next 
-     * time it is used.
-     */
-    private BufferedImage overlayMask = null;
-    /**
      * This is the image used to create the mask for the overlay when a loaded 
      * image is used for the mask. This is the raw image, and is null when no 
      * image has been loaded for the mask.
      */
     private BufferedImage overlayImage = null;
     /**
-     * This is the image used as as a mask for the overlay when a loaded image 
-     * is used for the mask. This is null when the mask needs to be recreated 
-     * from {@code overlayImage}, either due to another image being loaded in or 
-     * the resulting image's size being changed.
+     * This contains the masks and painter used for the overlay.
      */
-    private BufferedImage overlayImageMask = null;
+    private OverlayMask overlayMask = new OverlayMask();
     /**
      * This is a timer used to animate the animation.
      */
@@ -1718,6 +1725,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * The undo commands for the message mask field.
      */
     private UndoManagerCommands undoCommands;
+    /**
+     * This is the String to display on the progress bar before the progress 
+     * amount.
+     */
+    private String progressString = null;
+    /**
+     * This is the file worker currently being used.
+     */
+    private FileWorker fileWorker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
@@ -1755,6 +1771,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel imgMaskNoteLabel1;
     private javax.swing.JLabel imgMaskNoteLabel2;
     private javax.swing.JLabel imgMaskNoteLabel3;
+    private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
@@ -1777,6 +1794,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JPanel previewSpiralPanel;
     private javax.swing.JCheckBoxMenuItem printFPSToggle;
     private javax.swing.JMenuItem printTestButton;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel radiusLabel;
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
@@ -1791,6 +1809,54 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
+    /**
+     * 
+     */
+    private void updateProgressString(){
+            // If the progress bar's string is painted
+        if (progressBar.isStringPainted()){
+                // If the progress string is not null, then use it. Otherwise, 
+                // use an empty string
+            String str = (progressString != null) ? progressString : "";
+                // Get the percentage as a string
+            String percent = String.format("%.1f%%", progressBar.getPercentComplete()*100.0);
+                // If the string is not empty
+            if (!str.isEmpty()){
+                    // If the progress bar is indeterminate
+                if (progressBar.isIndeterminate())
+                    progressBar.setString(str + "...");
+                else
+                    progressBar.setString(str+": "+percent);
+                // If the progress bar is not indeterminate
+            } else if (!progressBar.isIndeterminate())
+                progressBar.setString(percent);
+        }
+    }
+    /**
+     * 
+     * @param text 
+     */
+    private void setProgressString(String text){
+        progressString = text;
+        progressBar.setStringPainted(text != null);
+    }
+    /**
+     * 
+     * @param isWaiting 
+     */
+    private void useWaitCursor(boolean isWaiting) {
+        setCursor((isWaiting)?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):null);
+    }
+    /**
+     * 
+     * @param enabled 
+     */
+    private void setInputEnabled(boolean enabled){
+        inputEnableToggle.setSelected(enabled);
+        framePlayButton.setEnabled(enabled);
+        updateFrameControls();
+        updateControlsEnabled();
+    }
     
     private void scaleMaintainLocation(Graphics2D g, double x, double y, 
             double scaleX, double scaleY){
@@ -1857,97 +1923,89 @@ public class SpiralGenerator extends javax.swing.JFrame {
         return hasNoColor(color1) && hasNoColor(color2);
     }
     
+    private void paintTextMask(Graphics2D g, int width, int height, String text, 
+            CenteredTextPainter painter){
+            // Set the graphics context font to the mask font
+        g.setFont(maskTextArea.getFont());
+            // Paint the mask's text to the graphics context
+        painter.paint(g, text, width, height);
+    }
+    
+    private BufferedImage getImageMaskImage(int width, int height, 
+            BufferedImage image, BufferedImage mask){
+            // If the source image is null
+        if (image == null)
+            return null;
+            // If the mask version of the overlay image is null
+        if (mask == null)
+            mask = image;
+            // If the mask version of the overlay image doesn't match the 
+            // size of the area being rendered
+            // TODO: Work on implementing user control over the overlay 
+            // image's size and stuff
+        if (mask.getWidth() != width || mask.getHeight() != height)
+                // Scale the overlay image
+            return Thumbnailator.createThumbnail(image,width,height);
+        return mask;
+    }
+    
+    private BufferedImage getTextMaskImage(int width, int height, String text, 
+            BufferedImage mask, CenteredTextPainter painter){
+            // If the text is null or blank
+        if (text == null || text.isBlank())
+            return null;
+            // If the overlay mask is not null and is the same width and height 
+            // as the given width and height
+        if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
+            return mask;
+        
+            // Overlay mask needs to be refreshed
+            
+            // Create a new image for the overlay mask
+        mask = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create the graphics context for the image
+        Graphics2D g = mask.createGraphics();
+            // Paint the mask's text
+        paintTextMask(g,width,height,text,painter);
+            // Dispose of the graphics context
+        g.dispose();
+        return mask;
+    }
+    
+    private boolean getOverlayAntialiased(){
+            // If the mask is an image, use whether the image  antialiasing 
+            // toggle is selected.
+        if (isOverlayMaskImage())
+            return imgMaskAntialiasingToggle.isSelected();
+        return overlayMask.textPainter.isAntialiasingEnabled();
+    }
+    
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
-            Color color2, int width, int height){
-            // If the width or height are less than or equal to zero (nothing 
-            // would be drawn)
-        if (width <= 0 || height <= 0)
-            return;
-            // Determine if the overlay is being rendered in a solid color
-        boolean solidColor = frameIndex < 0 || Objects.equals(color1, color2);
-            // If the overlay is a solid color
-        if (solidColor){
-                // If the first color is non-existant
-            if (hasNoColor(color1))
-                return;
-        }   // If both colors are non-existant
-        else if (hasNoColor(color1,color2))
-            return;
-            // This is the image that will get the mask to use
-        BufferedImage mask;
+            Color color2, int width, int height, BufferedImage mask, 
+            SpiralPainter spiralPainter, CenteredTextPainter painter){
+            // If the message should be a solid color
+        boolean solidColor = Objects.equals(color1, color2);
             // This gets the scale for the mask
         double scale = getMaskScale();
-            // This gets the x-coordinate for the center of the area
-        double centerX = width/2.0;
-            // This gets the y-coordinate for the center of the area
-        double centerY = height/2.0;
-            // This gets whether the mask is using the overlay image mask 
-            // instead of the text mask
-        boolean useImage = isOverlayMaskImage();
-            // If a loaded image is being used as the overlay mask
-        if (useImage){
-                // If there is no image loaded for the overlay mask
-            if (overlayImage == null)
-                return;
-                // If the mask version of the overlay image is null
-            if (overlayImageMask == null)
-                overlayImageMask = overlayImage;
-                // If the mask version of the overlay image doesn't match the 
-                // size of the area being rendered
-                // TODO: Work on implementing user control over the overlay 
-                // image's size and stuff
-            if (overlayImageMask.getWidth() != width || 
-                    overlayImageMask.getHeight() != height){
-                    // Scale the overlay image
-                overlayImageMask = Thumbnailator.createThumbnail(overlayImage,
-                        width,height);
-            }   // Use the mask version of the overlay image as the mask
-            mask = overlayImageMask;
-        } else {
+            // If the overlay is a solid color and using the mask
+        if (solidColor && !isOverlayMaskImage()){
                 // Get the text for the mask 
             String text = maskTextArea.getText();
                 // If the text is null or blank
             if (text == null || text.isBlank())
                 return;
-                // If the overlay is a solid color or the overlay mask is null 
-                // (needs to be refreshed) or the overlay mask's size does not 
-                // match the size of the area being rendered
-            if (solidColor || overlayMask == null || 
-                    overlayMask.getWidth() != width || 
-                    overlayMask.getHeight() != height){
-                    // This is a temporary graphics context to render the 
-                    // overlay mask to
-                Graphics2D gTemp;
-                    // If the overlay is one solid color
-                if (solidColor){
-                        // Since we're rendering it as a single color, we don't 
-                        // actually need to use a mask for this one. We can just 
-                        // render it to the given graphics context.
-                    
-                        // Create a copy of the given graphics context
-                    gTemp = (Graphics2D)g.create();
-                        // Set the color to the first color
-                    gTemp.setColor(color1);
-                        // Scale the graphics, maintaining the center
-                    scaleMaintainLocation(gTemp,centerX,centerY,scale,scale);
-                } else {
-                        // Create a new image for the overlay mask
-                    overlayMask = new BufferedImage(width, height, 
-                            BufferedImage.TYPE_INT_ARGB);
-                        // Create the graphics context for the image
-                    gTemp = overlayMask.createGraphics();
-                }   // Set the graphics context font to the mask font
-                gTemp.setFont(maskTextArea.getFont());
-                    // Paint the mask's text to the graphics context
-                maskPainter.paint(gTemp, text, width, height);
-                    // Dispose of the graphics context
-                gTemp.dispose();
-            }   // If the overlay is a solid color
-            if (solidColor)
-                    // We just finished rendering it
-                return;
-                // Use the overlay text mask as the mask
-            mask = overlayMask;
+                // Create a copy of the given graphics context
+            g = (Graphics2D) g.create();
+                // Set the color to the first color
+            g.setColor(color1);
+                // Scale the graphics, maintaining the center
+            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
+               // Paint the mask's text
+            paintTextMask(g,width,height,text,painter);
+                // Dispose of the graphics context
+            g.dispose();
+            return;
         }
             // If the mask is somehow null at this point
         if (mask == null)
@@ -1966,18 +2024,13 @@ public class SpiralGenerator extends javax.swing.JFrame {
             imgG.fillRect(0, 0, width, height);
         } else {
                 // Paint a spiral with the two colors
-            paintSpiral(imgG,frameIndex,color1,color2,width,height);
+            paintSpiral(imgG,frameIndex,color1,color2,width,height,spiralPainter);
         }   // Scale the image, maintaining its center
-        scaleMaintainLocation(imgG,centerX,centerY,scale,scale);
+        scaleMaintainLocation(imgG,width/2.0,height/2.0,scale,scale);
             // Enable or disable the antialiasing, depending on whether the mask 
             // should be antialiased
         imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    // If the mask is an image, use whether the image 
-                    // antialiasing toggle is selected. Otherwise, use whether 
-                    // the mask painter has antialiasing enabled
-                (((useImage)?imgMaskAntialiasingToggle.isSelected():
-                        maskPainter.isAntialiasingEnabled()))? 
-                        RenderingHints.VALUE_ANTIALIAS_ON : 
+                (getOverlayAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
             // Mask the overlay image pixels with the mask image
         maskImage(imgG,mask);
@@ -1991,8 +2044,31 @@ public class SpiralGenerator extends javax.swing.JFrame {
         g.dispose();
     }
     
+    private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
+            Color color2, int width, int height,SpiralPainter spiralPainter, 
+            OverlayMask mask){
+            // If the width or height are less than or equal to zero (nothing 
+            // would be drawn)
+        if (width <= 0 || height <= 0)
+            return;
+            // Determine if the overlay is being rendered in a solid color
+        boolean solidColor = frameIndex < 0 || Objects.equals(color1, color2);
+            // If the overlay is a solid color
+        if (solidColor){
+                // If the first color is non-existant
+            if (hasNoColor(color1))
+                return;
+        }   // If both colors are non-existant
+        else if (hasNoColor(color1,color2))
+            return;
+            // Paint the overlay
+        paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
+                height,mask.getMask(width, height),spiralPainter,
+                mask.textPainter);
+    }
+    
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height, LogarithmicSpiralPainter spiralPainter){
+            int width, int height, SpiralPainter spiralPainter){
         if (width <= 0 || height <= 0)
             return;
         if (hasNoColor(color1,color2))
@@ -2023,24 +2099,20 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
     }
     
-    private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height){
-        paintSpiral(g,frameIndex,color1,color2,width,height,spiralPainter);
+    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
+            int height, Color color1, SpiralPainter spiralPainter,
+            OverlayMask mask){
+        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,
+                spiralPainter);
+        paintOverlay(g,frameIndex,
+                colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,
+                spiralPainter,mask);
     }
     
-    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height, Color color1){
-        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height);
-        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height);
-    }
-    
-    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height){
-        paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor());
-    }
-    
-    private void paintMaskPreview(Graphics2D g, int width, int height){
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
-        paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height);
+    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
+            int height, SpiralPainter spiralPainter,OverlayMask mask){
+        paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor(),
+                spiralPainter,mask);
     }
     
     private class SpiralIcon implements Icon2D{
@@ -2048,7 +2120,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-            paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), getIconHeight());
+            paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), 
+                    getIconHeight(),spiralPainter,overlayMask);
         }
         @Override
         public int getIconWidth() {
@@ -2064,7 +2137,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-            paintMaskPreview(g, getIconWidth(), getIconHeight());
+            g.setColor(Color.BLACK);
+                // Get the width of the icon
+            int width = getIconWidth();
+                // Get the height of the icon
+            int height = getIconHeight();
+            g.fillRect(0, 0, width, height);
+            paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
+                    spiralPainter,overlayMask);
         }
         @Override
         public int getIconWidth() {
@@ -2095,11 +2175,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
                     config.setSpiralClockwise(spiralPainter.isClockwise());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
-                    config.setMaskTextAntialiased(maskPainter.isAntialiasingEnabled());
+                    config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
                     maskChanged = true;
                     break;
                 case(CenteredTextPainter.LINE_SPACING_PROPERTY_CHANGED):
-                    config.setMaskLineSpacing(maskPainter.getLineSpacing());
+                    config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
                     maskChanged = true;
                     break;
             }
@@ -2124,6 +2204,690 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public void changedUpdate(DocumentEvent evt) {
             refreshMaskText();
+        }
+    }
+    
+    private class OverlayMask{
+        /**
+         * This is the image used as a mask for the overlay when text is being 
+         * used as a mask. When this is null, then the mask will be generated 
+         * the next time it is used.
+         */
+        public BufferedImage textMask = null;
+        /**
+         * This is the image used as as a mask for the overlay when a loaded 
+         * image is used for the mask. This is null when the mask needs to be 
+         * recreated from {@code overlayImage}, either due to another image 
+         * being loaded in or the resulting image's size being changed.
+         */
+        public BufferedImage imgMask = null;
+        /**
+         * This is the painter used to paint the text used as the mask for the 
+         * message when text is being used for the mask.
+         */
+        public CenteredTextPainter textPainter;
+        
+        protected OverlayMask(){
+            textPainter = new CenteredTextPainter();
+        }
+        
+        protected OverlayMask(CenteredTextPainter painter){
+            textPainter = new CenteredTextPainter(painter);
+        }
+        
+        protected OverlayMask(OverlayMask mask){
+            this(mask.textPainter);
+        }
+        
+        public void reset(){
+            textMask = imgMask = null;
+        }
+        
+        public BufferedImage getMask(int width, int height){
+                // This will get the mask to return
+            BufferedImage mask;
+                // If a loaded image is being used as the overlay mask
+            if (isOverlayMaskImage())
+                    // Use the mask version of the overlay image as the mask
+                mask = imgMask = getImageMaskImage(width,height,overlayImage,
+                        imgMask);
+            else 
+                    // Use the text mask, creating it if it needs to be made
+                mask = textMask = getTextMaskImage(width,height,
+                        maskTextArea.getText(),textMask,textPainter);
+            return mask;
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class FileWorker extends SwingWorker<Void, Void>{
+        /**
+         * The file to process.
+         */
+        protected File file;
+        /**
+         * Whether this was successful at processing the file.
+         */
+        protected boolean success = false;
+        /**
+         * This constructs a FileWorker that will process the given file.
+         * @param file The file to process.
+         */
+        FileWorker(File file){
+            this.file = file;
+        }
+        /**
+         * This returns whether this was successful at processing the file. 
+         * This will be inaccurate up until the file is finished being 
+         * processed.
+         * @return Whether this has successfully processed the file.
+         */
+        public boolean isSuccessful(){
+            return success;
+        }
+        /**
+         * This returns the file being processed by this FileWorker.
+         * @return The file that will be processed.
+         */
+        public File getFile(){
+            return file;
+        }
+        /**
+         * This returns the String that is displayed for the progress bar.
+         * @return The String to display on the progress bar.
+         */
+        public abstract String getProgressString();
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully processed.
+         * @param file The file that was successfully processed.
+         */
+        protected void showSuccessPrompt(File file){}
+        /**
+         * This is used to display a failure prompt to the user when the file 
+         * fails to be processed. If the failure prompt is a retry prompt, then 
+         * this method should return whether to try processing the file again. 
+         * Otherwise, this method should return {@code false}.
+         * @param file The file that failed to be processed.
+         * @param ex The exception that was thrown, or null if there was no 
+         * exception thrown.
+         * @return {@code true} if this should attempt to process the file 
+         * again, {@code false} otherwise.
+         */
+        protected boolean showFailurePrompt(File file, IOException ex){
+            return false;
+        }
+        @Override
+        protected Void doInBackground() throws Exception {
+            setInputEnabled(false);
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(true);
+            setProgressString(getProgressString());
+                // Whether the user wants this to try processing the file again 
+            boolean retry = false;  // if unsuccessful
+            do{
+                useWaitCursor(true);
+                try{
+                    success = processFile(file);    // Try to process the file
+                    useWaitCursor(false);
+                    if (success)    // If the file was successfully processed
+                        showSuccessPrompt(file);    // Show the success prompt
+                    else            // If the file failed to be processed
+                            // Show the failure prompt and get if the user wants 
+                        retry = showFailurePrompt(file, null);  // to try again
+                } catch (IOException ex){
+                    System.out.println("Error: " + ex);
+                    success = false;
+                    useWaitCursor(false);
+                        // Show the failure prompt and get if the user wants to 
+                    retry = showFailurePrompt(file, ex);    // try again
+                }
+            }   // While the file failed to be processed and the user wants to 
+            while(!success && retry);   // try again
+            return null;
+        }
+        /**
+         * 
+         * @param file
+         * @return
+         * @throws IOException 
+         */
+        protected abstract boolean processFile(File file) throws IOException;
+        @Override
+        protected void done(){
+            System.gc();        // Run the garbage collector
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(false);
+            setProgressString(null);
+            setInputEnabled(true);
+            useWaitCursor(false);
+        }
+    }
+    /**
+     * This is an abstract class that provides the framework for loading from 
+     * files.
+     */
+    private abstract class FileLoader extends FileWorker{
+        /**
+         * Whether this is currently loading a file.
+         */
+        protected volatile boolean loading = false;
+        /**
+         * Whether file not found errors should be shown.
+         */
+        protected boolean showFileNotFound;
+        /**
+         * This constructs a FileLoader that will load the data from the given 
+         * file.
+         * @param file The file to load the data from.
+         * @param showFileNotFound Whether a file not found error should result 
+         * in a popup being shown to the user.
+         */
+        FileLoader(File file, boolean showFileNotFound){
+            super(file);
+            this.showFileNotFound = showFileNotFound;
+        }
+        /**
+         * This constructs a FileLoader that will load the data from the given 
+         * file.
+         * @param file The file to load the data from.
+         */
+        FileLoader(File file){
+            this(file,true);
+        }
+        @Override
+        public String getProgressString(){
+            return "Loading";
+        }
+        /**
+         * This returns whether this is currently loading from a file.
+         * @return Whether a file is currently being loaded.
+         */
+        public boolean isLoading(){
+            return loading;
+        }
+        /**
+         * This returns whether this was successful at loading from the file. 
+         * This will be inaccurate up until the file is loaded.
+         * @return Whether this has successfully loaded the file.
+         */
+        @Override
+        public boolean isSuccessful(){
+            return super.isSuccessful();
+        }
+        /**
+         * This returns whether this shows a failure prompt when the file is not 
+         * found.
+         * @return Whether the file not found failure prompt is shown.
+         */
+        public boolean getShowsFileNotFoundPrompts(){
+            return showFileNotFound;
+        }
+        /**
+         * This returns the file being loaded by this FileLoader.
+         * @return The file that will be loaded.
+         */
+        @Override
+        public File getFile(){
+            return super.getFile();
+        }
+        /**
+         * This loads the data from the given file. This is called by {@link 
+         * #processFile(File) processFile} in order to load the file.
+         * @param file The file to load the data from.
+         * @return Whether the file was successfully loaded.
+         * @throws IOException 
+         * @see #processFile(File) 
+         */
+        protected abstract boolean loadFile(File file) throws IOException;
+        /**
+         * {@inheritDoc } This delegates to {@link #loadFile(File) loadFile}.
+         * @see #loadFile(File) 
+         */
+        @Override
+        protected boolean processFile(File file) throws IOException{
+            loading = true;
+            return loadFile(file);
+        }
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully loaded.
+         * @param file The file that was successfully loaded.
+         */
+        @Override
+        protected void showSuccessPrompt(File file){}
+        /**
+         * This is used to display a failure prompt to the user when the file 
+         * fails to be loaded. 
+         * @param file The file that failed to load.
+         * @param ex
+         * @return {@inheritDoc}
+         */
+        @Override
+        protected boolean showFailurePrompt(File file, IOException ex){
+                // If the file doesn't exist
+            if (!file.exists() || ex instanceof FileNotFoundException){
+                    // If this should show file not found prompts
+                if (showFileNotFound){
+                    JOptionPane.showMessageDialog(SpiralGenerator.this, 
+                            getFileNotFoundMessage(file,ex), 
+                            getFailureTitle(file,ex), 
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                return false;
+            }
+            else{   // Ask the user if they would like to try loading the file
+                    // again
+                return JOptionPane.showConfirmDialog(SpiralGenerator.this,
+                        getFailureMessage(file,ex)+"\nWould you like to try again?",
+                        getFailureTitle(file,ex),JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+            }
+        }
+        /**
+         * This returns the title for the dialog to display if the file fails to 
+         * be saved.
+         * @param file The file that failed to load.
+         * @return The title for the dialog to display if the file fails to
+         * save.
+         */
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - File Failed To Load";
+        }
+        /**
+         * This returns the message to display if the file fails to load.
+         * @param file The file that failed to load.
+         * @return The message to display if the file fails to load.
+         */
+        protected String getFailureMessage(File file, IOException ex){
+            return "The file failed to load.";
+        }
+        /**
+         * This returns the message to display if the file does not exist.
+         * @param file The file that did not exist.
+         * @return The message to display if the file does not exist.
+         */
+        protected String getFileNotFoundMessage(File file, IOException ex){
+            return "The file does not exist.";
+        }
+        @Override
+        protected void done(){
+            loading = false;
+            super.done();
+        }
+    }
+    /**
+     * This is an abstract class that provides the framework for saving to a 
+     * file.
+     */
+    private abstract class FileSaver extends FileWorker{
+        /**
+         * Whether this is currently saving a file.
+         */
+        protected volatile boolean saving = false;
+        /**
+         * This stores whether this should exit the program after saving.
+         */
+        protected volatile boolean exitAfterSaving;
+        /**
+         * This constructs a FileSaver that will save data to the given file 
+         * and, if {@code exit} is {@code true}, will exit the program after 
+         * saving the file.
+         * @param file The file to save the data to.
+         * @param exit Whether the program will exit after saving the file.
+         */
+        FileSaver(File file, boolean exit){
+            super(file);
+            exitAfterSaving = exit;
+        }
+        /**
+         * This constructs a FileSaver that will save data to the given file.
+         * @param file The file to save the data to.
+         */
+        FileSaver(File file){
+            this(file,false);
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving";
+        }
+        /**
+         * This returns whether this is currently saving to a file.
+         * @return Whether a file is currently being saved to.
+         */
+        public boolean isSaving(){
+            return saving;
+        }
+        /**
+         * This returns whether this was successful at saving to the file. This 
+         * will be inaccurate up until the file is saved.
+         * @return Whether this has successfully saved the file.
+         */
+        @Override
+        public boolean isSuccessful(){
+            return super.isSuccessful();
+        }
+        /**
+         * This returns whether the program will exit after this finishes saving 
+         * the file.
+         * @return Whether the program will exit once the file is saved.
+         */
+        public boolean getExitAfterSaving(){
+            return exitAfterSaving;
+        }
+        /**
+         * This returns the file being saved to by this FileSaver.
+         * @return The file that will be saved.
+         */
+        @Override
+        public File getFile(){
+            return super.getFile();
+        }
+        /**
+         * This returns whether this should consider the file returned by {@link 
+         * #getFile() getFile} as a directory in which to save files into.
+         * @return Whether the file given to this FileSaver is actually a 
+         * directory.
+         */
+        protected boolean isFileDirectory(){
+            return false;
+        }
+        /**
+         * This attempts to save to the given file. This is called by {@link 
+         * #processFile(File) processFile} in order to save the file.
+         * @param file The file to save.
+         * @return Whether the file was successfully saved to.
+         * @throws IOException
+         * @see #processFile(File) 
+         */
+        protected abstract boolean saveFile(File file) throws IOException;
+        /**
+         * {@inheritDoc } This delegates the saving of the file to {@link 
+         * #saveFile(File) saveFile}.
+         * @see #saveFile(File) 
+         */
+        @Override
+        protected boolean processFile(File file) throws IOException{
+            saving = true;
+                // Try to create the directories and if that fails, then give up 
+                // on saving the file. (If the file is the directory, include it 
+                // as a directory to be created. Otherwise, create the parent 
+                // file of the file to be saved)
+            if (!FilesExtended.createDirectories(SpiralGenerator.this, 
+                    (isFileDirectory())?file:file.getParentFile()))
+                return false;
+            return saveFile(file);
+        }
+        /**
+         * This returns the title for the dialog to display if the file is 
+         * successfully saved.
+         * @param file The file that was successfully saved.
+         * @return The title for the dialog to display if the file is 
+         * successfully saved.
+         */
+        protected String getSuccessTitle(File file){
+            return "File Saved Successfully";
+        }
+        /**
+         * This returns the message to display if the file is successfully 
+         * saved.
+         * @param file The file that was successfully saved.
+         * @return The message to display if the file is successfully saved.
+         */
+        protected String getSuccessMessage(File file){
+            return "The file was successfully saved.";
+        }
+        /**
+         * This returns the title for the dialog to display if the file fails to 
+         * be saved.
+         * @param file The file that failed to be saved.
+         * @return The title for the dialog to display if the file fails to
+         * save.
+         */
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - File Failed To Save";
+        }
+        /**
+         * This returns the message to display if the file fails to be saved.
+         * @param file The file that failed to be saved.
+         * @return The message to display if the file fails to save.
+         */
+        protected String getFailureMessage(File file, IOException ex){
+            return "The file failed to save.";
+        }
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully saved. The success prompt will display the message 
+         * returned by {@link #getSuccessMessage()}. If the program is to exit 
+         * after saving the file, then this will show nothing.
+         * @param file The file that was successfully saved.
+         */
+        @Override
+        protected void showSuccessPrompt(File file){
+                // If the program is not to exit after saving the file
+            if (!exitAfterSaving)   
+                JOptionPane.showMessageDialog(SpiralGenerator.this, 
+                        getSuccessMessage(file), getSuccessTitle(file), 
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        /**
+         * This is used to display a failure and retry prompt to the user when 
+         * the file fails to be saved.
+         * @param file The file that failed to be saved.
+         * @param ex
+         * @return {@inheritDoc }
+         */
+        @Override
+        protected boolean showFailurePrompt(File file, IOException ex){
+                // Get the message to be displayed. If the file failed to be 
+                // backed up, show the backup failed message. Otherwise show the 
+                // normal failure message.
+            String message = getFailureMessage(file,ex);
+                // Show a dialog prompt asking the user if they would like to 
+                // try and save the file again and get their input. 
+            int option = JOptionPane.showConfirmDialog(
+                    SpiralGenerator.this, 
+                    message+"\nWould you like to try again?",
+                    getFailureTitle(file,ex),
+                        // If the program is to exit after saving the file, show 
+                        // a third "cancel" option to allow the user to cancel 
+                        // exiting the program
+                    (exitAfterSaving)?JOptionPane.YES_NO_CANCEL_OPTION:
+                            JOptionPane.YES_NO_OPTION,
+                    JOptionPane.ERROR_MESSAGE);
+                // If the program was going to exit after saving the file
+            if (exitAfterSaving){   
+                    // If the option selected was the cancel option or the user 
+                    // closed the dialog without selecting anything, then don't 
+                    // exit the program
+                exitAfterSaving = option != JOptionPane.CLOSED_OPTION && 
+                        option != JOptionPane.CANCEL_OPTION;
+            }   // Return whether the user selected yes
+            return option == JOptionPane.YES_OPTION;    
+        }
+        /**
+         * This is used to exit the program after this finishes saving the file.
+         */
+        protected void exitProgram(){
+            System.exit(0);         // Exit the program
+        }
+        @Override
+        protected void done(){
+            if (exitAfterSaving)    // If the program is to exit after saving
+                exitProgram();      // Exit the program
+            saving = false;
+            super.done();
+        }
+    }
+    /**
+     * 
+     */
+    private class AnimationSaver extends FileSaver{
+        /**
+         * 
+         */
+        private List<BufferedImage> frames = null;
+        /**
+         * 
+         */
+        private SpiralPainter painter = null;
+        /**
+         * 
+         */
+        private OverlayMask mask = null;
+        /**
+         * 
+         * @param file 
+         */
+        AnimationSaver(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean saveFile(File file) throws IOException {
+            progressBar.setIndeterminate(true);
+                // Create the necessary file output streams for writing to the 
+                // file, and a buffered output stream to write to the file stream
+            try(FileOutputStream fileOut = new FileOutputStream(file);
+                    BufferedOutputStream buffOut = new BufferedOutputStream(fileOut)){
+                    // If the frame list is null
+                if (frames == null)
+                    frames = new ArrayList<>();
+                    // If the spiral painter copy is null
+                if (painter == null)
+                    painter = new LogarithmicSpiralPainter(spiralPainter);
+                    // If the overlay mask copy is null
+                if (mask == null)
+                    mask = new OverlayMask(overlayMask);
+                progressBar.setValue(0);
+                progressBar.setIndeterminate(false);
+                    // Create an encoder to encode the gif
+                AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+                    // Get the image width
+                int width = getImageWidth();
+                    // Get the image height
+                int height = getImageHeight();
+                    // Start encoding to the buffered output stream
+                encoder.start(buffOut);
+                    // Repeat infinitely
+                encoder.setRepeat(0);
+                    // Use the spiral frame duration for the frames
+                encoder.setDelay(SPIRAL_FRAME_DURATION);
+                    // Set the size for the image
+                encoder.setSize(width, height);
+                    // Get the background color for the spiral
+                Color bg = colorIcons[0].getColor();
+                    // Get if the background has transparency
+                boolean transparency = bg.getAlpha() < 255;
+                    // Get the background without an alpha
+                bg = new Color(bg.getRGB());
+                    // Set the background for the gif
+                encoder.setBackground(bg);
+                    // If the background is transparent
+                if (transparency)
+                    encoder.setTransparent(bg);
+                    // A for loop to go through and add all the frames to the 
+                    // gif
+                for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
+                        // This gets the current frame
+                    BufferedImage frame;
+                        // If the frame is in the frames list
+                    if (i < frames.size())
+                        frame = frames.get(i);
+                    else {
+                            // Create the frame
+                        frame = createSpiralFrame(i,width,height,painter,mask);
+                        frames.add(frame);
+                        progressBar.setValue(progressBar.getValue()+1);
+                    }   // Add the frame to the gif
+                    encoder.addFrame(frame);
+                }
+                progressBar.setIndeterminate(true);
+                    // Finish encoding the gif
+                encoder.finish();
+            }
+            return true;
+        }
+        @Override
+        protected String getSuccessTitle(File file){
+            return "Animation Saved Successfully";
+        }
+        @Override
+        protected String getSuccessMessage(File file){
+            return "The animation was successfully saved.";
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Animation Failed To Save";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "There was an error saving the animation to file\n"+
+                    "\""+file+"\"."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving Animation";
+        }
+    }
+    /**
+     * 
+     */
+    private class ImageLoader extends FileLoader{
+        /**
+         * 
+         */
+        private BufferedImage img = null;
+        /**
+         * 
+         * @param file 
+         */
+        ImageLoader(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean loadFile(File file) throws IOException {
+            img = ImageIO.read(file);
+            if (img != null && img.getWidth() != img.getHeight()){
+                BufferedImage temp = img;
+                int size = Math.max(img.getWidth(), img.getHeight());
+                img = new BufferedImage(size, size,BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g = img.createGraphics();
+                g.drawImage(temp, 
+                        Math.max(0, Math.floorDiv(size-temp.getWidth(), 2)), 
+                        Math.max(0, Math.floorDiv(size-temp.getHeight(), 2)), 
+                        null);
+                g.dispose();
+            }
+            return img != null;
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Image Failed To Load";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "The image failed to load."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Loading Image Mask";
+        }
+        @Override
+        protected void done(){
+            if (success){
+                overlayMask.imgMask = null;
+                overlayImage = img;
+            }
+            maskPreviewLabel.repaint();
+            refreshPreview(false);
+            super.done();
         }
     }
 }

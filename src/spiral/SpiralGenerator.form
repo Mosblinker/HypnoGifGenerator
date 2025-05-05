@@ -24,6 +24,15 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="printFPSToggleActionPerformed"/>
           </Events>
         </MenuItem>
+        <MenuItem class="javax.swing.JCheckBoxMenuItem" name="inputEnableToggle">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" value="Input Enabled"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputEnableToggleActionPerformed"/>
+          </Events>
+        </MenuItem>
       </SubComponents>
     </Container>
     <Component class="components.JColorSelector" name="colorSelector">
@@ -451,7 +460,7 @@
                   <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imageSizePanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
@@ -459,6 +468,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="ctrlButtonPanel" min="-2" pref="135" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="progressBar" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -483,7 +493,8 @@
                           <Component id="alwaysScaleToggle" max="32767" attributes="0"/>
                           <Component id="ctrlButtonPanel" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="32767" attributes="0"/>
+                      <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -1236,6 +1247,12 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="alwaysScaleToggleActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JProgressBar" name="progressBar">
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="progressBarStateChanged"/>
+        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="progressBarPropertyChange"/>
       </Events>
     </Component>
   </SubComponents>

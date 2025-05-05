@@ -30,6 +30,19 @@ public class CenteredTextPainter extends ListenedPainter<String>{
      * This is whether the text will be rendered with antialiasing.
      */
     private boolean antialiasing = true;
+    /**
+     * 
+     */
+    public CenteredTextPainter(){
+    }
+    /**
+     * 
+     * @param painter 
+     */
+    public CenteredTextPainter(CenteredTextPainter painter){
+        this.antialiasing = painter.antialiasing;
+        this.lineSpacing = painter.lineSpacing;
+    }
     
     public double getLineSpacing(){
         return lineSpacing;
