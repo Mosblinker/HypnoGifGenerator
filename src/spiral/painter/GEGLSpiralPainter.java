@@ -133,47 +133,15 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return getArcLengthAzimuth(p0,p1,0.0);
     }
     /**
-     * This rotates the azimuth after it has been derived from the radial 
-     * distance of the spiral.
-     * @param p The azimuth of the point on the spiral, after it's calculated 
-     * from the radial distance.
-     * @param angle The angle of rotation for the spiral.
-     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
-     * if the spiral is counter-clockwise.
-     * @return The azimuth, rotated by the angle of rotation.
-     * @see #getAzimuth(double, double) 
-     */
-    protected double rotateAzimuth(double p, double angle, boolean clockwise){
-           // If the spiral is counter-clockwise
-        if (!clockwise)
-            p = -p;
-        return p + angle;
-    }
-    /**
-     * This adjust the azimuth to use to calculate the radial distance for the 
-     * spiral.
-     * @param p The azimuth of the point on the spiral to get.
-     * @param angle The angle of rotation for the spiral.
-     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
-     * if the spiral is counter-clockwise.
-     * @return The azimuth, adjusted for the angle of rotation.
-     * @see #getRadius(double, double) 
-     */
-    protected double adjustAzimuth(double p, double angle, boolean clockwise){
-        p -= angle;
-            // If the spiral is counter-clockwise
-        if (!clockwise)
-            p = -p;
-        return p;
-    }
-    /**
      * This returns the radial distance for the point on the spiral with the 
-     * given azimuth. This is used to do the calculations.
+     * given azimuth.
      * @param p The azimuth of the point on the spiral to get.
+     * @param angle The angle of rotation for the spiral.
+     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
+     * if the spiral is counter-clockwise.
      * @return The radial distance of the given point on the spiral.
      */
-    protected abstract double getRadiusImpl(double p);
-    
+    protected abstract double getRadius(double p,double angle,boolean clockwise);
     /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
@@ -184,10 +152,9 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     public double getRadius(double p, double angle){
             // Get if the spiral is clockwise
         boolean clockwise = isClockwise();
-            // Adjust the angle of rotation, and then use that to adjust the 
-            // azimuth
-        return getRadiusImpl(adjustAzimuth(p,
-                adjustRotation(angle,getThickness(),clockwise),clockwise));
+            // Adjust the angle of rotation, and then use that to get the radius
+        return getRadius(p,adjustRotation(angle,getThickness(),clockwise),
+                clockwise);
     }
     /**
      * This returns the radial distance for the point on the spiral with the 
@@ -202,9 +169,13 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * This returns the azimuth for the point on the spiral with the given 
      * radial distance. This is used to do the calculations.
      * @param r The radial distance of the point on the spiral to get.
+     * @param angle The angle of rotation for the spiral.
+     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
+     * if the spiral is counter-clockwise.
      * @return The azimuth of the given point on the spiral.
      */
-    protected abstract double getAzimuthImpl(double r);
+    protected abstract double getAzimuth(double r, double angle,
+            boolean clockwise);
     /**
      * This returns the azimuth for the point on the spiral with the given 
      * radial distance.
@@ -215,10 +186,10 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     public double getAzimuth(double r, double angle){
             // Get if the spiral is clockwise
         boolean clockwise = isClockwise();
-            // Get the azimuth, adjust the rotation, and then use that to rotate 
+            // Get the azimuth, adjust the rotation, and then use that to get  
             // the azimuth 
-        return rotateAzimuth(getAzimuthImpl(r),
-                adjustRotation(angle,getThickness(),clockwise),clockwise);
+        return getAzimuth(r,adjustRotation(angle,getThickness(),clockwise),
+                clockwise);
     }
     /**
      * This returns the azimuth for the point on the spiral with the given 
