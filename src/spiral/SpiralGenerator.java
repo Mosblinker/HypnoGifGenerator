@@ -1875,7 +1875,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
-            boolean antialiasing){
+            boolean antialiasing, CenteredTextPainter painter){
             // If the mask is somehow null at this point
         if (mask == null)
             return;
@@ -1916,7 +1916,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
-            Color color2, int width, int height){
+            Color color2, int width, int height, CenteredTextPainter painter){
             // If the width or height are less than or equal to zero (nothing 
             // would be drawn)
         if (width <= 0 || height <= 0)
@@ -1991,7 +1991,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         // Create the graphics context for the image
                     gTemp = overlayMask.createGraphics();
                 }   // Paint the mask's text
-                paintTextMask(gTemp,width,height,text,maskPainter);
+                paintTextMask(gTemp,width,height,text,painter);
                     // Dispose of the graphics context
                 gTemp.dispose();
             }   // If the overlay is a solid color
@@ -2003,7 +2003,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
-                height,mask,getOverlayAntialiased());
+                height,mask,getOverlayAntialiased(),painter);
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
@@ -2045,7 +2045,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height, Color color1){
         paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height);
-        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height);
+        paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,maskPainter);
     }
     
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height){
@@ -2055,7 +2055,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void paintMaskPreview(Graphics2D g, int width, int height){
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, width, height);
-        paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height);
+        paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,maskPainter);
     }
     
     private class SpiralIcon implements Icon2D{
