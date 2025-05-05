@@ -1980,19 +1980,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }   // If both colors are non-existant
         else if (hasNoColor(color1,color2))
             return;
-            // This is the image that will get the mask to use
-        BufferedImage mask = null;
-            // If a loaded image is being used as the overlay mask
-        if (isOverlayMaskImage()){
-                // Use the mask version of the overlay image as the mask
-            mask = overlayMask.imgMask = getImageMaskImage(width,height,overlayImage,overlayMask.imgMask);
-        } else if (!solidColor){
-                // Use the text mask, creating it if it needs to be made
-            mask = overlayMask.textMask = getTextMaskImage(width,height,maskTextArea.getText(),overlayMask.textMask,painter);
-        }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
-                height,mask,spiralPainter,painter);
+                height,overlayMask.getMask(width, height),spiralPainter,painter);
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
@@ -2161,6 +2151,21 @@ public class SpiralGenerator extends javax.swing.JFrame {
         
         public void reset(){
             textMask = imgMask = null;
+        }
+        
+        public BufferedImage getMask(int width, int height){
+                // This will get the mask to return
+            BufferedImage mask;
+                // If a loaded image is being used as the overlay mask
+            if (isOverlayMaskImage())
+                    // Use the mask version of the overlay image as the mask
+                mask = imgMask = getImageMaskImage(width,height,overlayImage,
+                        imgMask);
+            else 
+                    // Use the text mask, creating it if it needs to be made
+                mask = textMask = getTextMaskImage(width,height,
+                        maskTextArea.getText(),textMask,textPainter);
+            return mask;
         }
     }
 }
