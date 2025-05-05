@@ -2178,5 +2178,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         protected OverlayMask(OverlayMask mask){
             this(mask.textPainter);
         }
+        
+        public void reset(){
+            textMask = imgMask = null;
+        }
     }
 }
