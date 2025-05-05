@@ -18,6 +18,7 @@ import io.github.dheid.fontchooser.FontDialog;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -270,6 +271,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         debugPopup = new javax.swing.JPopupMenu();
         printTestButton = new javax.swing.JMenuItem();
         printFPSToggle = new javax.swing.JCheckBoxMenuItem();
+        inputEnableToggle = new javax.swing.JCheckBoxMenuItem();
         colorSelector = new components.JColorSelector();
         maskFCPreview = new components.JFileDisplayPanel();
         saveFCPreview = new components.JFileDisplayPanel();
@@ -370,6 +372,15 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
         debugPopup.add(printFPSToggle);
+
+        inputEnableToggle.setSelected(true);
+        inputEnableToggle.setText("Input Enabled");
+        inputEnableToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputEnableToggleActionPerformed(evt);
+            }
+        });
+        debugPopup.add(inputEnableToggle);
 
         colorSelector.setClearButtonShown(true);
 
@@ -1335,6 +1346,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_progressBarPropertyChange
+
+    private void inputEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputEnableToggleActionPerformed
+        setInputEnabled(inputEnableToggle.isSelected());
+    }//GEN-LAST:event_inputEnableToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1791,6 +1806,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel imgMaskNoteLabel1;
     private javax.swing.JLabel imgMaskNoteLabel2;
     private javax.swing.JLabel imgMaskNoteLabel3;
+    private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
@@ -1858,6 +1874,23 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void setProgressString(String text){
         progressString = text;
         progressBar.setStringPainted(text != null);
+    }
+    /**
+     * 
+     * @param isWaiting 
+     */
+    private void useWaitCursor(boolean isWaiting) {
+        setCursor((isWaiting)?Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR):null);
+    }
+    /**
+     * 
+     * @param enabled 
+     */
+    private void setInputEnabled(boolean enabled){
+        inputEnableToggle.setSelected(enabled);
+        framePlayButton.setEnabled(enabled);
+        updateFrameControls();
+        updateControlsEnabled();
     }
     
     private void scaleMaintainLocation(Graphics2D g, double x, double y, 
