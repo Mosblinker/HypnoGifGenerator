@@ -1982,10 +1982,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
                             BufferedImage.TYPE_INT_ARGB);
                         // Create the graphics context for the image
                     gTemp = overlayMask.createGraphics();
-                }   // Set the graphics context font to the mask font
-                gTemp.setFont(maskTextArea.getFont());
-                    // Paint the mask's text to the graphics context
-                maskPainter.paint(gTemp, text, width, height);
+                }   // Paint the mask's text
+                paintTextMask(gTemp,width,height,text,maskPainter);
                     // Dispose of the graphics context
                 gTemp.dispose();
             }   // If the overlay is a solid color
