@@ -247,11 +247,12 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskTextArea.getDocument().addDocumentListener(handler);
     }
     
-    private BufferedImage createSpiralFrame(int frameIndex, int width, int height){
+    private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
+            SpiralPainter spiralPainter,OverlayMask mask){
         BufferedImage img = new BufferedImage(width, height, 
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
-        paintSpiralDesign(g,frameIndex,width,height,spiralPainter,overlayMask);
+        paintSpiralDesign(g,frameIndex,width,height,spiralPainter,mask);
         g.dispose();
         return img;
     }
@@ -1036,10 +1037,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
         try(FileOutputStream fileOut = new FileOutputStream(file);
                 BufferedOutputStream buffOut = new BufferedOutputStream(fileOut)){
             AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+                // Get the image width
+            int width = getImageWidth();
+                // Get the image height
+            int height = getImageHeight();
             encoder.start(buffOut);
             encoder.setRepeat(0);
             encoder.setDelay(SPIRAL_FRAME_DURATION);
-            encoder.setSize(getImageWidth(), getImageHeight());
+            encoder.setSize(width, height);
             Color bg = colorIcons[0].getColor();
             boolean transparency = bg.getAlpha() < 255;
             bg = new Color(bg.getRGB());
@@ -1047,7 +1052,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             if (transparency)
                 encoder.setTransparent(bg);
             for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
-                encoder.addFrame(createSpiralFrame(i,getImageWidth(), getImageHeight()));
+                encoder.addFrame(createSpiralFrame(i,width,height,spiralPainter,overlayMask));
             }
             encoder.finish();
         } catch (IOException ex){
