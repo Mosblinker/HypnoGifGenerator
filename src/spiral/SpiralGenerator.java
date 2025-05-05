@@ -251,7 +251,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         BufferedImage img = new BufferedImage(width, height, 
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
-        paintSpiralDesign(g,frameIndex,width,height);
+        paintSpiralDesign(g,frameIndex,width,height,spiralPainter);
         g.dispose();
         return img;
     }
@@ -2017,13 +2017,16 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
     }
     
-    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height, Color color1){
+    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
+            int height, Color color1, SpiralPainter spiralPainter){
         paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,spiralPainter);
         paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,spiralPainter,overlayMask.textPainter);
     }
     
-    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height){
-        paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor());
+    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
+            int height, SpiralPainter spiralPainter){
+        paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor(),
+                spiralPainter);
     }
     
     private class SpiralIcon implements Icon2D{
@@ -2031,7 +2034,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-            paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), getIconHeight());
+            paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), getIconHeight(),spiralPainter);
         }
         @Override
         public int getIconWidth() {
