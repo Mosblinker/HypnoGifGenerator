@@ -30,7 +30,8 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     private double thickness = 0.5;
     /**
      * This is a scratch Rectangle2D object used to fill the painted area when 
-     * the entire area is to be filled with a solid color.
+     * the entire area is to be filled with a solid color. This is initially 
+     * null and is initialized the first time it is used.
      */
     private Rectangle2D rect = null;
     /**
