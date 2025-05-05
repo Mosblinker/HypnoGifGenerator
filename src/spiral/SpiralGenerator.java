@@ -752,7 +752,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(radiusLabel, gridBagConstraints);
 
-        radiusSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 1.0d, 100000.0d, 1.0d));
+        radiusSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.001d, 100000.0d, 1.0d));
         radiusSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(radiusSpinner, "0.00######"));
         radiusSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
