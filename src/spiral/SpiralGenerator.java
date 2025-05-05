@@ -2007,7 +2007,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height, LogarithmicSpiralPainter spiralPainter){
+            int width, int height, SpiralPainter spiralPainter){
         if (width <= 0 || height <= 0)
             return;
         if (hasNoColor(color1,color2))
