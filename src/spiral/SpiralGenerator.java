@@ -2027,11 +2027,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
     }
     
-    private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height){
-        paintSpiral(g,frameIndex,color1,color2,width,height,spiralPainter);
-    }
-    
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, int height, Color color1){
         paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,spiralPainter);
         paintOverlay(g,frameIndex,colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,spiralPainter,overlayMask.textPainter);
