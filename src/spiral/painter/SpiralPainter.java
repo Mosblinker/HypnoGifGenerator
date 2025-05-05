@@ -85,6 +85,17 @@ public abstract class SpiralPainter extends ListenedPainter<Double>{
      */
     private boolean clockwise = true;
     /**
+     * Implicit constructor.
+     */
+    protected SpiralPainter(){}
+    /**
+     * Copy constructor for the class.
+     * @param painter The SpiralPainter to copy.
+     */
+    protected SpiralPainter(SpiralPainter painter){
+        this.clockwise = painter.clockwise;
+    }
+    /**
      * This sets whether this spiral is clockwise or counter-clockwise.
      * @param value {@code true} if this spiral is clockwise, {@code false} if 
      * this spiral is counter-clockwise.
