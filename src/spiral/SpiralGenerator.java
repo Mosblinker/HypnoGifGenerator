@@ -1875,8 +1875,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
-            boolean antialiasing, SpiralPainter spiralPainter, 
-            CenteredTextPainter painter){
+            SpiralPainter spiralPainter, CenteredTextPainter painter){
             // If the mask is somehow null at this point
         if (mask == null)
             return;
@@ -1902,7 +1901,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // Enable or disable the antialiasing, depending on whether the mask 
             // should be antialiased
         imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                (antialiasing)? RenderingHints.VALUE_ANTIALIAS_ON : 
+                (getOverlayAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
             // Mask the overlay image pixels with the mask image
         maskImage(imgG,mask);
@@ -2005,7 +2004,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
-                height,mask,getOverlayAntialiased(),spiralPainter,painter);
+                height,mask,spiralPainter,painter);
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
