@@ -2294,4 +2294,110 @@ public class SpiralGenerator extends javax.swing.JFrame {
             return mask;
         }
     }
+    /**
+     * 
+     */
+    private abstract class FileWorker extends SwingWorker<Void, Void>{
+        /**
+         * The file to process.
+         */
+        protected File file;
+        /**
+         * Whether this was successful at processing the file.
+         */
+        protected boolean success = false;
+        /**
+         * This constructs a FileWorker that will process the given file.
+         * @param file The file to process.
+         */
+        FileWorker(File file){
+            this.file = file;
+        }
+        /**
+         * This returns whether this was successful at processing the file. 
+         * This will be inaccurate up until the file is finished being 
+         * processed.
+         * @return Whether this has successfully processed the file.
+         */
+        public boolean isSuccessful(){
+            return success;
+        }
+        /**
+         * This returns the file being processed by this FileWorker.
+         * @return The file that will be processed.
+         */
+        public File getFile(){
+            return file;
+        }
+        /**
+         * This returns the String that is displayed for the progress bar.
+         * @return The String to display on the progress bar.
+         */
+        public abstract String getProgressString();
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully processed.
+         * @param file The file that was successfully processed.
+         */
+        protected void showSuccessPrompt(File file){}
+        /**
+         * This is used to display a failure prompt to the user when the file 
+         * fails to be processed. If the failure prompt is a retry prompt, then 
+         * this method should return whether to try processing the file again. 
+         * Otherwise, this method should return {@code false}.
+         * @param file The file that failed to be processed.
+         * @param ex The exception that was thrown, or null if there was no 
+         * exception thrown.
+         * @return {@code true} if this should attempt to process the file 
+         * again, {@code false} otherwise.
+         */
+        protected boolean showFailurePrompt(File file, IOException ex){
+            return false;
+        }
+        @Override
+        protected Void doInBackground() throws Exception {
+            setInputEnabled(false);
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(true);
+            setProgressString(getProgressString());
+                // Whether the user wants this to try processing the file again 
+            boolean retry = false;  // if unsuccessful
+            do{
+                useWaitCursor(true);
+                try{
+                    success = processFile(file);    // Try to process the file
+                    useWaitCursor(false);
+                    if (success)    // If the file was successfully processed
+                        showSuccessPrompt(file);    // Show the success prompt
+                    else            // If the file failed to be processed
+                            // Show the failure prompt and get if the user wants 
+                        retry = showFailurePrompt(file, null);  // to try again
+                } catch (IOException ex){
+                    System.out.println("Error: " + ex);
+                    success = false;
+                    useWaitCursor(false);
+                        // Show the failure prompt and get if the user wants to 
+                    retry = showFailurePrompt(file, ex);    // try again
+                }
+            }   // While the file failed to be processed and the user wants to 
+            while(!success && retry);   // try again
+            return null;
+        }
+        /**
+         * 
+         * @param file
+         * @return
+         * @throws IOException 
+         */
+        protected abstract boolean processFile(File file) throws IOException;
+        @Override
+        protected void done(){
+            System.gc();        // Run the garbage collector
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(false);
+            setProgressString(null);
+            setInputEnabled(true);
+            useWaitCursor(false);
+        }
+    }
 }
