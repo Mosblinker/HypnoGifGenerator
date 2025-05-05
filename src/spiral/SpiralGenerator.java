@@ -1858,6 +1858,48 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
+            Color color2, int width, int height, BufferedImage mask, 
+            boolean antialiasing){
+            // If the mask is somehow null at this point
+        if (mask == null)
+            return;
+            // This gets the scale for the mask
+        double scale = getMaskScale();
+            // Create an image to render the overlay to
+        BufferedImage overlay = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create a graphics context for the image
+        Graphics2D imgG = overlay.createGraphics();
+            // Configure the image graphics
+        imgG = configureGraphics(imgG);
+            // If the overlay is being rendered in a solid color
+        if (Objects.equals(color1, color2)){
+                // Fill the image with the first color
+            imgG.setColor(color1);
+            imgG.fillRect(0, 0, width, height);
+        } else {
+                // Paint a spiral with the two colors
+            paintSpiral(imgG,frameIndex,color1,color2,width,height);
+        }   // Scale the image, maintaining its center
+        scaleMaintainLocation(imgG,width/2.0,height/2.0,scale,scale);
+            // Enable or disable the antialiasing, depending on whether the mask 
+            // should be antialiased
+        imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                (antialiasing)? RenderingHints.VALUE_ANTIALIAS_ON : 
+                        RenderingHints.VALUE_ANTIALIAS_OFF);
+            // Mask the overlay image pixels with the mask image
+        maskImage(imgG,mask);
+            // Dispose of the image graphics
+        imgG.dispose();
+            // Create a copy of the given graphics context and configure it
+        g = configureGraphics((Graphics2D) g.create());
+            // Draw the overlay image
+        g.drawImage(overlay, 0, 0, null);
+            // Dispose of the copy of the graphics context
+        g.dispose();
+    }
+    
+    private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height){
             // If the width or height are less than or equal to zero (nothing 
             // would be drawn)
@@ -1875,12 +1917,6 @@ public class SpiralGenerator extends javax.swing.JFrame {
             return;
             // This is the image that will get the mask to use
         BufferedImage mask;
-            // This gets the scale for the mask
-        double scale = getMaskScale();
-            // This gets the x-coordinate for the center of the area
-        double centerX = width/2.0;
-            // This gets the y-coordinate for the center of the area
-        double centerY = height/2.0;
             // This gets whether the mask is using the overlay image mask 
             // instead of the text mask
         boolean useImage = isOverlayMaskImage();
@@ -1928,8 +1964,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
                     gTemp = (Graphics2D)g.create();
                         // Set the color to the first color
                     gTemp.setColor(color1);
+                        // This gets the scale for the mask
+                    double scale = getMaskScale();
                         // Scale the graphics, maintaining the center
-                    scaleMaintainLocation(gTemp,centerX,centerY,scale,scale);
+                    scaleMaintainLocation(gTemp,width/2.0,height/2.0,scale,scale);
                 } else {
                         // Create a new image for the overlay mask
                     overlayMask = new BufferedImage(width, height, 
@@ -1949,46 +1987,14 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 // Use the overlay text mask as the mask
             mask = overlayMask;
         }
-            // If the mask is somehow null at this point
-        if (mask == null)
-            return;
-            // Create an image to render the overlay to
-        BufferedImage overlay = new BufferedImage(width, height, 
-                BufferedImage.TYPE_INT_ARGB);
-            // Create a graphics context for the image
-        Graphics2D imgG = overlay.createGraphics();
-            // Configure the image graphics
-        imgG = configureGraphics(imgG);
-            // If the overlay is being rendered in a solid color
-        if (solidColor){
-                // Fill the image with the first color
-            imgG.setColor(color1);
-            imgG.fillRect(0, 0, width, height);
-        } else {
-                // Paint a spiral with the two colors
-            paintSpiral(imgG,frameIndex,color1,color2,width,height);
-        }   // Scale the image, maintaining its center
-        scaleMaintainLocation(imgG,centerX,centerY,scale,scale);
-            // Enable or disable the antialiasing, depending on whether the mask 
-            // should be antialiased
-        imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    // If the mask is an image, use whether the image 
-                    // antialiasing toggle is selected. Otherwise, use whether 
-                    // the mask painter has antialiasing enabled
-                (((useImage)?imgMaskAntialiasingToggle.isSelected():
-                        maskPainter.isAntialiasingEnabled()))? 
-                        RenderingHints.VALUE_ANTIALIAS_ON : 
-                        RenderingHints.VALUE_ANTIALIAS_OFF);
-            // Mask the overlay image pixels with the mask image
-        maskImage(imgG,mask);
-            // Dispose of the image graphics
-        imgG.dispose();
-            // Create a copy of the given graphics context and configure it
-        g = configureGraphics((Graphics2D) g.create());
-            // Draw the overlay image
-        g.drawImage(overlay, 0, 0, null);
-            // Dispose of the copy of the graphics context
-        g.dispose();
+            // If the mask is an image, use whether the image 
+            // antialiasing toggle is selected. Otherwise, use whether 
+            // the mask painter has antialiasing enabled
+        boolean antialiasing = (useImage)?imgMaskAntialiasingToggle.isSelected():
+                        maskPainter.isAntialiasingEnabled();
+            // Paint the overlay
+        paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
+                height,mask,antialiasing);
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
