@@ -1051,8 +1051,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             encoder.setBackground(bg);
             if (transparency)
                 encoder.setTransparent(bg);
+            SpiralPainter painter = new LogarithmicSpiralPainter(spiralPainter);
+            OverlayMask mask = new OverlayMask(overlayMask);
             for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
-                encoder.addFrame(createSpiralFrame(i,width,height,spiralPainter,overlayMask));
+                encoder.addFrame(createSpiralFrame(i,width,height,painter,mask));
             }
             encoder.finish();
         } catch (IOException ex){
