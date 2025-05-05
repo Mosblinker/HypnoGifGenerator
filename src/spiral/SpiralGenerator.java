@@ -1869,7 +1869,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             BufferedImage mask, CenteredTextPainter painter){
             // If the text is null or blank
         if (text == null || text.isBlank())
-            return mask;
+            return null;
             // If the overlay mask is not null and is the same width and height 
             // as the given width and height
         if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
