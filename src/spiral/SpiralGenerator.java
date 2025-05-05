@@ -1876,11 +1876,32 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
             SpiralPainter spiralPainter, CenteredTextPainter painter){
+            // If the message should be a solid color
+        boolean solidColor = Objects.equals(color1, color2);
+            // This gets the scale for the mask
+        double scale = getMaskScale();
+            // If the overlay is a solid color and using the mask
+        if (solidColor && !isOverlayMaskImage()){
+                // Get the text for the mask 
+            String text = maskTextArea.getText();
+                // If the text is null or blank
+            if (text == null || text.isBlank())
+                return;
+                // Create a copy of the given graphics context
+            g = (Graphics2D) g.create();
+                // Set the color to the first color
+            g.setColor(color1);
+                // Scale the graphics, maintaining the center
+            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
+               // Paint the mask's text
+            paintTextMask(g,width,height,text,painter);
+                // Dispose of the graphics context
+            g.dispose();
+            return;
+        }
             // If the mask is somehow null at this point
         if (mask == null)
             return;
-            // This gets the scale for the mask
-        double scale = getMaskScale();
             // Create an image to render the overlay to
         BufferedImage overlay = new BufferedImage(width, height, 
                 BufferedImage.TYPE_INT_ARGB);
@@ -1889,7 +1910,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // Configure the image graphics
         imgG = configureGraphics(imgG);
             // If the overlay is being rendered in a solid color
-        if (Objects.equals(color1, color2)){
+        if (solidColor){
                 // Fill the image with the first color
             imgG.setColor(color1);
             imgG.fillRect(0, 0, width, height);
@@ -1933,7 +1954,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         else if (hasNoColor(color1,color2))
             return;
             // This is the image that will get the mask to use
-        BufferedImage mask;
+        BufferedImage mask = null;
             // This gets whether the mask is using the overlay image mask 
             // instead of the text mask
         boolean useImage = isOverlayMaskImage();
@@ -1956,7 +1977,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         width,height);
             }   // Use the mask version of the overlay image as the mask
             mask = overlayImageMask;
-        } else {
+        } else if (!solidColor){
                 // Get the text for the mask 
             String text = maskTextArea.getText();
                 // If the text is null or blank
@@ -1965,40 +1986,19 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 // If the overlay is a solid color or the overlay mask is null 
                 // (needs to be refreshed) or the overlay mask's size does not 
                 // match the size of the area being rendered
-            if (solidColor || overlayMask == null || 
+            if (overlayMask == null || 
                     overlayMask.getWidth() != width || 
                     overlayMask.getHeight() != height){
-                    // This is a temporary graphics context to render the 
-                    // overlay mask to
-                Graphics2D gTemp;
-                    // If the overlay is one solid color
-                if (solidColor){
-                        // Since we're rendering it as a single color, we don't 
-                        // actually need to use a mask for this one. We can just 
-                        // render it to the given graphics context.
-                    
-                        // Create a copy of the given graphics context
-                    gTemp = (Graphics2D)g.create();
-                        // Set the color to the first color
-                    gTemp.setColor(color1);
-                        // This gets the scale for the mask
-                    double scale = getMaskScale();
-                        // Scale the graphics, maintaining the center
-                    scaleMaintainLocation(gTemp,width/2.0,height/2.0,scale,scale);
-                } else {
-                        // Create a new image for the overlay mask
-                    overlayMask = new BufferedImage(width, height, 
-                            BufferedImage.TYPE_INT_ARGB);
-                        // Create the graphics context for the image
-                    gTemp = overlayMask.createGraphics();
-                }   // Paint the mask's text
+                    // Create a new image for the overlay mask
+                overlayMask = new BufferedImage(width, height, 
+                        BufferedImage.TYPE_INT_ARGB);
+                    // Create the graphics context for the image
+                Graphics2D gTemp = overlayMask.createGraphics();
+                    // Paint the mask's text
                 paintTextMask(gTemp,width,height,text,painter);
                     // Dispose of the graphics context
                 gTemp.dispose();
-            }   // If the overlay is a solid color
-            if (solidColor)
-                    // We just finished rendering it
-                return;
+            }
                 // Use the overlay text mask as the mask
             mask = overlayMask;
         }
