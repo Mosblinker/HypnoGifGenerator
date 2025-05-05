@@ -1865,6 +1865,24 @@ public class SpiralGenerator extends javax.swing.JFrame {
         painter.paint(g, text, width, height);
     }
     
+    private BufferedImage getImageMaskImage(int width, int height, 
+            BufferedImage image, BufferedImage mask){
+            // If the source image is null
+        if (image == null)
+            return null;
+            // If the mask version of the overlay image is null
+        if (mask == null)
+            mask = image;
+            // If the mask version of the overlay image doesn't match the 
+            // size of the area being rendered
+            // TODO: Work on implementing user control over the overlay 
+            // image's size and stuff
+        if (mask.getWidth() != width || mask.getHeight() != height)
+                // Scale the overlay image
+            return Thumbnailator.createThumbnail(image,width,height);
+        return mask;
+    }
+    
     private BufferedImage getTextMaskImage(int width, int height, String text, 
             BufferedImage mask, CenteredTextPainter painter){
             // If the text is null or blank
@@ -1984,23 +2002,8 @@ public class SpiralGenerator extends javax.swing.JFrame {
         boolean useImage = isOverlayMaskImage();
             // If a loaded image is being used as the overlay mask
         if (useImage){
-                // If there is no image loaded for the overlay mask
-            if (overlayImage == null)
-                return;
-                // If the mask version of the overlay image is null
-            if (overlayImageMask == null)
-                overlayImageMask = overlayImage;
-                // If the mask version of the overlay image doesn't match the 
-                // size of the area being rendered
-                // TODO: Work on implementing user control over the overlay 
-                // image's size and stuff
-            if (overlayImageMask.getWidth() != width || 
-                    overlayImageMask.getHeight() != height){
-                    // Scale the overlay image
-                overlayImageMask = Thumbnailator.createThumbnail(overlayImage,
-                        width,height);
-            }   // Use the mask version of the overlay image as the mask
-            mask = overlayImageMask;
+                // Use the mask version of the overlay image as the mask
+            mask = overlayImageMask = getImageMaskImage(width,height,overlayImage,overlayImageMask);
         } else if (!solidColor){
                 // Use the text mask, creating it if it needs to be made
             mask = overlayMask = getTextMaskImage(width,height,maskTextArea.getText(),overlayMask,painter);
