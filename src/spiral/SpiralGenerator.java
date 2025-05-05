@@ -1433,6 +1433,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
         for (JButton button : colorButtons.values()){
             button.setEnabled(enabled);
         }
+        widthSpinner.setEnabled(enabled);
+        heightSpinner.setEnabled(enabled);
+        maskScaleSpinner.setEnabled(enabled);
+        imgMaskAntialiasingToggle.setEnabled(enabled);
     }
     /**
      * 
