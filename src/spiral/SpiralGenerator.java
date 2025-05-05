@@ -10,6 +10,7 @@ import components.JColorSelector;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
+import files.FilesExtended;
 import files.extensions.ImageExtensions;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
@@ -31,6 +32,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -2398,6 +2400,362 @@ public class SpiralGenerator extends javax.swing.JFrame {
             setProgressString(null);
             setInputEnabled(true);
             useWaitCursor(false);
+        }
+    }
+    /**
+     * This is an abstract class that provides the framework for loading from 
+     * files.
+     */
+    private abstract class FileLoader extends FileWorker{
+        /**
+         * Whether this is currently loading a file.
+         */
+        protected volatile boolean loading = false;
+        /**
+         * Whether file not found errors should be shown.
+         */
+        protected boolean showFileNotFound;
+        /**
+         * This constructs a FileLoader that will load the data from the given 
+         * file.
+         * @param file The file to load the data from.
+         * @param showFileNotFound Whether a file not found error should result 
+         * in a popup being shown to the user.
+         */
+        FileLoader(File file, boolean showFileNotFound){
+            super(file);
+            this.showFileNotFound = showFileNotFound;
+        }
+        /**
+         * This constructs a FileLoader that will load the data from the given 
+         * file.
+         * @param file The file to load the data from.
+         */
+        FileLoader(File file){
+            this(file,true);
+        }
+        @Override
+        public String getProgressString(){
+            return "Loading";
+        }
+        /**
+         * This returns whether this is currently loading from a file.
+         * @return Whether a file is currently being loaded.
+         */
+        public boolean isLoading(){
+            return loading;
+        }
+        /**
+         * This returns whether this was successful at loading from the file. 
+         * This will be inaccurate up until the file is loaded.
+         * @return Whether this has successfully loaded the file.
+         */
+        @Override
+        public boolean isSuccessful(){
+            return super.isSuccessful();
+        }
+        /**
+         * This returns whether this shows a failure prompt when the file is not 
+         * found.
+         * @return Whether the file not found failure prompt is shown.
+         */
+        public boolean getShowsFileNotFoundPrompts(){
+            return showFileNotFound;
+        }
+        /**
+         * This returns the file being loaded by this FileLoader.
+         * @return The file that will be loaded.
+         */
+        @Override
+        public File getFile(){
+            return super.getFile();
+        }
+        /**
+         * This loads the data from the given file. This is called by {@link 
+         * #processFile(File) processFile} in order to load the file.
+         * @param file The file to load the data from.
+         * @return Whether the file was successfully loaded.
+         * @throws IOException 
+         * @see #processFile(File) 
+         */
+        protected abstract boolean loadFile(File file) throws IOException;
+        /**
+         * {@inheritDoc } This delegates to {@link #loadFile(File) loadFile}.
+         * @see #loadFile(File) 
+         */
+        @Override
+        protected boolean processFile(File file) throws IOException{
+            loading = true;
+            return loadFile(file);
+        }
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully loaded.
+         * @param file The file that was successfully loaded.
+         */
+        @Override
+        protected void showSuccessPrompt(File file){}
+        /**
+         * This is used to display a failure prompt to the user when the file 
+         * fails to be loaded. 
+         * @param file The file that failed to load.
+         * @param ex
+         * @return {@inheritDoc}
+         */
+        @Override
+        protected boolean showFailurePrompt(File file, IOException ex){
+                // If the file doesn't exist
+            if (!file.exists() || ex instanceof FileNotFoundException){
+                    // If this should show file not found prompts
+                if (showFileNotFound){
+                    JOptionPane.showMessageDialog(SpiralGenerator.this, 
+                            getFileNotFoundMessage(file,ex), 
+                            getFailureTitle(file,ex), 
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                return false;
+            }
+            else{   // Ask the user if they would like to try loading the file
+                    // again
+                return JOptionPane.showConfirmDialog(SpiralGenerator.this,
+                        getFailureMessage(file,ex)+"\nWould you like to try again?",
+                        getFailureTitle(file,ex),JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+            }
+        }
+        /**
+         * This returns the title for the dialog to display if the file fails to 
+         * be saved.
+         * @param file The file that failed to load.
+         * @return The title for the dialog to display if the file fails to
+         * save.
+         */
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - File Failed To Load";
+        }
+        /**
+         * This returns the message to display if the file fails to load.
+         * @param file The file that failed to load.
+         * @return The message to display if the file fails to load.
+         */
+        protected String getFailureMessage(File file, IOException ex){
+            return "The file failed to load.";
+        }
+        /**
+         * This returns the message to display if the file does not exist.
+         * @param file The file that did not exist.
+         * @return The message to display if the file does not exist.
+         */
+        protected String getFileNotFoundMessage(File file, IOException ex){
+            return "The file does not exist.";
+        }
+        @Override
+        protected void done(){
+            loading = false;
+            super.done();
+        }
+    }
+    /**
+     * This is an abstract class that provides the framework for saving to a 
+     * file.
+     */
+    private abstract class FileSaver extends FileWorker{
+        /**
+         * Whether this is currently saving a file.
+         */
+        protected volatile boolean saving = false;
+        /**
+         * This stores whether this should exit the program after saving.
+         */
+        protected volatile boolean exitAfterSaving;
+        /**
+         * This constructs a FileSaver that will save data to the given file 
+         * and, if {@code exit} is {@code true}, will exit the program after 
+         * saving the file.
+         * @param file The file to save the data to.
+         * @param exit Whether the program will exit after saving the file.
+         */
+        FileSaver(File file, boolean exit){
+            super(file);
+            exitAfterSaving = exit;
+        }
+        /**
+         * This constructs a FileSaver that will save data to the given file.
+         * @param file The file to save the data to.
+         */
+        FileSaver(File file){
+            this(file,false);
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving";
+        }
+        /**
+         * This returns whether this is currently saving to a file.
+         * @return Whether a file is currently being saved to.
+         */
+        public boolean isSaving(){
+            return saving;
+        }
+        /**
+         * This returns whether this was successful at saving to the file. This 
+         * will be inaccurate up until the file is saved.
+         * @return Whether this has successfully saved the file.
+         */
+        @Override
+        public boolean isSuccessful(){
+            return super.isSuccessful();
+        }
+        /**
+         * This returns whether the program will exit after this finishes saving 
+         * the file.
+         * @return Whether the program will exit once the file is saved.
+         */
+        public boolean getExitAfterSaving(){
+            return exitAfterSaving;
+        }
+        /**
+         * This returns the file being saved to by this FileSaver.
+         * @return The file that will be saved.
+         */
+        @Override
+        public File getFile(){
+            return super.getFile();
+        }
+        /**
+         * This returns whether this should consider the file returned by {@link 
+         * #getFile() getFile} as a directory in which to save files into.
+         * @return Whether the file given to this FileSaver is actually a 
+         * directory.
+         */
+        protected boolean isFileDirectory(){
+            return false;
+        }
+        /**
+         * This attempts to save to the given file. This is called by {@link 
+         * #processFile(File) processFile} in order to save the file.
+         * @param file The file to save.
+         * @return Whether the file was successfully saved to.
+         * @throws IOException
+         * @see #processFile(File) 
+         */
+        protected abstract boolean saveFile(File file) throws IOException;
+        /**
+         * {@inheritDoc } This delegates the saving of the file to {@link 
+         * #saveFile(File) saveFile}.
+         * @see #saveFile(File) 
+         */
+        @Override
+        protected boolean processFile(File file) throws IOException{
+            saving = true;
+                // Try to create the directories and if that fails, then give up 
+                // on saving the file. (If the file is the directory, include it 
+                // as a directory to be created. Otherwise, create the parent 
+                // file of the file to be saved)
+            if (!FilesExtended.createDirectories(SpiralGenerator.this, 
+                    (isFileDirectory())?file:file.getParentFile()))
+                return false;
+            return saveFile(file);
+        }
+        /**
+         * This returns the title for the dialog to display if the file is 
+         * successfully saved.
+         * @param file The file that was successfully saved.
+         * @return The title for the dialog to display if the file is 
+         * successfully saved.
+         */
+        protected String getSuccessTitle(File file){
+            return "File Saved Successfully";
+        }
+        /**
+         * This returns the message to display if the file is successfully 
+         * saved.
+         * @param file The file that was successfully saved.
+         * @return The message to display if the file is successfully saved.
+         */
+        protected String getSuccessMessage(File file){
+            return "The file was successfully saved.";
+        }
+        /**
+         * This returns the title for the dialog to display if the file fails to 
+         * be saved.
+         * @param file The file that failed to be saved.
+         * @return The title for the dialog to display if the file fails to
+         * save.
+         */
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - File Failed To Save";
+        }
+        /**
+         * This returns the message to display if the file fails to be saved.
+         * @param file The file that failed to be saved.
+         * @return The message to display if the file fails to save.
+         */
+        protected String getFailureMessage(File file, IOException ex){
+            return "The file failed to save.";
+        }
+        /**
+         * This is used to display a success prompt to the user when the file is 
+         * successfully saved. The success prompt will display the message 
+         * returned by {@link #getSuccessMessage()}. If the program is to exit 
+         * after saving the file, then this will show nothing.
+         * @param file The file that was successfully saved.
+         */
+        @Override
+        protected void showSuccessPrompt(File file){
+                // If the program is not to exit after saving the file
+            if (!exitAfterSaving)   
+                JOptionPane.showMessageDialog(SpiralGenerator.this, 
+                        getSuccessMessage(file), getSuccessTitle(file), 
+                        JOptionPane.INFORMATION_MESSAGE);
+        }
+        /**
+         * This is used to display a failure and retry prompt to the user when 
+         * the file fails to be saved.
+         * @param file The file that failed to be saved.
+         * @param ex
+         * @return {@inheritDoc }
+         */
+        @Override
+        protected boolean showFailurePrompt(File file, IOException ex){
+                // Get the message to be displayed. If the file failed to be 
+                // backed up, show the backup failed message. Otherwise show the 
+                // normal failure message.
+            String message = getFailureMessage(file,ex);
+                // Show a dialog prompt asking the user if they would like to 
+                // try and save the file again and get their input. 
+            int option = JOptionPane.showConfirmDialog(
+                    SpiralGenerator.this, 
+                    message+"\nWould you like to try again?",
+                    getFailureTitle(file,ex),
+                        // If the program is to exit after saving the file, show 
+                        // a third "cancel" option to allow the user to cancel 
+                        // exiting the program
+                    (exitAfterSaving)?JOptionPane.YES_NO_CANCEL_OPTION:
+                            JOptionPane.YES_NO_OPTION,
+                    JOptionPane.ERROR_MESSAGE);
+                // If the program was going to exit after saving the file
+            if (exitAfterSaving){   
+                    // If the option selected was the cancel option or the user 
+                    // closed the dialog without selecting anything, then don't 
+                    // exit the program
+                exitAfterSaving = option != JOptionPane.CLOSED_OPTION && 
+                        option != JOptionPane.CANCEL_OPTION;
+            }   // Return whether the user selected yes
+            return option == JOptionPane.YES_OPTION;    
+        }
+        /**
+         * This is used to exit the program after this finishes saving the file.
+         */
+        protected void exitProgram(){
+            System.exit(0);         // Exit the program
+        }
+        @Override
+        protected void done(){
+            if (exitAfterSaving)    // If the program is to exit after saving
+                exitProgram();      // Exit the program
+            saving = false;
+            super.done();
         }
     }
 }
