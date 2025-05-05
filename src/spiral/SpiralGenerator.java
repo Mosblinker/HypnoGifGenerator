@@ -200,7 +200,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
         
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
-        
+        progressBar.setMaximum(SPIRAL_FRAME_DURATION);
         updateFrameNumberDisplayed();
         animationTimer = new javax.swing.Timer(SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
             progressAnimation(e);
@@ -989,6 +989,17 @@ public class SpiralGenerator extends javax.swing.JFrame {
             }
         });
 
+        progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                progressBarStateChanged(evt);
+            }
+        });
+        progressBar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                progressBarPropertyChange(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1300,6 +1311,30 @@ public class SpiralGenerator extends javax.swing.JFrame {
         maskPreviewLabel.repaint();
         refreshPreview(false);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
+    /**
+     * 
+     * @param evt 
+     */
+    private void progressBarStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_progressBarStateChanged
+        updateProgressString();
+    }//GEN-LAST:event_progressBarStateChanged
+    /**
+     * 
+     * @param evt 
+     */
+    private void progressBarPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_progressBarPropertyChange
+            // If the property name is not null
+        if (evt.getPropertyName() != null){
+                // Determine what to do with the property name
+            switch(evt.getPropertyName()){
+                    // If the progress bar's indeterminate state or the string 
+                    // painted get changed
+                case("indeterminate"):
+                case("stringPainted"):
+                    updateProgressString();
+            }
+        }
+    }//GEN-LAST:event_progressBarPropertyChange
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1714,6 +1749,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * The undo commands for the message mask field.
      */
     private UndoManagerCommands undoCommands;
+    /**
+     * This is the String to display on the progress bar before the progress 
+     * amount.
+     */
+    private String progressString = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
@@ -1788,6 +1828,37 @@ public class SpiralGenerator extends javax.swing.JFrame {
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
+    /**
+     * 
+     */
+    private void updateProgressString(){
+            // If the progress bar's string is painted
+        if (progressBar.isStringPainted()){
+                // If the progress string is not null, then use it. Otherwise, 
+                // use an empty string
+            String str = (progressString != null) ? progressString : "";
+                // Get the percentage as a string
+            String percent = String.format("%.1f%%", progressBar.getPercentComplete()*100.0);
+                // If the string is not empty
+            if (!str.isEmpty()){
+                    // If the progress bar is indeterminate
+                if (progressBar.isIndeterminate())
+                    progressBar.setString(str + "...");
+                else
+                    progressBar.setString(str+": "+percent);
+                // If the progress bar is not indeterminate
+            } else if (!progressBar.isIndeterminate())
+                progressBar.setString(percent);
+        }
+    }
+    /**
+     * 
+     * @param text 
+     */
+    private void setProgressString(String text){
+        progressString = text;
+        progressBar.setStringPainted(text != null);
+    }
     
     private void scaleMaintainLocation(Graphics2D g, double x, double y, 
             double scaleX, double scaleY){
