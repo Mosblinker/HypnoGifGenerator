@@ -4,9 +4,9 @@
  */
 package spiral.painter;
 
+import geom.*;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.geom.*;
 import java.util.Objects;
 import swing.ListenedPainter;
 
@@ -14,72 +14,11 @@ import swing.ListenedPainter;
  *
  * @author Mosblinker
  */
-public abstract class SpiralPainter extends ListenedPainter<Double>{
-    /**
-     * This is the maximum angle for a circle. In other words, 360 degrees.
-     */
-    public static final double MAXIMUM_ANGLE = 360.0;
-    /**
-     * This is is the angle for quarter of a circle. In other words, 90 degrees.
-     */
-    public static final double QUARTER_ANGLE = 90.0;
+public abstract class SpiralPainter extends ListenedPainter<Double> implements 
+        GeometryMathConstants{
     
     public static final String CLOCKWISE_PROPERTY_CHANGED = 
             "ClockwisePropertyChanged";
-    /**
-     * This method bounds the given angle to be within the range of 0 and 
-     * {@value MAXIMUM_ANGLE}, exclusive. If the given angle is negative, then 
-     * it will loop back to being positive.
-     * @param p The angle to bound.
-     * @return The angle, limited to a range of 0 and {@value MAXIMUM_ANGLE}, 
-     * exclusive.
-     * @see MAXIMUM_ANGLE
-     */
-    public static double boundAngle(double p){
-        return ((p%MAXIMUM_ANGLE)+MAXIMUM_ANGLE)%MAXIMUM_ANGLE;
-    }
-    /**
-     * This returns a {@code Point2D} object with the given point on a polar 
-     * coordinate system converted to Cartesian coordinates with the origin at 
-     * ({@code x}, {@code y}).
-     * @param r The radius of the point on the polar coordinate system.
-     * @param p The azimuth of the point on the polar coordinate system, in 
-     * degrees.
-     * @param x The x-coordinate of the origin.
-     * @param y The y-coordinate of the origin.
-     * @param point A {@code Point2D} object to reuse to store the resulting 
-     * coordinate, or null.
-     * @return A {@code Point2D} object with the given polar coordinate 
-     * converted into Cartesian coordinates.
-     */
-    public Point2D polarToCartesianCoords(double r, double p,double x,double y, 
-            Point2D point){
-            // If the given point is null
-        if (point == null)
-            point = new Point2D.Double();
-            // Get the bounded azimuth in radians
-        double theta = Math.toRadians(boundAngle(p));
-            // Add the radius multiplied by the cosine of the azimuth to the 
-            // x-coordinate of the origin, and add the radius multiplied by the 
-            // sine of the azimuth to the y-coordinate of the origin
-        point.setLocation(x + r*Math.cos(theta), y + r*Math.sin(theta));
-        return point;
-    }
-    /**
-     * This returns a {@code Point2D} object with the given point on a polar 
-     * coordinate system converted to Cartesian coordinates with the origin at 
-     * ({@code 0}, {@code 0}).
-     * @param r The radius of the point on the polar coordinate system.
-     * @param p The azimuth of the point on the polar coordinate system, in 
-     * degrees.
-     * @param point A {@code Point2D} object to reuse to store the resulting 
-     * coordinate, or null.
-     * @return A {@code Point2D} object with the given polar coordinate 
-     * converted into Cartesian coordinates.
-     */
-    public Point2D polarToCartesianCoords(double r, double p, Point2D point){
-        return polarToCartesianCoords(r,p,0,0,point);
-    }
     /**
      * This stores whether this spiral is clockwise or counter-clockwise.
      */
@@ -131,7 +70,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double>{
         g.clipRect(0, 0, width, height);
             // Paint the spiral. If the angle is null, then default to 0. 
             // Otherwise, keep in in range of (-360, 360), exclusive.
-        paintSpiral(g,(angle!=null)?(angle%MAXIMUM_ANGLE):0.0,width,height,
+        paintSpiral(g,(angle!=null)?(angle%FULL_CIRCLE_DEGREES):0.0,width,height,
                 width/2.0,height/2.0,isClockwise());
         g.dispose();
     }

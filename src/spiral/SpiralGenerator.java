@@ -77,10 +77,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
      */
     private static final int SPIRAL_FRAME_COUNT = 64;
     /**
-     * This is the amount that the spiral will rotate per frame.
+     * This is the amount that the spiral will rotate per frame, in degrees.
      */
     private static final double SPIRAL_FRAME_ROTATION = 
-            SpiralPainter.MAXIMUM_ANGLE / SPIRAL_FRAME_COUNT;
+            SpiralPainter.FULL_CIRCLE_DEGREES / SPIRAL_FRAME_COUNT;
     /**
      * This is the duration for each frame of animation.
      */
@@ -1365,10 +1365,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
             // If the spin direction is the same as the spiral's direction
         if (isSpinClockwise() == spiralPainter.isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
-            angle = SpiralPainter.MAXIMUM_ANGLE - angle;
+            angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
             // Add the angle spinner's value and bound it by 360
         return (angle + (double) angleSpinner.getValue()) % 
-                SpiralPainter.MAXIMUM_ANGLE;
+                SpiralPainter.FULL_CIRCLE_DEGREES;
     }
     /**
      * @param args the command line arguments

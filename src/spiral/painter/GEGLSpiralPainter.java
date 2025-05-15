@@ -4,6 +4,7 @@
  */
 package spiral.painter;
 
+import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
@@ -239,12 +240,12 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     protected double adjustRotation(double angle, double thickness, 
             boolean clockwise){
             // Bound the angle of rotation
-        angle = boundAngle(angle);
+        angle = GeometryMath.boundDegrees(angle);
             // If the spiral is going clockwise and the angle is not 0
         if (clockwise && angle > 0.0)
-            angle = MAXIMUM_ANGLE - angle;
+            angle = FULL_CIRCLE_DEGREES - angle;
             // Alter the angle based off the thickness of the spiral
-        return (angle + (thickness / 2.0)*MAXIMUM_ANGLE) % MAXIMUM_ANGLE;
+        return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
     }
     @Override
     protected void paintSpiral(Graphics2D g, double angle, int width,int height, 

@@ -163,7 +163,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // If the spiral is counter-clockwise
         if (!clockwise)
             p = -p;
-        return a * Math.exp((p/MAXIMUM_ANGLE) * k);
+        return a * Math.exp((p/FULL_CIRCLE_DEGREES) * k);
     }
     /**
      * 
@@ -191,7 +191,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     protected double getAzimuth(double a, double k, double r, double angle, 
             boolean clockwise){
             // Calculate the azimuth from the radius
-        double p = (Math.log(r / a) / k) * MAXIMUM_ANGLE;
+        double p = (Math.log(r / a) / k) * FULL_CIRCLE_DEGREES;
             // If the spiral is counter-clockwise
         if (!clockwise)
             p = -p;
@@ -264,7 +264,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         double p0 = getAzimuth(a,k,STARTING_RADIUS/rScale,angle,true);
             // Subtract the starting azimuth by itself mod 90 degrees to ensure 
             // it ends at a multiple of 90 degrees.
-        p0 -= p0 % QUARTER_ANGLE;
+        p0 -= p0 % QUARTER_CIRCLE_DEGREES;
         
             // This gets the ending azimuth for the spiral. This uses the 
             // radius and ignores whether the spiral is clockwise or not, 
@@ -273,7 +273,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         double p1 = getAzimuth(radius, k, 
                 Math.sqrt(width*width+height*height)/2.0, angle,true);
             // Effectively round it up to the nearest quarter angle
-        p1 += (QUARTER_ANGLE - (p1 % QUARTER_ANGLE)) % QUARTER_ANGLE;
+        p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
@@ -309,7 +309,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         if (!clockwise){
             p1 = -p1;
                 // Not only swap the signs but offset this by 360
-            p0 = -p0+MAXIMUM_ANGLE;
+            p0 = -p0+FULL_CIRCLE_DEGREES;
                 // Invert the values m0, m1, and m2
             m0 = 1/m0;
             m1 = 1/m1;
@@ -336,7 +336,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // spiral. This has an additional 360 degrees on the ending azimuth. 
             // This is the return path for the spiral that turns the spiral from 
             // a line to a shape.
-        path = processLogSpiral(centerX, centerY, a, k, p0, p1+MAXIMUM_ANGLE, 
+        path = processLogSpiral(centerX, centerY, a, k, p0, p1+FULL_CIRCLE_DEGREES, 
                 angle,clockwise,m0,m1,m2,n0,n1,true,point1,point2,point3,point4,path);
             // Close the path now
         path.closePath();
@@ -414,7 +414,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // Make sure the maximum azimuth is the larger azimuth
         p1 = Math.max(temp, p1);
             // Calculate the point on the spiral for the start of the spiral
-        point1 = polarToCartesianCoords(startR,startP,x,y,point1);
+        point1 = GeometryMath.polarToCartesianDegrees(startR,startP,x,y,point1);
             // If the path is empty
         if (path.getCurrentPoint() == null)
                 // Move the path to the starting point
@@ -428,13 +428,13 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
                 (p > p0 && p < p1) || p == startP; r*=m2, p+=n2){
                 // Calculate the point on the spiral that is 1/3rd of the way on 
                 // the current segment of the spiral
-            point2 = polarToCartesianCoords(r*m0,p+n0,x,y,point2);
+            point2 = GeometryMath.polarToCartesianDegrees(r*m0,p+n0,x,y,point2);
                 // Calculate the point on the spiral that is 2/3rd of the way on 
                 // the current segment of the spiral
-            point3 = polarToCartesianCoords(r*m1,p+n1,x,y,point3);
+            point3 = GeometryMath.polarToCartesianDegrees(r*m1,p+n1,x,y,point3);
                 // Calculate the point on the spiral that is the end of the 
                 // current segment of the spiral
-            point4 = polarToCartesianCoords(r*m2,p+n2,x,y,point4);
+            point4 = GeometryMath.polarToCartesianDegrees(r*m2,p+n2,x,y,point4);
                 // Calculate the control points for the cubic bezier curve that 
                 // passes through point1, point2, point3, and point4, and store 
                 // the control points in point2 and point3
