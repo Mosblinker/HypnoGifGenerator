@@ -4,6 +4,7 @@
  */
 package spiral;
 
+import config.ConfigUtilities;
 import io.github.dheid.fontchooser.FontFamilies;
 import io.github.dheid.fontchooser.FontFamily;
 import java.awt.Color;
@@ -11,7 +12,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.Window;
 import java.io.File;
 import java.nio.*;
 import java.util.*;
@@ -530,7 +530,7 @@ public class SpiralGeneratorConfig {
                 // Select that file in the file chooser
             fc.setSelectedFile(file);
         }   // Load the file chooser's size from the preference node
-        setSizeOfComponent(fc,getFileChooserSize(fc));
+        ConfigUtilities.setComponentSize(fc,getFileChooserSize(fc));
     }
     /**
      * 
@@ -548,7 +548,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadComponentSize(Component comp, String key){
         Dimension dim = getDimension(key);
-        setSizeOfComponent(comp,dim);
+        ConfigUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
@@ -558,7 +558,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadComponentSize(Component comp){
         Dimension dim = getComponentSize(comp);
-        setSizeOfComponent(comp,dim);
+        ConfigUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
@@ -985,7 +985,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadMaskFontSelectorSize(Component comp){
         Dimension dim = getMaskFontSelectorSize();
-        setSizeOfComponent(comp,dim);
+        ConfigUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
@@ -1057,25 +1057,5 @@ public class SpiralGeneratorConfig {
     
     public void setImageHeight(int value){
         getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
-    }
-    /**
-     * 
-     * @param comp
-     * @param dim 
-     */
-    public static void setSizeOfComponent(Component comp, Dimension dim){
-            // If there isn't a size set
-        if (dim == null)
-            return;
-            // Get the minimum size for the component
-        Dimension min = comp.getMinimumSize();
-            // Make sure the size is not smaller than the minimum size
-        dim.width = Math.max(dim.width, min.width);
-        dim.height = Math.max(dim.height, min.height);
-            // If the component is a window
-        if (comp instanceof Window)
-            comp.setSize(dim);
-        else
-            comp.setPreferredSize(dim);
     }
 }
