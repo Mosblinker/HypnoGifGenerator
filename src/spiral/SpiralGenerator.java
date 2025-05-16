@@ -1133,7 +1133,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
     }//GEN-LAST:event_frameLastButtonActionPerformed
 
     private void printTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTestButtonActionPerformed
-        // TODO add your handling code here:
+        System.out.println("Bounds: " + getBounds());
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
