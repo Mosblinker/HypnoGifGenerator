@@ -13,7 +13,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.io.File;
-import java.nio.*;
 import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
@@ -158,21 +157,8 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public Dimension getDimension(String key, Dimension defaultValue){
-        try{    // Get the byte array representing the dimenison, or null
-            byte[] arr = node.getByteArray(key, null);
-                // If the byte array is null
-            if (arr == null)
-                return defaultValue;
-                // Get an IntBuffer to go through the integers in the array
-            IntBuffer buffer = ByteBuffer.wrap(arr).asIntBuffer();
-                // If there are less than 2 integers in the array
-            if (buffer.remaining() < 2)
-                return defaultValue;
-            return new Dimension(buffer.get(),buffer.get());
-        } catch (IllegalStateException ex){
-            System.out.println("Node has been removed: " + ex);
-            return defaultValue;
-        }
+        return ConfigUtilities.dimensionFromByteArray(node.getByteArray(key, 
+                null), defaultValue);
     }
     /**
      * 
@@ -189,19 +175,7 @@ public class SpiralGeneratorConfig {
      * @param height 
      */
     public void putDimension(String key, int width, int height){
-        try{    // Create a byte array to store the two integers
-            byte[] arr = new byte[Integer.BYTES*2];
-                // Create a byte buffer to write the two integers to the array
-            ByteBuffer buffer = ByteBuffer.wrap(arr);
-                // Put the width into the array
-            buffer.putInt(width);
-                // Put the height into the array
-            buffer.putInt(height);
-                // Put the resulting byte array into the preference node
-            node.putByteArray(key, arr);
-        } catch (IllegalStateException ex){
-            System.out.println("Node has been removed: " + ex);
-        }
+        node.putByteArray(key, ConfigUtilities.dimensionToByteArray(width, height));
     }
     /**
      * 
@@ -235,26 +209,8 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public Rectangle getRectangle(String key, Rectangle defaultValue){
-        try{    // Get the byte array representing the dimenison, or null
-            byte[] arr = node.getByteArray(key, null);
-                // If the byte array is null
-            if (arr == null)
-                return defaultValue;
-                // Get an IntBuffer to go through the integers in the array
-            IntBuffer buffer = ByteBuffer.wrap(arr).asIntBuffer();
-                // If there are less than 4 integers in the array
-            if (buffer.remaining() < 4){
-                    // If there are less than 2 integers in the array
-                if (buffer.remaining() < 2)
-                    return defaultValue;
-                return new Rectangle(buffer.get(),buffer.get());
-            }
-            return new Rectangle(buffer.get(),buffer.get(),
-                    buffer.get(),buffer.get());
-        } catch (IllegalStateException ex){
-            System.out.println("Node has been removed: " + ex);
-        }
-        return defaultValue;
+        return ConfigUtilities.rectangleFromByteArray(node.getByteArray(key, 
+                null), defaultValue);
     }
     /**
      * 
@@ -273,23 +229,8 @@ public class SpiralGeneratorConfig {
      * @param height 
      */
     public void putRectangle(String key, int x, int y, int width, int height){
-        try{    // Create a byte array to store the 4 integers
-            byte[] arr = new byte[Integer.BYTES*4];
-                // Create a byte buffer to write the 4 integers to the array
-            ByteBuffer buffer = ByteBuffer.wrap(arr);
-                // Put the x-coordinate into the array
-            buffer.putInt(x);
-                // Put the y-coordinate into the array
-            buffer.putInt(y);
-                // Put the width into the array
-            buffer.putInt(width);
-                // Put the height into the array
-            buffer.putInt(height);
-                // Put the resulting byte array into the preference node
-            node.putByteArray(key, arr);
-        } catch (IllegalStateException ex){
-            System.out.println("Node has been removed: " + ex);
-        }
+        node.putByteArray(key, ConfigUtilities.rectangleToByteArray(x, y, 
+                width, height));
     }
     /**
      * 
@@ -372,18 +313,7 @@ public class SpiralGeneratorConfig {
      * character.
      */
     public Color getColor(String key, Color defaultValue){
-            // Get the String with the color information
-        String colorStr = node.get(key, null);
-            // If there was no String mapped to the given key
-        if (colorStr == null)
-            return defaultValue;
-            // Try to parse the hexadecimal string and get the color from it. If 
-            // there are more than 6 characters in the string, then the alpha 
-        try{// component was specified 
-            return new Color(Integer.parseUnsignedInt(colorStr,16),
-                    colorStr.length()>6);
-        } catch(NumberFormatException ex){ }
-        return defaultValue;
+        return ConfigUtilities.colorFromString(node.get(key,null),defaultValue);
     }
     
     public Color getColor(String key){
@@ -403,7 +333,7 @@ public class SpiralGeneratorConfig {
      */
     public void putColor(String key, Color color){
         if (color != null)  // If the color is not null
-            node.put(key,String.format("%08X", color.getRGB()));
+            node.put(key,ConfigUtilities.colorToString(color));
         else
             node.remove(key);
     }
@@ -421,14 +351,7 @@ public class SpiralGeneratorConfig {
      */
     public Rectangle getProgramBounds(SpiralGenerator comp){
         Rectangle rect = getProgramBounds();
-        if (rect != null){
-                // Get the minimum size for the component
-            Dimension min = comp.getMinimumSize();
-                // Make sure the size is not smaller than the minimum size
-            rect.width = Math.max(rect.width, min.width);
-            rect.height = Math.max(rect.height, min.height);
-            comp.setBounds(rect);
-        }
+        ConfigUtilities.setComponentBounds(comp, rect);
         return rect;
     }
     /**
