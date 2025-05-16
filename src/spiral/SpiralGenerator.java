@@ -613,6 +613,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Hypno Gif Generator");
+        setLocationByPlatform(true);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentMoved(java.awt.event.ComponentEvent evt) {
                 formComponentMoved(evt);
