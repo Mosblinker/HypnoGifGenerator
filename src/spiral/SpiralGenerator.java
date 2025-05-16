@@ -223,7 +223,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         config.loadComponentSize(colorSelector);
 //        config.loadComponentSize(fontSelector);
         
-        ConfigUtilities.setComponentSize(SpiralGenerator.this, 960, 570);
+        ConfigUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         radiusSpinner.setValue(spiralPainter.getSpiralRadius());
         baseSpinner.setValue(spiralPainter.getBase());
