@@ -10,7 +10,6 @@ import components.JColorSelector;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
-import config.ConfigUtilities;
 import files.FilesExtended;
 import files.extensions.ImageExtensions;
 import icons.Icon2D;
@@ -53,6 +52,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import net.coobird.thumbnailator.Thumbnailator;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
+import utils.SwingExtendedUtilities;
 
 /**
  *
@@ -223,7 +223,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         config.loadComponentSize(colorSelector);
 //        config.loadComponentSize(fontSelector);
         
-        ConfigUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
+        SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         radiusSpinner.setValue(spiralPainter.getSpiralRadius());
         baseSpinner.setValue(spiralPainter.getBase());

@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
+import utils.SwingExtendedUtilities;
 
 /**
  *
@@ -351,7 +352,7 @@ public class SpiralGeneratorConfig {
      */
     public Rectangle getProgramBounds(SpiralGenerator comp){
         Rectangle rect = getProgramBounds();
-        ConfigUtilities.setComponentBounds(comp, rect);
+        SwingExtendedUtilities.setComponentBounds(comp, rect);
         return rect;
     }
     /**
@@ -453,7 +454,7 @@ public class SpiralGeneratorConfig {
                 // Select that file in the file chooser
             fc.setSelectedFile(file);
         }   // Load the file chooser's size from the preference node
-        ConfigUtilities.setComponentSize(fc,getFileChooserSize(fc));
+        SwingExtendedUtilities.setComponentSize(fc,getFileChooserSize(fc));
     }
     /**
      * 
@@ -471,7 +472,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadComponentSize(Component comp, String key){
         Dimension dim = getDimension(key);
-        ConfigUtilities.setComponentSize(comp,dim);
+        SwingExtendedUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
@@ -481,7 +482,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadComponentSize(Component comp){
         Dimension dim = getComponentSize(comp);
-        ConfigUtilities.setComponentSize(comp,dim);
+        SwingExtendedUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
@@ -908,7 +909,7 @@ public class SpiralGeneratorConfig {
      */
     public Dimension loadMaskFontSelectorSize(Component comp){
         Dimension dim = getMaskFontSelectorSize();
-        ConfigUtilities.setComponentSize(comp,dim);
+        SwingExtendedUtilities.setComponentSize(comp,dim);
         return dim;
     }
     /**
