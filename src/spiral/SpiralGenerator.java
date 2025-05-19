@@ -746,7 +746,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
 
         previewPanel.setLayout(new java.awt.GridLayout(1, 2, 6, 0));
 
-        previewSpiralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Preview"));
+        previewSpiralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hypno Gif Preview"));
         previewSpiralPanel.setLayout(new java.awt.BorderLayout());
 
         previewLabel.setComponentPopupMenu(debugPopup);
