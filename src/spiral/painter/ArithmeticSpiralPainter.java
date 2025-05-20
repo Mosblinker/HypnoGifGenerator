@@ -221,4 +221,5 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     
     public int i0 = 0;
     public boolean b1;
+    public boolean b2;
 }
