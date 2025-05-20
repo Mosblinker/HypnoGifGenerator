@@ -353,6 +353,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPopup = new javax.swing.JPopupMenu();
         testDialog = new javax.swing.JDialog(this);
         javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
+        javax.swing.JLabel testSpiralImageLabel = new javax.swing.JLabel();
+        testSpiralImageSpinner = new javax.swing.JSpinner();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -679,20 +681,40 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         testCtrlPanel.setLayout(new java.awt.GridLayout());
 
+        testSpiralImageLabel.setLabelFor(testSpiralImageSpinner);
+        testSpiralImageLabel.setText("Test Image:");
+
+        testSpiralImageSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
+        testSpiralImageSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                testSpiralImageSpinnerStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
         testDialog.getContentPane().setLayout(testDialogLayout);
         testDialogLayout.setHorizontalGroup(
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(testDialogLayout.createSequentialGroup()
+                        .addComponent(testSpiralImageLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 210, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         testDialogLayout.setVerticalGroup(
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(testDialogLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(testSpiralImageLabel)
+                    .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1403,6 +1425,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void showTestDialogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestDialogButtonActionPerformed
         testDialog.setVisible(true);
     }//GEN-LAST:event_showTestDialogButtonActionPerformed
+
+    private void testSpiralImageSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testSpiralImageSpinnerStateChanged
+        if (showTestSpiralToggle.isSelected())
+            previewLabel.repaint();
+    }//GEN-LAST:event_testSpiralImageSpinnerStateChanged
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1909,6 +1936,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
     private javax.swing.JDialog testDialog;
+    private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
