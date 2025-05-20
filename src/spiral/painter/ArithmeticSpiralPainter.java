@@ -170,6 +170,24 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             point1.setLocation(point4);
         }
         g.draw(path);
+        
+        for (double p = p0; p <= p1; p+= INTERPOLATION_ANGLE){
+            point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p ,
+                    angle,clockwise),p ,centerX,centerY,point1);
+            double pA = getAzimuthValue(p,angle,clockwise)*GeometryMath.FULL_CIRCLE_DEGREES;
+            double theta = Math.toRadians(GeometryMath.boundDegrees(pA));
+            double sin = Math.sin(theta);
+            double cos = Math.cos(theta);
+            double r = getRadius(radius,p,angle,clockwise);
+            double m = (r * cos + radius * sin) / (-r*sin + radius * cos);
+//            point2 = GeometryMath.p
+            double y1 = m * (0 - point1.getX()) + point1.getY();
+            double y2 = m * (width - point1.getX()) + point1.getY();
+            
+//            System.out.printf("%10.5f %10.5f %10.5f %10.5f %n",0.0,y1,(double)width,y2);
+            g.setColor(Color.BLUE);
+            g.draw(new Line2D.Double(0, y1, width, y2));
+        }
     }
     
 }
