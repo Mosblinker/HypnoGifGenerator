@@ -2497,8 +2497,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 scale = 1;
             scale = 1.0/scale;
             scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
-            width = (int)Math.ceil(width*scale);
-            height = (int)Math.ceil(height*scale);
             testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
         }
         @Override
