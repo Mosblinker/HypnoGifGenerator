@@ -1050,8 +1050,12 @@ public class SpiralGeneratorConfig {
         getDebugTestNode().put("testString"+index, value);
     }
     
+    public boolean getDebugTestBoolean(int index, boolean defaultValue){
+        return getDebugTestNode().getBoolean("testBoolean"+index, defaultValue);
+    }
+    
     public boolean getDebugTestBoolean(int index){
-        return getDebugTestNode().getBoolean("testBoolean"+index, false);
+        return getDebugTestBoolean(index,false);
     }
     
     public void setDebugTestBoolean(int index, boolean value){
