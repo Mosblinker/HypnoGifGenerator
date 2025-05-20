@@ -98,6 +98,8 @@ public class SpiralGeneratorConfig {
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
+    
+    public static final String TEST_SPIRAL_SCALE_KEY = "TestScale";
     /**
      * This is a preference node to store the settings for this program.
      */
@@ -1014,5 +1016,13 @@ public class SpiralGeneratorConfig {
     
     public void setDebugTestRotation(double value){
         getDebugTestNode().putDouble(TEST_SPIRAL_ROTATION_KEY, value);
+    }
+    
+    public double getDebugTestScale(){
+        return Math.max(getDebugTestNode().getDouble(TEST_SPIRAL_SCALE_KEY, 1), 0);
+    }
+    
+    public void setDebugTestScale(double value){
+        getDebugTestNode().putDouble(TEST_SPIRAL_SCALE_KEY, value);
     }
 }
