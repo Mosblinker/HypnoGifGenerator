@@ -307,7 +307,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 testSpiralImageSpinner.setEnabled(false);
             else
                 testSpiralImageSpinner.setModel(new javax.swing.SpinnerNumberModel(
-                        0, 0, testImages.size()-1, 1));
+                        config.getDebugTestImage(testImages.size()), 0, 
+                        testImages.size()-1, 1));
+            testRotateSpinner.setValue(config.getDebugTestRotation());
         }
     }
     
@@ -1464,11 +1466,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void testSpiralImageSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testSpiralImageSpinnerStateChanged
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
+        config.setDebugTestImage((int)testSpiralImageSpinner.getValue());
     }//GEN-LAST:event_testSpiralImageSpinnerStateChanged
 
     private void testRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testRotateSpinnerStateChanged
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
+        config.setDebugTestRotation((double)testRotateSpinner.getValue());
     }//GEN-LAST:event_testRotateSpinnerStateChanged
     /**
      * This returns the width for the image.

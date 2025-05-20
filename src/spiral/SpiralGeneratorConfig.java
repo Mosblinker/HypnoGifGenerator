@@ -5,6 +5,7 @@
 package spiral;
 
 import config.ConfigUtilities;
+import geom.GeometryMath;
 import io.github.dheid.fontchooser.FontFamilies;
 import io.github.dheid.fontchooser.FontFamily;
 import java.awt.Color;
@@ -50,6 +51,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_NODE_NAME = "Mask";
     
+    public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
+    
     public static final String SPIRAL_RADIUS_KEY = "Radius";
     
     public static final String SPIRAL_BASE_KEY = "Base";
@@ -91,6 +94,10 @@ public class SpiralGeneratorConfig {
     public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
     
     public static final String MASK_SCALE_KEY = "MaskScale";
+    
+    public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
+    
+    public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
     /**
      * This is a preference node to store the settings for this program.
      */
@@ -99,6 +106,8 @@ public class SpiralGeneratorConfig {
     private final Preferences spiralNode;
     
     private final Preferences maskNode;
+    
+    private Preferences testDebugNode = null;
     /**
      * 
      */
@@ -981,5 +990,29 @@ public class SpiralGeneratorConfig {
     
     public void setImageHeight(int value){
         getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
+    }
+    
+    public Preferences getDebugTestNode(){
+        if (testDebugNode == null)
+            testDebugNode = getPreferences().node(TEST_SPIRAL_NODE_NAME);
+        return testDebugNode;
+    }
+    
+    public int getDebugTestImage(int size){
+        return Math.max(Math.min(getDebugTestNode().getInt(TEST_SPIRAL_IMAGE_KEY, 0), size-1), 0);
+    }
+    
+    public void setDebugTestImage(int value){
+        getDebugTestNode().putInt(TEST_SPIRAL_IMAGE_KEY, value);
+    }
+    
+    public double getDebugTestRotation(){
+        return Math.max(Math.min(
+                getDebugTestNode().getDouble(TEST_SPIRAL_ROTATION_KEY, 0), 0), 
+                GeometryMath.FULL_CIRCLE_DEGREES);
+    }
+    
+    public void setDebugTestRotation(double value){
+        getDebugTestNode().putDouble(TEST_SPIRAL_ROTATION_KEY, value);
     }
 }
