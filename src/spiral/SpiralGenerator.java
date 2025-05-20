@@ -363,7 +363,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         printFPSToggle = new javax.swing.JCheckBoxMenuItem();
         inputEnableToggle = new javax.swing.JCheckBoxMenuItem();
         showTestDialogButton = new javax.swing.JMenuItem();
-        showTestSpiralToggle = new javax.swing.JCheckBoxMenuItem();
         colorSelector = new components.JColorSelector();
         maskFCPreview = new components.JFileDisplayPanel();
         saveFCPreview = new components.JFileDisplayPanel();
@@ -401,6 +400,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testRotateSpinner = new javax.swing.JSpinner();
         javax.swing.JLabel testScaleLabel = new javax.swing.JLabel();
         testScaleSpinner = new javax.swing.JSpinner();
+        showTestSpiralToggle = new javax.swing.JCheckBox();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         testDoubleSpinner0 = new javax.swing.JSpinner();
         testDoubleSpinner1 = new javax.swing.JSpinner();
@@ -496,14 +496,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
         debugPopup.add(showTestDialogButton);
-
-        showTestSpiralToggle.setText("Show Test Spiral");
-        showTestSpiralToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showTestSpiralToggleActionPerformed(evt);
-            }
-        });
-        debugPopup.add(showTestSpiralToggle);
 
         colorSelector.setClearButtonShown(true);
 
@@ -800,6 +792,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 7);
         testCtrlPanel.add(testScaleSpinner, gridBagConstraints);
+
+        showTestSpiralToggle.setText("Show Test Spiral");
+        showTestSpiralToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTestSpiralToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        testCtrlPanel.add(showTestSpiralToggle, gridBagConstraints);
 
         testCtrlPanel2.setLayout(new java.awt.GridLayout(0, 4, 6, 7));
 
@@ -2131,7 +2135,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
     private javax.swing.JMenuItem showTestDialogButton;
-    private javax.swing.JCheckBoxMenuItem showTestSpiralToggle;
+    private javax.swing.JCheckBox showTestSpiralToggle;
     private javax.swing.JComboBox<String> spinDirCombo;
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
