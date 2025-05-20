@@ -1008,8 +1008,8 @@ public class SpiralGeneratorConfig {
     
     public double getDebugTestRotation(){
         return Math.max(Math.min(
-                getDebugTestNode().getDouble(TEST_SPIRAL_ROTATION_KEY, 0), 0), 
-                GeometryMath.FULL_CIRCLE_DEGREES);
+                getDebugTestNode().getDouble(TEST_SPIRAL_ROTATION_KEY, 0), 
+                GeometryMath.FULL_CIRCLE_DEGREES), 0);
     }
     
     public void setDebugTestRotation(double value){
