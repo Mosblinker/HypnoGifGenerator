@@ -148,7 +148,7 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point4 == null)
             point4 = new Point2D.Double();
         
-        double maxR = Math.sqrt(width*width+height*height);
+        double maxR = Math.sqrt(width*width+height*height)/2.0;
         
         double p1 = getAzimuth(radius,maxR, angle, true);
             // Effectively round it up to the nearest quarter angle
