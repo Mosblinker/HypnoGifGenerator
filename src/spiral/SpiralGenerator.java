@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,8 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
@@ -268,6 +271,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextArea.getDocument().addDocumentListener(handler);
         
         if (debugMode){
+            testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
             for (int i = 0; i < 100; i++){
@@ -289,6 +293,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         config.getDebugTestImage(testImages.size()), 0, 
                         testImages.size()-1, 1));
             testRotateSpinner.setValue(config.getDebugTestRotation());
+            testScaleSpinner.setValue(config.getDebugTestScale());
+            testComponents.put(Double.class, Arrays.asList(testDoubleSpinner0,testDoubleSpinner1));
+            testComponents.put(Boolean.class, Arrays.asList(testToggle0));
+            DebugTestComponentHandler debugHandler = new DebugTestComponentHandler();
+            for (Map.Entry<Class, List<Component>> entry : testComponents.entrySet()){
+                Class type = entry.getKey();
+                List<Component> list = entry.getValue();
+                for (int i = 0; i < list.size(); i++){
+                    Object value = null;
+                    Component c = list.get(i);
+                    if (Double.class.equals(type))
+                        value = config.getDebugTestDouble(i);
+                    else if (Integer.class.equals(type))
+                        value = config.getDebugTestInteger(i);
+                    else if (Boolean.class.equals(type)){
+                        if (c instanceof JToggleButton){
+                            JToggleButton b = (JToggleButton)c;
+                            b.setSelected(config.getDebugTestBoolean(i,b.isSelected()));
+                        } else 
+                            value = config.getDebugTestBoolean(i);
+                    }
+                    else if (String.class.equals(type))
+                        value = config.getDebugTestString(i);
+                    if (c instanceof JToggleButton)
+                        ((JToggleButton)c).addActionListener(debugHandler);
+                    else if (c instanceof JSpinner){
+                        if (value != null)
+                            ((JSpinner)c).setValue(value);
+                        ((JSpinner)c).addChangeListener(debugHandler);
+                    }
+                }
+            }
         }
     }
     
@@ -1944,7 +1980,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is whether the program is in debug mode.
      */
-    boolean debugMode;
+    private boolean debugMode;
+    /**
+     * This is a map to map the test components to their corresponding classes.
+     */
+    private Map<Class, List<Component>> testComponents;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
@@ -2402,8 +2442,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
-    private class SpiralHandler implements PropertyChangeListener, ActionListener, DocumentListener{
-
+    private class SpiralHandler implements PropertyChangeListener, 
+            ActionListener, DocumentListener{
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             boolean maskChanged = false;
@@ -2450,6 +2490,45 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void changedUpdate(DocumentEvent evt) {
             refreshMaskText();
+        }
+    }
+    
+    private void setDebugValueInConfig(Component source, Object value){
+        if (value == null || source == null)
+            return;
+        Class type = value.getClass();
+        List<Component> list = testComponents.get(type);
+        if (list != null){
+            int index = list.indexOf(source);
+            if (index < 0)
+                return;
+            if (Double.class.equals(type))
+                config.setDebugTestDouble(index, (double)value);
+            else if (Integer.class.equals(type))
+                config.setDebugTestInteger(index, (int)value);
+            else if (Boolean.class.equals(type))
+                config.setDebugTestBoolean(index, (boolean)value);
+            else
+                config.setDebugTestString(index, value.toString());
+        }
+    }
+    
+    private class DebugTestComponentHandler implements ChangeListener, 
+            ActionListener{
+        @Override
+        public void stateChanged(ChangeEvent evt) {
+            if (evt.getSource() instanceof JSpinner){
+                JSpinner spinner = (JSpinner) evt.getSource();
+                if (spinner.getModel() instanceof SpinnerNumberModel)
+                    setDebugValueInConfig(spinner,spinner.getValue());
+            }
+        }
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource() instanceof JToggleButton){
+                JToggleButton button = (JToggleButton) evt.getSource();
+                setDebugValueInConfig(button,button.isSelected());
+            }
         }
     }
     
