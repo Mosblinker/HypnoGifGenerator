@@ -2492,7 +2492,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g.drawImage(img, 0, 0, null);
             }
             g.setColor(new Color(0x8000FF00,true));
-            double scale = 1.0/((double)testScaleSpinner.getValue());
+            double scale = (double)testScaleSpinner.getValue();
+            if (scale == 0)
+                scale = 1;
+            scale = 1.0/scale;
             scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
             width = (int)Math.ceil(width*scale);
             height = (int)Math.ceil(height*scale);
