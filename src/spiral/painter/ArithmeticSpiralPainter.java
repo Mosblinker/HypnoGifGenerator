@@ -188,22 +188,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             point1.setLocation(point3);
         }
         g.draw(path);
-        
-        if (b1){
-            for (int t = 0; t <= i0; t++){
-                double p = p0 + (INTERPOLATION_ANGLE*t);
-                point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p ,
-                        angle,clockwise),p ,centerX,centerY,point1);
-                double m = getTangentSlope(radius,getRadius(radius,p,angle,clockwise),
-                        p,angle,clockwise);
-                double y1 = GeometryMath.getLineY(m,0,point1);
-                double y2 = GeometryMath.getLineY(m,width,point1);
-
-                System.out.printf("%5d: %10.5f %10.5f %10.5f %10.5f %10.5f %n",t,m,0.0,y1,(double)width,y2);
-                g.setColor(Color.BLUE);
-                g.draw(new Line2D.Double(0, y1, width, y2));
-            }
-        }
     }
     
     protected void processLinearSpiral(double b, double p0, double p1, 
@@ -217,14 +201,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         point2 = GeometryMath.getQuadBezierControlPoint(point1, point2, point3, 
                 point2);
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
-    }
-    
-    protected double getTangentSlope(double b, double r, double p,double angle, boolean clockwise){
-        p = getAzimuthValue(p,angle,clockwise);
-        double theta = Math.toRadians(GeometryMath.boundDegrees(p*GeometryMath.FULL_CIRCLE_DEGREES));
-        double sin = Math.sin(theta);
-        double cos = Math.cos(theta);
-        return (r * cos + b * sin) / (-r*sin + b * cos);
     }
     
     public int i0 = 0;
