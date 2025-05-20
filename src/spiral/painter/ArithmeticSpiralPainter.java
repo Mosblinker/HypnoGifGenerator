@@ -13,6 +13,10 @@ import java.awt.geom.*;
  * @author Mosblinker
  */
 public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
+    public int i0 = 0;
+    public boolean b1 = false;
+    public boolean b2 = false;
+    
     /**
      * A scratch Path2D object to use to create the spiral. This is initially 
      * null and is initialized the first time it is used.
@@ -200,7 +204,4 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
     
-    public int i0 = 0;
-    public boolean b1;
-    public boolean b2;
 }
