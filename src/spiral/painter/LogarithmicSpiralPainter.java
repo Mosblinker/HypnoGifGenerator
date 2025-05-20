@@ -152,17 +152,27 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      * @param a
      * @param k
      * @param p
+     * @return 
+     */
+    protected double getRadiusImpl(double a, double k, double p){
+        return a * Math.exp(p * k);
+    }
+    @Override
+    protected double getRadiusImpl(double p){
+        return getRadiusImpl(getSpiralRadius(),getLogarithmicK(),p);
+    }
+    /**
+     * 
+     * @param a
+     * @param k
+     * @param p
      * @param angle
      * @param clockwise
      * @return 
      */
     protected double getRadius(double a, double k, double p, double angle, 
             boolean clockwise){
-        p -= angle;
-            // If the spiral is counter-clockwise
-        if (!clockwise)
-            p = -p;
-        return a * Math.exp((p/FULL_CIRCLE_DEGREES) * k);
+        return getRadiusImpl(a,k,getAzimuthValue(p,angle,clockwise));
     }
     /**
      * 
@@ -174,9 +184,19 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     protected double getRadius(double k, double r0, double length){
         return (length/getSignPitchInverted(k))+r0;
     }
+    /**
+     * 
+     * @param a
+     * @param k
+     * @param r
+     * @return 
+     */
+    protected double getAzimuthImpl(double a, double k, double r){
+        return (Math.log(r / a) / k);
+    }
     @Override
-    protected double getRadius(double p,double angle,boolean clockwise) {
-        return getRadius(getSpiralRadius(),getLogarithmicK(),p,angle,clockwise);
+    protected double getAzimuthImpl(double r){
+        return getAzimuthImpl(getSpiralRadius(),getLogarithmicK(),r);
     }
     /**
      * 
@@ -189,16 +209,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      */
     protected double getAzimuth(double a, double k, double r, double angle, 
             boolean clockwise){
-            // Calculate the azimuth from the radius
-        double p = (Math.log(r / a) / k) * FULL_CIRCLE_DEGREES;
-            // If the spiral is counter-clockwise
-        if (!clockwise)
-            p = -p;
-        return p + angle;
-    }
-    @Override
-    protected double getAzimuth(double r, double angle,boolean clockwise){
-        return getAzimuth(getSpiralRadius(),getLogarithmicK(),r,angle,clockwise);
+        return getAzimuthDegrees(getAzimuthImpl(a,k,r),angle,clockwise);
     }
     @Override
     protected double fillConditionValue() {
