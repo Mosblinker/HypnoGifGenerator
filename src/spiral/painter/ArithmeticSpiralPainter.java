@@ -4,6 +4,8 @@
  */
 package spiral.painter;
 
+import geom.GeometryMath;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 
@@ -159,6 +161,15 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         
         path.moveTo(point1.getX(), point1.getY());
         
+        for (double p = p0+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE){
+            
+            point4 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p,
+                    angle,clockwise),p,centerX,centerY,point4);
+            
+            path.lineTo(point4.getX(), point4.getY());
+            point1.setLocation(point4);
+        }
+        g.draw(path);
     }
     
 }
