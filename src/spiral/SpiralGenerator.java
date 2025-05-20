@@ -295,12 +295,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
             for (int i = 0; i < 100; i++){
-                try {
-                    testImages.add(ImageIO.read(this.getClass().getResource(
-                            String.format(TEST_IMAGE_FILE_TEMPLATE, i))));
-                } catch (IOException ex) {
-                    Logger.getLogger(SpiralGenerator.class.getName()).log(
-                            Level.INFO, null, ex);
+                java.net.URL url = this.getClass().getResource(
+                        String.format(TEST_IMAGE_FILE_TEMPLATE, i));
+                if (url != null){
+                    try {
+                        testImages.add(ImageIO.read(url));
+                    } catch (IOException ex) {
+                        Logger.getLogger(SpiralGenerator.class.getName()).log(
+                                Level.INFO, null, ex);
+                    }
                 }
             }
             if (testImages.isEmpty())
