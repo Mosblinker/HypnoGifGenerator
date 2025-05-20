@@ -192,18 +192,8 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         point3 = GeometryMath.polarToCartesianDegrees(r,p1,x,y,point3);
         point2 = GeometryMath.polarToCartesianDegrees(
                 getRadius(b,pInter,angle,clockwise),pInter,x,y,point2);
-        if (b1){
-            System.out.println("Polar: " + r + ", " + p1);
-            System.out.println("Point 1: " + point1);
-            System.out.println("Point 2: " + point2);
-            System.out.println("Point 3: " + point3);
-        }
         point2 = GeometryMath.getQuadBezierControlPoint(point1, point2, point3, 
                 point2);
-        if (b1){
-            System.out.println("Point C: " +point2);
-            System.out.println();
-        }
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
     
@@ -220,7 +210,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         double startP = (reverse) ? p2 : p1;
         double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
         double p3 = (reverse) ? p2 : p0;
-        System.out.println(minP + " " + maxP + " " + p3 + " " + startP + " " + inc);
         point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,p3,angle,
                 clockwise),p3,x,y,point1);
         if (currPoint == null)
@@ -235,7 +224,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         for (double p = startP;     
                     // Go up until it reaches the opposite azimuth extreme
                 (p > minP && p < maxP) || p == startP; p += inc){
-            System.out.println("Hello " + p);
             processLinearSpiral(b,p,p+inc,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
