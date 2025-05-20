@@ -146,6 +146,18 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point4 == null)
             point4 = new Point2D.Double();
         
+        double maxR = Math.sqrt(width*width+height*height);
+        
+        double p1 = getAzimuth(radius,maxR, angle, clockwise);
+            // Effectively round it up to the nearest quarter angle
+        p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
+        
+        double p0 = 90;
+        
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p0 ,
+                    angle,clockwise),p0 ,centerX,centerY,point1);
+        
+        path.moveTo(point1.getX(), point1.getY());
         
     }
     
