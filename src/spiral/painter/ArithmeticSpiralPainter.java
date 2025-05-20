@@ -168,23 +168,22 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         for (double p = pA+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE, i++){
             double r = getRadius(radius,p,angle,clockwise);
             point4 = GeometryMath.polarToCartesianDegrees(r,p,centerX,centerY,point4);
+            double pI = p - INTERPOLATION_ANGLE_2;
+            point3 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pI,angle,clockwise),
+                    pI,centerX,centerY,point3);
+            point2 = GeometryMath.getQuadBezierControlPoint(point1, point3, 
+                    point4, point2);
             
             if (i < i0){
                 System.out.println(i+": ");
                 System.out.println("\tPoint 1: " +point1);
                 System.out.println("\tPoint 4: " +point4);
-                double pI = p - INTERPOLATION_ANGLE_2;
-                point3 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pI,angle,clockwise),
-                        pI,centerX,centerY,point3);
-                point2 = GeometryMath.getQuadBezierControlPoint(point1, point3, 
-                        point4, point2);
                 System.out.println("\tPoint 3: " + point3);
                 System.out.println("\tPoint 2: " + point2);
-                
                 System.out.println();
-                path.quadTo(point2.getX(), point2.getY(), point4.getX(), point4.getY());
-            }else 
-                path.lineTo(point4.getX(), point4.getY());
+            }
+            
+            path.quadTo(point2.getX(), point2.getY(), point4.getX(), point4.getY());
             
             point1.setLocation(point4);
             rA = r;
