@@ -138,6 +138,11 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
                 getRadius(a,k,p1,angle,clockwise));
     }
     @Override
+    public double getArcLength(double r0, double p0, double r1, double p1, 
+            double angle){
+        return getArcLengthRadius(r0,r1,angle);
+    }
+    @Override
     public double getArcLengthAzimuth(double p0, double p1, double angle) {
         return getArcLengthAzimuth(getSpiralRadius(),getLogarithmicK(),p0,p1,
                 angle,isClockwise());

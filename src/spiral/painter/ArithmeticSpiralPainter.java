@@ -37,32 +37,28 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
      * initially null and is initialized the first time it is used.
      */
     private Point2D point4 = null;
-
     @Override
     public double getArcLengthRadius(double r0, double r1, double angle) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
     @Override
     public double getArcLengthAzimuth(double p0, double p1, double angle) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
     @Override
-    protected double getRadius(double p, double angle, boolean clockwise) {
+    public double getArcLength(double r0, double p0, double r1, double p1, double angle){
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    }
     @Override
     protected double getAzimuth(double r, double angle, boolean clockwise) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
     @Override
     protected double fillConditionValue() {
         return getSpiralRadius();
     }
-
     @Override
     protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 

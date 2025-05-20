@@ -152,6 +152,28 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return getArcLengthAzimuth(p0,p1,0.0);
     }
     /**
+     * 
+     * @param r0
+     * @param p0
+     * @param r1
+     * @param p1
+     * @param angle
+     * @return 
+     */
+    public abstract double getArcLength(double r0, double p0, double r1, 
+            double p1, double angle);
+    /**
+     * 
+     * @param r0
+     * @param p0
+     * @param r1
+     * @param p1
+     * @return 
+     */
+    public double getArcLength(double r0, double p0, double r1, double p1){
+        return getArcLength(r0,p0,r1,p1,0.0);
+    }
+    /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
      * @param p The azimuth of the point on the spiral to get.
