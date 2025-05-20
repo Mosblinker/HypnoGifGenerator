@@ -15,6 +15,10 @@ import java.awt.geom.*;
  */
 public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     /**
+     * This is the value used to calculate the control points for 
+     */
+    public static final double ARC_CONTROL_VALUE = 4*(Math.sqrt(2)-1)/3;
+    /**
      * A scratch Path2D object to use to create the spiral. This is initially 
      * null and is initialized the first time it is used.
      */
@@ -169,6 +173,33 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             path.lineTo(point4.getX(), point4.getY());
             point1.setLocation(point4);
         }
+        
+//        point2 = GeometryMath.polarToCartesianDegrees(getRadius(radius,360+INTERPOLATION_ANGLE,
+//                    angle,clockwise),360+INTERPOLATION_ANGLE,centerX,centerY,point2);
+//        
+//        path.lineTo(point2.getX(), point2.getY());
+        
+//        double p = 90;
+//        
+//        for (int i = 0; i < 8; i++, p+= 90){
+//        for (double p = INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE){
+//            point4 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p,
+//                    angle,clockwise),p,centerX,centerY,point4);
+//            
+//            double x1 = point1.getX();
+//            double y1 = point1.getY();
+//            double x2 = point4.getX();
+//            double y2 = point4.getY();
+//            double w = ((x2 - x1) * 2) * ARC_CONTROL_VALUE;
+//            double h = ((y2 - y1) * 2) * ARC_CONTROL_VALUE;
+////            switch (i % 4){
+////                case(0):
+////                    y1 += h;
+////                    x2 += w;
+////                    break;
+////            }
+//            path.lineTo(point4.getX(), point4.getY());
+//        }
         g.draw(path);
         
         for (double p = p0; p <= p1; p+= INTERPOLATION_ANGLE){
