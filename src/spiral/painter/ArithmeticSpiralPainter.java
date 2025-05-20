@@ -14,6 +14,8 @@ import java.awt.geom.*;
  * @author Mosblinker
  */
 public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
+    
+    private static final double INTERPOLATION_ANGLE_2 = INTERPOLATION_ANGLE/2.0;
     /**
      * A scratch Path2D object to use to create the spiral. This is initially 
      * null and is initialized the first time it is used.
@@ -168,22 +170,17 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             point4 = GeometryMath.polarToCartesianDegrees(r,p,centerX,centerY,point4);
             
             if (i < i0){
-                double m1 = getTangentSlope(radius,rA,pA,angle,clockwise);
-                double m2 = getTangentSlope(radius,r,p,angle,clockwise);
-                double y1 = GeometryMath.getLineY(m1,0,point1);
-                double y2 = GeometryMath.getLineY(m1,width,point1);
-                double y3 = GeometryMath.getLineY(m2,0,point4);
-                double y4 = GeometryMath.getLineY(m2,width,point4);
-                point2 = GeometryMath.getLineIntersection(0, y1, 
-                        width, y2, 
-                        0, y3, 
-                        width, y4, point2);
                 System.out.println(i+": ");
                 System.out.println("\tPoint 1: " +point1);
-                System.out.printf("\t%10.5f %10.5f %10.5f %10.5f %10.5f %n",m1,0.0,y1,(double)width,y2);
                 System.out.println("\tPoint 4: " +point4);
-                System.out.printf("\t%10.5f %10.5f %10.5f %10.5f %10.5f %n",m2,0.0,y3,(double)width,y4);
+                double pI = p - INTERPOLATION_ANGLE_2;
+                point3 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pI,angle,clockwise),
+                        pI,centerX,centerY,point3);
+                point2 = GeometryMath.getQuadBezierControlPoint(point1, point3, 
+                        point4, point2);
+                System.out.println("\tPoint 3: " + point3);
                 System.out.println("\tPoint 2: " + point2);
+                
                 System.out.println();
                 path.quadTo(point2.getX(), point2.getY(), point4.getX(), point4.getY());
             }else 
