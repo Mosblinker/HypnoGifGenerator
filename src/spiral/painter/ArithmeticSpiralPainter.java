@@ -173,8 +173,8 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             else
                 startP -= offset;
         }
-            // Effectively round it up to the nearest quarter angle
-        p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
+            // Effectively round it up to the nearest interplation angle
+        p1 += (INTERPOLATION_ANGLE - (p1 % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         double p0 = startP + (INTERPOLATION_ANGLE - (startP % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         
         double p2 = (!b2) ? p1 : startP;
