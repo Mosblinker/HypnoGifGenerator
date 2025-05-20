@@ -7,6 +7,7 @@ package spiral;
 import anim.*;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import components.JColorSelector;
+import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
@@ -82,7 +83,7 @@ import utils.SwingExtendedUtilities;
  *
  * @author Mosblinker
  */
-public class SpiralGenerator extends javax.swing.JFrame {
+public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the current version of the program.
      */
@@ -285,6 +286,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         spiralPainter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
+        
     }
     
     private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
@@ -1692,6 +1694,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
         while (option == JFileChooser.APPROVE_OPTION && file == null);
         return file;
     }
+    @Override
+    public boolean isInDebug() {
+        return debugMode;
+    }
     /**
      * This is the time it was when the most recent frame was displayed when the 
      * animation is playing.
@@ -1770,6 +1776,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
      * This is the file worker currently being used.
      */
     private FileWorker fileWorker = null;
+    /**
+     * This is whether the program is in debug mode.
+     */
+    boolean debugMode;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
