@@ -177,21 +177,16 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         double p0 = startP + (INTERPOLATION_ANGLE - (startP % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,startP,angle,clockwise),
-                startP,centerX,centerY,point1);
-        path.moveTo(point1.getX(), point1.getY());
-        if (p0 != startP){
+        double p2 = (!b2) ? p1 : startP;
         
-            processLinearSpiral(radius,angle,p0,angle,clockwise,centerX,centerY,
-                    point1,point2,point3,path);
-            point1.setLocation(point3);
-        }
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p2,angle,clockwise),
+                p2,centerX,centerY,point1);
         
-        for (double p = p0; p < p1; p+= INTERPOLATION_ANGLE){
-            processLinearSpiral(radius,p,p+INTERPOLATION_ANGLE,angle,clockwise,
-                    centerX,centerY,point1,point2,point3,path);
-            point1.setLocation(point3);
-        }
+        processLinearSpiral(radius,startP,p0,p1,angle,clockwise,centerX,
+                centerY,!b2,point1,point2,point3,path);
+        
+        
+        
         g.draw(path);
     }
     
@@ -217,5 +212,44 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         }
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
+    
+    protected Path2D processLinearSpiral(double b, double p0, double p1, 
+            double p2, double angle, boolean clockwise, double x, double y, 
+            boolean reverse, Point2D point1, Point2D point2, Point2D point3, 
+            Path2D path){
+        if (path == null)
+            path = new Path2D.Double();
+        Point2D currPoint = path.getCurrentPoint();
+        if (currPoint == null)
+            path.moveTo(point1.getX(), point1.getY());
+        else if (!currPoint.equals(point1))
+            path.lineTo(point1.getX(), point1.getY());
+        if (!reverse && p0 != p1){
+            processLinearSpiral(b,p0,p1,angle,clockwise,x,y,point1,point2,
+                    point3,path);
+            point1.setLocation(point3);
+        }
+        System.out.println("Hello");
+        double minP = Math.min(p1, p2);
+        double maxP = Math.max(p1, p2);
+        double startP = (reverse) ? p2 : p1;
+        double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
+        System.out.println(minP + " " + maxP + " " + startP + " " + inc);
+        for (double p = startP;     
+                    // Go up until it reaches the opposite azimuth extreme
+                (p > minP && p < maxP) || p == startP; p += inc){
+            System.out.println("Hello " + p);
+            processLinearSpiral(b,p,p+inc,angle,clockwise,x,y,point1,point2,
+                    point3,path);
+            point1.setLocation(point3);
+        }
+        if (reverse && p0 != p1){
+            processLinearSpiral(b,p0,p1,angle,clockwise,x,y,point1,point2,
+                    point3,path);
+            point1.setLocation(point3);
+        }
+        return path;
+    }
+    
     
 }
