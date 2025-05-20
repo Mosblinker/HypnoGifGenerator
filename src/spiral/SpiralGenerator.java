@@ -2494,6 +2494,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.setColor(new Color(0x8000FF00,true));
             double scale = 1.0/((double)testScaleSpinner.getValue());
             scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
+            width = (int)Math.ceil(width*scale);
+            height = (int)Math.ceil(height*scale);
             testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
         }
         @Override
