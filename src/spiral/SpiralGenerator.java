@@ -54,11 +54,43 @@ import spiral.painter.*;
 import swing.CenteredTextPainter;
 import utils.SwingExtendedUtilities;
 
+/*
+    // TODO: Rework the about window to look good.
+        String message = "About "+PROGRAM_NAME+
+                "\nVersion: "+PROGRAM_VERSION+
+                "\n\nCredits: ";
+        for (String value : CREDITS)
+            message += "\n"+value;
+        RambleyIcon icon = new RambleyIcon(){
+            @Override
+            public int getIconWidth(){
+                return 128;
+            }
+            @Override
+            public int getIconHeight(){
+                return 256;
+            }
+        };
+        icon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
+        icon.setRambleyOpenMouthHeight(1.0);
+        
+        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
+                JOptionPane.PLAIN_MESSAGE,icon);
+*/
+
 /**
  *
  * @author Mosblinker
  */
 public class SpiralGenerator extends javax.swing.JFrame {
+    /**
+     * This is the current version of the program.
+     */
+    public static final String PROGRAM_VERSION = "0.1.0";
+    /**
+     * This is the name of the program.
+     */
+    public static final String PROGRAM_NAME = "Hypno Gif Generator";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
@@ -614,7 +646,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Hypno Gif Generator");
+        setTitle(PROGRAM_NAME + " - Version "+ PROGRAM_VERSION);
         setLocationByPlatform(true);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentMoved(java.awt.event.ComponentEvent evt) {
@@ -1055,7 +1087,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGap(18, 33, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
