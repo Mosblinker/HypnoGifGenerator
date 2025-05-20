@@ -163,13 +163,19 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
-        double p0 = 90;
-        
-        double pA = p0;
-        double rA = getRadius(radius,pA,angle,clockwise);
-        point1 = GeometryMath.polarToCartesianDegrees(rA,pA,centerX,centerY,point1);
+        double p0 = HALF_CIRCLE_DEGREES * thickness;
+
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p0,angle,clockwise),
+                p0,centerX,centerY,point1);
         
         path.moveTo(point1.getX(), point1.getY());
+        if (p0 % INTERPOLATION_ANGLE != 0){
+            double temp = p0;
+            p0 += (QUARTER_CIRCLE_DEGREES - (p0 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
+            processLinearSpiral(radius,temp,p0,angle,clockwise,centerX,centerY,
+                    point1,point2,point3,path);
+            point1.setLocation(point3);
+        }
         
         int i = 0;
         for (double p = p0; p < p1; p+= INTERPOLATION_ANGLE, i++){
