@@ -179,8 +179,9 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         startP = getAzimuth(radius,r0,angle2,clockwise);
         processLinearSpiral(radius,startP,p0,p1+FULL_CIRCLE_DEGREES,angle2,
                 clockwise,centerX,centerY,false,point1,point2,point3,path);
+        path.closePath();
         
-        g.draw(path);
+        g.fill(path);
     }
     
     protected void processLinearSpiral(double b, double p0, double p1, 
