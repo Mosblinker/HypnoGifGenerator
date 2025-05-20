@@ -462,7 +462,11 @@
                           <Component id="testSpiralImageLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="testSpiralImageSpinner" min="-2" pref="100" max="-2" attributes="0"/>
-                          <EmptySpace min="0" pref="210" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="testRotateLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="testRotateSpinner" min="-2" pref="100" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="52" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -476,6 +480,8 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="testSpiralImageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="testSpiralImageSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="testRotateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="testRotateSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="testCtrlPanel" pref="245" max="32767" attributes="0"/>
@@ -511,6 +517,28 @@
         <Component class="javax.swing.JSpinner" name="testSpiralImageSpinner">
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testSpiralImageSpinnerStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="testRotateLabel">
+          <Properties>
+            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+              <ComponentRef name="testRotateSpinner"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Rotation:"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_VariableLocal" type="java.lang.Boolean" value="true"/>
+            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="0"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JSpinner" name="testRotateSpinner">
+          <Properties>
+            <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+              <SpinnerModel initial="0.0" maximum="360.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testRotateSpinnerStateChanged"/>
           </Events>
         </Component>
       </SubComponents>

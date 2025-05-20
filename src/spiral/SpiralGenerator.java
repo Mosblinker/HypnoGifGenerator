@@ -373,6 +373,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
         javax.swing.JLabel testSpiralImageLabel = new javax.swing.JLabel();
         testSpiralImageSpinner = new javax.swing.JSpinner();
+        javax.swing.JLabel testRotateLabel = new javax.swing.JLabel();
+        testRotateSpinner = new javax.swing.JSpinner();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -708,6 +710,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        testRotateLabel.setLabelFor(testRotateSpinner);
+        testRotateLabel.setText("Rotation:");
+
+        testRotateSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, 360.0d, 1.0d));
+        testRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                testRotateSpinnerStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
         testDialog.getContentPane().setLayout(testDialogLayout);
         testDialogLayout.setHorizontalGroup(
@@ -720,7 +732,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(testSpiralImageLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 210, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(testRotateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(testRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 52, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         testDialogLayout.setVerticalGroup(
@@ -729,7 +745,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap()
                 .addGroup(testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(testSpiralImageLabel)
-                    .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(testRotateLabel)
+                    .addComponent(testRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1447,6 +1465,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
     }//GEN-LAST:event_testSpiralImageSpinnerStateChanged
+
+    private void testRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testRotateSpinnerStateChanged
+        if (showTestSpiralToggle.isSelected())
+            previewLabel.repaint();
+    }//GEN-LAST:event_testRotateSpinnerStateChanged
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1957,6 +1980,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
     private javax.swing.JDialog testDialog;
+    private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
     private javax.swing.JLabel widthLabel;
@@ -2269,7 +2293,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private class SpiralIcon implements Icon2D{
-
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
