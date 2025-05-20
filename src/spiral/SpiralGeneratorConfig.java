@@ -1025,4 +1025,36 @@ public class SpiralGeneratorConfig {
     public void setDebugTestScale(double value){
         getDebugTestNode().putDouble(TEST_SPIRAL_SCALE_KEY, value);
     }
+    
+    public double getDebugTestDouble(int index){
+        return getDebugTestNode().getDouble("testDouble"+index, 0);
+    }
+    
+    public void setDebugTestDouble(int index, double value){
+        getDebugTestNode().putDouble("testDouble"+index, value);
+    }
+    
+    public int getDebugTestInteger(int index){
+        return getDebugTestNode().getInt("testInteger"+index, 0);
+    }
+    
+    public void setDebugTestInteger(int index, int value){
+        getDebugTestNode().putInt("testInteger"+index, value);
+    }
+    
+    public String getDebugTestString(int index){
+        return getDebugTestNode().get("testString"+index, null);
+    }
+    
+    public void setDebugTestString(int index, String value){
+        getDebugTestNode().put("testString"+index, value);
+    }
+    
+    public boolean getDebugTestBoolean(int index){
+        return getDebugTestNode().getBoolean("testBoolean"+index, false);
+    }
+    
+    public void setDebugTestBoolean(int index, boolean value){
+        getDebugTestNode().putBoolean("testBoolean"+index, value);
+    }
 }
