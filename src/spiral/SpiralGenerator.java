@@ -148,8 +148,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     /**
      * Creates new form SpiralGenerator
+     * @param debugMode
      */
-    public SpiralGenerator() {
+    public SpiralGenerator(boolean debugMode) {
+        this.debugMode = debugMode;
             // This will get the preference node for the program
         Preferences node = null;
         try{    // Try to get the preference node used for the program
@@ -289,6 +291,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         if (debugMode)
             previewLabel.setComponentPopupMenu(debugPopup);
+    }
+    
+    public SpiralGenerator() {
+        this(false);
     }
     
     private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
@@ -1433,7 +1439,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new SpiralGenerator().setVisible(true);
+            new SpiralGenerator(DebugCapable.checkForDebugArgument(args)).setVisible(true);
         });
     }
     
