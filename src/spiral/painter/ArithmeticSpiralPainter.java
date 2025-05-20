@@ -147,17 +147,15 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point4 == null)
             point4 = new Point2D.Double();
         
-        if (b2){
-            clockwise = !clockwise;
-            thickness = 1 - thickness;
-            angle = FULL_CIRCLE_DEGREES - angle;
-        }
             // Adjust the angle of rotation for the spiral
         angle = adjustRotation(angle,thickness,clockwise);
         
-        double maxR = Math.sqrt(width*width+height*height)/2.0;
+        if (b2)
+            angle = GeometryMath.boundDegrees(angle + FULL_CIRCLE_DEGREES * (1-thickness));
         
-        double p1 = getAzimuth(radius,maxR, angle, true);
+        double r1 = Math.sqrt(width*width+height*height)/2.0;
+        
+        double p1 = getAzimuth(radius,r1, angle, true);
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
