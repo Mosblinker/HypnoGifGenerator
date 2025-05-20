@@ -2741,6 +2741,10 @@ public class SpiralGenerator extends javax.swing.JFrame {
          */
         private OverlayMask mask = null;
         /**
+         * This is the current icon for the preview label.
+         */
+        private Icon currentIcon = null;
+        /**
          * 
          * @param file 
          */
@@ -2750,6 +2754,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
         @Override
         protected boolean saveFile(File file) throws IOException {
             progressBar.setIndeterminate(true);
+                // If the current icon has not been set yet
+            if (currentIcon == null)
+                currentIcon = previewLabel.getIcon();
                 // Create the necessary file output streams for writing to the 
                 // file, and a buffered output stream to write to the file stream
             try(FileOutputStream fileOut = new FileOutputStream(file);
@@ -2803,7 +2810,9 @@ public class SpiralGenerator extends javax.swing.JFrame {
                         frame = createSpiralFrame(i,width,height,painter,mask);
                         frames.add(frame);
                         progressBar.setValue(progressBar.getValue()+1);
-                    }   // Add the frame to the gif
+                    }   // Set the preview to the current frame
+                    previewLabel.setImage(frame);
+                        // Add the frame to the gif
                     encoder.addFrame(frame);
                 }
                 progressBar.setIndeterminate(true);
@@ -2811,6 +2820,11 @@ public class SpiralGenerator extends javax.swing.JFrame {
                 encoder.finish();
             }
             return true;
+        }
+        @Override
+        protected void done(){
+            super.done();
+            previewLabel.setIcon(currentIcon);
         }
         @Override
         protected String getSuccessTitle(File file){
