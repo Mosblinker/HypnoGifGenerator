@@ -172,29 +172,18 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         path.moveTo(point1.getX(), point1.getY());
         
         int i = 0;
-        for (double p = pA+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE, i++){
-            double r = getRadius(radius,p,angle,clockwise);
-            point4 = GeometryMath.polarToCartesianDegrees(r,p,centerX,centerY,point4);
-            double pI = p - INTERPOLATION_ANGLE_2;
-            point3 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pI,angle,clockwise),
-                    pI,centerX,centerY,point3);
-            point2 = GeometryMath.getQuadBezierControlPoint(point1, point3, 
-                    point4, point2);
+        for (double p = p0; p < p1; p+= INTERPOLATION_ANGLE, i++){
+            processLinearSpiral(radius,p,p+INTERPOLATION_ANGLE,angle,clockwise,
+                    centerX,centerY,point1,point2,point3,path);
             
             if (i < i0){
                 System.out.println(i+": ");
                 System.out.println("\tPoint 1: " +point1);
-                System.out.println("\tPoint 4: " +point4);
-                System.out.println("\tPoint 3: " + point3);
                 System.out.println("\tPoint 2: " + point2);
+                System.out.println("\tPoint 3: " + point3);
                 System.out.println();
             }
-            
-            path.quadTo(point2.getX(), point2.getY(), point4.getX(), point4.getY());
-            
-            point1.setLocation(point4);
-            rA = r;
-            pA = p;
+            point1.setLocation(point3);
         }
         g.draw(path);
         
@@ -213,6 +202,19 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
                 g.draw(new Line2D.Double(0, y1, width, y2));
             }
         }
+    }
+    
+    protected void processLinearSpiral(double b, double p0, double p1, 
+            double angle, boolean clockwise, double x, double y, Point2D point1, 
+            Point2D point2, Point2D point3, Path2D path){
+        double pInter = (p0 + p1) / 2.0;
+        point3 = GeometryMath.polarToCartesianDegrees(
+                getRadius(b,p1,angle,clockwise),p1,x,y,point3);
+        point2 = GeometryMath.polarToCartesianDegrees(
+                getRadius(b,pInter,angle,clockwise),pInter,x,y,point2);
+        point2 = GeometryMath.getQuadBezierControlPoint(point1, point2, point3, 
+                point2);
+        path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
     
     protected double getTangentSlope(double b, double r, double p,double angle, boolean clockwise){
