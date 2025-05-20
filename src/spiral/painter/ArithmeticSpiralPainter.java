@@ -37,17 +37,40 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
      * initially null and is initialized the first time it is used.
      */
     private Point2D point4 = null;
+    
+    protected double getArcLengthRadius(double b, double r0, double r1, 
+            double angle, boolean clockwise){
+        return getArcLengthAzimuthHelper(b,getAzimuthImpl(b,r0),
+                getAzimuthImpl(b,r1));
+    }
     @Override
     public double getArcLengthRadius(double r0, double r1, double angle) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return getArcLengthRadius(getSpiralRadius(), r0,r1,angle,isClockwise());
+    }
+    
+    protected double getArcLengthHelper(double p){
+        if (p <= 0)
+            return 0;
+        double a = Math.sqrt(1+p*p);
+        return p * a + Math.log(p + a);
+    }
+    
+    protected double getArcLengthAzimuthHelper(double b, double p0, double p1){
+        return (b / 2.0) * (getArcLengthHelper(p1) - getArcLengthHelper(p0));
+    }
+    
+    protected double getArcLengthAzimuth(double b, double p0, double p1, 
+            double angle, boolean clockwise){
+        return getArcLengthAzimuthHelper(b,getAzimuthValue(p0,angle,clockwise),
+                getAzimuthValue(p1,angle,clockwise));
     }
     @Override
     public double getArcLengthAzimuth(double p0, double p1, double angle) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return getArcLengthAzimuth(getSpiralRadius(),p0,p1,angle,isClockwise());
     }
     @Override
     public double getArcLength(double r0, double p0, double r1, double p1, double angle){
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return getArcLengthAzimuth(p0,p1,angle);
     }
     /**
      * 
@@ -122,6 +145,7 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // If the fourth point has not been initialized yet
         if (point4 == null)
             point4 = new Point2D.Double();
+        
         
     }
     
