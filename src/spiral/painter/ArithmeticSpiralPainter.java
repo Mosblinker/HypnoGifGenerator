@@ -150,6 +150,9 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point4 == null)
             point4 = new Point2D.Double();
         
+            // Adjust the angle of rotation for the spiral
+        angle = adjustRotation(angle,thickness,clockwise);
+        
         double maxR = Math.sqrt(width*width+height*height)/2.0;
         
         double p1 = getAzimuth(radius,maxR, angle, true);
