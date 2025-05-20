@@ -5,7 +5,6 @@
 package spiral.painter;
 
 import geom.GeometryMath;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 
@@ -173,18 +172,9 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             point1.setLocation(point3);
         }
         
-        int i = 0;
-        for (double p = p0; p < p1; p+= INTERPOLATION_ANGLE, i++){
+        for (double p = p0; p < p1; p+= INTERPOLATION_ANGLE){
             processLinearSpiral(radius,p,p+INTERPOLATION_ANGLE,angle,clockwise,
                     centerX,centerY,point1,point2,point3,path);
-            
-            if (i < i0){
-                System.out.println(i+": ");
-                System.out.println("\tPoint 1: " +point1);
-                System.out.println("\tPoint 2: " + point2);
-                System.out.println("\tPoint 3: " + point3);
-                System.out.println();
-            }
             point1.setLocation(point3);
         }
         g.draw(path);
@@ -198,8 +188,17 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
                 getRadius(b,p1,angle,clockwise),p1,x,y,point3);
         point2 = GeometryMath.polarToCartesianDegrees(
                 getRadius(b,pInter,angle,clockwise),pInter,x,y,point2);
+        if (b1){
+            System.out.println("Point 1: " + point1);
+            System.out.println("Point 2: " + point2);
+            System.out.println("Point 3: " + point3);
+        }
         point2 = GeometryMath.getQuadBezierControlPoint(point1, point2, point3, 
                 point2);
+        if (b1){
+            System.out.println("Point C: " +point2);
+            System.out.println();
+        }
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
     
