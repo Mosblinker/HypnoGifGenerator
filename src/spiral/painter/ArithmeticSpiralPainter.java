@@ -150,6 +150,8 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point4 == null)
             point4 = new Point2D.Double();
         
+        
+        
         if (b2){
             clockwise = !clockwise;
             thickness = 1 - thickness;
@@ -163,12 +165,11 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
-        double p0 = HALF_CIRCLE_DEGREES * thickness;
-
+        double p0 = angle;
         point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p0,angle,clockwise),
                 p0,centerX,centerY,point1);
-        
         path.moveTo(point1.getX(), point1.getY());
+        
         if (p0 % INTERPOLATION_ANGLE != 0){
             double temp = p0;
             p0 += (QUARTER_CIRCLE_DEGREES - (p0 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
