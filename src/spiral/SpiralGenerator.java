@@ -377,6 +377,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testSpiralImageSpinner = new javax.swing.JSpinner();
         javax.swing.JLabel testRotateLabel = new javax.swing.JLabel();
         testRotateSpinner = new javax.swing.JSpinner();
+        javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -701,19 +702,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         testDialog.setMinimumSize(new java.awt.Dimension(640, 480));
 
-        testCtrlPanel.setLayout(new java.awt.GridLayout());
+        testCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
         testSpiralImageLabel.setLabelFor(testSpiralImageSpinner);
         testSpiralImageLabel.setText("Test Image:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        testCtrlPanel.add(testSpiralImageLabel, gridBagConstraints);
 
         testSpiralImageSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 testSpiralImageSpinnerStateChanged(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        testCtrlPanel.add(testSpiralImageSpinner, gridBagConstraints);
 
         testRotateLabel.setLabelFor(testRotateSpinner);
         testRotateLabel.setText("Rotation:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        testCtrlPanel.add(testRotateLabel, gridBagConstraints);
 
         testRotateSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, 360.0d, 1.0d));
         testRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -721,6 +741,33 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 testRotateSpinnerStateChanged(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        testCtrlPanel.add(testRotateSpinner, gridBagConstraints);
+
+        javax.swing.GroupLayout testCtrlPanel2Layout = new javax.swing.GroupLayout(testCtrlPanel2);
+        testCtrlPanel2.setLayout(testCtrlPanel2Layout);
+        testCtrlPanel2Layout.setHorizontalGroup(
+            testCtrlPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 376, Short.MAX_VALUE)
+        );
+        testCtrlPanel2Layout.setVerticalGroup(
+            testCtrlPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 238, Short.MAX_VALUE)
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        testCtrlPanel.add(testCtrlPanel2, gridBagConstraints);
 
         javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
         testDialog.getContentPane().setLayout(testDialogLayout);
@@ -728,30 +775,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(testDialogLayout.createSequentialGroup()
-                        .addComponent(testSpiralImageLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(testRotateLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(testRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 52, Short.MAX_VALUE)))
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         testDialogLayout.setVerticalGroup(
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(testSpiralImageLabel)
-                    .addComponent(testSpiralImageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(testRotateLabel)
-                    .addComponent(testRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
