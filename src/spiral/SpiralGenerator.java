@@ -2485,6 +2485,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             int width = getIconWidth();
                 // Get the height of the icon
             int height = getIconHeight();
+            double scale = (double)testScaleSpinner.getValue();
+            if (scale == 0)
+                scale = 1;
+            scale = 1.0/scale;
+            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
             if (index >= 0 && index < testImages.size()){
                 BufferedImage img = testImages.get(index);
                 if (img.getWidth() != width || img.getHeight() != height)
@@ -2492,11 +2497,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g.drawImage(img, 0, 0, null);
             }
             g.setColor(new Color(0x8000FF00,true));
-            double scale = (double)testScaleSpinner.getValue();
-            if (scale == 0)
-                scale = 1;
-            scale = 1.0/scale;
-            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
             testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
         }
         @Override
