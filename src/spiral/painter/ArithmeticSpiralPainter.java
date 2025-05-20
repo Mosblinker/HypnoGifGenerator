@@ -14,8 +14,6 @@ import java.awt.geom.*;
  * @author Mosblinker
  */
 public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
-    
-    private static final double INTERPOLATION_ANGLE_2 = INTERPOLATION_ANGLE/2.0;
     /**
      * A scratch Path2D object to use to create the spiral. This is initially 
      * null and is initialized the first time it is used.
@@ -164,15 +162,13 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
-        double p0 = angle;
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p0,angle,clockwise),
-                p0,centerX,centerY,point1);
+        double p0 = angle + (INTERPOLATION_ANGLE - (angle % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,angle,angle,clockwise),
+                angle,centerX,centerY,point1);
         path.moveTo(point1.getX(), point1.getY());
         
-        if (p0 % INTERPOLATION_ANGLE != 0){
-            double temp = p0;
-            p0 += (QUARTER_CIRCLE_DEGREES - (p0 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
-            processLinearSpiral(radius,temp,p0,angle,clockwise,centerX,centerY,
+        if (p0 != angle){
+            processLinearSpiral(radius,angle,p0,angle,clockwise,centerX,centerY,
                     point1,point2,point3,path);
             point1.setLocation(point3);
         }
