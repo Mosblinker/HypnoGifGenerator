@@ -383,6 +383,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.JLabel testScaleLabel = new javax.swing.JLabel();
         testScaleSpinner = new javax.swing.JSpinner();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
+        javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -776,15 +777,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 7);
         testCtrlPanel.add(testScaleSpinner, gridBagConstraints);
 
-        testCtrlPanel2.setLayout(new java.awt.GridLayout());
+        testCtrlPanel2.setLayout(new java.awt.GridLayout(1, 4, 6, 7));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weighty = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         testCtrlPanel.add(testCtrlPanel2, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.weighty = 0.9;
+        testCtrlPanel.add(filler16, gridBagConstraints);
 
         javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
         testDialog.getContentPane().setLayout(testDialogLayout);
