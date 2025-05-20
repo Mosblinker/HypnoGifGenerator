@@ -158,13 +158,12 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         
         double pA = p0;
         double rA = getRadius(radius,pA,angle,clockwise);
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pA ,
-                    angle,clockwise),p0 ,centerX,centerY,point1);
+        point1 = GeometryMath.polarToCartesianDegrees(rA,pA,centerX,centerY,point1);
         
         path.moveTo(point1.getX(), point1.getY());
         
         int i = 0;
-        for (double p = p0+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE, i++){
+        for (double p = pA+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE, i++){
             double r = getRadius(radius,p,angle,clockwise);
             point4 = GeometryMath.polarToCartesianDegrees(r,p,centerX,centerY,point4);
             
