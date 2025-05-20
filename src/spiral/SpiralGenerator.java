@@ -320,6 +320,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         printTestButton = new javax.swing.JMenuItem();
         printFPSToggle = new javax.swing.JCheckBoxMenuItem();
         inputEnableToggle = new javax.swing.JCheckBoxMenuItem();
+        showTestDialogButton = new javax.swing.JMenuItem();
+        showTestSpiralToggle = new javax.swing.JCheckBoxMenuItem();
         colorSelector = new components.JColorSelector();
         maskFCPreview = new components.JFileDisplayPanel();
         saveFCPreview = new components.JFileDisplayPanel();
@@ -349,6 +351,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
+        testDialog = new javax.swing.JDialog(this);
+        javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -429,6 +433,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
         debugPopup.add(inputEnableToggle);
+
+        showTestDialogButton.setText("Show Test Dialog");
+        showTestDialogButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTestDialogButtonActionPerformed(evt);
+            }
+        });
+        debugPopup.add(showTestDialogButton);
+
+        showTestSpiralToggle.setText("Show Test Spiral");
+        showTestSpiralToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTestSpiralToggleActionPerformed(evt);
+            }
+        });
+        debugPopup.add(showTestSpiralToggle);
 
         colorSelector.setClearButtonShown(true);
 
@@ -652,6 +672,27 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maskScaleLabel)
                     .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        testDialog.setMinimumSize(new java.awt.Dimension(640, 480));
+
+        testCtrlPanel.setLayout(new java.awt.GridLayout());
+
+        javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
+        testDialog.getContentPane().setLayout(testDialogLayout);
+        testDialogLayout.setHorizontalGroup(
+            testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        testDialogLayout.setVerticalGroup(
+            testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(testDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1354,6 +1395,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void inputEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputEnableToggleActionPerformed
         setInputEnabled(inputEnableToggle.isSelected());
     }//GEN-LAST:event_inputEnableToggleActionPerformed
+
+    private void showTestSpiralToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestSpiralToggleActionPerformed
+        previewLabel.repaint();
+    }//GEN-LAST:event_showTestSpiralToggleActionPerformed
+
+    private void showTestDialogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestDialogButtonActionPerformed
+        testDialog.setVisible(true);
+    }//GEN-LAST:event_showTestDialogButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1853,10 +1902,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
+    private javax.swing.JMenuItem showTestDialogButton;
+    private javax.swing.JCheckBoxMenuItem showTestSpiralToggle;
     private javax.swing.JComboBox<String> spinDirCombo;
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
+    private javax.swing.JDialog testDialog;
     private javax.swing.JPanel textMaskCtrlPanel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
