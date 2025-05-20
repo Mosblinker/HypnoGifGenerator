@@ -595,6 +595,9 @@
                       <SpinnerModel initial="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testDoubleSpinner0StateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JSpinner" name="testDoubleSpinner1">
                   <Properties>
@@ -602,12 +605,18 @@
                       <SpinnerModel initial="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testDoubleSpinner1StateChanged"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JToggleButton" name="testToggle0">
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Clockwise"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testToggle0ActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
