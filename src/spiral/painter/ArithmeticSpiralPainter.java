@@ -150,7 +150,7 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         
         double maxR = Math.sqrt(width*width+height*height);
         
-        double p1 = getAzimuth(radius,maxR, angle, clockwise);
+        double p1 = getAzimuth(radius,maxR, angle, true);
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
         
