@@ -160,18 +160,43 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         
         double p0 = 90;
         
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p0 ,
+        double pA = p0;
+        double rA = getRadius(radius,pA,angle,clockwise);
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,pA ,
                     angle,clockwise),p0 ,centerX,centerY,point1);
         
         path.moveTo(point1.getX(), point1.getY());
         
-        for (double p = p0+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE){
+        int i = 0;
+        for (double p = p0+INTERPOLATION_ANGLE; p <= p1; p+= INTERPOLATION_ANGLE, i++){
+            double r = getRadius(radius,p,angle,clockwise);
+            point4 = GeometryMath.polarToCartesianDegrees(r,p,centerX,centerY,point4);
             
-            point4 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p,
-                    angle,clockwise),p,centerX,centerY,point4);
+            if (i < i0){
+                double m1 = getTangentSlope(radius,rA,pA,angle,clockwise);
+                double m2 = getTangentSlope(radius,r,p,angle,clockwise);
+                double y1 = GeometryMath.getLineY(m1,0,point1);
+                double y2 = GeometryMath.getLineY(m1,width,point1);
+                double y3 = GeometryMath.getLineY(m2,0,point4);
+                double y4 = GeometryMath.getLineY(m2,width,point4);
+                point2 = GeometryMath.getLineIntersection(0, y1, 
+                        width, y2, 
+                        0, y3, 
+                        width, y4, point2);
+                System.out.println(i+": ");
+                System.out.println("\tPoint 1: " +point1);
+                System.out.printf("\t%10.5f %10.5f %10.5f %10.5f %10.5f %n",m1,0.0,y1,(double)width,y2);
+                System.out.println("\tPoint 4: " +point4);
+                System.out.printf("\t%10.5f %10.5f %10.5f %10.5f %10.5f %n",m2,0.0,y3,(double)width,y4);
+                System.out.println("\tPoint 2: " + point2);
+                System.out.println();
+                path.quadTo(point2.getX(), point2.getY(), point4.getX(), point4.getY());
+            }else 
+                path.lineTo(point4.getX(), point4.getY());
             
-            path.lineTo(point4.getX(), point4.getY());
             point1.setLocation(point4);
+            rA = r;
+            pA = p;
         }
         
 //        point2 = GeometryMath.polarToCartesianDegrees(getRadius(radius,360+INTERPOLATION_ANGLE,
