@@ -202,17 +202,19 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
 //        }
         g.draw(path);
         
-        for (double p = p0; p <= p1; p+= INTERPOLATION_ANGLE){
-            point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p ,
-                    angle,clockwise),p ,centerX,centerY,point1);
-            double m = getTangentSlope(radius,getRadius(radius,p,angle,clockwise),
-                    p,angle,clockwise);
-            double y1 = GeometryMath.getLineY(m,0,point1);
-            double y2 = GeometryMath.getLineY(m,width,point1);
+        if (b1){
+            for (int t = 0; t <= i0; t++){
+                double p = p0 + (INTERPOLATION_ANGLE*t);
+                point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p ,
+                        angle,clockwise),p ,centerX,centerY,point1);
+                double m = getTangentSlope(radius,getRadius(radius,p,angle,clockwise),
+                        p,angle,clockwise);
+                double y1 = GeometryMath.getLineY(m,0,point1);
+                double y2 = GeometryMath.getLineY(m,width,point1);
 
-//            System.out.printf("%10.5f %10.5f %10.5f %10.5f %n",0.0,y1,(double)width,y2);
-            g.setColor(Color.BLUE);
-            g.draw(new Line2D.Double(0, y1, width, y2));
+                System.out.printf("%5d: %10.5f %10.5f %10.5f %10.5f %10.5f %n",t,m,0.0,y1,(double)width,y2);
+                g.setColor(Color.BLUE);
+                g.draw(new Line2D.Double(0, y1, width, y2));
             }
         }
     }
