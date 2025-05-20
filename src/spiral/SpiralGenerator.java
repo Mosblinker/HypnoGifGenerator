@@ -1504,7 +1504,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_inputEnableToggleActionPerformed
 
     private void showTestSpiralToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestSpiralToggleActionPerformed
-        previewLabel.repaint();
+        previewLabel.setIcon((showTestSpiralToggle.isSelected()) ? new TestSpiralIcon() : spiralIcon);
     }//GEN-LAST:event_showTestSpiralToggleActionPerformed
 
     private void showTestDialogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestDialogButtonActionPerformed
@@ -3018,6 +3018,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the current icon has not been set yet
             if (currentIcon == null)
                 currentIcon = previewLabel.getIcon();
+            showTestSpiralToggle.setEnabled(false);
                 // Create the necessary file output streams for writing to the 
                 // file, and a buffered output stream to write to the file stream
             try(FileOutputStream fileOut = new FileOutputStream(file);
@@ -3085,6 +3086,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         protected void done(){
             super.done();
+            showTestSpiralToggle.setEnabled(true);
             previewLabel.setIcon(currentIcon);
         }
         @Override
