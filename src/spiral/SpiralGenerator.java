@@ -206,7 +206,7 @@ public class SpiralGenerator extends javax.swing.JFrame {
         }
         
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
-        progressBar.setMaximum(SPIRAL_FRAME_DURATION);
+        progressBar.setMaximum(SPIRAL_FRAME_COUNT);
         updateFrameNumberDisplayed();
         animationTimer = new javax.swing.Timer(SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
             progressAnimation(e);
