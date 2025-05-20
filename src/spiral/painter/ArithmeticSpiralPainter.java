@@ -205,13 +205,8 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         for (double p = p0; p <= p1; p+= INTERPOLATION_ANGLE){
             point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,p ,
                     angle,clockwise),p ,centerX,centerY,point1);
-            double pA = getAzimuthValue(p,angle,clockwise)*GeometryMath.FULL_CIRCLE_DEGREES;
-            double theta = Math.toRadians(GeometryMath.boundDegrees(pA));
-            double sin = Math.sin(theta);
-            double cos = Math.cos(theta);
-            double r = getRadius(radius,p,angle,clockwise);
-            double m = (r * cos + radius * sin) / (-r*sin + radius * cos);
-//            point2 = GeometryMath.p
+            double m = getTangentSlope(radius,getRadius(radius,p,angle,clockwise),
+                    p,angle,clockwise);
             double y1 = GeometryMath.getLineY(m,0,point1);
             double y2 = GeometryMath.getLineY(m,width,point1);
 
@@ -222,6 +217,13 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         }
     }
     
+    protected double getTangentSlope(double b, double r, double p,double angle, boolean clockwise){
+        p = getAzimuthValue(p,angle,clockwise);
+        double theta = Math.toRadians(GeometryMath.boundDegrees(p*GeometryMath.FULL_CIRCLE_DEGREES));
+        double sin = Math.sin(theta);
+        double cos = Math.cos(theta);
+        return (r * cos + b * sin) / (-r*sin + b * cos);
+    }
     
     public int i0 = 0;
     public boolean b1;
