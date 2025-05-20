@@ -154,21 +154,34 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // Adjust the angle of rotation for the spiral
         angle = adjustRotation(angle,thickness,clockwise);
         
+        double offset = FULL_CIRCLE_DEGREES * (1-thickness);
+        
         if (b2)
-            angle = GeometryMath.boundDegrees(angle + FULL_CIRCLE_DEGREES * (1-thickness));
+            angle = GeometryMath.boundDegrees(angle + offset);
         
         double r1 = Math.sqrt(width*width+height*height)/2.0;
         
         double p1 = getAzimuth(radius,r1, angle, true);
+        
+        double startP = angle;
+        
+        if (!clockwise){
+            p1 = -p1;
+            startP = FULL_CIRCLE_DEGREES-startP;
+            if (b2)
+                startP += offset;
+            else
+                startP -= offset;
+        }
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
+        double p0 = startP + (INTERPOLATION_ANGLE - (startP % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         
-        double p0 = angle + (INTERPOLATION_ANGLE - (angle % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,angle,angle,clockwise),
-                angle,centerX,centerY,point1);
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(radius,startP,angle,clockwise),
+                startP,centerX,centerY,point1);
         path.moveTo(point1.getX(), point1.getY());
+        if (p0 != startP){
         
-        if (p0 != angle){
             processLinearSpiral(radius,angle,p0,angle,clockwise,centerX,centerY,
                     point1,point2,point3,path);
             point1.setLocation(point3);
@@ -185,12 +198,13 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     protected void processLinearSpiral(double b, double p0, double p1, 
             double angle, boolean clockwise, double x, double y, Point2D point1, 
             Point2D point2, Point2D point3, Path2D path){
+        double r = getRadius(b,p1,angle,clockwise);
         double pInter = (p0 + p1) / 2.0;
-        point3 = GeometryMath.polarToCartesianDegrees(
-                getRadius(b,p1,angle,clockwise),p1,x,y,point3);
+        point3 = GeometryMath.polarToCartesianDegrees(r,p1,x,y,point3);
         point2 = GeometryMath.polarToCartesianDegrees(
                 getRadius(b,pInter,angle,clockwise),pInter,x,y,point2);
         if (b1){
+            System.out.println("Polar: " + r + ", " + p1);
             System.out.println("Point 1: " + point1);
             System.out.println("Point 2: " + point2);
             System.out.println("Point 3: " + point3);
