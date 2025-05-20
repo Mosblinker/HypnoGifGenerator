@@ -55,30 +55,6 @@ import spiral.painter.*;
 import swing.CenteredTextPainter;
 import utils.SwingExtendedUtilities;
 
-/*
-    // TODO: Rework the about window to look good.
-        String message = "About "+PROGRAM_NAME+
-                "\nVersion: "+PROGRAM_VERSION+
-                "\n\nCredits: ";
-        for (String value : CREDITS)
-            message += "\n"+value;
-        RambleyIcon icon = new RambleyIcon(){
-            @Override
-            public int getIconWidth(){
-                return 128;
-            }
-            @Override
-            public int getIconHeight(){
-                return 256;
-            }
-        };
-        icon.setFlags(ICON_IMAGES_RAMBLEY_FLAGS);
-        icon.setRambleyOpenMouthHeight(1.0);
-        
-        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
-                JOptionPane.PLAIN_MESSAGE,icon);
-*/
-
 /**
  *
  * @author Mosblinker
