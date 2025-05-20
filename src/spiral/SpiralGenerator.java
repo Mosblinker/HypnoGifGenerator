@@ -2313,6 +2313,34 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
+    private class TestSpiralIcon implements Icon2D{
+        @Override
+        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+            g.translate(x, y);
+            int index = (int) testSpiralImageSpinner.getValue();
+                // Get the width of the icon
+            int width = getIconWidth();
+                // Get the height of the icon
+            int height = getIconHeight();
+            if (index >= 0 && index < testImages.size()){
+                BufferedImage img = testImages.get(index);
+                if (img.getWidth() != width || img.getHeight() != height)
+                    img = Thumbnailator.createThumbnail(img, width, height);
+                g.drawImage(img, 0, 0, null);
+            }
+            g.setColor(new Color(0x8000FF00,true));
+            spiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
+        }
+        @Override
+        public int getIconWidth() {
+            return getImageWidth();
+        }
+        @Override
+        public int getIconHeight() {
+            return getImageHeight();
+        }
+    }
+    
     private class MaskPreviewIcon implements Icon2D{
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
