@@ -20,7 +20,12 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     
     public static final String THICKNESS_PROPERTY_CHANGED = 
             "ThicknessPropertyChanged";
-    
+    /**
+     * This is the angle to use for interpolating the spiral curve. The end of 
+     * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
+     * of the curve.
+     */
+    protected static final double INTERPOLATION_ANGLE = 45.0;
     /**
      * This is the spiral radius that controls the size of the spirals.
      */

@@ -14,12 +14,6 @@ import java.awt.geom.*;
  */
 public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     /**
-     * This is the angle to use for interpolating the spiral curve. The end of 
-     * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
-     * of the curve.
-     */
-    protected static final double INTERPOLATION_ANGLE = 45.0;
-    /**
      * This is the target radius for the start of the spiral. This is set to 0.1 
      * to ensure that the spiral is properly formed in the center of the image 
      * with a pitch that makes it appear that it infinitely gets smaller as it 
