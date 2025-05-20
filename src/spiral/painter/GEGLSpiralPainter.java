@@ -200,6 +200,13 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         if (!clockwise)
             p = -p;
         return p + angle;
+    }
+    /**
+     * 
+     * @param p
+     * @return 
+     */
+    protected abstract double getRadiusImpl(double p);
     /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
@@ -209,7 +216,9 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * if the spiral is counter-clockwise.
      * @return The radial distance of the given point on the spiral.
      */
-    protected abstract double getRadius(double p,double angle,boolean clockwise);
+    protected double getRadius(double p, double angle, boolean clockwise){
+        return getRadiusImpl(getAzimuthValue(p,angle,clockwise));
+    }
     /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
@@ -233,6 +242,12 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     public double getRadius(double p){
         return getRadius(p,0.0);
     }
+    /**
+     * 
+     * @param r
+     * @return 
+     */
+    protected abstract double getAzimuthImpl(double r);
     /**
      * This returns the azimuth for the point on the spiral with the given 
      * radial distance. This is used to do the calculations.
