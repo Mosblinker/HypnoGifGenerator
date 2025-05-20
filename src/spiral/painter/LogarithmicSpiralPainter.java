@@ -274,9 +274,9 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // that the spiral appears as if it is infinitely getting smaller 
             // the closer it gets to the center
         double p0 = getAzimuth(a,k,STARTING_RADIUS/rScale,angle,true);
-            // Subtract the starting azimuth by itself mod 90 degrees to ensure 
-            // it ends at a multiple of 90 degrees.
-        p0 -= p0 % QUARTER_CIRCLE_DEGREES;
+            // Subtract the starting azimuth by itself mod by the interpolation 
+            // angle to ensure it ends at a multiple of the interpolation angle.
+        p0 -= p0 % INTERPOLATION_ANGLE;
         
             // This gets the ending azimuth for the spiral. This uses the 
             // radius and ignores whether the spiral is clockwise or not, 
@@ -284,8 +284,8 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // radius of half the diagonal length of the area
         double p1 = getAzimuth(radius, k, 
                 Math.sqrt(width*width+height*height)/2.0, angle,true);
-            // Effectively round it up to the nearest quarter angle
-        p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
+            // Effectively round it up to the nearest interpolation angle
+        p1 += (INTERPOLATION_ANGLE - (p1 % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
