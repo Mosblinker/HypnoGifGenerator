@@ -287,6 +287,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
         
+        if (debugMode)
+            previewLabel.setComponentPopupMenu(debugPopup);
     }
     
     private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
@@ -782,8 +784,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         previewSpiralPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hypno Gif Preview"));
         previewSpiralPanel.setLayout(new java.awt.BorderLayout());
-
-        previewLabel.setComponentPopupMenu(debugPopup);
         previewSpiralPanel.add(previewLabel, java.awt.BorderLayout.CENTER);
 
         previewPanel.add(previewSpiralPanel);
