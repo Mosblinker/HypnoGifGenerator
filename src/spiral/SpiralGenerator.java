@@ -99,6 +99,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final int[] ICON_SIZES = {16, 24, 32, 48, 64, 96, 128, 256, 512};
     
     private static final String ICON_FILE_IMAGE = "/images/icon.png";
+    
+    private static final String TEST_IMAGE_FILE_TEMPLATE = "/images/test/test%d.png";
     /**
      * This is the default width for the spiral image.
      */
@@ -289,8 +291,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
         
-        if (debugMode)
+        if (debugMode){
             previewLabel.setComponentPopupMenu(debugPopup);
+            testImages = new ArrayList<>();
+            for (int i = 0; i < 100; i++){
+                try {
+                    testImages.add(ImageIO.read(this.getClass().getResource(
+                            String.format(TEST_IMAGE_FILE_TEMPLATE, i))));
+                } catch (IOException ex) {
+                    Logger.getLogger(SpiralGenerator.class.getName()).log(
+                            Level.INFO, null, ex);
+                }
+            }
+            if (testImages.isEmpty())
+                testSpiralImageSpinner.setEnabled(false);
+            else
+                testSpiralImageSpinner.setModel(new javax.swing.SpinnerNumberModel(
+                        0, 0, testImages.size()-1, 1));
+        }
     }
     
     public SpiralGenerator() {
@@ -684,7 +702,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testSpiralImageLabel.setLabelFor(testSpiralImageSpinner);
         testSpiralImageLabel.setText("Test Image:");
 
-        testSpiralImageSpinner.setModel(new javax.swing.SpinnerNumberModel(0, 0, 0, 1));
         testSpiralImageSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 testSpiralImageSpinnerStateChanged(evt);
@@ -1804,6 +1821,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the icon used to display the sprial.
      */
     private Icon spiralIcon;
+    /**
+     * This is an array containing the test images to display while testing.
+     */
+    private ArrayList<BufferedImage> testImages = null;
     /**
      * This is the painter used to paint the spiral.
      */
