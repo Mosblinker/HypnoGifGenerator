@@ -49,11 +49,53 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     public double getArcLength(double r0, double p0, double r1, double p1, double angle){
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    /**
+     * 
+     * @param b
+     * @param p
+     * @return 
+     */
+    protected double getRadiusImpl(double b, double p){
+        return b * p;
     }
     @Override
-    protected double getAzimuth(double r, double angle, boolean clockwise) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    protected double getRadiusImpl(double p){
+        return getRadiusImpl(getSpiralRadius(),p);
+    }
+    /**
+     * 
+     * @param b
+     * @param p
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
+    protected double getRadius(double b, double p, double angle, boolean clockwise) {
+        return getRadiusImpl(b,getAzimuthValue(p,angle,clockwise));
+    }
+    /**
+     * 
+     * @param b
+     * @param r
+     * @return 
+     */
+    protected double getAzimuthImpl(double b, double r){
+        return r / b;
+    }
+    @Override
+    protected double getAzimuthImpl(double r){
+        return getAzimuthImpl(getSpiralRadius(),r);
+    }
+    /**
+     * 
+     * @param b
+     * @param r
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
+    protected double getAzimuth(double b, double r, double angle, boolean clockwise){
+        return getAzimuthDegrees(getAzimuthImpl(b,r),angle,clockwise);
     }
     @Override
     protected double fillConditionValue() {
