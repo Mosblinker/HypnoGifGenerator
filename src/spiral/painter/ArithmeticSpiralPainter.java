@@ -212,12 +212,13 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             double r = getRadius(radius,p,angle,clockwise);
             double m = (r * cos + radius * sin) / (-r*sin + radius * cos);
 //            point2 = GeometryMath.p
-            double y1 = m * (0 - point1.getX()) + point1.getY();
-            double y2 = m * (width - point1.getX()) + point1.getY();
-            
+            double y1 = GeometryMath.getLineY(m,0,point1);
+            double y2 = GeometryMath.getLineY(m,width,point1);
+
 //            System.out.printf("%10.5f %10.5f %10.5f %10.5f %n",0.0,y1,(double)width,y2);
             g.setColor(Color.BLUE);
             g.draw(new Line2D.Double(0, y1, width, y2));
+            }
         }
     }
     
