@@ -1492,12 +1492,9 @@
     <Component class="javax.swing.JSpinner" name="delaySpinner">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="1" maximum="100" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="10" maximum="1000" minimum="10" numberType="java.lang.Integer" stepSize="10" type="number"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="This is the duration for each frame of animation, in milliseconds."/>
-        <Property name="editor" type="javax.swing.JComponent" editor="org.netbeans.modules.form.editors.SpinnerEditorEditor">
-          <SpinnerEditor format="0&apos;0&apos;" type="3"/>
-        </Property>
       </Properties>
       <Events>
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="delaySpinnerStateChanged"/>

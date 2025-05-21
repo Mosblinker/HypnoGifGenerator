@@ -1330,9 +1330,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 1000, 10));
         delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
-        delaySpinner.setEditor(new javax.swing.JSpinner.NumberEditor(delaySpinner, "0'0'"));
         delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 delaySpinnerStateChanged(evt);
@@ -1694,7 +1693,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spiralTypeComboActionPerformed
 
     private void delaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySpinnerStateChanged
-        // TODO add your handling code here:
+        int value = ((Integer) delaySpinner.getValue());
+        if (value % 10 != 0){
+            UIManager.getLookAndFeel().provideErrorFeedback(delaySpinner);
+            delaySpinner.setValue(value - (value % 10));
+            return;
+        }
     }//GEN-LAST:event_delaySpinnerStateChanged
     /**
      * This returns the width for the image.
