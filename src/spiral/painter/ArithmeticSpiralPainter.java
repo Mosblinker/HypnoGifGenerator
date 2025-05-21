@@ -49,8 +49,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     }
     
     protected double getArcLengthHelper(double p){
-        if (p <= 0)
-            return 0;
         double a = Math.sqrt(1+p*p);
         return p * a + Math.log(p + a);
     }
