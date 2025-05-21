@@ -103,6 +103,8 @@ public class SpiralGeneratorConfig {
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
     
     public static final String TEST_SPIRAL_SCALE_KEY = "TestScale";
+    
+    public static final String FRAME_DURATION_KEY = "FrameDuration";
     /**
      * This is a preference node to store the settings for this program.
      */
@@ -882,6 +884,28 @@ public class SpiralGeneratorConfig {
      */
     public void setSpiralType(int value){
         getPreferences().putInt(SPIRAL_TYPE_KEY, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public int getFrameDuration(int defaultValue){
+        return getPreferences().getInt(FRAME_DURATION_KEY, defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public int getFrameDuration(){
+        return getFrameDuration(20);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setFrameDuration(int value){
+        getPreferences().putInt(FRAME_DURATION_KEY, value);
     }
     /**
      * 
