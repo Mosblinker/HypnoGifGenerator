@@ -326,6 +326,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     }
     @Override
     public String getName() {
-        return "Arithmetic Spiral";
+        return "Arithmetic";
     }
 }

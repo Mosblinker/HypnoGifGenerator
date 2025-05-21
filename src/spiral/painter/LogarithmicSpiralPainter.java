@@ -469,7 +469,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     }
     @Override
     public String getName() {
-        return "Logarithmic Spiral";
+        return "Logarithmic";
     }
     @Override
     public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
