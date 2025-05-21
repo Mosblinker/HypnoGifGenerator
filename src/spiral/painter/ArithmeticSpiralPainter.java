@@ -37,11 +37,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
      * initially null and is initialized the first time it is used.
      */
     private Point2D point3 = null;
-    /**
-     * A fourth scratch Point2D object to use to create the spiral. This is 
-     * initially null and is initialized the first time it is used.
-     */
-    private Point2D point4 = null;
     
     protected double getArcLengthRadius(double b, double r0, double r1, 
             double angle, boolean clockwise){
@@ -147,9 +142,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // If the third point has not been initialized yet
         if (point3 == null)
             point3 = new Point2D.Double();
-            // If the fourth point has not been initialized yet
-        if (point4 == null)
-            point4 = new Point2D.Double();
         
             // Adjust the angle of rotation for the spiral
         angle = adjustRotation(angle,thickness,clockwise);
