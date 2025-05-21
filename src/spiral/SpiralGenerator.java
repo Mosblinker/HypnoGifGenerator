@@ -148,21 +148,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, DEFAULT_SPIRAL_COLORS[i]));
         }
         
-        spiralPainter = new LogarithmicSpiralPainter();
-        
-        spiralPainter.setSpiralRadius(config.getSpiralRadius(spiralPainter.getSpiralRadius()));
-        spiralPainter.setBase(config.getSpiralBase(spiralPainter.getBase()));
-        spiralPainter.setThickness(config.getSpiralThickness(spiralPainter.getThickness()));
-        spiralPainter.setClockwise(config.isSpiralClockwise(spiralPainter.isClockwise()));
+        spiralPainters = new SpiralPainter[]{
+            new LogarithmicSpiralPainter(),
+            new ArithmeticSpiralPainter()
+        };
+        for (SpiralPainter painter : spiralPainters){
+            painter.loadSpiralFromPreferences(config);
+        }
         
         overlayMask.textPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled()));
         overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(overlayMask.textPainter.getLineSpacing()));
         
         colorButtons = new HashMap<>();
         colorIndexes = new HashMap<>();
+        spiralCompLabels = new HashMap<>();
         
         spiralIcon = new SpiralIcon();
         initComponents();
+        for (JLabel label : new JLabel[]{
+            radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel
+        }){
+            spiralCompLabels.put(label.getLabelFor(), label);
+        }
         
         BufferedImage iconImg = null;
         try {
@@ -241,11 +248,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
-        radiusSpinner.setValue(spiralPainter.getSpiralRadius());
-        baseSpinner.setValue(spiralPainter.getBase());
-        balanceSpinner.setValue(spiralPainter.getBalance());
-        dirCombo.setSelectedIndex((spiralPainter.isClockwise())?0:1);
-        angleSpinner.setValue(config.getSpiralAngle());
+        
+        loadSpiralPainter();
+        
+        angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
@@ -266,7 +272,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         maskTextArea.setText(config.getMaskText());
         
-        spiralPainter.addPropertyChangeListener(handler);
+        for (SpiralPainter painter : spiralPainters)
+            painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         maskTextArea.getDocument().addDocumentListener(handler);
         
@@ -332,6 +339,41 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     public SpiralGenerator() {
         this(false);
+    }
+    
+    private SpiralPainter getSpiralPainter(int index){
+        if (index >= 0 && index < spiralPainters.length)
+            return spiralPainters[index];
+        return null;
+    }
+    
+    private SpiralPainter getSpiralPainter(){
+        return getSpiralPainter(0);
+    }
+    
+    private void loadSpiralPainter(SpiralPainter painter){
+        if (painter == null)
+            return;
+        dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
+        boolean visible = painter instanceof GEGLSpiralPainter;
+        if (visible){
+            GEGLSpiralPainter temp = (GEGLSpiralPainter)painter;
+            radiusSpinner.setValue(temp.getSpiralRadius());
+            balanceSpinner.setValue(temp.getBalance());
+        }
+        radiusSpinner.setVisible(visible);
+        balanceSpinner.setVisible(visible);
+        visible = painter instanceof LogarithmicSpiralPainter;
+        if (visible)
+            baseSpinner.setValue(((LogarithmicSpiralPainter)painter).getBase());
+        baseSpinner.setVisible(visible);
+        for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
+            entry.getValue().setVisible(entry.getKey().isVisible());
+        }
+    }
+    
+    private void loadSpiralPainter(){
+        loadSpiralPainter(getSpiralPainter());
     }
     
     private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
@@ -1389,21 +1431,33 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_formComponentMoved
 
     private void radiusSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiusSpinnerStateChanged
-        double value = (double) radiusSpinner.getValue();
-        if (value != spiralPainter.getSpiralRadius())
-            spiralPainter.setSpiralRadius(value);
+        SpiralPainter temp = getSpiralPainter();
+        if (temp instanceof GEGLSpiralPainter){
+            GEGLSpiralPainter painter = (GEGLSpiralPainter)temp;
+            double value = (double) radiusSpinner.getValue();
+            if (value != painter.getSpiralRadius())
+                painter.setSpiralRadius(value);
+        }
     }//GEN-LAST:event_radiusSpinnerStateChanged
 
     private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
-        double value = (double) baseSpinner.getValue();
-        if (value != spiralPainter.getBase())
-            spiralPainter.setBase(value);
+        SpiralPainter temp = getSpiralPainter();
+        if (temp instanceof LogarithmicSpiralPainter){
+            LogarithmicSpiralPainter painter = (LogarithmicSpiralPainter) temp;
+            double value = (double) baseSpinner.getValue();
+            if (value != painter.getBase())
+                painter.setBase(value);
+        }
     }//GEN-LAST:event_baseSpinnerStateChanged
 
     private void balanceSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_balanceSpinnerStateChanged
-        double value = (double) balanceSpinner.getValue();
-        if (value != spiralPainter.getBalance())
-            spiralPainter.setBalance(value);
+        SpiralPainter temp = getSpiralPainter();
+        if (temp instanceof GEGLSpiralPainter){
+            GEGLSpiralPainter painter = (GEGLSpiralPainter)temp;
+            double value = (double) balanceSpinner.getValue();
+            if (value != painter.getBalance())
+                painter.setBalance(value);
+        }
     }//GEN-LAST:event_balanceSpinnerStateChanged
 
     private void alwaysScaleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwaysScaleToggleActionPerformed
@@ -1417,7 +1471,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_printFPSToggleActionPerformed
 
     private void dirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dirComboActionPerformed
-        spiralPainter.setClockwise(dirCombo.getSelectedIndex() == 0);
+        getSpiralPainter().setClockwise(dirCombo.getSelectedIndex() == 0);
     }//GEN-LAST:event_dirComboActionPerformed
 
     private void spinDirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinDirComboActionPerformed
@@ -1426,7 +1480,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
-        config.setSpiralAngle((double)angleSpinner.getValue());
+        config.setSpiralRotation((double)angleSpinner.getValue());
         refreshPreview(false);
     }//GEN-LAST:event_angleSpinnerStateChanged
 
@@ -1503,13 +1557,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
         heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
-        radiusSpinner.setValue(100.0);
-        baseSpinner.setValue(2.0);
-        balanceSpinner.setValue(0.0);
         spinDirCombo.setSelectedIndex(0);
         config.setSpiralClockwise(true);
-        dirCombo.setSelectedIndex(0);
-        spiralPainter.setClockwise(true);
+        for (SpiralPainter painter : spiralPainters){
+            painter.reset();
+        }
+        loadSpiralPainter();
         angleSpinner.setValue(0.0);
     }//GEN-LAST:event_resetButtonActionPerformed
 
@@ -1629,7 +1682,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Get the angle to use for the rotation
         double angle = SPIRAL_FRAME_ROTATION*frameIndex;
             // If the spin direction is the same as the spiral's direction
-        if (isSpinClockwise() == spiralPainter.isClockwise())
+        if (isSpinClockwise() == getSpiralPainter().isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
             // Add the angle spinner's value and bound it by 360
@@ -1955,13 +2008,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private ArrayList<BufferedImage> testImages = null;
     /**
-     * This is the painter used to paint the spiral.
+     * These are the painters used to paint the spiral.
      */
-    private LogarithmicSpiralPainter spiralPainter;
+    private SpiralPainter[] spiralPainters;
     /**
      * 
      */
-    private ArithmeticSpiralPainter testSpiralPainter;
+    private SpiralPainter testSpiralPainter;
+    /**
+     * 
+     */
+    private Map<Component, JLabel> spiralCompLabels;
     /**
      * This is the image used to create the mask for the overlay when a loaded 
      * image is used for the mask. This is the raw image, and is null when no 
@@ -2414,7 +2471,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
             paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), 
-                    getIconHeight(),spiralPainter,overlayMask);
+                    getIconHeight(),getSpiralPainter(),overlayMask);
         }
         @Override
         public int getIconWidth() {
@@ -2470,7 +2527,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
             paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
-                    spiralPainter,overlayMask);
+                    getSpiralPainter(),overlayMask);
         }
         @Override
         public int getIconWidth() {
@@ -2486,19 +2543,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             ActionListener, DocumentListener{
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            if (!(evt.getSource() instanceof SpiralPainter))
+                return;
+            SpiralPainter painter = (SpiralPainter) evt.getSource();
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
                 case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
-                    config.setSpiralRadius(spiralPainter.getSpiralRadius());
+                    config.setSpiralRadius((double)evt.getNewValue());
                     break;
                 case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
-                    config.setSpiralBase(spiralPainter.getBase());
+                    config.setSpiralBase((double)evt.getNewValue());
                     break;
                 case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
-                    config.setSpiralThickness(spiralPainter.getThickness());
+                    config.setSpiralThickness((double)evt.getNewValue());
                     break;
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
-                    config.setSpiralClockwise(spiralPainter.isClockwise());
+                    config.setSpiralClockwise(painter.isClockwise());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
                     config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
@@ -3131,8 +3191,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (frames == null)
                     frames = new ArrayList<>();
                     // If the spiral painter copy is null
-                if (painter == null)
-                    painter = new LogarithmicSpiralPainter(spiralPainter);
+                if (painter == null){
+                    SpiralPainter temp = getSpiralPainter();
+                    if (temp instanceof LogarithmicSpiralPainter)
+                        painter = new LogarithmicSpiralPainter((LogarithmicSpiralPainter)temp);
+                    else if (temp instanceof ArithmeticSpiralPainter)
+                        painter = new ArithmeticSpiralPainter((ArithmeticSpiralPainter)temp);
+                }
                     // If the overlay mask copy is null
                 if (mask == null)
                     mask = new OverlayMask(overlayMask);
