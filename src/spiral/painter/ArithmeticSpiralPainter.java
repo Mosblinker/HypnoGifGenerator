@@ -181,7 +181,7 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // This is the value to use to calculate the other spiral that 
             // completes the path. This is used for the outer spiral curve when 
             // clockwise and the inner spiral curve when counter-clockwise 
-        double angle2 = GeometryMath.boundDegrees(angle + offset);
+        double angle2 = angle + offset;
             // This is the starting azimuth
         double p0 = angle;
             // This is the ending azimuth
