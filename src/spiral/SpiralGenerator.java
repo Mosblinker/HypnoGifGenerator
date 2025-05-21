@@ -257,6 +257,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
         lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
+        delaySpinner.setValue(config.getFrameDuration(SPIRAL_FRAME_DURATION));
         
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
@@ -1699,6 +1700,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             delaySpinner.setValue(value - (value % 10));
             return;
         }
+        config.setFrameDuration(value);
+        animationTimer.setDelay(value);
+        animationTimer.setInitialDelay(value);
     }//GEN-LAST:event_delaySpinnerStateChanged
     /**
      * This returns the width for the image.
@@ -1849,6 +1853,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgMaskAntialiasingToggle.setEnabled(enabled);
         resetButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
+        delaySpinner.setEnabled(enabled);
     }
     /**
      * 
@@ -1881,7 +1886,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         frameTime = temp;
         if (printFPSToggle.isSelected()){
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
-                    diff, frameTimeTotal/((double)frameTotal), SPIRAL_FRAME_DURATION);
+                    diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
         }
         try{
             frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
