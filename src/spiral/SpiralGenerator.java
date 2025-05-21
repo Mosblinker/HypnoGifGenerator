@@ -1214,6 +1214,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(spiralTypeLabel, gridBagConstraints);
 
+        spiralTypeCombo.setModel(new DefaultComboBoxModel<>(spiralPainters));
+        spiralTypeCombo.setRenderer(new SpiralPainterListCellRenderer());
         spiralTypeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spiralTypeComboActionPerformed(evt);
@@ -2150,7 +2152,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
-    private javax.swing.JComboBox<String> spiralTypeCombo;
+    private javax.swing.JComboBox<SpiralPainter> spiralTypeCombo;
     private javax.swing.JLabel spiralTypeLabel;
     private javax.swing.JDialog testDialog;
     private javax.swing.JSpinner testRotateSpinner;
