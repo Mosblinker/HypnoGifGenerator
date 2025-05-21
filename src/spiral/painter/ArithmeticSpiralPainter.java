@@ -13,9 +13,6 @@ import java.awt.geom.*;
  * @author Mosblinker
  */
 public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
-    public int i0 = 0;
-    public boolean b1 = false;
-    public boolean b2 = false;
     /**
      * 
      */
