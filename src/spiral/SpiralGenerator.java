@@ -3293,7 +3293,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Repeat infinitely
                 encoder.setRepeat(0);
                     // Use the spiral frame duration for the frames
-                encoder.setDelay(SPIRAL_FRAME_DURATION);
+                encoder.setDelay(animationTimer.getDelay());
                     // Set the size for the image
                 encoder.setSize(width, height);
                     // Get the background color for the spiral
