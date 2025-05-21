@@ -66,7 +66,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the current version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.2.0";
+    public static final String PROGRAM_VERSION = "0.3.0";
     /**
      * This is the name of the program.
      */
@@ -257,6 +257,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
         lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
+        delaySpinner.setValue(config.getFrameDuration(SPIRAL_FRAME_DURATION));
         
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
@@ -531,6 +532,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton = new javax.swing.JButton();
         alwaysScaleToggle = new javax.swing.JCheckBox();
         progressBar = new javax.swing.JProgressBar();
+        delaySpinner = new javax.swing.JSpinner();
+        delayLabel = new javax.swing.JLabel();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1328,6 +1331,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
+        delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
+        delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                delaySpinnerStateChanged(evt);
+            }
+        });
+
+        delayLabel.setLabelFor(delaySpinner);
+        delayLabel.setText("Duration:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1341,11 +1355,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(imageSizePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
                         .addComponent(alwaysScaleToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(delayLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delaySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1362,10 +1382,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(imageSizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 58, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(alwaysScaleToggle))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(delaySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(delayLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1668,6 +1692,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         loadSpiralPainter();
         refreshPreview(false);
     }//GEN-LAST:event_spiralTypeComboActionPerformed
+
+    private void delaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySpinnerStateChanged
+        int value = ((Integer) delaySpinner.getValue());
+        if (value % 10 != 0){
+            UIManager.getLookAndFeel().provideErrorFeedback(delaySpinner);
+            delaySpinner.setValue(value - (value % 10));
+            return;
+        }
+        config.setFrameDuration(value);
+        animationTimer.setDelay(value);
+        animationTimer.setInitialDelay(value);
+    }//GEN-LAST:event_delaySpinnerStateChanged
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1816,6 +1852,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
         resetButton.setEnabled(enabled);
+        spiralTypeCombo.setEnabled(enabled);
+        delaySpinner.setEnabled(enabled);
     }
     /**
      * 
@@ -1848,7 +1886,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         frameTime = temp;
         if (printFPSToggle.isSelected()){
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
-                    diff, frameTimeTotal/((double)frameTotal), SPIRAL_FRAME_DURATION);
+                    diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
         }
         try{
             frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
@@ -2132,6 +2170,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JPopupMenu debugPopup;
+    private javax.swing.JLabel delayLabel;
+    private javax.swing.JSpinner delaySpinner;
     private javax.swing.JComboBox<String> dirCombo;
     private javax.swing.JLabel dirLabel;
     private javax.swing.JCheckBox fontAntialiasingToggle;
@@ -3253,7 +3293,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Repeat infinitely
                 encoder.setRepeat(0);
                     // Use the spiral frame duration for the frames
-                encoder.setDelay(SPIRAL_FRAME_DURATION);
+                encoder.setDelay(animationTimer.getDelay());
                     // Set the size for the image
                 encoder.setSize(width, height);
                     // Get the background color for the spiral

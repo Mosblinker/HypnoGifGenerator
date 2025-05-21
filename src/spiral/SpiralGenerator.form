@@ -656,12 +656,19 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imageSizePanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="alwaysScaleToggle" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="ctrlButtonPanel" min="-2" pref="135" max="-2" attributes="0"/>
-                  </Group>
                   <Component id="progressBar" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      <Component id="alwaysScaleToggle" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="ctrlButtonPanel" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="delayLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="delaySpinner" min="-2" pref="83" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -681,12 +688,17 @@
                       <Component id="spiralCtrlPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="imageSizePanel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="alwaysScaleToggle" max="32767" attributes="0"/>
-                          <Component id="ctrlButtonPanel" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="ctrlButtonPanel" min="-2" max="-2" attributes="0"/>
+                          <Component id="alwaysScaleToggle" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" pref="58" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="delaySpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="delayLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -1476,6 +1488,25 @@
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="progressBarStateChanged"/>
         <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="progressBarPropertyChange"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="delaySpinner">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="10" maximum="100" minimum="10" numberType="java.lang.Integer" stepSize="10" type="number"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value="This is the duration for each frame of animation, in milliseconds."/>
+      </Properties>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="delaySpinnerStateChanged"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="delayLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="delaySpinner"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Duration:"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
