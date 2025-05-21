@@ -432,13 +432,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirCombo = new javax.swing.JComboBox<>();
         angleLabel = new javax.swing.JLabel();
         angleSpinner = new javax.swing.JSpinner();
+        spinLabel = new javax.swing.JLabel();
+        spinDirCombo = new javax.swing.JComboBox<>();
         spiralColorPanel = new javax.swing.JPanel();
         color1Button = new javax.swing.JButton();
         color2Button = new javax.swing.JButton();
         color3Button = new javax.swing.JButton();
         color4Button = new javax.swing.JButton();
-        spinLabel = new javax.swing.JLabel();
-        spinDirCombo = new javax.swing.JComboBox<>();
         maskEditButton = new javax.swing.JButton();
         imageSizePanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
@@ -978,7 +978,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         radiusLabel.setText("Radius:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
@@ -993,7 +993,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 0.9;
@@ -1004,7 +1004,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         baseLabel.setText("Base:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(baseLabel, gridBagConstraints);
@@ -1018,7 +1018,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(baseSpinner, gridBagConstraints);
@@ -1027,7 +1027,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         balanceLabel.setText("Balance:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(balanceLabel, gridBagConstraints);
@@ -1041,7 +1041,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(balanceSpinner, gridBagConstraints);
@@ -1050,7 +1050,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirLabel.setText("Direction:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(dirLabel, gridBagConstraints);
@@ -1063,7 +1062,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(dirCombo, gridBagConstraints);
@@ -1072,7 +1070,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         angleLabel.setText("Rotation:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
         spiralCtrlPanel.add(angleLabel, gridBagConstraints);
@@ -1086,10 +1084,33 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(angleSpinner, gridBagConstraints);
+
+        spinLabel.setLabelFor(spinDirCombo);
+        spinLabel.setText("Spin:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        spiralCtrlPanel.add(spinLabel, gridBagConstraints);
+
+        spinDirCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clockwise", "Counter-Clockwise" }));
+        spinDirCombo.setToolTipText("This controls the direction in which the spiral will spin in the animation.");
+        spinDirCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spinDirComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        spiralCtrlPanel.add(spinDirCombo, gridBagConstraints);
 
         spiralColorPanel.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
 
@@ -1124,33 +1145,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralColorPanel, gridBagConstraints);
-
-        spinLabel.setLabelFor(spinDirCombo);
-        spinLabel.setText("Spin:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        spiralCtrlPanel.add(spinLabel, gridBagConstraints);
-
-        spinDirCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Clockwise", "Counter-Clockwise" }));
-        spinDirCombo.setToolTipText("This controls the direction in which the spiral will spin in the animation.");
-        spinDirCombo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                spinDirComboActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        spiralCtrlPanel.add(spinDirCombo, gridBagConstraints);
 
         maskEditButton.setText("Edit Message Mask");
         maskEditButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1160,7 +1158,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 2;
         spiralCtrlPanel.add(maskEditButton, gridBagConstraints);
 
@@ -1236,7 +1234,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
+                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1266,7 +1264,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 33, Short.MAX_VALUE)
+                        .addGap(18, 89, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
