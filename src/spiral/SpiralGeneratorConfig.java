@@ -62,7 +62,7 @@ public class SpiralGeneratorConfig {
     
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
-    public static final String SPIRAL_ANGLE_KEY = "Angle";
+    public static final String SPIRAL_ROTATION_KEY = "SpiralRotation";
     
     public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
     
@@ -820,22 +820,22 @@ public class SpiralGeneratorConfig {
      * @param defaultValue
      * @return 
      */
-    public double getSpiralAngle(double defaultValue){
-        return getSpiralPreferences().getDouble(SPIRAL_ANGLE_KEY,defaultValue);
+    public double getSpiralRotation(double defaultValue){
+        return getPreferences().getDouble(SPIRAL_ROTATION_KEY,defaultValue);
     }
     /**
      * 
      * @return 
      */
-    public double getSpiralAngle(){
-        return getSpiralAngle(0.0);
+    public double getSpiralRotation(){
+        return SpiralGeneratorConfig.this.getSpiralRotation(0.0);
     }
     /**
      * 
      * @param value 
      */
-    public void setSpiralAngle(double value){
-        getSpiralPreferences().putDouble(SPIRAL_ANGLE_KEY, value);
+    public void setSpiralRotation(double value){
+        getPreferences().putDouble(SPIRAL_ROTATION_KEY, value);
     }
     /**
      * 
