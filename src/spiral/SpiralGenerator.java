@@ -440,6 +440,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         color3Button = new javax.swing.JButton();
         color4Button = new javax.swing.JButton();
         maskEditButton = new javax.swing.JButton();
+        spiralTypeLabel = new javax.swing.JLabel();
+        spiralTypeCombo = new javax.swing.JComboBox<>();
         imageSizePanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
         javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
@@ -996,7 +998,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
-        gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(radiusSpinner, gridBagConstraints);
 
@@ -1162,6 +1163,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridwidth = 2;
         spiralCtrlPanel.add(maskEditButton, gridBagConstraints);
 
+        spiralTypeLabel.setLabelFor(spiralTypeCombo);
+        spiralTypeLabel.setText("Type:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        spiralCtrlPanel.add(spiralTypeLabel, gridBagConstraints);
+
+        spiralTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                spiralTypeComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        spiralCtrlPanel.add(spiralTypeCombo, gridBagConstraints);
+
         imageSizePanel.setLayout(new javax.swing.BoxLayout(imageSizePanel, javax.swing.BoxLayout.X_AXIS));
 
         widthLabel.setLabelFor(widthSpinner);
@@ -1264,7 +1287,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(alwaysScaleToggle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 89, Short.MAX_VALUE)
+                        .addGap(18, 58, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1549,6 +1572,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             previewLabel.repaint();
         config.setDebugTestScale((double)testScaleSpinner.getValue());
     }//GEN-LAST:event_testScaleSpinnerStateChanged
+
+    private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_spiralTypeComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2066,6 +2093,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
+    private javax.swing.JComboBox<String> spiralTypeCombo;
+    private javax.swing.JLabel spiralTypeLabel;
     private javax.swing.JDialog testDialog;
     private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testScaleSpinner;
