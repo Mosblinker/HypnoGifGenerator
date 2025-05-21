@@ -8,6 +8,7 @@ import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import spiral.SpiralGeneratorConfig;
 
 /**
  *
@@ -20,7 +21,12 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     
     public static final String THICKNESS_PROPERTY_CHANGED = 
             "ThicknessPropertyChanged";
-    
+    /**
+     * This is the angle to use for interpolating the spiral curve. The end of 
+     * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
+     * of the curve.
+     */
+    protected static final double INTERPOLATION_ANGLE = 45.0;
     /**
      * This is the spiral radius that controls the size of the spirals.
      */
@@ -147,6 +153,62 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return getArcLengthAzimuth(p0,p1,0.0);
     }
     /**
+     * 
+     * @param r0
+     * @param p0
+     * @param r1
+     * @param p1
+     * @param angle
+     * @return 
+     */
+    public abstract double getArcLength(double r0, double p0, double r1, 
+            double p1, double angle);
+    /**
+     * 
+     * @param r0
+     * @param p0
+     * @param r1
+     * @param p1
+     * @return 
+     */
+    public double getArcLength(double r0, double p0, double r1, double p1){
+        return getArcLength(r0,p0,r1,p1,0.0);
+    }
+    /**
+     * 
+     * @param p
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
+    protected double getAzimuthValue(double p,double angle,boolean clockwise){
+        p -= angle;
+            // If the spiral is counter-clockwise
+        if (!clockwise)
+            p = -p;
+        return p / FULL_CIRCLE_DEGREES;
+    }
+    /**
+     * 
+     * @param p
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
+    public double getAzimuthDegrees(double p,double angle,boolean clockwise){
+        p *= FULL_CIRCLE_DEGREES;
+            // If the spiral is counter-clockwise
+        if (!clockwise)
+            p = -p;
+        return p + angle;
+    }
+    /**
+     * 
+     * @param p
+     * @return 
+     */
+    protected abstract double getRadiusImpl(double p);
+    /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
      * @param p The azimuth of the point on the spiral to get.
@@ -155,7 +217,9 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * if the spiral is counter-clockwise.
      * @return The radial distance of the given point on the spiral.
      */
-    protected abstract double getRadius(double p,double angle,boolean clockwise);
+    protected double getRadius(double p, double angle, boolean clockwise){
+        return getRadiusImpl(getAzimuthValue(p,angle,clockwise));
+    }
     /**
      * This returns the radial distance for the point on the spiral with the 
      * given azimuth.
@@ -180,6 +244,12 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return getRadius(p,0.0);
     }
     /**
+     * 
+     * @param r
+     * @return 
+     */
+    protected abstract double getAzimuthImpl(double r);
+    /**
      * This returns the azimuth for the point on the spiral with the given 
      * radial distance. This is used to do the calculations.
      * @param r The radial distance of the point on the spiral to get.
@@ -188,8 +258,9 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * if the spiral is counter-clockwise.
      * @return The azimuth of the given point on the spiral.
      */
-    protected abstract double getAzimuth(double r, double angle,
-            boolean clockwise);
+    protected double getAzimuth(double r, double angle, boolean clockwise){
+        return getAzimuthDegrees(getAzimuthImpl(r),angle,clockwise);
+    }
     /**
      * This returns the azimuth for the point on the spiral with the given 
      * radial distance.
@@ -308,5 +379,17 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return super.paramString()+
                 ",spiralRadius="+getSpiralRadius()+
                 ",thickness="+getThickness();
+    }
+    @Override
+    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
+        super.loadSpiralFromPreferences(config);
+        setSpiralRadius(config.getSpiralRadius(this,getSpiralRadius()));
+        setThickness(config.getSpiralThickness(this, getThickness()));
+    }
+    @Override
+    public void reset(){
+        super.reset();
+        setSpiralRadius(100.0);
+        setThickness(0.5);
     }
 }
