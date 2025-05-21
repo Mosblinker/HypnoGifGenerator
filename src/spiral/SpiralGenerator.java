@@ -2547,22 +2547,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             ActionListener, DocumentListener{
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if (!(evt.getSource() instanceof SpiralPainter))
-                return;
-            SpiralPainter painter = (SpiralPainter) evt.getSource();
+            SpiralPainter painter = null;
+            if (evt.getSource() instanceof SpiralPainter)
+                painter = (SpiralPainter) evt.getSource();
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
                 case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
-                    config.setSpiralRadius((double)evt.getNewValue());
+                    config.setSpiralRadius(painter,(double)evt.getNewValue());
                     break;
                 case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
-                    config.setSpiralBase((double)evt.getNewValue());
+                    config.setSpiralBase(painter,(double)evt.getNewValue());
                     break;
                 case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
-                    config.setSpiralThickness((double)evt.getNewValue());
+                    config.setSpiralThickness(painter,(double)evt.getNewValue());
                     break;
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
-                    config.setSpiralClockwise(painter.isClockwise());
+                    config.setSpiralClockwise(painter,(boolean)evt.getNewValue());
                     break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
                     config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
