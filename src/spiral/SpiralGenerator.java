@@ -1331,7 +1331,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 1000, 10));
+        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
         delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
         delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
