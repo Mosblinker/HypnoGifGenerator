@@ -16,7 +16,18 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     public int i0 = 0;
     public boolean b1 = false;
     public boolean b2 = false;
-    
+    /**
+     * 
+     */
+    public ArithmeticSpiralPainter(){
+    }
+    /**
+     * 
+     * @param painter The ArithmeticSpiralPainter to copy.
+     */
+    public ArithmeticSpiralPainter(ArithmeticSpiralPainter painter){
+        super(painter);
+    }
     /**
      * A scratch Path2D object to use to create the spiral. This is initially 
      * null and is initialized the first time it is used.
