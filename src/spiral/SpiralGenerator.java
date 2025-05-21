@@ -36,6 +36,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -291,7 +292,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (prgDir.getParentFile() != null)
                         prgDir = prgDir.getParentFile();
                 }
-            } catch (Exception ex) {}
+            } catch (URISyntaxException ex) {}
             if (prgDir == null)
                 prgDir = new File(System.getProperty("user.dir"));
             File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
@@ -1435,21 +1436,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_framePlayButtonActionPerformed
 
     private void frameSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_frameSliderStateChanged
-        try{
-            updateFrameNavigation();
-        } catch (NullPointerException ex){
-            System.out.println("Null? Nav "+evt);
-        }
+        updateFrameNavigation();
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            System.out.println("Null? Repaint "+evt);
+            Logger.getLogger(SpiralGenerator.class.getName()).log(
+                    Level.WARNING,"Null encountered in frameSliderStateChanged", 
+                    ex);
         }
-        try{
-            updateFrameNumberDisplayed();
-        } catch (NullPointerException ex){
-            System.out.println("Null? Num "+evt);
-        }
+        updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
 
     private void frameStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frameStopButtonActionPerformed
