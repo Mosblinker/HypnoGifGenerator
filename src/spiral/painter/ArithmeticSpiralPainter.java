@@ -286,6 +286,8 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // If the path is not at the first point
         else if (!currPoint.equals(point1))
             path.lineTo(point1.getX(), point1.getY());
+            // This is the previous azimuth for the point
+        double prevP = startP;
             // If the path is not starting from the center outwards and the 
             // center azimuth is different from the first interpolation azimuth
         if (!reverse && mismatch){ 
@@ -294,7 +296,7 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
                     point3,path);
             point1.setLocation(point3);
             p0 = p2;
-            startP = p0;
+            prevP = p0;
         }   // Get the smaller of the two azimuths
         double minP = Math.min(p0, p1);
             // Get the larger of the two azimuths
@@ -307,13 +309,14 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // then decrement the azimuths
         double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
             // A for loop to go through the points on the spiral 
-        for (double p = startP;     
+        for (double p = prevP + inc;     
                     // Go up until it reaches the opposite azimuth extreme
-                (p > minP && p < maxP) || p == startP; p += inc){
+                (p > minP && p < maxP); p += inc){
                 // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,p,p+inc,angle,clockwise,x,y,point1,point2,
+            processLinearSpiral(b,prevP,p,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
+            prevP = p;
         }   // If the spiral is reversed and has not reached the center of the 
             // spiral due to the mismatch
         if (reverse && mismatch){
