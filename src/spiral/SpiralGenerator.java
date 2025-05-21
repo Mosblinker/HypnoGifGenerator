@@ -79,7 +79,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String ICON_FILE_IMAGE = "/images/icon.png";
     
-    private static final String TEST_IMAGE_FILE_TEMPLATE = "/images/test/test%d.png";
+    private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff/images";
     /**
      * This is the default width for the spiral image.
      */
@@ -282,12 +282,46 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
-            for (int i = 0; i < 100; i++){
-                java.net.URL url = this.getClass().getResource(
-                        String.format(TEST_IMAGE_FILE_TEMPLATE, i));
+            File prgDir = null;
+            try{
+                java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
                 if (url != null){
+                    prgDir = new File(url.toURI()).getParentFile();
+                    if (prgDir.getParentFile() != null)
+                        prgDir = prgDir.getParentFile();
+                }
+            } catch (Exception ex) {}
+            if (prgDir == null)
+                prgDir = new File(System.getProperty("user.dir"));
+            File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
+            if (imgDir.exists()){
+                List<File> files = FilesExtended.getFilesFromFolder(imgDir, (File pathname) -> {
+                    if (pathname == null)
+                        return false;
+                    if (imgDir.equals(pathname))
+                        return true;
+                    String name = pathname.getName();
+                    if (name == null) 
+                        return false;
+                    if (name.startsWith("test") && name.endsWith(".png")) {
+                        try {
+                            Integer.valueOf(name.substring(4, name.length()-4));
+                            return true;
+                        }catch (NumberFormatException ex){}
+                    }
+                    return false;
+                }, 1);
+                files.remove(imgDir);
+                files.sort((File o1, File o2) -> {
+                    String name1 = o1.getName();
+                    String name2 = o2.getName();
+                    return Integer.compare(
+                            Integer.parseInt(name1.substring(4,name1.length()-4)),
+                            Integer.parseInt(name2.substring(4,name2.length()-4)));
+                });
+                for (File file : files){
                     try {
-                        testImages.add(ImageIO.read(url));
+                        testImages.add(ImageIO.read(file));
                     } catch (IOException ex) {
                         Logger.getLogger(SpiralGenerator.class.getName()).log(
                                 Level.INFO, null, ex);
