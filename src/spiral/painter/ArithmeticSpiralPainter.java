@@ -37,7 +37,15 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
      * initially null and is initialized the first time it is used.
      */
     private Point2D point3 = null;
-    
+    /**
+     * 
+     * @param b
+     * @param r0
+     * @param r1
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
     protected double getArcLengthRadius(double b, double r0, double r1, 
             double angle, boolean clockwise){
         return getArcLengthAzimuthHelper(b,getAzimuthImpl(b,r0),
@@ -47,16 +55,35 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
     public double getArcLengthRadius(double r0, double r1, double angle) {
         return getArcLengthRadius(getSpiralRadius(), r0,r1,angle,isClockwise());
     }
-    
+    /**
+     * 
+     * @param p
+     * @return 
+     */
     protected double getArcLengthHelper(double p){
+            // Get the value of the square root of (1+p^2)
         double a = Math.sqrt(1+p*p);
         return p * a + Math.log(p + a);
     }
-    
+    /**
+     * 
+     * @param b
+     * @param p0
+     * @param p1
+     * @return 
+     */
     protected double getArcLengthAzimuthHelper(double b, double p0, double p1){
         return (b / 2.0) * (getArcLengthHelper(p1) - getArcLengthHelper(p0));
     }
-    
+    /**
+     * 
+     * @param b
+     * @param p0
+     * @param p1
+     * @param angle
+     * @param clockwise
+     * @return 
+     */
     protected double getArcLengthAzimuth(double b, double p0, double p1, 
             double angle, boolean clockwise){
         return getArcLengthAzimuthHelper(b,getAzimuthValue(p0,angle,clockwise),
@@ -140,89 +167,153 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
             // If the third point has not been initialized yet
         if (point3 == null)
             point3 = new Point2D.Double();
-        
+            // This is the amount by which to offset the angle for getting the 
+            // the second spiral that makes up the shape
         double offset = FULL_CIRCLE_DEGREES * (1-thickness);
-        
+            // This is the value to use to calculate the other spiral that 
+            // completes the path. This is used for the outer spiral curve when 
+            // clockwise and the inner spiral curve when counter-clockwise 
         double angle2 = GeometryMath.boundDegrees(angle + offset);
-        
+            // This is the starting azimuth
         double p0 = angle;
+            // This is the ending azimuth
         double p1 = getAzimuth(radius,Math.sqrt(width*width+height*height)/2.0, 
                 angle, true);
-        
+            // If the spiral is going anti-clockwise
         if (!clockwise){
             p1 = -p1-FULL_CIRCLE_DEGREES;
             p0 = FULL_CIRCLE_DEGREES-p0;
             p0 -= offset;
-        }
-            // Effectively round it up to the nearest quarter angle
+        }   // Effectively round the ending azimuth up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
-        
-        processLinearSpiral(radius,p0,p1,angle,clockwise,centerX,
+            // Process the first spiral from out to in
+        path = processLinearSpiral(radius,p0,p1,angle,clockwise,centerX,
                 centerY,true,point1,point2,point3,path);
+            // Get the radius of the center of the spiral
         double r0 = getRadius(radius, p0, angle, clockwise);
+            // Get the starting azimuth for the second spiral
         p0 = getAzimuth(radius,r0,angle2,clockwise);
-        processLinearSpiral(radius,p0,p1+FULL_CIRCLE_DEGREES,angle2,
+            // Process the second spiral from in to out
+        path = processLinearSpiral(radius,p0,p1+FULL_CIRCLE_DEGREES,angle2,
                 clockwise,centerX,centerY,false,point1,point2,point3,path);
+            // Close the path
         path.closePath();
-        
+            // Fill in the spiral
         g.fill(path);
     }
-    
+    /**
+     * 
+     * @param b
+     * @param p0
+     * @param p1
+     * @param angle
+     * @param clockwise
+     * @param x
+     * @param y
+     * @param point1
+     * @param point2
+     * @param point3
+     * @param path 
+     */
     protected void processLinearSpiral(double b, double p0, double p1, 
             double angle, boolean clockwise, double x, double y, Point2D point1, 
             Point2D point2, Point2D point3, Path2D path){
+            // Get the azimuth between the two azimuths. This will be used for 
+            // interpolating the segment of the spiral
         double pInter = (p0 + p1) / 2.0;
+            // Get the end point for the segment of the spiral
         point3 = GeometryMath.polarToCartesianDegrees(getRadius(b,p1,angle,
                 clockwise),p1,x,y,point3);
-        point2 = GeometryMath.polarToCartesianDegrees(
-                getRadius(b,pInter,angle,clockwise),pInter,x,y,point2);
+             // Get the interpolation point for the segment of the spiral
+        point2 = GeometryMath.polarToCartesianDegrees(getRadius(b,pInter,angle,
+                clockwise),pInter,x,y,point2);
+            // Get the control point for the bezier curve used to draw the 
+            // segment of the spiral
         point2 = GeometryMath.getQuadBezierControlPoint(point1, point2, point3, 
                 point2);
+            // Add the bezier curve to the path
         path.quadTo(point2.getX(), point2.getY(), point3.getX(), point3.getY());
     }
-    
+    /**
+     * 
+     * @param b
+     * @param p0
+     * @param p1
+     * @param angle
+     * @param clockwise
+     * @param x
+     * @param y
+     * @param reverse
+     * @param point1
+     * @param point2
+     * @param point3
+     * @param path
+     * @return 
+     */
     protected Path2D processLinearSpiral(double b, double p0, double p1, 
             double angle, boolean clockwise, double x, double y,boolean reverse, 
             Point2D point1, Point2D point2, Point2D point3, Path2D path){
+            // If the given path is null
         if (path == null)
             path = new Path2D.Double();
-        Point2D currPoint = path.getCurrentPoint();
+            // Calculate the first azimuth rounded to the nearest interpolation 
+            // angle
         double p2 = p0 + (INTERPOLATION_ANGLE - (p0 % INTERPOLATION_ANGLE)) 
                 % INTERPOLATION_ANGLE;
-        boolean startOdd = !reverse && p2 != p0;
-        if (startOdd){
-            point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,p2,angle,
-                    clockwise),p2,x,y,point1);
+            // Get whether the first interpolation angle is the same as the 
+            // first azimuth
+        boolean mismatch = p2 != p0;
+            // This gets the azimuth for the first point. If this is going in 
+            // reverse, then this will be the last azimuth. Otherwise get the 
+            // first azimuth.
+        double startP = (reverse) ? p1 : p0;
+            // Get the point for the starting azimuth
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,startP,angle,
+                clockwise),startP,x,y,point1);
+            // Get the current position of the path
+        Point2D currPoint = path.getCurrentPoint();
+            // If the path is empty
+        if (currPoint == null)
+            path.moveTo(point1.getX(), point1.getY());
+            // If the path is not at the first point
+        else if (!currPoint.equals(point1))
+            path.lineTo(point1.getX(), point1.getY());
+            // If the path is not starting from the center outwards and the 
+            // center azimuth is different from the first interpolation azimuth
+        if (!reverse && mismatch){ 
+                // Process the part of the spiral between the azimuths
             processLinearSpiral(b,p2,p0,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
             p0 = p2;
-        }
-        double startP = (reverse) ? p1 : p0;
-        if (!startOdd)
-            point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,startP,
-                    angle,clockwise),startP,x,y,point1);
+            startP = p0;
+        }   // Get the smaller of the two azimuths
         double minP = Math.min(p0, p1);
+            // Get the larger of the two azimuths
         double maxP = Math.max(p0, p1);
+            // This is the amount by which to increment the azimuths to get the 
+            // next azimuth. 
+            // If the value of reverse is the same as the direction of the 
+            // spiral (i.e. reverse the spiral and the spiral is clockwise or 
+            // don't reverse the spiral and the spiral is counter-clockwise), 
+            // then decrement the azimuths
         double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
-        if (currPoint == null)
-            path.moveTo(point1.getX(), point1.getY());
-        else if (!currPoint.equals(point1))
-            path.lineTo(point1.getX(), point1.getY());
+            // A for loop to go through the points on the spiral 
         for (double p = startP;     
                     // Go up until it reaches the opposite azimuth extreme
                 (p > minP && p < maxP) || p == startP; p += inc){
+                // Process the part of the spiral between the azimuths
             processLinearSpiral(b,p,p+inc,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
-        }
-        if (reverse && p0 != p2){
+        }   // If the spiral is reversed and has not reached the center of the 
+            // spiral due to the mismatch
+        if (reverse && mismatch){
+                // Process the part of the spiral between the azimuths
             processLinearSpiral(b,p0,p2,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
         }
         return path;
     }
-    
-    
 }
