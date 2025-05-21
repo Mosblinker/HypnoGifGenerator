@@ -129,6 +129,16 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * @return 
      */
     public abstract String getName();
+    /**
+     * 
+     * @return 
+     */
+    public String getPreferenceName(){
+        String name = getClass().getSimpleName();
+        if (name.endsWith("Painter"))
+            return name.substring(0, name.length()-7);
+        return name;
+    }
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so
