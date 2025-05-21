@@ -386,4 +386,10 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         setSpiralRadius(config.getSpiralRadius(this,getSpiralRadius()));
         setThickness(config.getSpiralThickness(this, getThickness()));
     }
+    @Override
+    public void reset(){
+        super.reset();
+        setSpiralRadius(100.0);
+        setThickness(0.5);
+    }
 }

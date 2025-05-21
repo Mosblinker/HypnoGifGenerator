@@ -147,6 +147,12 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
         setClockwise(config.isSpiralClockwise(this, isClockwise()));
     }
+    /**
+     * 
+     */
+    public void reset(){
+        setClockwise(true);
+    }
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so

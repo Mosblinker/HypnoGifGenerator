@@ -476,4 +476,9 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         super.loadSpiralFromPreferences(config);
         setBase(config.getSpiralBase(this, getBase()));
     }
+    @Override
+    public void reset(){
+        super.reset();
+        setBase(2.0);
+    }
 }
