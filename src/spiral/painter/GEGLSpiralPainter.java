@@ -344,7 +344,7 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
                 g.fill(rect);
             } else {
                     // Paint the spiral
-                paintSpiral(g,GeometryMath.boundDegrees(angle),width,height,
+                paintSpiral(g,adjustRotation(angle,t,clockwise),width,height,
                         centerX,centerY,clockwise,getSpiralRadius(),t);
             }
         }

@@ -237,8 +237,6 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         if (point4 == null)
             point4 = new Point2D.Double();
         
-            // Adjust the angle of rotation for the spiral
-        angle = adjustRotation(angle,thickness,clockwise);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();

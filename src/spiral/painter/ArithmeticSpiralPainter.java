@@ -143,9 +143,6 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         if (point3 == null)
             point3 = new Point2D.Double();
         
-            // Adjust the angle of rotation for the spiral
-        angle = adjustRotation(angle,thickness,clockwise);
-        
         double offset = FULL_CIRCLE_DEGREES * (1-thickness);
         
         double angle2 = GeometryMath.boundDegrees(angle + offset);
