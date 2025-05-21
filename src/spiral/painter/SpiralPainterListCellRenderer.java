@@ -22,8 +22,8 @@ public class SpiralPainterListCellRenderer extends DefaultListCellRenderer{
         if (value instanceof SpiralPainter){
                 // Get the name of the spiral
             String name = ((SpiralPainter)value).getName();
-                // If there is a name for the spiral
-            if (name != null)
+                // If there is no name for the spiral
+            if (name == null)
                 value = value.getClass().getSimpleName();
         }
         return super.getListCellRendererComponent(list, value, index, 
