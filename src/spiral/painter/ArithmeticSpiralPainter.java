@@ -156,28 +156,25 @@ public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
         
         double offset = FULL_CIRCLE_DEGREES * (1-thickness);
         
-        double r1 = Math.sqrt(width*width+height*height)/2.0;
-        
         double angle2 = GeometryMath.boundDegrees(angle + offset);
         
-        double p1 = getAzimuth(radius,r1, angle, true);
-        
-        double startP = angle;
+        double p0 = angle;
+        double p1 = getAzimuth(radius,Math.sqrt(width*width+height*height)/2.0, 
+                angle, true);
         
         if (!clockwise){
             p1 = -p1-FULL_CIRCLE_DEGREES;
-            startP = FULL_CIRCLE_DEGREES-startP;
-            startP -= offset;
+            p0 = FULL_CIRCLE_DEGREES-p0;
+            p0 -= offset;
         }
             // Effectively round it up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
-        double p0 = startP + (INTERPOLATION_ANGLE - (startP % INTERPOLATION_ANGLE)) % INTERPOLATION_ANGLE;
         
-        processLinearSpiral(radius,startP,p1,angle,clockwise,centerX,
+        processLinearSpiral(radius,p0,p1,angle,clockwise,centerX,
                 centerY,true,point1,point2,point3,path);
-        double r0 = getRadius(radius, startP, angle, clockwise);
-        startP = getAzimuth(radius,r0,angle2,clockwise);
-        processLinearSpiral(radius,startP,p1+FULL_CIRCLE_DEGREES,angle2,
+        double r0 = getRadius(radius, p0, angle, clockwise);
+        p0 = getAzimuth(radius,r0,angle2,clockwise);
+        processLinearSpiral(radius,p0,p1+FULL_CIRCLE_DEGREES,angle2,
                 clockwise,centerX,centerY,false,point1,point2,point3,path);
         path.closePath();
         
