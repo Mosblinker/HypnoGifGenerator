@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import spiral.SpiralGeneratorConfig;
 
 /**
  *
@@ -469,5 +470,10 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     @Override
     public String getName() {
         return "Logarithmic Spiral";
+    }
+    @Override
+    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
+        super.loadSpiralFromPreferences(config);
+        setBase(config.getSpiralBase(this, getBase()));
     }
 }

@@ -8,6 +8,7 @@ import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import spiral.SpiralGeneratorConfig;
 
 /**
  *
@@ -378,5 +379,11 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         return super.paramString()+
                 ",spiralRadius="+getSpiralRadius()+
                 ",thickness="+getThickness();
+    }
+    @Override
+    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
+        super.loadSpiralFromPreferences(config);
+        setSpiralRadius(config.getSpiralRadius(this,getSpiralRadius()));
+        setThickness(config.getSpiralThickness(this, getThickness()));
     }
 }

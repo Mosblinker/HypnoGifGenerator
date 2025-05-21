@@ -8,6 +8,7 @@ import geom.*;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.Objects;
+import spiral.SpiralGeneratorConfig;
 import swing.ListenedPainter;
 
 /**
@@ -138,6 +139,13 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         if (name.endsWith("Painter"))
             return name.substring(0, name.length()-7);
         return name;
+    }
+    /**
+     * 
+     * @param config 
+     */
+    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
+        setClockwise(config.isSpiralClockwise(this, isClockwise()));
     }
     @Override
     protected String paramString(){
