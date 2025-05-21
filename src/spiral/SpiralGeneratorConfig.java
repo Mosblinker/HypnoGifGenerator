@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
+import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
 
 /**
@@ -105,7 +106,7 @@ public class SpiralGeneratorConfig {
      */
     private final Preferences node;
     
-    private final Preferences spiralNode;
+    private final HashMap<String,Preferences> spiralNodes = new HashMap<>();
     
     private final Preferences maskNode;
     
@@ -120,7 +121,6 @@ public class SpiralGeneratorConfig {
      */
     public SpiralGeneratorConfig(Preferences node) {
         this.node = Objects.requireNonNull(node);
-        spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
         compNames = new HashMap<>();
     }
@@ -136,7 +136,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public Preferences getSpiralPreferences(){
-        return spiralNode;
+        return getSpiralPreferences(SPIRAL_NODE_NAME);
     }
     /**
      * 
@@ -503,27 +503,118 @@ public class SpiralGeneratorConfig {
     public void setComponentSize(Component comp){
         putDimension(getComponentName(comp)+COMPONENT_SIZE_KEY,comp);
     }
+    
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public Preferences getSpiralPreferences(String name){
+        Preferences pref = spiralNodes.get(name);
+        if (pref == null){
+            pref = getPreferences().node(name);
+            spiralNodes.put(name, pref);
+        }
+        return pref;
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public Preferences getSpiralPreferences(SpiralPainter painter){
+        return getSpiralPreferences(painter.getPreferenceName());
+    }
+    /**
+     * 
+     * @param name
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralRadius(String name, double defaultValue){
+        return getSpiralPreferences(name).getDouble(SPIRAL_RADIUS_KEY,
+                defaultValue);
+    }
+    /**
+     * 
+     * @param painter
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralRadius(SpiralPainter painter, double defaultValue){
+        return getSpiralRadius(painter.getPreferenceName(),defaultValue);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
     public double getSpiralRadius(double defaultValue){
-        return getSpiralPreferences().getDouble(SPIRAL_RADIUS_KEY,defaultValue);
+        return getSpiralRadius(SPIRAL_NODE_NAME,defaultValue);
+    }
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public double getSpiralRadius(String name){
+        return getSpiralRadius(name,100.0);
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public double getSpiralRadius(SpiralPainter painter){
+        return getSpiralRadius(painter.getPreferenceName());
     }
     /**
      * 
      * @return 
      */
     public double getSpiralRadius(){
-        return getSpiralRadius(100.0);
+        return getSpiralRadius(SPIRAL_NODE_NAME);
+    }
+    /**
+     * 
+     * @param name
+     * @param value 
+     */
+    public void setSpiralRadius(String name, double value){
+        getSpiralPreferences(name).putDouble(SPIRAL_RADIUS_KEY, value);
+    }
+    /**
+     * 
+     * @param painter
+     * @param value 
+     */
+    public void setSpiralRadius(SpiralPainter painter, double value){
+        setSpiralRadius(painter.getPreferenceName(),value);
     }
     /**
      * 
      * @param value 
      */
     public void setSpiralRadius(double value){
-        getSpiralPreferences().putDouble(SPIRAL_RADIUS_KEY, value);
+        setSpiralRadius(SPIRAL_NODE_NAME,value);
+    }
+    /**
+     * 
+     * @param name
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralBase(String name, double defaultValue){
+        return getSpiralPreferences(name).getDouble(SPIRAL_BASE_KEY,defaultValue);
+    }
+    /**
+     * 
+     * @param painter
+     * @param value
+     * @return 
+     */
+    public double getSpiralBase(SpiralPainter painter, double value){
+        return getSpiralBase(painter.getPreferenceName(),value);
     }
     /**
      * 
@@ -531,21 +622,72 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralBase(double defaultValue){
-        return getSpiralPreferences().getDouble(SPIRAL_BASE_KEY,defaultValue);
+        return getSpiralBase(SPIRAL_NODE_NAME,defaultValue);
+    }
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public double getSpiralBase(String name){
+        return getSpiralBase(name,2.0);
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public double getSpiralBase(SpiralPainter painter){
+        return getSpiralBase(painter.getPreferenceName());
     }
     /**
      * 
      * @return 
      */
     public double getSpiralBase(){
-        return getSpiralBase(2.0);
+        return getSpiralBase(SPIRAL_NODE_NAME);
+    }
+    /**
+     * 
+     * @param name
+     * @param value 
+     */
+    public void setSpiralBase(String name, double value){
+        getSpiralPreferences(name).putDouble(SPIRAL_BASE_KEY, value);
+    }
+    /**
+     * 
+     * @param painter
+     * @param value 
+     */
+    public void setSpiralBase(SpiralPainter painter, double value){
+        setSpiralBase(painter.getPreferenceName(),value);
     }
     /**
      * 
      * @param value 
      */
     public void setSpiralBase(double value){
-        getSpiralPreferences().putDouble(SPIRAL_BASE_KEY, value);
+        setSpiralBase(SPIRAL_NODE_NAME,value);
+    }
+    /**
+     * 
+     * @param name
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralThickness(String name, double defaultValue){
+        return getSpiralPreferences(name).getDouble(SPIRAL_THICKNESS_KEY,
+                defaultValue);
+    }
+    /**
+     * 
+     * @param painter
+     * @param defaultValue
+     * @return 
+     */
+    public double getSpiralThickness(SpiralPainter painter,double defaultValue){
+        return getSpiralThickness(painter.getPreferenceName(),defaultValue);
     }
     /**
      * 
@@ -553,21 +695,71 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralThickness(double defaultValue){
-        return getSpiralPreferences().getDouble(SPIRAL_THICKNESS_KEY,defaultValue);
+        return getSpiralThickness(SPIRAL_NODE_NAME,defaultValue);
+    }
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public double getSpiralThickness(String name){
+        return getSpiralThickness(name,0.5);
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public double getSpiralThickness(SpiralPainter painter){
+        return getSpiralThickness(painter.getPreferenceName());
     }
     /**
      * 
      * @return 
      */
     public double getSpiralThickness(){
-        return getSpiralThickness(0.5);
+        return getSpiralThickness(SPIRAL_NODE_NAME);
+    }
+    /**
+     * 
+     * @param name
+     * @param value 
+     */
+    public void setSpiralThickness(String name, double value){
+        getSpiralPreferences(name).putDouble(SPIRAL_THICKNESS_KEY, value);
+    }
+    /**
+     * 
+     * @param painter
+     * @param value 
+     */
+    public void setSpiralThickness(SpiralPainter painter, double value){
+        setSpiralThickness(painter.getPreferenceName(),value);
     }
     /**
      * 
      * @param value 
      */
     public void setSpiralThickness(double value){
-        getSpiralPreferences().putDouble(SPIRAL_THICKNESS_KEY, value);
+        setSpiralThickness(SPIRAL_NODE_NAME, value);
+    }
+    /**
+     * 
+     * @param name
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isSpiralClockwise(String name, boolean defaultValue){
+        return getSpiralPreferences(name).getBoolean(SPIRAL_CLOCKWISE_KEY, defaultValue);
+    }
+    /**
+     * 
+     * @param painter
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isSpiralClockwise(SpiralPainter painter, boolean defaultValue){
+        return isSpiralClockwise(painter.getPreferenceName(),defaultValue);
     }
     /**
      * 
@@ -575,21 +767,53 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public boolean isSpiralClockwise(boolean defaultValue){
-        return getSpiralPreferences().getBoolean(SPIRAL_CLOCKWISE_KEY, defaultValue);
+        return isSpiralClockwise(SPIRAL_NODE_NAME, defaultValue);
+    }
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    public boolean isSpiralClockwise(String name){
+        return isSpiralClockwise(name,true);
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public boolean isSpiralClockwise(SpiralPainter painter){
+        return isSpiralClockwise(painter.getPreferenceName());
     }
     /**
      * 
      * @return 
      */
     public boolean isSpiralClockwise(){
-        return isSpiralClockwise(true);
+        return isSpiralClockwise(SPIRAL_NODE_NAME);
+    }
+    /**
+     * 
+     * @param name
+     * @param value 
+     */
+    public void setSpiralClockwise(String name, boolean value){
+        getSpiralPreferences(name).putBoolean(SPIRAL_CLOCKWISE_KEY, value);
+    }
+    /**
+     * 
+     * @param painter
+     * @param value 
+     */
+    public void setSpiralClockwise(SpiralPainter painter, boolean value){
+        setSpiralClockwise(painter.getPreferenceName(),value);
     }
     /**
      * 
      * @param value 
      */
     public void setSpiralClockwise(boolean value){
-        getSpiralPreferences().putBoolean(SPIRAL_CLOCKWISE_KEY, value);
+        setSpiralClockwise(SPIRAL_NODE_NAME, value);
     }
     /**
      * 
