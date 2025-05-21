@@ -348,7 +348,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private SpiralPainter getSpiralPainter(){
-        return getSpiralPainter(0);
+        return getSpiralPainter(spiralTypeCombo.getSelectedIndex());
     }
     
     private void loadSpiralPainter(SpiralPainter painter){
@@ -1629,7 +1629,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testScaleSpinnerStateChanged
 
     private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
-        // TODO add your handling code here:
+        config.setSpiralType(spiralTypeCombo.getSelectedIndex());
+        loadSpiralPainter();
+        refreshPreview(false);
     }//GEN-LAST:event_spiralTypeComboActionPerformed
     /**
      * This returns the width for the image.
