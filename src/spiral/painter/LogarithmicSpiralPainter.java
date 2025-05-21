@@ -466,4 +466,8 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         return super.paramString()+
                 ",base="+getBase();
     }
+    @Override
+    public String getName() {
+        return "Logarithmic Spiral";
+    }
 }

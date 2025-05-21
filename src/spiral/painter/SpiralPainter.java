@@ -124,6 +124,11 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
                 RenderingHints.VALUE_STROKE_PURE);
         return g;
     }
+    /**
+     * 
+     * @return 
+     */
+    public abstract String getName();
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so
