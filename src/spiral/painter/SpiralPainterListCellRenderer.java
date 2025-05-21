@@ -24,7 +24,7 @@ public class SpiralPainterListCellRenderer extends DefaultListCellRenderer{
             String name = ((SpiralPainter)value).getName();
                 // If there is a name for the spiral
             if (name != null)
-                value = name;
+                value = value.getClass().getSimpleName();
         }
         return super.getListCellRendererComponent(list, value, index, 
                 isSelected, cellHasFocus);

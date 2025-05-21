@@ -129,7 +129,9 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * 
      * @return 
      */
-    public abstract String getName();
+    public String getName(){
+        return getClass().getSimpleName();
+    }
     /**
      * 
      * @return 
