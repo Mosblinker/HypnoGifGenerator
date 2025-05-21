@@ -593,63 +593,6 @@
                 <Property name="rows" type="int" value="0"/>
                 <Property name="verticalGap" type="int" value="7"/>
               </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JSpinner" name="testDoubleSpinner0">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testDoubleSpinner0StateChanged"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="testDoubleSpinner1">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testDoubleSpinner1StateChanged"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JToggleButton" name="testToggle0">
-                  <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
-                    <Property name="text" type="java.lang.String" value="Clockwise"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testToggle0ActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="testIntSpinner0">
-                  <Properties>
-                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-                      <SpinnerModel initial="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="testIntSpinner0StateChanged"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JToggleButton" name="testToggle1">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Test 1"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testToggle1ActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JToggleButton" name="testToggle2">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Test 2"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testToggle2ActionPerformed"/>
-                  </Events>
-                </Component>
-              </SubComponents>
             </Container>
             <Component class="javax.swing.Box$Filler" name="filler16">
               <Properties>

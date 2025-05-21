@@ -295,9 +295,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         testImages.size()-1, 1));
             testRotateSpinner.setValue(config.getDebugTestRotation());
             testScaleSpinner.setValue(config.getDebugTestScale());
-            testComponents.put(Double.class, Arrays.asList(testDoubleSpinner0,testDoubleSpinner1));
-            testComponents.put(Boolean.class, Arrays.asList(testToggle0,testToggle1,testToggle2));
-            testComponents.put(Integer.class, Arrays.asList(testIntSpinner0));
+            testComponents.put(Double.class, Arrays.asList());
+            testComponents.put(Boolean.class, Arrays.asList());
+            testComponents.put(Integer.class, Arrays.asList());
             DebugTestComponentHandler debugHandler = new DebugTestComponentHandler();
             for (Map.Entry<Class, List<Component>> entry : testComponents.entrySet()){
                 Class type = entry.getKey();
@@ -326,12 +326,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         ((JSpinner)c).addChangeListener(debugHandler);
                     }
                 }
-                testSpiralPainter.setSpiralRadius((double)testDoubleSpinner0.getValue());
-                testSpiralPainter.setThickness((double)testDoubleSpinner1.getValue());
-                testSpiralPainter.setClockwise(testToggle0.isSelected());
-                testSpiralPainter.i0 = (int)testIntSpinner0.getValue();
-                testSpiralPainter.b1 = testToggle1.isSelected();
-                testSpiralPainter.b2 = testToggle2.isSelected();
             }
         }
     }
@@ -403,12 +397,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testScaleSpinner = new javax.swing.JSpinner();
         showTestSpiralToggle = new javax.swing.JCheckBox();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
-        testDoubleSpinner0 = new javax.swing.JSpinner();
-        testDoubleSpinner1 = new javax.swing.JSpinner();
-        testToggle0 = new javax.swing.JToggleButton();
-        testIntSpinner0 = new javax.swing.JSpinner();
-        testToggle1 = new javax.swing.JToggleButton();
-        testToggle2 = new javax.swing.JToggleButton();
         javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
@@ -808,56 +796,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testCtrlPanel.add(showTestSpiralToggle, gridBagConstraints);
 
         testCtrlPanel2.setLayout(new java.awt.GridLayout(0, 4, 6, 7));
-
-        testDoubleSpinner0.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
-        testDoubleSpinner0.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                testDoubleSpinner0StateChanged(evt);
-            }
-        });
-        testCtrlPanel2.add(testDoubleSpinner0);
-
-        testDoubleSpinner1.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
-        testDoubleSpinner1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                testDoubleSpinner1StateChanged(evt);
-            }
-        });
-        testCtrlPanel2.add(testDoubleSpinner1);
-
-        testToggle0.setSelected(true);
-        testToggle0.setText("Clockwise");
-        testToggle0.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testToggle0ActionPerformed(evt);
-            }
-        });
-        testCtrlPanel2.add(testToggle0);
-
-        testIntSpinner0.setModel(new javax.swing.SpinnerNumberModel());
-        testIntSpinner0.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                testIntSpinner0StateChanged(evt);
-            }
-        });
-        testCtrlPanel2.add(testIntSpinner0);
-
-        testToggle1.setText("Test 1");
-        testToggle1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testToggle1ActionPerformed(evt);
-            }
-        });
-        testCtrlPanel2.add(testToggle1);
-
-        testToggle2.setText("Test 2");
-        testToggle2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testToggle2ActionPerformed(evt);
-            }
-        });
-        testCtrlPanel2.add(testToggle2);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -1613,30 +1551,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             previewLabel.repaint();
         config.setDebugTestScale((double)testScaleSpinner.getValue());
     }//GEN-LAST:event_testScaleSpinnerStateChanged
-
-    private void testDoubleSpinner0StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testDoubleSpinner0StateChanged
-        testSpiralPainter.setSpiralRadius((double)testDoubleSpinner0.getValue());
-    }//GEN-LAST:event_testDoubleSpinner0StateChanged
-
-    private void testDoubleSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testDoubleSpinner1StateChanged
-        testSpiralPainter.setThickness((double)testDoubleSpinner1.getValue());
-    }//GEN-LAST:event_testDoubleSpinner1StateChanged
-
-    private void testToggle0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testToggle0ActionPerformed
-        testSpiralPainter.setClockwise(testToggle0.isSelected());
-    }//GEN-LAST:event_testToggle0ActionPerformed
-
-    private void testIntSpinner0StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testIntSpinner0StateChanged
-        testSpiralPainter.i0 = (int)testIntSpinner0.getValue();
-    }//GEN-LAST:event_testIntSpinner0StateChanged
-
-    private void testToggle1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testToggle1ActionPerformed
-        testSpiralPainter.b1 = testToggle1.isSelected();
-    }//GEN-LAST:event_testToggle1ActionPerformed
-
-    private void testToggle2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testToggle2ActionPerformed
-        testSpiralPainter.b2 = testToggle2.isSelected();
-    }//GEN-LAST:event_testToggle2ActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2155,15 +2069,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.JPanel spiralCtrlPanel;
     private javax.swing.JDialog testDialog;
-    private javax.swing.JSpinner testDoubleSpinner0;
-    private javax.swing.JSpinner testDoubleSpinner1;
-    private javax.swing.JSpinner testIntSpinner0;
     private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testScaleSpinner;
     private javax.swing.JSpinner testSpiralImageSpinner;
-    private javax.swing.JToggleButton testToggle0;
-    private javax.swing.JToggleButton testToggle1;
-    private javax.swing.JToggleButton testToggle2;
     private javax.swing.JPanel textMaskCtrlPanel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
