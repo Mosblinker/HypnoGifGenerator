@@ -145,13 +145,6 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     }
     /**
      * 
-     * @param config 
-     */
-    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
-        setClockwise(config.isSpiralClockwise(this, isClockwise()));
-    }
-    /**
-     * 
      * @return 
      */
     protected int getByteArrayLength(){

@@ -8,7 +8,6 @@ import geom.GeometryMath;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 import java.nio.ByteBuffer;
-import spiral.SpiralGeneratorConfig;
 
 /**
  *
@@ -471,11 +470,6 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     @Override
     public String getName() {
         return "Logarithmic";
-    }
-    @Override
-    public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
-        super.loadSpiralFromPreferences(config);
-        setBase(config.getSpiralBase(this, getBase()));
     }
     @Override
     protected int getByteArrayLength(){
