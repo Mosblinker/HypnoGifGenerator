@@ -527,7 +527,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public Preferences getSpiralPreferences(SpiralPainter painter){
-        return getSpiralPreferences(painter.getPreferenceName());
+        return getSpiralPreferences(painter.getPreferenceKey());
     }
     /**
      * 
@@ -546,7 +546,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralRadius(SpiralPainter painter, double defaultValue){
-        return getSpiralRadius(painter.getPreferenceName(),defaultValue);
+        return getSpiralRadius(painter.getPreferenceKey(),defaultValue);
     }
     /**
      * 
@@ -570,7 +570,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralRadius(SpiralPainter painter){
-        return getSpiralRadius(painter.getPreferenceName());
+        return getSpiralRadius(painter.getPreferenceKey());
     }
     /**
      * 
@@ -593,7 +593,7 @@ public class SpiralGeneratorConfig {
      * @param value 
      */
     public void setSpiralRadius(SpiralPainter painter, double value){
-        setSpiralRadius(painter.getPreferenceName(),value);
+        setSpiralRadius(painter.getPreferenceKey(),value);
     }
     /**
      * 
@@ -618,7 +618,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralBase(SpiralPainter painter, double value){
-        return getSpiralBase(painter.getPreferenceName(),value);
+        return getSpiralBase(painter.getPreferenceKey(),value);
     }
     /**
      * 
@@ -642,7 +642,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralBase(SpiralPainter painter){
-        return getSpiralBase(painter.getPreferenceName());
+        return getSpiralBase(painter.getPreferenceKey());
     }
     /**
      * 
@@ -665,7 +665,7 @@ public class SpiralGeneratorConfig {
      * @param value 
      */
     public void setSpiralBase(SpiralPainter painter, double value){
-        setSpiralBase(painter.getPreferenceName(),value);
+        setSpiralBase(painter.getPreferenceKey(),value);
     }
     /**
      * 
@@ -691,7 +691,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralThickness(SpiralPainter painter,double defaultValue){
-        return getSpiralThickness(painter.getPreferenceName(),defaultValue);
+        return getSpiralThickness(painter.getPreferenceKey(),defaultValue);
     }
     /**
      * 
@@ -715,7 +715,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public double getSpiralThickness(SpiralPainter painter){
-        return getSpiralThickness(painter.getPreferenceName());
+        return getSpiralThickness(painter.getPreferenceKey());
     }
     /**
      * 
@@ -738,7 +738,7 @@ public class SpiralGeneratorConfig {
      * @param value 
      */
     public void setSpiralThickness(SpiralPainter painter, double value){
-        setSpiralThickness(painter.getPreferenceName(),value);
+        setSpiralThickness(painter.getPreferenceKey(),value);
     }
     /**
      * 
@@ -763,7 +763,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public boolean isSpiralClockwise(SpiralPainter painter, boolean defaultValue){
-        return isSpiralClockwise(painter.getPreferenceName(),defaultValue);
+        return isSpiralClockwise(painter.getPreferenceKey(),defaultValue);
     }
     /**
      * 
@@ -787,7 +787,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public boolean isSpiralClockwise(SpiralPainter painter){
-        return isSpiralClockwise(painter.getPreferenceName());
+        return isSpiralClockwise(painter.getPreferenceKey());
     }
     /**
      * 
@@ -810,7 +810,7 @@ public class SpiralGeneratorConfig {
      * @param value 
      */
     public void setSpiralClockwise(SpiralPainter painter, boolean value){
-        setSpiralClockwise(painter.getPreferenceName(),value);
+        setSpiralClockwise(painter.getPreferenceKey(),value);
     }
     /**
      * 
@@ -833,7 +833,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public byte[] getSpiralData(SpiralPainter painter){
-        return getSpiralData(painter.getPreferenceName());
+        return getSpiralData(painter.getPreferenceKey());
     }
     /**
      * 
@@ -849,7 +849,7 @@ public class SpiralGeneratorConfig {
      * @param data 
      */
     public void setSpiralData(SpiralPainter painter, byte[] data){
-        setSpiralData(painter.getPreferenceName(),data);
+        setSpiralData(painter.getPreferenceKey(),data);
     }
     /**
      * 

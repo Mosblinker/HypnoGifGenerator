@@ -137,7 +137,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * 
      * @return 
      */
-    public String getPreferenceName(){
+    public String getPreferenceKey(){
         String name = getClass().getSimpleName();
         if (name.endsWith("Painter"))
             return name.substring(0, name.length()-7);
