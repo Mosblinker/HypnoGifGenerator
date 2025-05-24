@@ -250,6 +250,26 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         fillWithTransparency(g,width,height,thickness,g.getColor());
     }
     /**
+     * This is used to adjust the angle of rotation for the spiral.
+     * @param angle The angle of rotation.
+     * @param thickness The thickness of the spiral.
+     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
+     * if the spiral is counter-clockwise.
+     * @return The angle of rotation for the spiral, adjusted accordingly.
+     * @see #getThickness() 
+     * @see #isClockwise() 
+     */
+    protected double adjustRotation(double angle, double thickness, 
+            boolean clockwise){
+            // Bound the angle of rotation
+        angle = GeometryMath.boundDegrees(angle);
+            // If the spiral is going clockwise and the angle is not 0
+        if (clockwise && angle > 0.0)
+            angle = FULL_CIRCLE_DEGREES - angle;
+            // Alter the angle based off the thickness of the spiral
+        return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
+    }
+    /**
      * This is used to configure the graphics context used to render the spiral. 
      * It's assumed that the returned graphics context is the same as the given 
      * graphics context, or at least that the returned graphics context 

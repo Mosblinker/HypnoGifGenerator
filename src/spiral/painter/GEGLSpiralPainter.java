@@ -4,7 +4,6 @@
  */
 package spiral.painter;
 
-import geom.GeometryMath;
 import java.awt.Graphics2D;
 
 /**
@@ -203,26 +202,6 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * double, boolean, double, double) 
      */
     protected abstract double fillConditionValue();
-    /**
-     * This is used to adjust the angle of rotation for the spiral.
-     * @param angle The angle of rotation.
-     * @param thickness The thickness of the spiral.
-     * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
-     * if the spiral is counter-clockwise.
-     * @return The angle of rotation for the spiral, adjusted accordingly.
-     * @see #getThickness() 
-     * @see #isClockwise() 
-     */
-    protected double adjustRotation(double angle, double thickness, 
-            boolean clockwise){
-            // Bound the angle of rotation
-        angle = GeometryMath.boundDegrees(angle);
-            // If the spiral is going clockwise and the angle is not 0
-        if (clockwise && angle > 0.0)
-            angle = FULL_CIRCLE_DEGREES - angle;
-            // Alter the angle based off the thickness of the spiral
-        return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
-    }
     @Override
     protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
