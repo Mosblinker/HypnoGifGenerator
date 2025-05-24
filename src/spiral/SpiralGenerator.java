@@ -154,7 +154,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ArithmeticSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
-            painter.loadSpiralFromPreferences(config);
+            painter.fromByteArray(config.getSpiralData(painter));
         }
         
         overlayMask.textPainter.setAntialiasingEnabled(config.isMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled()));
@@ -2622,18 +2622,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 painter = (SpiralPainter) evt.getSource();
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
-                case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
-                    config.setSpiralRadius(painter,(double)evt.getNewValue());
-                    break;
-                case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
-                    config.setSpiralBase(painter,(double)evt.getNewValue());
-                    break;
-                case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
-                    config.setSpiralThickness(painter,(double)evt.getNewValue());
-                    break;
-                case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
-                    config.setSpiralClockwise(painter,(boolean)evt.getNewValue());
-                    break;
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
                     config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
                     maskChanged = true;
@@ -2642,6 +2630,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
                     maskChanged = true;
                     break;
+                case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
+                case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
+                case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
+                case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
+                    if (painter != null)
+                        config.setSpiralData(painter);
             }
             refreshPreview(maskChanged);
         }
