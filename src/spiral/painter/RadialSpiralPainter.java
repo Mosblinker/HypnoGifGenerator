@@ -45,6 +45,8 @@ public class RadialSpiralPainter extends SpiralPainter{
                 double halfWidth = lineWidth / 2.0;
                 
                 g.setStroke(new BasicStroke((float)lineWidth));
+                if (!clockwise)
+                    startR = (startR + (m/2.0)) % m;
                 
                 double r1 = Math.sqrt(width*width+height*height)/2.0 + lineWidth;
                 
