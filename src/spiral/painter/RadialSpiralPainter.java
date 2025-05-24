@@ -37,13 +37,15 @@ public class RadialSpiralPainter extends SpiralPainter{
             else{
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
-                
-                double r1 = Math.sqrt(width*width+height*height)/2.0;
                 angle = adjustRotation(angle,thickness,clockwise);
                 
                 double m = radius / 2.0;
                 
-                g.setStroke(new BasicStroke((float)(thickness * m)));
+                double lineWidth = thickness * m;
+                
+                g.setStroke(new BasicStroke((float)lineWidth));
+                
+                double r1 = Math.sqrt(width*width+height*height)/2.0 + lineWidth;
                 
                 for (double r = m * (angle / FULL_CIRCLE_DEGREES); r <= r1; r+= m){
                     ellipse.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
