@@ -821,6 +821,45 @@ public class SpiralGeneratorConfig {
     }
     /**
      * 
+     * @param key
+     * @return 
+     */
+    public byte[] getSpiralData(String key){
+        return getSpiralPreferences().getByteArray(key, null);
+    }
+    /**
+     * 
+     * @param painter
+     * @return 
+     */
+    public byte[] getSpiralData(SpiralPainter painter){
+        return getSpiralData(painter.getPreferenceName());
+    }
+    /**
+     * 
+     * @param key
+     * @param data 
+     */
+    public void setSpiralData(String key, byte[] data){
+        getSpiralPreferences().putByteArray(key, data);
+    }
+    /**
+     * 
+     * @param painter
+     * @param data 
+     */
+    public void setSpiralData(SpiralPainter painter, byte[] data){
+        setSpiralData(painter.getPreferenceName(),data);
+    }
+    /**
+     * 
+     * @param painter 
+     */
+    public void setSpiralData(SpiralPainter painter){
+        setSpiralData(painter,painter.toByteArray());
+    }
+    /**
+     * 
      * @param defaultValue
      * @return 
      */
