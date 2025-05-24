@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
  *
  * @author Mosblinker
  */
-public class RadialFadeSpiralPainter extends SpiralPainter{
+public class RadialFadeSpiralPainter extends SpiralPainter implements LogarithmicSpiral{
     
     public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     /**
