@@ -27,6 +27,6 @@ public class RadialFadeSpiralPainter extends SpiralPainter{
     }
     @Override
     public String getName() {
-        return "Radial";
+        return "Ripple";
     }
 }
