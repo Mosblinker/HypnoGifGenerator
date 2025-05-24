@@ -155,7 +155,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ArithmeticSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
-            painter.fromByteArray(config.getSpiralData(painter));
+            try{
+                painter.fromByteArray(config.getSpiralData(painter));
+            } catch (IllegalArgumentException ex) {}
         }
         
         overlayMask.textPainter.setAntialiasingEnabled(
@@ -254,7 +256,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         
-        spiralTypeCombo.setSelectedIndex(config.getSpiralType());
+        spiralTypeCombo.setSelectedIndex(
+                Math.max(Math.min(config.getSpiralType(), 
+                        spiralPainters.length-1), 0));
+        
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
