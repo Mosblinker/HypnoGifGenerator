@@ -37,11 +37,9 @@ public class RadialSpiralPainter extends SpiralPainter{
             else{
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
-                if (clockwise)
-                    angle = -angle;
-                angle = GeometryMath.boundDegrees(angle);
                 
                 double r1 = Math.sqrt(width*width+height*height)/2.0;
+                angle = adjustRotation(angle,thickness,clockwise);
                 
                 double m = radius / 2.0;
                 
