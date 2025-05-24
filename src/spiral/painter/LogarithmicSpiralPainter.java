@@ -217,7 +217,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
         return getBase();
     }
     @Override
-    protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
+    protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
             double thickness) {
             // If the path has not been initialized yet

@@ -296,8 +296,8 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * translucent color.
      * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
      * boolean) 
-     * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
-     * boolean, double, double) 
+     * @see #paintSpiralGegl(java.awt.Graphics2D, double, int, int, double, 
+     * double, boolean, double, double) 
      */
     protected abstract double fillConditionValue();
     /**
@@ -347,7 +347,7 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
                 g.fill(rect);
             } else {
                     // Paint the spiral
-                paintSpiral(g,adjustRotation(angle,t,clockwise),width,height,
+                paintSpiralGegl(g,adjustRotation(angle,t,clockwise),width,height,
                         centerX,centerY,clockwise,getSpiralRadius(),t);
             }
         }
@@ -373,7 +373,7 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * @see #getSpiralRadius() 
      * @see #getThickness() 
      */
-    protected abstract void paintSpiral(Graphics2D g, double angle, int width, 
+    protected abstract void paintSpiralGegl(Graphics2D g, double angle, int width, 
             int height, double centerX, double centerY, boolean clockwise, 
             double radius, double thickness); 
     @Override
