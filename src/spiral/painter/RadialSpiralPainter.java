@@ -4,6 +4,7 @@
  */
 package spiral.painter;
 
+import geom.GeometryMath;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -37,6 +38,7 @@ public class RadialSpiralPainter extends SpiralPainter{
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
                 angle = adjustRotation(angle,thickness,clockwise);
+                angle = GeometryMath.boundDegrees(angle - QUARTER_CIRCLE_DEGREES);
                 if (!clockwise)
                     angle = -angle;
                 
