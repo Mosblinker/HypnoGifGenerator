@@ -404,9 +404,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
-        boolean isLog = painter instanceof LogarithmicSpiralPainter;
+        boolean isLog = painter instanceof LogarithmicSpiral;
         if (isLog)
-            baseSpinner.setValue(((LogarithmicSpiralPainter)painter).getBase());
+            baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
         baseSpinner.setVisible(isLog);
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
@@ -1500,8 +1500,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
         SpiralPainter temp = getSpiralPainter();
-        if (temp instanceof LogarithmicSpiralPainter){
-            LogarithmicSpiralPainter painter = (LogarithmicSpiralPainter) temp;
+        if (temp instanceof LogarithmicSpiral){
+            LogarithmicSpiral painter = (LogarithmicSpiral) temp;
             double value = (double) baseSpinner.getValue();
             if (value != painter.getBase())
                 painter.setBase(value);
