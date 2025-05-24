@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import java.nio.ByteBuffer;
 import spiral.SpiralGeneratorConfig;
 
 /**
@@ -475,6 +476,20 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
         super.loadSpiralFromPreferences(config);
         setBase(config.getSpiralBase(this, getBase()));
+    }
+    @Override
+    protected int getByteArrayLength(){
+        return super.getByteArrayLength()+Double.BYTES;
+    }
+    @Override
+    protected void toByteArray(ByteBuffer buffer){
+        super.toByteArray(buffer);
+        buffer.putDouble(getBase());
+    }
+    @Override
+    protected void fromByteArray(ByteBuffer buffer){
+        super.fromByteArray(buffer);
+        setBase(buffer.getDouble());
     }
     @Override
     public void reset(){

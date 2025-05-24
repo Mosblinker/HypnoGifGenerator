@@ -8,6 +8,7 @@ import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import java.nio.ByteBuffer;
 import spiral.SpiralGeneratorConfig;
 
 /**
@@ -21,6 +22,8 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     
     public static final String THICKNESS_PROPERTY_CHANGED = 
             "ThicknessPropertyChanged";
+    
+    private static final int BYTE_ARRAY_LENGTH = Double.BYTES*2;
     /**
      * This is the angle to use for interpolating the spiral curve. The end of 
      * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
@@ -385,6 +388,20 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
         super.loadSpiralFromPreferences(config);
         setSpiralRadius(config.getSpiralRadius(this,getSpiralRadius()));
         setThickness(config.getSpiralThickness(this, getThickness()));
+    }
+    @Override
+    protected int getByteArrayLength(){
+        return BYTE_ARRAY_LENGTH;
+    }
+    @Override
+    protected void toByteArray(ByteBuffer buffer){
+        buffer.putDouble(getSpiralRadius());
+        buffer.putDouble(getThickness());
+    }
+    @Override
+    protected void fromByteArray(ByteBuffer buffer){
+        setSpiralRadius(buffer.getDouble());
+        setThickness(buffer.getDouble());
     }
     @Override
     public void reset(){

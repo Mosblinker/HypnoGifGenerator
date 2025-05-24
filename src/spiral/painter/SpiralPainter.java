@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.*;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 import spiral.SpiralGeneratorConfig;
 import swing.ListenedPainter;
@@ -148,6 +149,78 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     public void loadSpiralFromPreferences(SpiralGeneratorConfig config){
         setClockwise(config.isSpiralClockwise(this, isClockwise()));
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected int getByteArrayLength(){
+        return 0;
+    }
+    /**
+     * 
+     * @param arr
+     * @param offset
+     * @return 
+     */
+    public byte[] toByteArray(byte[] arr, int offset){
+        int length = getByteArrayLength()+1;
+        if (arr == null || arr.length < offset+length){
+            byte[] temp = arr;
+            arr = new byte[offset+length];
+            if (temp != null && temp.length > 0)
+                System.arraycopy(temp, 0, arr, 0, Math.min(temp.length,offset));
+        }
+        arr[offset] = (byte)((isClockwise()) ? 0x01 : 0x00);
+        if (length > 1){
+            ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
+            toByteArray(buffer);
+        }
+        return arr;
+    }
+    /**
+     * 
+     * @param buffer 
+     */
+    protected void toByteArray(ByteBuffer buffer){
+        
+    }
+    /**
+     * 
+     * @return 
+     */
+    public byte[] toByteArray(){
+        return toByteArray(null,0);
+    }
+    /**
+     * 
+     * @param arr
+     * @param offset 
+     */
+    public void fromByteArray(byte[] arr, int offset){
+        int length = getByteArrayLength();
+        if (arr == null || (arr.length - offset) < length + 1)
+            return;
+        setClockwise((arr[offset] & 0x01) != 0);
+        if (length > 0){
+            ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length)
+                    .asReadOnlyBuffer();
+            fromByteArray(buffer);
+        }
+    }
+    /**
+     * 
+     * @param buffer 
+     */
+    protected void fromByteArray(ByteBuffer buffer){
+        
+    }
+    /**
+     * 
+     * @param arr 
+     */
+    public void fromByteArray(byte[] arr){
+        fromByteArray(arr,0);
     }
     /**
      * 
