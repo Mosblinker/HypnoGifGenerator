@@ -37,8 +37,8 @@ public class RadialSpiralPainter extends SpiralPainter{
             else{
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
-                angle = -GeometryMath.boundDegrees(angle);
                 
+                angle = GeometryMath.boundDegrees(angle);
                 double m = radius / 2.0;
                 
                 double lineWidth = thickness * m;
@@ -48,8 +48,6 @@ public class RadialSpiralPainter extends SpiralPainter{
                 
                 double r1 = Math.sqrt(width*width+height*height)/2.0 + lineWidth;
                 
-                double a = angle / FULL_CIRCLE_DEGREES;
-                double startR = m * a;
                 startR = (m + startR) % m;
                 
                 if (startR <= halfWidth || startR > m - halfWidth){
