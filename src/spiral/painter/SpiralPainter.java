@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.nio.ByteBuffer;
 import java.util.Objects;
-import spiral.SpiralGeneratorConfig;
 import swing.ListenedPainter;
 
 /**
