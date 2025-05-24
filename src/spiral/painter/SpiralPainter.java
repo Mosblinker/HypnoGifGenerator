@@ -5,8 +5,10 @@
 package spiral.painter;
 
 import geom.*;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import swing.ListenedPainter;
@@ -46,6 +48,14 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * This is the thickness of the spiral.
      */
     private double thickness;
+    /**
+     * This is a scratch Rectangle2D object typically used to fill the painted 
+     * area when the entire area is to be filled. This is initially null and is 
+     * initialized the first time it is used. This scratch object may change at 
+     * any time during the rendering process, and should not be assumed to be in 
+     * a known state before being used.
+     */
+    protected Rectangle2D rect = null;
     /**
      * Implicit constructor.
      */
@@ -200,6 +210,45 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     protected abstract void paintSpiral(Graphics2D g, double angle, 
             int width, int height, double centerX, double centerY, 
             boolean clockwise, double radius, double thickness);
+    /**
+     * 
+     * @param g
+     * @param width
+     * @param height
+     * @param thickness 
+     * @param color
+     */
+    protected void fillWithTransparency(Graphics2D g, double width, 
+            double height, double thickness, Color color){
+            // If the thickness is greater than zero
+        if (thickness > 0.0){
+                // If the thickness is less than 1
+            if (thickness < 1.0){
+                color = new Color((color.getRGB() & 0x00FFFFFF) | 
+                        (((int)Math.floor(color.getAlpha()*thickness))<< 24),
+                        true);
+            }   // Set the color to use
+            g.setColor(color);
+                // If the rectangle object has not been initialized yet
+            if (rect == null)
+                rect = new Rectangle2D.Double();
+                // Set the frame of the rectangle to cover the entire area
+            rect.setFrame(0, 0, width, height);
+                // Fill the area
+            g.fill(rect);
+        }
+    }
+    /**
+     * 
+     * @param g
+     * @param width
+     * @param height
+     * @param thickness 
+     */
+    protected void fillWithTransparency(Graphics2D g, double width, 
+            double height, double thickness){
+        fillWithTransparency(g,width,height,thickness,g.getColor());
+    }
     /**
      * This is used to configure the graphics context used to render the spiral. 
      * It's assumed that the returned graphics context is the same as the given 

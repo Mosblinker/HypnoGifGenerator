@@ -5,21 +5,13 @@
 package spiral.painter;
 
 import geom.GeometryMath;
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.*;
 
 /**
  *
  * @author Mosblinker
  */
 public abstract class GEGLSpiralPainter extends SpiralPainter{
-    /**
-     * This is a scratch Rectangle2D object used to fill the painted area when 
-     * the entire area is to be filled with a solid color. This is initially 
-     * null and is initialized the first time it is used.
-     */
-    private Rectangle2D rect = null;
     /**
      * Implicit constructor.
      */
@@ -240,21 +232,8 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
                 // If the thickness is greater than or equal to 1 or the fill 
                 // condition value is equal to 1
             if (thickness >= 1.0 || fillConditionValue() == 1.0){
-                    // If the thickness is less than 1
-                if (thickness < 1.0){
-                        // Get the color from the graphics context
-                    Color c = g.getColor();
-                        // Set the color to be a translucent color based off 
-                        // the thickness of the spiral
-                    g.setColor(new Color((c.getRGB() & 0x00FFFFFF) | 
-                        (((int)Math.floor(c.getAlpha()*thickness))<< 24),true));
-                }   // If the rectangle object has not been initialized yet
-                if (rect == null)
-                    rect = new Rectangle2D.Double();
-                    // Set the frame of the rectangle to cover the entire area
-                rect.setFrame(0, 0, width, height);
-                    // Fill the area
-                g.fill(rect);
+                    // Fill the area with a solid color
+                fillWithTransparency(g,width,height,thickness);
             } else {
                     // Paint the spiral
                 paintSpiralGegl(g,adjustRotation(angle,thickness,clockwise),
