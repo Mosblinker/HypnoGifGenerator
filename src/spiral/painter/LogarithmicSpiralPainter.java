@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
  *
  * @author Mosblinker
  */
-public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
+public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements LogarithmicSpiral{
     /**
      * This is the target radius for the start of the spiral. This is set to 0.1 
      * to ensure that the spiral is properly formed in the center of the image 
@@ -48,8 +48,6 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
     protected static double getStartRadius(Graphics2D g){
         return getStartRadius(g.getTransform());
     }
-    
-    public static final String BASE_PROPERTY_CHANGED ="BasePropertyChanged";
     /**
      * This is the base for the spiral.
      */
@@ -96,6 +94,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      * 
      * @param base 
      */
+    @Override
     public void setBase(double base){
             // If the base is less than 1
         if (base < 1)
@@ -112,6 +111,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      * 
      * @return 
      */
+    @Override
     public double getBase(){
         return base;
     }
