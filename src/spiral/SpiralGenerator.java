@@ -146,7 +146,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
             // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
-            colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, DEFAULT_SPIRAL_COLORS[i]));
+            colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, 
+                    DEFAULT_SPIRAL_COLORS[i]));
         }
         
         spiralPainters = new SpiralPainter[]{
@@ -283,7 +284,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextArea.getDocument().addDocumentListener(handler);
         
         if (debugMode){
-            testSpiralPainter = spiralPainters[1];
+            testSpiralPainter = spiralPainters[spiralPainters.length-1];
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
