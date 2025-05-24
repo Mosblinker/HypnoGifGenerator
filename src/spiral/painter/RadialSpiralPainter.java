@@ -1,0 +1,45 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package spiral.painter;
+
+import geom.GeometryMath;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+
+/**
+ *
+ * @author Mosblinker
+ */
+public class RadialSpiralPainter extends SpiralPainter{
+    /**
+     * This is a scratch Ellipse2D object used to draw the circles. This is 
+     * initially null and is initialized the first time it is used. 
+     */
+    private Ellipse2D ellipse = null;
+    
+    public RadialSpiralPainter() { }
+    
+    public RadialSpiralPainter(RadialSpiralPainter painter){
+        super(painter);
+    }
+    @Override
+    protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
+            double centerX, double centerY, boolean clockwise, double radius, 
+            double thickness) {
+            // If the thickness is greater than zero
+        if (thickness > 0.0){
+                // If the thickness is greater than or equal to 1
+            if (thickness >= 1.0)
+                fillWithTransparency(g,width,height,thickness);
+            else{
+                    
+            }
+        }
+    }
+    @Override
+    public String getName() {
+        return "Radial";
+    }
+}
