@@ -34,6 +34,20 @@ public class RadialSpiralPainter extends SpiralPainter{
             if (thickness >= 1.0)
                 fillWithTransparency(g,width,height,thickness);
             else{
+                if (ellipse == null)
+                    ellipse = new Ellipse2D.Double();
+                if (clockwise)
+                    angle = -angle;
+                angle = GeometryMath.boundDegrees(angle);
+                
+                double r1 = Math.sqrt(width*width+height*height)/2.0;
+                
+                double m = radius / 2.0;
+                
+                for (double r = m * (angle / FULL_CIRCLE_DEGREES); r <= r1; r+= m){
+                    ellipse.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+                    g.draw(ellipse);
+                }
                     
             }
         }
