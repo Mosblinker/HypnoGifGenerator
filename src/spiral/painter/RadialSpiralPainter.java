@@ -5,6 +5,7 @@
 package spiral.painter;
 
 import geom.GeometryMath;
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
@@ -44,11 +45,12 @@ public class RadialSpiralPainter extends SpiralPainter{
                 
                 double m = radius / 2.0;
                 
+                g.setStroke(new BasicStroke((float)(thickness * m)));
+                
                 for (double r = m * (angle / FULL_CIRCLE_DEGREES); r <= r1; r+= m){
                     ellipse.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                     g.draw(ellipse);
                 }
-                    
             }
         }
     }
