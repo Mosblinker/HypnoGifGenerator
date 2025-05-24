@@ -8,35 +8,12 @@ import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
-import java.nio.ByteBuffer;
 
 /**
  *
  * @author Mosblinker
  */
 public abstract class GEGLSpiralPainter extends SpiralPainter{
-    
-    public static final String SPIRAL_RADIUS_PROPERTY_CHANGED = 
-            "SpiralRadiusPropertyChanged";
-    
-    public static final String THICKNESS_PROPERTY_CHANGED = 
-            "ThicknessPropertyChanged";
-    
-    private static final int BYTE_ARRAY_LENGTH = Double.BYTES*2;
-    /**
-     * This is the angle to use for interpolating the spiral curve. The end of 
-     * each segment is {@value INTERPOLATION_ANGLE} degrees away from the start 
-     * of the curve.
-     */
-    protected static final double INTERPOLATION_ANGLE = 45.0;
-    /**
-     * This is the spiral radius that controls the size of the spirals.
-     */
-    private double radius = 100.0;
-    /**
-     * This is the thickness of the spiral.
-     */
-    private double thickness = 0.5;
     /**
      * This is a scratch Rectangle2D object used to fill the painted area when 
      * the entire area is to be filled with a solid color. This is initially 
@@ -53,72 +30,6 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      */
     protected GEGLSpiralPainter(GEGLSpiralPainter painter){
         super(painter);
-        this.radius = painter.radius;
-        this.thickness = painter.thickness;
-    }
-    /**
-     * 
-     * @param radius 
-     */
-    public void setSpiralRadius(double radius){
-            // If the new radius is less than or equal to zero
-        if (radius <= 0)
-            throw new IllegalArgumentException();
-            // If the radius would change
-        if (this.radius != radius){
-                // Get the old radius.
-            double old = this.radius;
-            this.radius = radius;
-            firePropertyChange(SPIRAL_RADIUS_PROPERTY_CHANGED,old,radius);
-        }
-    }
-    /**
-     * 
-     * @return 
-     */
-    public double getSpiralRadius(){
-        return radius;
-    }
-    /**
-     * 
-     * @param thickness 
-     * @see #setBalance(double) 
-     */
-    public void setThickness(double thickness){
-            // If the new thickness is less than 0 or greater than 1
-        if (thickness < 0 || thickness > 1)
-            throw new IllegalArgumentException();
-            // If the thicnkess would change
-        if (this.thickness != thickness){
-                // Get the old thickness
-            double old = this.thickness;
-            this.thickness = thickness;
-            firePropertyChange(THICKNESS_PROPERTY_CHANGED,old,thickness);
-        }
-    }
-    /**
-     * 
-     * @return 
-     * @see #getBalance() 
-     */
-    public double getThickness(){
-        return thickness;
-    }
-    /**
-     * 
-     * @param balance 
-     * @see #setThickness(double) 
-     */
-    public void setBalance(double balance){
-        setThickness((1.0 + balance) / 2.0);
-    }
-    /**
-     * 
-     * @return The balance between the two colors
-     * @see #getThickness() 
-     */
-    public double getBalance(){
-        return getThickness()*2.0 - 1.0;
     }
     /**
      * 
@@ -295,7 +206,7 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * @return The value to check to see if the area should be filled with a 
      * translucent color.
      * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
-     * boolean) 
+     * boolean, double, double) 
      * @see #paintSpiralGegl(java.awt.Graphics2D, double, int, int, double, 
      * double, boolean, double, double) 
      */
@@ -322,22 +233,21 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     }
     @Override
     protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise) {
-            // Get the thickness of the spiral
-        double t = getThickness();
+            double centerX, double centerY, boolean clockwise, double radius, 
+            double thickness) {
             // If the thickness is greater than zero
-        if (t > 0.0){
+        if (thickness > 0.0){
                 // If the thickness is greater than or equal to 1 or the fill 
                 // condition value is equal to 1
-            if (t >= 1.0 || fillConditionValue() == 1.0){
+            if (thickness >= 1.0 || fillConditionValue() == 1.0){
                     // If the thickness is less than 1
-                if (t < 1.0){
+                if (thickness < 1.0){
                         // Get the color from the graphics context
                     Color c = g.getColor();
                         // Set the color to be a translucent color based off 
                         // the thickness of the spiral
                     g.setColor(new Color((c.getRGB() & 0x00FFFFFF) | 
-                        (((int)Math.floor(c.getAlpha()*t)) << 24), true));
+                        (((int)Math.floor(c.getAlpha()*thickness))<< 24),true));
                 }   // If the rectangle object has not been initialized yet
                 if (rect == null)
                     rect = new Rectangle2D.Double();
@@ -347,8 +257,8 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
                 g.fill(rect);
             } else {
                     // Paint the spiral
-                paintSpiralGegl(g,adjustRotation(angle,t,clockwise),width,height,
-                        centerX,centerY,clockwise,getSpiralRadius(),t);
+                paintSpiralGegl(g,adjustRotation(angle,thickness,clockwise),
+                        width,height,centerX,centerY,clockwise,radius,thickness);
             }
         }
     }
@@ -368,7 +278,7 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
      * @param thickness The thickness of the spiral.
      * @see #paint
      * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
-     * boolean) 
+     * boolean, double, double) 
      * @see #isClockwise() 
      * @see #getSpiralRadius() 
      * @see #getThickness() 
@@ -376,30 +286,4 @@ public abstract class GEGLSpiralPainter extends SpiralPainter{
     protected abstract void paintSpiralGegl(Graphics2D g, double angle, int width, 
             int height, double centerX, double centerY, boolean clockwise, 
             double radius, double thickness); 
-    @Override
-    protected String paramString(){
-        return super.paramString()+
-                ",spiralRadius="+getSpiralRadius()+
-                ",thickness="+getThickness();
-    }
-    @Override
-    protected int getByteArrayLength(){
-        return BYTE_ARRAY_LENGTH;
-    }
-    @Override
-    protected void toByteArray(ByteBuffer buffer){
-        buffer.putDouble(getSpiralRadius());
-        buffer.putDouble(getThickness());
-    }
-    @Override
-    protected void fromByteArray(ByteBuffer buffer){
-        setSpiralRadius(buffer.getDouble());
-        setThickness(buffer.getDouble());
-    }
-    @Override
-    public void reset(){
-        super.reset();
-        setSpiralRadius(100.0);
-        setThickness(0.5);
-    }
 }

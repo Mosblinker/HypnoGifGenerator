@@ -18,22 +18,127 @@ import swing.ListenedPainter;
 public abstract class SpiralPainter extends ListenedPainter<Double> implements 
         GeometryMathConstants{
     
+    public static final String SPIRAL_RADIUS_PROPERTY_CHANGED = 
+            "SpiralRadiusPropertyChanged";
+    
+    public static final String THICKNESS_PROPERTY_CHANGED = 
+            "ThicknessPropertyChanged";
+    
     public static final String CLOCKWISE_PROPERTY_CHANGED = 
             "ClockwisePropertyChanged";
+    
+    private static final int BYTE_ARRAY_LENGTH = Double.BYTES*2 + 1;
+    /**
+     * This is the angle typically used for interpolating the spiral curve. The
+     * end of each segment is {@value INTERPOLATION_ANGLE} degrees away from the 
+     * start of the curve.
+     */
+    protected static final double INTERPOLATION_ANGLE = 45.0;
     /**
      * This stores whether this spiral is clockwise or counter-clockwise.
      */
     private boolean clockwise = true;
     /**
+     * This is the spiral radius that controls the size of the spirals.
+     */
+    private double radius;
+    /**
+     * This is the thickness of the spiral.
+     */
+    private double thickness;
+    /**
      * Implicit constructor.
      */
-    protected SpiralPainter(){}
+    protected SpiralPainter(){
+        radius = SpiralPainter.this.getDefaultRadius();
+        thickness = SpiralPainter.this.getDefaultThickness();
+    }
     /**
      * Copy constructor for the class.
      * @param painter The SpiralPainter to copy.
      */
     protected SpiralPainter(SpiralPainter painter){
         this.clockwise = painter.clockwise;
+        this.radius = painter.radius;
+        this.thickness = painter.thickness;
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected double getDefaultRadius(){
+        return 100.0;
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected double getDefaultThickness(){
+        return 0.5;
+    }
+    /**
+     * 
+     * @param radius 
+     */
+    public void setSpiralRadius(double radius){
+            // If the new radius is less than or equal to zero
+        if (radius <= 0)
+            throw new IllegalArgumentException();
+            // If the radius would change
+        if (this.radius != radius){
+                // Get the old radius.
+            double old = this.radius;
+            this.radius = radius;
+            firePropertyChange(SPIRAL_RADIUS_PROPERTY_CHANGED,old,radius);
+        }
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getSpiralRadius(){
+        return radius;
+    }
+    /**
+     * 
+     * @param thickness 
+     * @see #setBalance(double) 
+     */
+    public void setThickness(double thickness){
+            // If the new thickness is less than 0 or greater than 1
+        if (thickness < 0 || thickness > 1)
+            throw new IllegalArgumentException();
+            // If the thicnkess would change
+        if (this.thickness != thickness){
+                // Get the old thickness
+            double old = this.thickness;
+            this.thickness = thickness;
+            firePropertyChange(THICKNESS_PROPERTY_CHANGED,old,thickness);
+        }
+    }
+    /**
+     * 
+     * @return 
+     * @see #getBalance() 
+     */
+    public double getThickness(){
+        return thickness;
+    }
+    /**
+     * 
+     * @param balance 
+     * @see #setThickness(double) 
+     */
+    public void setBalance(double balance){
+        setThickness((1.0 + balance) / 2.0);
+    }
+    /**
+     * 
+     * @return The balance between the two colors
+     * @see #getThickness() 
+     */
+    public double getBalance(){
+        return getThickness()*2.0 - 1.0;
     }
     /**
      * This sets whether this spiral is clockwise or counter-clockwise.
@@ -72,7 +177,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
             // Paint the spiral. If the angle is null, then default to 0. 
             // Otherwise, keep in in range of (-360, 360), exclusive.
         paintSpiral(g,(angle!=null)?(angle%FULL_CIRCLE_DEGREES):0.0,width,height,
-                width/2.0,height/2.0,isClockwise());
+                width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
     /**
@@ -87,12 +192,14 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * @param centerY This is the y-coordinate of the center of the area.
      * @param clockwise {@code true} if the spiral is clockwise, {@code false} 
      * if the spiral is counter-clockwise.
+     * @param radius The spiral radius which controls the size of the spirals.
+     * @param thickness The thickness of the spiral.
      * @see #paint
      * @see #isClockwise() 
      */
     protected abstract void paintSpiral(Graphics2D g, double angle, 
             int width, int height, double centerX, double centerY, 
-            boolean clockwise);
+            boolean clockwise, double radius, double thickness);
     /**
      * This is used to configure the graphics context used to render the spiral. 
      * It's assumed that the returned graphics context is the same as the given 
@@ -156,7 +263,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * @return 
      */
     public byte[] toByteArray(byte[] arr, int offset){
-        int length = getByteArrayLength()+1;
+        int length = getByteArrayLength()+BYTE_ARRAY_LENGTH;
         if (arr == null || arr.length < offset+length){
             byte[] temp = arr;
             arr = new byte[offset+length];
@@ -164,19 +271,18 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
                 System.arraycopy(temp, 0, arr, 0, Math.min(temp.length,offset));
         }
         arr[offset] = (byte)((isClockwise()) ? 0x01 : 0x00);
-        if (length > 1){
-            ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
-            toByteArray(buffer);
-        }
+        ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
+        buffer.putDouble(getSpiralRadius());
+        buffer.putDouble(getThickness());
+        if (length > BYTE_ARRAY_LENGTH)
+            toByteArray(buffer.slice());
         return arr;
     }
     /**
      * 
      * @param buffer 
      */
-    protected void toByteArray(ByteBuffer buffer){
-        
-    }
+    protected void toByteArray(ByteBuffer buffer){ }
     /**
      * 
      * @return 
@@ -190,23 +296,22 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * @param offset 
      */
     public void fromByteArray(byte[] arr, int offset){
-        int length = getByteArrayLength();
-        if (arr == null || (arr.length - offset) < length + 1)
+        int length = getByteArrayLength()+BYTE_ARRAY_LENGTH;
+        if (arr == null || (arr.length - offset) < length)
             return;
         setClockwise((arr[offset] & 0x01) != 0);
-        if (length > 0){
-            ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length)
-                    .asReadOnlyBuffer();
-            fromByteArray(buffer);
-        }
+        ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1)
+                .asReadOnlyBuffer();
+        setSpiralRadius(buffer.getDouble());
+        setThickness(buffer.getDouble());
+        if (length > BYTE_ARRAY_LENGTH)
+            fromByteArray(buffer.slice());
     }
     /**
      * 
      * @param buffer 
      */
-    protected void fromByteArray(ByteBuffer buffer){
-        
-    }
+    protected void fromByteArray(ByteBuffer buffer){ }
     /**
      * 
      * @param arr 
@@ -219,10 +324,14 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     public void reset(){
         setClockwise(true);
+        setSpiralRadius(getDefaultRadius());
+        setThickness(getDefaultThickness());
     }
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so
-        return ((isClockwise())?"":"counter-")+"clockwise";
+        return ((isClockwise())?"":"counter-")+"clockwise"+
+                ",spiralRadius="+getSpiralRadius()+
+                ",thickness="+getThickness();
     }
 }
