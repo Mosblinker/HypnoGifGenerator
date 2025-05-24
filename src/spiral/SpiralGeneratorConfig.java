@@ -110,7 +110,7 @@ public class SpiralGeneratorConfig {
      */
     private final Preferences node;
     
-    private final HashMap<String,Preferences> spiralNodes = new HashMap<>();
+    private final Preferences spiralNode;
     
     private final Preferences maskNode;
     
@@ -125,6 +125,7 @@ public class SpiralGeneratorConfig {
      */
     public SpiralGeneratorConfig(Preferences node) {
         this.node = Objects.requireNonNull(node);
+        spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
         compNames = new HashMap<>();
     }
@@ -140,7 +141,7 @@ public class SpiralGeneratorConfig {
      * @return 
      */
     public Preferences getSpiralPreferences(){
-        return getSpiralPreferences(SPIRAL_NODE_NAME);
+        return spiralNode;
     }
     /**
      * 
@@ -508,27 +509,6 @@ public class SpiralGeneratorConfig {
         putDimension(getComponentName(comp)+COMPONENT_SIZE_KEY,comp);
     }
     
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    public Preferences getSpiralPreferences(String name){
-        Preferences pref = spiralNodes.get(name);
-        if (pref == null){
-            pref = getPreferences().node(name);
-            spiralNodes.put(name, pref);
-        }
-        return pref;
-    }
-    /**
-     * 
-     * @param painter
-     * @return 
-     */
-    public Preferences getSpiralPreferences(SpiralPainter painter){
-        return getSpiralPreferences(painter.getPreferenceKey());
-    }
     /**
      * 
      * @param key
