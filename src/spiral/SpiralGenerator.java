@@ -1614,7 +1614,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
         heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
         spinDirCombo.setSelectedIndex(0);
-        config.setSpiralClockwise(true);
         for (SpiralPainter painter : spiralPainters){
             painter.reset();
         }
