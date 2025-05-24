@@ -48,7 +48,6 @@ public class RadialSpiralPainter extends SpiralPainter{
                 
                 double r1 = Math.sqrt(width*width+height*height)/2.0 + lineWidth;
                 
-                startR = (m + startR) % m;
                 
                 if (startR <= halfWidth || startR > m - halfWidth){
                     if (startR > halfWidth)
