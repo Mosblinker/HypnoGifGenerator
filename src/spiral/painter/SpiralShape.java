@@ -14,6 +14,21 @@ public enum SpiralShape {
     
     SQUARE,
     
-    DIAMOND
+    DIAMOND;
+    /**
+     * 
+     * @param shape
+     * @return 
+     */
+    public static int getShapeIndex(SpiralShape shape){
+        if (shape == null)
+            return -1;
+        SpiralShape[] shapes = SpiralShape.values();
+        for (int i = 0; i < shapes.length; i++){
+            if (shapes[i] == shape)
+                return i;
+        }
+        return -1;
+    }
     
 }
