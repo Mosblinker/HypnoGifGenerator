@@ -83,7 +83,7 @@ public class ConcentricSpiralPainter extends SpiralPainter{
     }
     @Override
     public String getName() {
-        return "Concentric Circles";
+        return "Concentric Shapes";
     }
     @Override
     public ConcentricSpiralPainter clone() {
