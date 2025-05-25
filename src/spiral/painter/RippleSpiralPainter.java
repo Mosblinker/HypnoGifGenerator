@@ -85,6 +85,25 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("r2/r1: " + (r2 / r1));
         System.out.println("(r2/r1)/m: " + (r2 / r1) / m);
         System.out.println("(r2/r1)%m: " + (r2 / r1) % m);
+        
+        ArrayList<Double> rList = new ArrayList<>();
+        for (double r = r1; r > r0; r /= m)
+            rList.add(r);
+        rList.add(rList.get(rList.size()-1)/m);
+        for (double r = r1 * m; r < r2; r *= m)
+            rList.add(r);
+        r2 = rList.get(rList.size()-1)*m;
+        rList.add(r2);
+        rList.sort(null);
+        
+        int index = rList.indexOf(r1);
+        boolean isColorEven = ((index % 2) == 0) == clockwise;
+        
+        System.out.println("List: " + rList);
+        System.out.println("r2: " + r2);
+        System.out.println("Index: " + index);
+        System.out.println("Is Color Even: " + isColorEven);
+        
         System.out.println();
         
         
