@@ -466,6 +466,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgMaskAntialiasingToggle = new javax.swing.JCheckBox();
         javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        maskAlphaCtrlPanel = new javax.swing.JPanel();
+        maskAlphaToggle = new javax.swing.JRadioButton();
+        maskAlphaColorCtrlPanel = new javax.swing.JPanel();
+        maskAlphaBlackToggle = new javax.swing.JRadioButton();
+        maskAlphaWhiteToggle = new javax.swing.JRadioButton();
+        javax.swing.Box.Filler filler17 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        maskAlphaRedToggle = new javax.swing.JRadioButton();
+        maskAlphaGreenToggle = new javax.swing.JRadioButton();
+        maskAlphaBlueToggle = new javax.swing.JRadioButton();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -480,6 +489,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         showTestSpiralToggle = new javax.swing.JCheckBox();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        maskAlphaButtons = new javax.swing.ButtonGroup();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -671,7 +681,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -706,7 +716,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -757,6 +767,76 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.5;
         maskImageCtrlPanel.add(filler15, gridBagConstraints);
+
+        maskAlphaCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mask Alpha Channel"));
+        maskAlphaCtrlPanel.setLayout(new java.awt.BorderLayout(0, 7));
+
+        maskAlphaButtons.add(maskAlphaToggle);
+        maskAlphaToggle.setSelected(true);
+        maskAlphaToggle.setText("Alpha Component");
+        maskAlphaToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaCtrlPanel.add(maskAlphaToggle, java.awt.BorderLayout.PAGE_START);
+
+        maskAlphaColorCtrlPanel.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
+
+        maskAlphaButtons.add(maskAlphaBlackToggle);
+        maskAlphaBlackToggle.setText("Black");
+        maskAlphaBlackToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaBlackToggle);
+
+        maskAlphaButtons.add(maskAlphaWhiteToggle);
+        maskAlphaWhiteToggle.setText("White");
+        maskAlphaWhiteToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaWhiteToggle);
+        maskAlphaColorCtrlPanel.add(filler17);
+
+        maskAlphaButtons.add(maskAlphaRedToggle);
+        maskAlphaRedToggle.setText("Red");
+        maskAlphaRedToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaRedToggle);
+
+        maskAlphaButtons.add(maskAlphaGreenToggle);
+        maskAlphaGreenToggle.setText("Green");
+        maskAlphaGreenToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaGreenToggle);
+
+        maskAlphaButtons.add(maskAlphaBlueToggle);
+        maskAlphaBlueToggle.setText("Blue");
+        maskAlphaBlueToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaBlueToggle);
+
+        maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, java.awt.BorderLayout.CENTER);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -1696,6 +1776,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         animationTimer.setDelay(value);
         animationTimer.setInitialDelay(value);
     }//GEN-LAST:event_delaySpinnerStateChanged
+
+    private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maskAlphaToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2187,6 +2271,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadMaskButton;
+    private javax.swing.JRadioButton maskAlphaBlackToggle;
+    private javax.swing.JRadioButton maskAlphaBlueToggle;
+    private javax.swing.ButtonGroup maskAlphaButtons;
+    private javax.swing.JPanel maskAlphaColorCtrlPanel;
+    private javax.swing.JPanel maskAlphaCtrlPanel;
+    private javax.swing.JRadioButton maskAlphaGreenToggle;
+    private javax.swing.JRadioButton maskAlphaRedToggle;
+    private javax.swing.JRadioButton maskAlphaToggle;
+    private javax.swing.JRadioButton maskAlphaWhiteToggle;
     private javax.swing.JDialog maskDialog;
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
