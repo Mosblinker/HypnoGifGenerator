@@ -30,8 +30,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
             double thickness) {
-        clockwise = !clockwise;
-        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, clockwise, radius, thickness);
+        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, !clockwise, radius, thickness);
         double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
@@ -67,7 +66,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         double r0 = getStartRadius(g);
         double r1 = Math.sqrt(width*width+height*height)/2.0;
-        double r = getRadius(radius,k,0,angle2,clockwise);
+        double r = getRadius(radius,k,0,angle2,!clockwise);
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
@@ -91,19 +90,18 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         g.setColor(Color.GREEN);
         g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, angle, centerX, centerY, null)));
-        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, getAzimuth(radius, k, radius, angle,clockwise), centerX, centerY, null)));
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, getAzimuth(radius, k, radius, angle,!clockwise), centerX, centerY, null)));
         g.setColor(Color.RED);
-        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(radius,k,0,angle2,clockwise), 0, centerX, centerY, null)));
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(radius,k,0,angle2,!clockwise), 0, centerX, centerY, null)));
         g.setColor(Color.CYAN);
         Ellipse2D e = new Ellipse2D.Double();
         if (rect == null)
             rect = new Rectangle2D.Double();
-        rect.setFrameFromCenter(centerX, centerY, centerX+r1, centerY+r1);
+        rect.setFrameFromCenter(centerX, centerY, centerX+r2, centerY+r2);
         e.setFrame(rect);
         g.draw(rect);
         g.draw(e);
-        double rT = getRadius(radius,k,0,angle2,clockwise);
-        e.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
+        e.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
         g.draw(e);
         e.setFrameFromCenter(centerX, centerY, centerX+r0, centerY+r0);
         g.draw(e);
