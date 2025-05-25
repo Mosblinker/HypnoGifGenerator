@@ -3266,6 +3266,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         painter = new ArithmeticSpiralPainter((ArithmeticSpiralPainter)temp);
                     else if (temp instanceof ConcentricSpiralPainter)
                         painter = new ConcentricSpiralPainter((ConcentricSpiralPainter)temp);
+                    else if (temp instanceof RippleSpiralPainter)
+                        painter = new RippleSpiralPainter((RippleSpiralPainter)temp);
                 }
                     // If the overlay mask copy is null
                 if (mask == null)
