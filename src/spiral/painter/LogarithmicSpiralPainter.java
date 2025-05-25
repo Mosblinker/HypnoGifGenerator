@@ -275,7 +275,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements Logar
             // completes the path. This is used for the outer spiral curve when 
             // clockwise and the inner spiral curve when counter-clockwise 
         double a = radius;
-            // When the spiral is going clockwise
+            // If the spiral is going clockwise
         if (clockwise)
             a /= lim;
         else
