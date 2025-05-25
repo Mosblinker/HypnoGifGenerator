@@ -63,8 +63,31 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Effectively round it up to the nearest full circle
         p1 += (FULL_CIRCLE_DEGREES - (p1 % FULL_CIRCLE_DEGREES)) % FULL_CIRCLE_DEGREES;
         
+            // Get the azimuth of the point on the spiral where the spiral 
+            // radius lies. This ignores whether the spiral is clockwise or not, 
+            // treating it as if it was always clockwise. 
+        double pR = getAzimuth(radius, k, radius, angle,true);
+            // Get the radius of the point on the spiral that is one full 
+            // revolution away from the spiral radius. This ignores whether the 
+            // spiral is clockwise or not, treating it as if it was always 
+            // clockwise. 
+        double m0 = getRadius(radius,k,pR+FULL_CIRCLE_DEGREES,angle,true);
+        m0 /= radius;
+        
+            // If the spiral is going counter-clockwise
+        if (!clockwise){
+            p1 = -p1;
+                // Not only swap the signs but offset this by 360
+            p0 = -p0+FULL_CIRCLE_DEGREES;
+                // Invert the values m0, m1, and m2
+            m0 = 1/m0;
+        }
+        
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
+        System.out.println("pR: " + pR);
+        System.out.println("m0: " + m0);
+        
     }
     @Override
     public String getName() {
