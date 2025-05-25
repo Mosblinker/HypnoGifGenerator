@@ -5,7 +5,6 @@
 package spiral.painter;
 
 import geom.GeometryMath;
-import geom.Rhombus2D;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
@@ -21,11 +20,6 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
      * initially null and is initialized the first time it is used. 
      */
     private Ellipse2D ellipse = null;
-    /**
-     * This is a scratch Rhombus2D object used to draw the diamonds. This is 
-     * initially null and is initialized the first time it is used. 
-     */
-    private Rhombus2D rhombus = null;
     /**
      * This is the shape for the concentric shapes for this spiral.
      */
@@ -50,6 +44,11 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 RectangularShape shape;
                     // Determine the shape to use for the spiral
                 switch (getShape()){
+                        // If the shape is a diamond
+                    case DIAMOND:
+                            // Rotate the painted area by 45 degrees to turn the 
+                            // squares into diamonds
+                        g.rotate(Math.PI/4.0, centerX, centerY);
                         // If the shape is square
                     case SQUARE:
                             // If the scratch rectangle object is null
@@ -57,13 +56,6 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                             rect = new Rectangle2D.Double();
                         shape = rect;
                         break;
-//                        // If the shape is a diamond
-//                    case DIAMOND:
-//                            // If the scratch rhombus object is null
-//                        if (rhombus == null)
-//                            rhombus = new Rhombus2D.Double();
-//                        shape = rhombus;
-//                        break;
                     default:
                             // If the scratch ellipse object is null
                         if (ellipse == null)
