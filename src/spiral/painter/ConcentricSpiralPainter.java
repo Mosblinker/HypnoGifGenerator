@@ -146,4 +146,9 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
         super.reset();
         setShape(SpiralShape.CIRCLE);
     }
+    @Override
+    protected String paramString(){
+        return super.paramString()+
+                ",shape="+getShape();
+    }
 }
