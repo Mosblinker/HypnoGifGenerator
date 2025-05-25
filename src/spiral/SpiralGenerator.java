@@ -67,7 +67,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the current version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.5.0";
+    public static final String PROGRAM_VERSION = "0.5.1";
     /**
      * This is the name of the program.
      */
@@ -153,7 +153,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralPainters = new SpiralPainter[]{
             new LogarithmicSpiralPainter(),
             new ArithmeticSpiralPainter(),
-            new RadialSpiralPainter()
+            new ConcentricSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
             try{
