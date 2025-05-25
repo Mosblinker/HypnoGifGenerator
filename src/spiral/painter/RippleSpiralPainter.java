@@ -39,29 +39,19 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // This is the value by which to use to get the actual curve of the 
             // spiral
         double lim = Math.exp(k * (1-thickness));
-            // This is the radius of the actual curve of the spiral
-        double a = radius;
-        
-            // If the spiral is going clockwise
-//        if (!clockwise)
-//            a /= lim;
-//        else
-//            a *= lim;
-//            // Get the point in between the inner and outer spirals
-//        a = (radius + a) / 2.0;
         
         double m = getBase();
         
             // This gets the starting azimuth for the spiral. This ignores 
             // whether the spiral is clockwise or not, treating it as if it was 
             // always clockwise.
-        double p0 = getAzimuth(a,k,getStartRadius(g),angle2,true);
+        double p0 = getAzimuth(radius,k,getStartRadius(g),angle2,true);
         
             // This gets the ending azimuth for the spiral. This ignores whether 
             // the spiral is clockwise or not, treating it as if it was always 
             // clockwise. This uses the target radius of half the diagonal 
             // length of the area
-        double p1 = getAzimuth(a, k, Math.sqrt(width*width+height*height)/2.0, 
+        double p1 = getAzimuth(radius, k, Math.sqrt(width*width+height*height)/2.0, 
                 angle2,true);
             // TODO: Add ending azimuth adjustment code here if necessary
 //            // Effectively round it up to the nearest full circle
@@ -70,7 +60,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
             // treating it as if it was always clockwise. 
-        double pR = getAzimuth(a, k, radius, angle2,true);
+        double pR = getAzimuth(radius, k, radius, angle2,true);
         
             // If the spiral is going counter-clockwise
         if (!clockwise){
@@ -83,13 +73,13 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
         System.out.println("lim: " + lim);
-        System.out.println("a: " + a);
+        System.out.println("a: " + radius);
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
         System.out.println("m: " + m);
         System.out.println("pR: " + pR);
-        System.out.println(getRadius(a,k,0,angle2,clockwise));
-        System.out.println(getRadius(a,k,pR,angle2,clockwise));
+        System.out.println(getRadius(radius,k,0,angle2,clockwise));
+        System.out.println(getRadius(radius,k,pR,angle2,clockwise));
         System.out.println();
         
         
@@ -97,17 +87,17 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, angle, centerX, centerY, null)));
         g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, getAzimuth(radius, k, radius, angle,clockwise), centerX, centerY, null)));
         g.setColor(Color.RED);
-        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(a,k,0,angle2,clockwise), 0, centerX, centerY, null)));
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(radius,k,0,angle2,clockwise), 0, centerX, centerY, null)));
         g.setColor(Color.CYAN);
         Ellipse2D e = new Ellipse2D.Double();
         if (rect == null)
             rect = new Rectangle2D.Double();
-        double rT = getRadius(a,k,p1,angle2,clockwise);
+        double rT = getRadius(radius,k,p1,angle2,clockwise);
         rect.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
         e.setFrame(rect);
         g.draw(rect);
         g.draw(e);
-        rT = getRadius(a,k,0,angle2,clockwise);
+        rT = getRadius(radius,k,0,angle2,clockwise);
         e.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
         g.draw(e);
     }
