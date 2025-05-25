@@ -9,6 +9,8 @@ package spiral.painter;
  * @author Mosblinker
  */
 public interface ShapedSpiral {
+    
+    public static final String SHAPE_PROPERTY_CHANGED ="ShapePropertyChanged";
     /**
      * 
      * @return 
