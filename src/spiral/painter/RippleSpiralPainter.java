@@ -53,7 +53,18 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + unadjustRotation(angle,thickness,clockwise));
         System.out.println("a: " + a);
+        
+            // This gets the ending azimuth for the spiral. This uses the 
+            // radius and ignores whether the spiral is clockwise or not, 
+            // treating it as if it was always clockwise. This uses the target 
+            // radius of half the diagonal length of the area
+        double p1 = getAzimuth(radius, k, 
+                Math.sqrt(width*width+height*height)/2.0, angle,true);
+            // Effectively round it up to the nearest full circle
+        p1 += (FULL_CIRCLE_DEGREES - (p1 % FULL_CIRCLE_DEGREES)) % FULL_CIRCLE_DEGREES;
+        
         System.out.println("p0: "+ p0);
+        System.out.println("p1: " + p1);
     }
     @Override
     public String getName() {
