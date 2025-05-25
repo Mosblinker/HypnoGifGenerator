@@ -40,8 +40,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // spiral
         double lim = Math.exp(k * (1-thickness));
         
-        double m = getBase();
-        
             // This gets the starting azimuth for the spiral. This ignores 
             // whether the spiral is clockwise or not, treating it as if it was 
             // always clockwise.
@@ -64,6 +62,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // radius lies. This ignores whether the spiral is clockwise or not, 
             // treating it as if it was always clockwise. 
         double pR = getAzimuth(radius, k, radius, angle2,true);
+        
+        double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle2,true) / radius;
         
             // If the spiral is going counter-clockwise
         if (!clockwise){
@@ -88,8 +88,12 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("r: " + r);
         System.out.println("r0: " + r0);
         System.out.println("r/r0: " + (r / r0));
+        System.out.println("(r/r0)/m: " + (r / r0) / m);
+        System.out.println("(r/r0)%m: " + (r / r0) % m);
         System.out.println("r1: " + r1);
         System.out.println("r1/r: " + (r1 / r));
+        System.out.println("(r1/r)/m: " + (r1 / r) / m);
+        System.out.println("(r1/r)%m: " + (r1 / r) % m);
         System.out.println();
         
         
@@ -102,13 +106,14 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         Ellipse2D e = new Ellipse2D.Double();
         if (rect == null)
             rect = new Rectangle2D.Double();
-        double rT = getRadius(radius,k,p1,angle2,clockwise);
-        rect.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
+        rect.setFrameFromCenter(centerX, centerY, centerX+r1, centerY+r1);
         e.setFrame(rect);
         g.draw(rect);
         g.draw(e);
-        rT = getRadius(radius,k,0,angle2,clockwise);
+        double rT = getRadius(radius,k,0,angle2,clockwise);
         e.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
+        g.draw(e);
+        e.setFrameFromCenter(centerX, centerY, centerX+r0, centerY+r0);
         g.draw(e);
     }
     @Override
