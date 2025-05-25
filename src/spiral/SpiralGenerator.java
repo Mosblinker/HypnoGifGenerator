@@ -3258,17 +3258,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (frames == null)
                     frames = new ArrayList<>();
                     // If the spiral painter copy is null
-                if (painter == null){
-                    SpiralPainter temp = getSpiralPainter();
-                    if (temp instanceof LogarithmicSpiralPainter)
-                        painter = new LogarithmicSpiralPainter((LogarithmicSpiralPainter)temp);
-                    else if (temp instanceof ArithmeticSpiralPainter)
-                        painter = new ArithmeticSpiralPainter((ArithmeticSpiralPainter)temp);
-                    else if (temp instanceof ConcentricSpiralPainter)
-                        painter = new ConcentricSpiralPainter((ConcentricSpiralPainter)temp);
-                    else if (temp instanceof RippleSpiralPainter)
-                        painter = new RippleSpiralPainter((RippleSpiralPainter)temp);
-                }
+                if (painter == null)
+                    painter = getSpiralPainter().clone();
                     // If the overlay mask copy is null
                 if (mask == null)
                     mask = new OverlayMask(overlayMask);
