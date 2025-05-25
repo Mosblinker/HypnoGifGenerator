@@ -460,9 +460,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         loadMaskButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
-        imgMaskNoteLabel1 = new javax.swing.JLabel();
-        imgMaskNoteLabel2 = new javax.swing.JLabel();
-        imgMaskNoteLabel3 = new javax.swing.JLabel();
         imgMaskAntialiasingToggle = new javax.swing.JCheckBox();
         javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -720,29 +717,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
-
-        imgMaskNoteLabel1.setText("Note: Mask only considers the alpha component of the source image's pixels.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
-        maskImageCtrlPanel.add(imgMaskNoteLabel1, gridBagConstraints);
-
-        imgMaskNoteLabel2.setText("All opaque pixels, regardless of color will be opaque in the mask.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        maskImageCtrlPanel.add(imgMaskNoteLabel2, gridBagConstraints);
-
-        imgMaskNoteLabel3.setText("In other words, the alpha channel of the source is used as the mask.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 4;
-        maskImageCtrlPanel.add(imgMaskNoteLabel3, gridBagConstraints);
 
         imgMaskAntialiasingToggle.setSelected(true);
         imgMaskAntialiasingToggle.setText("Antialiasing");
@@ -2263,9 +2237,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageSizePanel;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
-    private javax.swing.JLabel imgMaskNoteLabel1;
-    private javax.swing.JLabel imgMaskNoteLabel2;
-    private javax.swing.JLabel imgMaskNoteLabel3;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel lineSpacingLabel;
