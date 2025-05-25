@@ -7,8 +7,10 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 /**
@@ -90,6 +92,24 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println(getRadius(a,k,pR,angle2,clockwise));
         System.out.println();
         
+        
+        g.setColor(Color.GREEN);
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, angle, centerX, centerY, null)));
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, getAzimuth(radius, k, radius, angle,clockwise), centerX, centerY, null)));
+        g.setColor(Color.RED);
+        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(a,k,0,angle2,clockwise), 0, centerX, centerY, null)));
+        g.setColor(Color.CYAN);
+        Ellipse2D e = new Ellipse2D.Double();
+        if (rect == null)
+            rect = new Rectangle2D.Double();
+        double rT = getRadius(a,k,p1,angle2,clockwise);
+        rect.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
+        e.setFrame(rect);
+        g.draw(rect);
+        g.draw(e);
+        rT = getRadius(a,k,0,angle2,clockwise);
+        e.setFrameFromCenter(centerX, centerY, centerX+rT, centerY+rT);
+        g.draw(e);
     }
     @Override
     public String getName() {
