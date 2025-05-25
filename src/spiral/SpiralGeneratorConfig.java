@@ -1002,7 +1002,7 @@ public class SpiralGeneratorConfig {
     }
     
     public int getDebugTestImage(int size){
-        return Math.max(Math.min(getDebugTestNode().getInt(TEST_SPIRAL_IMAGE_KEY, 0), size-1), 0);
+        return Math.max(Math.min(getDebugTestNode().getInt(TEST_SPIRAL_IMAGE_KEY, 0), size-1), -1);
     }
     
     public void setDebugTestImage(int value){

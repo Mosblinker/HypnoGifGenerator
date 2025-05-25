@@ -345,7 +345,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 testSpiralImageSpinner.setEnabled(false);
             else
                 testSpiralImageSpinner.setModel(new SpinnerNumberModel(
-                        config.getDebugTestImage(testImages.size()), 0, 
+                        config.getDebugTestImage(testImages.size()), -1, 
                         testImages.size()-1, 1));
             testRotateSpinner.setValue(config.getDebugTestRotation());
             testScaleSpinner.setValue(config.getDebugTestScale());
@@ -2571,8 +2571,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (img.getWidth() != width || img.getHeight() != height)
                     img = Thumbnailator.createThumbnail(img, width, height);
                 g.drawImage(img, 0, 0, null);
+                g.setColor(new Color(0x8000FF00,true));
             }
-            g.setColor(new Color(0x8000FF00,true));
             testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
         }
         @Override
