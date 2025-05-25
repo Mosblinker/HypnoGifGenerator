@@ -34,9 +34,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             double thickness) {
 //        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, !clockwise, radius, thickness);
         Color color = g.getColor();
-        Color color1 = getTranslucentColor(color,thickness*2.0);
-        Color color2 = getTranslucentColor(color,(thickness*2.0)-1.0);
-//        System.out.println(thickness + " " + color1.getAlpha() + " " + color2.getAlpha());
         double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
@@ -73,7 +70,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
-        System.out.println("lim: " + lim);
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
         System.out.println("m: " + m);
@@ -102,17 +98,44 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         int index = rList.indexOf(r1);
         boolean isColorEven = ((index % 2) == 0) == clockwise;
+        boolean isThickerEven = false;
+        int length = rList.size();
+        if (thickness != 0.5){
+            isThickerEven = thickness > 0.5 == isColorEven;
+            length += Math.floorDiv(length, 2);
+            if (isThickerEven)
+                length += rList.size() % 2;
+        }
         
         System.out.println("List: " + rList);
         System.out.println("r2: " + r2);
         System.out.println("Index: " + index);
         System.out.println("Is Color Even: " + isColorEven);
         
-        float[] fractions = new float[rList.size()];
-        Color[] colors = new Color[rList.size()];
-        for (int i = 0; i < rList.size(); i++){
-            fractions[i] = (float)(rList.get(i) / r2);
-            colors[i] = ((i % 2 == 0) == isColorEven) ? color1 : color2;
+        float[] fractions = new float[length];
+        Color[] colors = new Color[length];
+        double t = thickness * 2.0;
+        if (t > 1.0)
+            t = 2.0 - t;
+        t = 1.0 - t;
+        int fIndex = 0;
+        for (int i = 0; i < rList.size(); i++, fIndex++){
+            double r = rList.get(i);
+            boolean isEven = i % 2 == 0;
+            colors[fIndex] = (isEven == isColorEven) ? color : TRANSPARENT_COLOR;
+            if (thickness != 0.5 && isEven == isThickerEven){
+                double f = 0;
+                if (i > 0)
+                    f = (r-rList.get(i-1)) * t;
+                fractions[fIndex] = (float)((r-f) / r2);
+                fIndex++;
+                colors[fIndex] = colors[fIndex-1];
+                f = 0;
+                if (i < rList.size()-1)
+                    f = (rList.get(i+1)-r)*t;
+                fractions[fIndex] = (float)((r+f) / r2);
+            } else 
+                fractions[fIndex] = (float)(r / r2);
         }
         
         System.out.println("Fractions: " + Arrays.toString(fractions));
