@@ -83,6 +83,6 @@ public class RadialSpiralPainter extends SpiralPainter{
     }
     @Override
     public String getName() {
-        return "Radial";
+        return "Concentric Circles";
     }
 }
