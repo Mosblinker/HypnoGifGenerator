@@ -65,8 +65,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle2,true) / radius;
         
         double r0 = getStartRadius(g);
-        double r2 = Math.sqrt(width*width+height*height)/2.0;
         double r1 = getRadius(radius,k,0,angle2,!clockwise);
+        double r2 = Math.sqrt(width*width+height*height)/2.0;
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
@@ -89,12 +89,14 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         ArrayList<Double> rList = new ArrayList<>();
         for (double r = r1; r > r0; r /= m)
             rList.add(r);
-        rList.add(rList.get(rList.size()-1)/m);
         for (double r = r1 * m; r < r2; r *= m)
             rList.add(r);
-        r2 = rList.get(rList.size()-1)*m;
-        rList.add(r2);
         rList.sort(null);
+        if (rList.get(0) > r0)
+            rList.add(0,rList.get(0)/m);
+        if (rList.get(rList.size()-1) < r2)
+            rList.add(rList.get(rList.size()-1)*m);
+        r2 = rList.get(rList.size()-1);
         
         int index = rList.indexOf(r1);
         boolean isColorEven = ((index % 2) == 0) == clockwise;
