@@ -28,6 +28,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
             double thickness) {
+        clockwise = !clockwise;
         super.paintSpiralGegl(g, angle, width, height, centerX, centerY, clockwise, radius, thickness);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
