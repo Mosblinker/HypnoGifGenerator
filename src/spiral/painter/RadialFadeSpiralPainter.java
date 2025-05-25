@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
@@ -79,22 +78,35 @@ public class RadialFadeSpiralPainter extends SpiralPainter implements Logarithmi
             else{
                 Color color = g.getColor();
                     // Bound the angle
-                angle = (FULL_CIRCLE_DEGREES - GeometryMath.boundDegrees(angle)) / FULL_CIRCLE_DEGREES;
+                angle = GeometryMath.boundDegrees(-angle) / FULL_CIRCLE_DEGREES;
                 
                 double k = getLogarithmicK();
+                
+//                System.out.println("Radius: " + radius);
+//                System.out.println("Next Radius: " + (radius / k));
+//                System.out.println("Prev Radius: " + (radius * k));
+                double r = radius * angle;
+//                radius = radius + r;
+                
+//                System.out.println("Radius + R: " + radius);
+//                System.out.println("R: " + r);
+//                System.out.println("Angle: " + angle);
+//                System.out.println("k: " + k);
+//                System.out.println("k * angle: " + (angle * k));
+                
                     // Get the maximum radius for the spiral
                 double r1 = Math.sqrt(width*width+height*height)/2.0;
                 
                 double m1 = radius / r1;
-                System.out.print(m1 + " ");
+//                System.out.print(m1 + " ");
                 while (m1 < 1.0)
                     m1 /= k;
                 r1 *= m1;
-                System.out.println(m1);
-                double f1 = radius / r1;
-                double temp = ((f1/k/k)-f1) * angle;
-                System.out.println(f1 + " " + temp + " " + (f1 + temp));
-                f1 += temp;
+//                System.out.println(m1);
+                double f1 = (radius + r) / r1;
+//                double temp = ((f1/k/k)-f1) * angle;
+//                System.out.println(f1 + " " + temp + " " + (f1 + temp));
+//                f1 += temp;
                 
                 ArrayList<Double> fractionList = new ArrayList<>();
                 double f0 = LogarithmicSpiralPainter.STARTING_RADIUS / r1;
@@ -111,12 +123,14 @@ public class RadialFadeSpiralPainter extends SpiralPainter implements Logarithmi
                     fractionList.add(1.0);
                 
                 int index = fractionList.indexOf(f1);
+                double temp2 = r1 * fractionList.get(index+1);
+//                System.out.println((r1 * fractionList.get(index)) + " " + temp2 + " " + (temp2 / radius) + " " + (radius / temp2));
                 
-                System.out.println(r1);
-                System.out.println("List: " + fractionList);
-                System.out.println(k);
-                System.out.println(f1);
-                System.out.println(index);
+//                System.out.println(r1);
+//                System.out.println("List: " + fractionList);
+//                System.out.println(k + " " + (k * angle));
+//                System.out.println(f1);
+//                System.out.println(index);
                 
                 float[] fractions = new float[fractionList.size()];
                 Color[] colors = new Color[fractionList.size()];
@@ -127,7 +141,7 @@ public class RadialFadeSpiralPainter extends SpiralPainter implements Logarithmi
                     colors[i] = (colorOnEven == (i % 2 == 0)) ? color : TRANSPARENT_COLOR;
                 }
                 
-                System.out.println(Arrays.toString(fractions));
+//                System.out.println(Arrays.toString(fractions));
                 g.setPaint(new RadialGradientPaint((float) centerX, (float) centerY, (float) r1, fractions,colors));
                 if (rect == null)
                     rect = new Rectangle2D.Double();
