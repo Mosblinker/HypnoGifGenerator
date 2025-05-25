@@ -2572,6 +2572,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     img = Thumbnailator.createThumbnail(img, width, height);
                 g.drawImage(img, 0, 0, null);
                 g.setColor(new Color(0x8000FF00,true));
+            } else {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, width, height);
+                g.setColor(Color.BLACK);
             }
             testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
         }
