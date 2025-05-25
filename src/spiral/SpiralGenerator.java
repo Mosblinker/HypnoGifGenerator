@@ -2630,9 +2630,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     maskChanged = true;
                     break;
                 case(SpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
-                case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
+                case(LogarithmicSpiral.BASE_PROPERTY_CHANGED):
                 case(SpiralPainter.THICKNESS_PROPERTY_CHANGED):
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
+                case(ShapedSpiral.SHAPE_PROPERTY_CHANGED):
                     if (painter != null)
                         config.setSpiralData(painter);
             }
