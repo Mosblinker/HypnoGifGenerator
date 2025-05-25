@@ -16,6 +16,8 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.util.*;
 import java.util.prefs.Preferences;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
@@ -99,6 +101,8 @@ public class SpiralGeneratorConfig {
     public static final String MASK_SCALE_KEY = "MaskScale";
     
     public static final String MASK_TYPE_KEY = "MaskType";
+    
+    public static final String MASK_ALPHA_CHANNEL_INDEX = "MaskAlphaChannelIndex";
     
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
@@ -983,6 +987,31 @@ public class SpiralGeneratorConfig {
     
     public void setMaskType(int value){
         getMaskPreferences().putInt(MASK_TYPE_KEY, value);
+    }
+    
+    public int getMaskAlphaIndex(int defaultValue){
+        return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX, defaultValue);
+    }
+    
+    public int getMaskAlphaIndex(){
+        return getMaskAlphaIndex(0);
+    }
+    
+    public void loadMaskAlphaIndex(ButtonGroup group){
+        int index = getMaskAlphaIndex(-1);
+        if (index < 0 || index >= group.getButtonCount())
+            return;
+        AbstractButton button = SwingExtendedUtilities.getButton(group, index);
+        if (button != null)
+            button.setSelected(true);
+    }
+    
+    public void setMaskAlphaIndex(int value){
+        getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX, value);
+    }
+    
+    public void setMaskAlphaIndex(ButtonGroup group){
+        setMaskAlphaIndex(SwingExtendedUtilities.indexOfSelected(group));
     }
     
     public int getImageWidth(int defaultValue){

@@ -264,6 +264,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         spiralPainters.length-1), 0));
         maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
                 maskTabbedPane.getTabCount()-1), 0));
+        config.loadMaskAlphaIndex(maskAlphaButtons);
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -1662,6 +1663,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.reset();
         maskTextArea.setText("");
         maskTabbedPane.setSelectedIndex(0);
+        maskAlphaToggle.setSelected(true);
+        config.setMaskAlphaIndex(maskAlphaButtons);
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
@@ -1757,7 +1760,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_delaySpinnerStateChanged
 
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
-        // TODO add your handling code here:
+        config.setMaskAlphaIndex(maskAlphaButtons);
+        refreshPreview(true);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -2425,8 +2429,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (image == null)
             return null;
             // If the mask version of the overlay image is null
-        if (mask == null)
+        if (mask == null){
             mask = image;
+        }
             // If the mask version of the overlay image doesn't match the 
             // size of the area being rendered
             // TODO: Work on implementing user control over the overlay 
