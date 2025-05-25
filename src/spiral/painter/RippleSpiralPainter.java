@@ -65,14 +65,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle2,true) / radius;
         
-            // If the spiral is going counter-clockwise
-        if (!clockwise){
-//            p1 = -p1;
-//                // Not only swap the signs but offset this by 360
-//            p0 = -p0+FULL_CIRCLE_DEGREES;
-        } else
-            m = 1/m;
-        
         double r0 = getStartRadius(g);
         double r1 = Math.sqrt(width*width+height*height)/2.0;
         double r = getRadius(radius,k,0,angle2,clockwise);
