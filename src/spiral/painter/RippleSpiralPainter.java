@@ -192,4 +192,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     public String getName() {
         return "Ripple";
     }
+    @Override
+    public RippleSpiralPainter clone() {
+        return new RippleSpiralPainter(this);
+    }
 }

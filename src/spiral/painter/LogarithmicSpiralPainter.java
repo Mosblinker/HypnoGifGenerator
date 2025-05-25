@@ -502,4 +502,8 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements Logar
         super.reset();
         setBase(2.0);
     }
+    @Override
+    public LogarithmicSpiralPainter clone() {
+        return new LogarithmicSpiralPainter(this);
+    }
 }

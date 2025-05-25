@@ -18,7 +18,7 @@ import swing.ListenedPainter;
  * @author Mosblinker
  */
 public abstract class SpiralPainter extends ListenedPainter<Double> implements 
-        GeometryMathConstants{
+        GeometryMathConstants, Cloneable{
     
     public static final String SPIRAL_RADIUS_PROPERTY_CHANGED = 
             "SpiralRadiusPropertyChanged";
@@ -434,4 +434,10 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
                 ",spiralRadius="+getSpiralRadius()+
                 ",thickness="+getThickness();
     }
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public abstract SpiralPainter clone();
 }
