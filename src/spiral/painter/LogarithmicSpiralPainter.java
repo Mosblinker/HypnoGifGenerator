@@ -20,7 +20,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements Logar
      * with a pitch that makes it appear that it infinitely gets smaller as it 
      * gets closer to the center of the image.
      */
-    private static final double STARTING_RADIUS = 0.1;
+    protected static final double STARTING_RADIUS = 0.1;
     /**
      * This returns the target radius for the start of the spiral.
      * @param tx
