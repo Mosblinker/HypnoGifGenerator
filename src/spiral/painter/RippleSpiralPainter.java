@@ -30,6 +30,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             double thickness) {
         clockwise = !clockwise;
         super.paintSpiralGegl(g, angle, width, height, centerX, centerY, clockwise, radius, thickness);
+        double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();
@@ -51,9 +52,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
 //            // Get the point in between the inner and outer spirals
 //        a = (radius + a) / 2.0;
         
-        System.out.println("Angle: " + angle);
-        System.out.println("Angle: " + unadjustRotation(angle,thickness,clockwise));
-        System.out.println("a: " + a);
         
             // This gets the ending azimuth for the spiral. This uses the 
             // radius and ignores whether the spiral is clockwise or not, 
@@ -84,6 +82,10 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             m0 = 1/m0;
         }
         
+        System.out.println("Angle: " + angle);
+        System.out.println("Angle: " + angle2);
+        System.out.println("lim: " + lim);
+        System.out.println("a: " + a);
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
         System.out.println("pR: " + pR);
