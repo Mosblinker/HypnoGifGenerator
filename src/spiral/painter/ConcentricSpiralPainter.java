@@ -86,10 +86,6 @@ public class ConcentricSpiralPainter extends SpiralPainter{
         return "Concentric Circles";
     }
     @Override
-    public String getPreferenceKey(){
-        return "ConcentricCircleSpiral";
-    }
-    @Override
     public ConcentricSpiralPainter clone() {
         return new ConcentricSpiralPainter(this);
     }
