@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +19,12 @@ import java.util.ArrayList;
 public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     
     public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
+    /**
+     * This is a scratch list to use to get the radiuses for the points on the 
+     * spiral where the color changes. This is initially null and is initialized 
+     * the first time it's used.
+     */
+    private List<Double> rList = null;
     
     public RippleSpiralPainter() { }
     
@@ -57,7 +64,10 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         double r1 = getRadius(radius,k,0,angle,!clockwise);
         double r2 = Math.sqrt(width*width+height*height)/2.0;
         
-        ArrayList<Double> rList = new ArrayList<>();
+        if (rList == null)
+            rList = new ArrayList<>();
+        else
+            rList.clear();
         for (double r = r1; r > r0; r /= m)
             rList.add(r);
         for (double r = r1 * m; r < r2; r *= m)
