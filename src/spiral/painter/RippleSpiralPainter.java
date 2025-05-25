@@ -73,8 +73,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         } else
             m = 1/m;
         
-        double r0 = getRadius(radius,k,p0,angle2,true);
-        double r1 = getRadius(radius,k,p1,angle2,true);
+        double r0 = getStartRadius(g);
+        double r1 = Math.sqrt(width*width+height*height)/2.0;
         double r = getRadius(radius,k,0,angle2,clockwise);
         
         System.out.println("Angle: " + angle);
