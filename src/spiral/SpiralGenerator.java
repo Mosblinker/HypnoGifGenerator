@@ -1657,6 +1657,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayImage = null;
         overlayMask.reset();
         maskTextArea.setText("");
+        maskTabbedPane.setSelectedIndex(0);
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
