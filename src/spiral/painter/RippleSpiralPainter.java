@@ -34,6 +34,9 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             double thickness) {
 //        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, !clockwise, radius, thickness);
         Color color = g.getColor();
+        Color color1 = getTranslucentColor(color,thickness*2.0);
+        Color color2 = getTranslucentColor(color,(thickness*2.0)-1.0);
+//        System.out.println(thickness + " " + color1.getAlpha() + " " + color2.getAlpha());
         double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
@@ -113,7 +116,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         Color[] colors = new Color[rList.size()];
         for (int i = 0; i < rList.size(); i++){
             fractions[i] = (float)(rList.get(i) / r2);
-            colors[i] = ((i % 2 == 0) == isColorEven) ? color : TRANSPARENT_COLOR;
+            colors[i] = ((i % 2 == 0) == isColorEven) ? color1 : color2;
         }
         
         System.out.println("Fractions: " + Arrays.toString(fractions));
