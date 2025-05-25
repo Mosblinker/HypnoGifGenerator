@@ -13,16 +13,16 @@ import java.awt.geom.Ellipse2D;
  *
  * @author Mosblinker
  */
-public class RadialSpiralPainter extends SpiralPainter{
+public class ConcentricSpiralPainter extends SpiralPainter{
     /**
      * This is a scratch Ellipse2D object used to draw the circles. This is 
      * initially null and is initialized the first time it is used. 
      */
     private Ellipse2D ellipse = null;
     
-    public RadialSpiralPainter() { }
+    public ConcentricSpiralPainter() { }
     
-    public RadialSpiralPainter(RadialSpiralPainter painter){
+    public ConcentricSpiralPainter(ConcentricSpiralPainter painter){
         super(painter);
     }
     @Override
@@ -83,6 +83,10 @@ public class RadialSpiralPainter extends SpiralPainter{
     }
     @Override
     public String getName() {
-        return "Radial";
+        return "Concentric Circles";
+    }
+    @Override
+    public String getPreferenceKey(){
+        return "ConcentricCircleSpiral";
     }
 }
