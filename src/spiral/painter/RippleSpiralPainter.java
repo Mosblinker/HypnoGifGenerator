@@ -106,10 +106,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
         System.out.println();
         
-        
-        g.setColor(Color.GREEN);
-        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, angle, centerX, centerY, null)));
-        g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(radius, getAzimuth(radius, k, radius, angle,!clockwise), centerX, centerY, null)));
         g.setColor(Color.RED);
         g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(radius,k,0,angle2,!clockwise), 0, centerX, centerY, null)));
         g.setColor(Color.CYAN);
@@ -117,13 +113,16 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         if (rect == null)
             rect = new Rectangle2D.Double();
         rect.setFrameFromCenter(centerX, centerY, centerX+r2, centerY+r2);
-        e.setFrame(rect);
         g.draw(rect);
-        g.draw(e);
-        e.setFrameFromCenter(centerX, centerY, centerX+r1, centerY+r1);
-        g.draw(e);
-        e.setFrameFromCenter(centerX, centerY, centerX+r0, centerY+r0);
-        g.draw(e);
+        for (int i = 0; i < rList.size(); i++){
+            double r = rList.get(i);
+            if ((i % 2 == 0) == isColorEven)
+                g.setColor(Color.BLUE);
+            else
+                g.setColor(Color.GREEN);
+            e.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+            g.draw(e);
+        }
     }
     @Override
     public String getName() {
