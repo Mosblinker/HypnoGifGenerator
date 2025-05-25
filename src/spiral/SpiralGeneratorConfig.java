@@ -98,6 +98,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_SCALE_KEY = "MaskScale";
     
+    public static final String MASK_TYPE_KEY = "MaskType";
+    
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
@@ -969,6 +971,18 @@ public class SpiralGeneratorConfig {
     
     public void setMaskImageAntialiased(boolean value){
         getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
+    }
+    
+    public int getMaskType(int defaultValue){
+        return getMaskPreferences().getInt(MASK_TYPE_KEY, defaultValue);
+    }
+    
+    public int getMaskType(){
+        return getMaskType(0);
+    }
+    
+    public void setMaskType(int value){
+        getMaskPreferences().putInt(MASK_TYPE_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){

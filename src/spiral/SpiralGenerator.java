@@ -172,6 +172,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralCompLabels = new HashMap<>();
         
         spiralIcon = new SpiralIcon();
+        
+        int spiralType = config.getSpiralType();
+        int maskType = config.getMaskType();
         initComponents();
         for (JLabel label : new JLabel[]{
             radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel
@@ -257,10 +260,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         
-        spiralTypeCombo.setSelectedIndex(
-                Math.max(Math.min(config.getSpiralType(), 
+        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
                         spiralPainters.length-1), 0));
-        
+        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
+                maskTabbedPane.getTabCount()-1), 0));
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -1633,6 +1636,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskEditButtonActionPerformed
 
     private void maskTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskTabbedPaneStateChanged
+        config.setMaskType(maskTabbedPane.getSelectedIndex());
         maskPreviewLabel.repaint();
         refreshPreview(false);
     }//GEN-LAST:event_maskTabbedPaneStateChanged
