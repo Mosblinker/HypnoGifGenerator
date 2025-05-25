@@ -175,7 +175,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralIcon = new SpiralIcon();
         initComponents();
         for (JLabel label : new JLabel[]{
-            radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel
+            radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel,spiralShapeLabel
         }){
             spiralCompLabels.put(label.getLabelFor(), label);
         }
@@ -408,6 +408,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (isLog)
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
         baseSpinner.setVisible(isLog);
+        boolean hasShape = painter instanceof ShapedSpiral;
+        if (hasShape)
+            spiralShapeCombo.setSelectedItem(((ShapedSpiral)painter).getShape());
+        spiralShapeCombo.setVisible(hasShape);
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
         }
@@ -1286,6 +1290,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralCtrlPanel.add(spiralShapeLabel, gridBagConstraints);
 
         spiralShapeCombo.setModel(new DefaultComboBoxModel<>(SpiralShape.values()));
+        spiralShapeCombo.setRenderer(new SpiralShapeListCellRenderer());
         spiralShapeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spiralShapeComboActionPerformed(evt);
@@ -1725,7 +1730,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_delaySpinnerStateChanged
 
     private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
-        // TODO add your handling code here:
+        SpiralPainter painter = getSpiralPainter();
+        if (painter instanceof ShapedSpiral){
+            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(spiralShapeCombo.getSelectedIndex()));
+        }
     }//GEN-LAST:event_spiralShapeComboActionPerformed
     /**
      * This returns the width for the image.
