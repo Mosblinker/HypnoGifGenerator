@@ -227,7 +227,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
                 // Multiply the color's alpha component by the alpha and shift 
                 // it into the last 8 bits to use the result as the alpha 
                 // component
-            rgb |= ((int)Math.floor(color.getAlpha()*alpha))<< 24;
+            rgb |= ((int)Math.floor(color.getAlpha()*alpha)) << 24;
         return new Color(rgb, true);
     }
     /**
