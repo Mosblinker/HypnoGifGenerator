@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RadialGradientPaint;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -31,7 +32,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
             double thickness) {
-        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, !clockwise, radius, thickness);
+//        super.paintSpiralGegl(g, angle, width, height, centerX, centerY, !clockwise, radius, thickness);
+        Color color = g.getColor();
         double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
@@ -117,12 +119,17 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("Fractions: " + Arrays.toString(fractions));
         System.out.println();
         
+        g.setPaint(new RadialGradientPaint((float) centerX, (float) centerY, (float) r2, fractions,colors));
+        if (rect == null)
+            rect = new Rectangle2D.Double();
+        rect.setFrame(0, 0, width, height);
+        g.fill(rect);
+        
         g.setColor(Color.RED);
         g.draw(new Line2D.Double(new Point2D.Double(centerX,centerY), GeometryMath.polarToCartesian(getRadius(radius,k,0,angle2,!clockwise), 0, centerX, centerY, null)));
         g.setColor(Color.CYAN);
         Ellipse2D e = new Ellipse2D.Double();
-        if (rect == null)
-            rect = new Rectangle2D.Double();
+        
         rect.setFrameFromCenter(centerX, centerY, centerX+r2, centerY+r2);
         g.draw(rect);
         for (int i = 0; i < rList.size(); i++){
