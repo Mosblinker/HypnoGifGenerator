@@ -2629,9 +2629,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
                     maskChanged = true;
                     break;
-                case(GEGLSpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
+                case(SpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
                 case(LogarithmicSpiralPainter.BASE_PROPERTY_CHANGED):
-                case(GEGLSpiralPainter.THICKNESS_PROPERTY_CHANGED):
+                case(SpiralPainter.THICKNESS_PROPERTY_CHANGED):
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                     if (painter != null)
                         config.setSpiralData(painter);
