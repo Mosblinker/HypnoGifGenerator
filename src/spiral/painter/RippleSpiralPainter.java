@@ -48,6 +48,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
 //            // Get the point in between the inner and outer spirals
 //        a = (radius + a) / 2.0;
         
+        double m = getBase();
         
             // This gets the starting azimuth for the spiral. This ignores 
             // whether the spiral is clockwise or not, treating it as if it was 
@@ -67,22 +68,15 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
             // treating it as if it was always clockwise. 
-        double pR = getAzimuth(radius, k, radius, angle,true);
-            // Get the radius of the point on the spiral that is one full 
-            // revolution away from the spiral radius. This ignores whether the 
-            // spiral is clockwise or not, treating it as if it was always 
-            // clockwise. 
-        double m0 = getRadius(radius,k,pR+FULL_CIRCLE_DEGREES,angle,true);
-        m0 /= radius;
+        double pR = getAzimuth(a, k, radius, angle2,true);
         
             // If the spiral is going counter-clockwise
         if (!clockwise){
             p1 = -p1;
                 // Not only swap the signs but offset this by 360
             p0 = -p0+FULL_CIRCLE_DEGREES;
-                // Invert the values m0, m1, and m2
-            m0 = 1/m0;
-        }
+        } else
+            m = 1/m;
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
@@ -90,8 +84,11 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("a: " + a);
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
+        System.out.println("m: " + m);
         System.out.println("pR: " + pR);
-        System.out.println("m0: " + m0);
+        System.out.println(getRadius(a,k,0,angle2,clockwise));
+        System.out.println(getRadius(a,k,pR,angle2,clockwise));
+        System.out.println();
         
     }
     @Override
