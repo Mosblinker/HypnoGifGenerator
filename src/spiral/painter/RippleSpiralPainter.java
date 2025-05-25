@@ -46,6 +46,9 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // whether the spiral is clockwise or not, treating it as if it was 
             // always clockwise.
         double p0 = getAzimuth(radius,k,getStartRadius(g),angle2,true);
+            // Subtract the starting azimuth by itself mod 180 degrees to ensure 
+            // it ends at half a rotation.
+//        p0 -= p0 % HALF_CIRCLE_DEGREES;
         
             // This gets the ending azimuth for the spiral. This ignores whether 
             // the spiral is clockwise or not, treating it as if it was always 
@@ -54,8 +57,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         double p1 = getAzimuth(radius, k, Math.sqrt(width*width+height*height)/2.0, 
                 angle2,true);
             // TODO: Add ending azimuth adjustment code here if necessary
-//            // Effectively round it up to the nearest full circle
-//        p1 += (FULL_CIRCLE_DEGREES - (p1 % FULL_CIRCLE_DEGREES)) % FULL_CIRCLE_DEGREES;
+//            // Effectively round it up to the nearest half of a rotation
+//        p1 += (HALF_CIRCLE_DEGREES - (p1 % HALF_CIRCLE_DEGREES)) % HALF_CIRCLE_DEGREES;
         
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
@@ -64,11 +67,15 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         
             // If the spiral is going counter-clockwise
         if (!clockwise){
-            p1 = -p1;
-                // Not only swap the signs but offset this by 360
-            p0 = -p0+FULL_CIRCLE_DEGREES;
+//            p1 = -p1;
+//                // Not only swap the signs but offset this by 360
+//            p0 = -p0+FULL_CIRCLE_DEGREES;
         } else
             m = 1/m;
+        
+        double r0 = getRadius(radius,k,p0,angle2,true);
+        double r1 = getRadius(radius,k,p1,angle2,true);
+        double r = getRadius(radius,k,0,angle2,clockwise);
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
@@ -78,8 +85,11 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("p1: " + p1);
         System.out.println("m: " + m);
         System.out.println("pR: " + pR);
-        System.out.println(getRadius(radius,k,0,angle2,clockwise));
-        System.out.println(getRadius(radius,k,pR,angle2,clockwise));
+        System.out.println("r: " + r);
+        System.out.println("r0: " + r0);
+        System.out.println("r/r0: " + (r / r0));
+        System.out.println("r1: " + r1);
+        System.out.println("r1/r: " + (r1 / r));
         System.out.println();
         
         
