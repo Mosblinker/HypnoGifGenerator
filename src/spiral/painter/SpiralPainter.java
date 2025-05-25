@@ -212,6 +212,26 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
             boolean clockwise, double radius, double thickness);
     /**
      * 
+     * @param color
+     * @param alpha
+     * @return 
+     */
+    protected Color getTranslucentColor(Color color, double alpha){
+            // If the alpha is greater than or equal to 1
+        if (alpha >= 1.0)
+            return color;
+            // Get the RGB value of the color without the alpha component
+        int rgb = color.getRGB() & 0x00FFFFFF;
+            // If the alpha is greater than zero
+        if (alpha > 0.0)
+                // Multiply the color's alpha component by the alpha and shift 
+                // it into the last 8 bits to use the result as the alpha 
+                // component
+            rgb |= ((int)Math.floor(color.getAlpha()*alpha))<< 24;
+        return new Color(rgb, true);
+    }
+    /**
+     * 
      * @param g
      * @param width
      * @param height
@@ -222,13 +242,8 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
             double height, double thickness, Color color){
             // If the thickness is greater than zero
         if (thickness > 0.0){
-                // If the thickness is less than 1
-            if (thickness < 1.0){
-                color = new Color((color.getRGB() & 0x00FFFFFF) | 
-                        (((int)Math.floor(color.getAlpha()*thickness))<< 24),
-                        true);
-            }   // Set the color to use
-            g.setColor(color);
+                // Set the color to use
+            g.setColor(getTranslucentColor(color,thickness));
                 // If the rectangle object has not been initialized yet
             if (rect == null)
                 rect = new Rectangle2D.Double();
