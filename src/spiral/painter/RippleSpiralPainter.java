@@ -40,10 +40,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // This is the radius of the actual curve of the spiral
         double a = radius;
         
-            // This gets the starting azimuth for the spiral. This uses the 
-            // multiplier for the secondary curve and ignores whether the spiral 
-            // is clockwise or not, treating it as if it was always clockwise.
-        double p0 = getAzimuth(a,k,getStartRadius(g),angle,true);
             // If the spiral is going clockwise
 //        if (!clockwise)
 //            a /= lim;
@@ -53,14 +49,20 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
 //        a = (radius + a) / 2.0;
         
         
-            // This gets the ending azimuth for the spiral. This uses the 
-            // radius and ignores whether the spiral is clockwise or not, 
-            // treating it as if it was always clockwise. This uses the target 
-            // radius of half the diagonal length of the area
-        double p1 = getAzimuth(radius, k, 
-                Math.sqrt(width*width+height*height)/2.0, angle,true);
-            // Effectively round it up to the nearest full circle
-        p1 += (FULL_CIRCLE_DEGREES - (p1 % FULL_CIRCLE_DEGREES)) % FULL_CIRCLE_DEGREES;
+            // This gets the starting azimuth for the spiral. This ignores 
+            // whether the spiral is clockwise or not, treating it as if it was 
+            // always clockwise.
+        double p0 = getAzimuth(a,k,getStartRadius(g),angle2,true);
+        
+            // This gets the ending azimuth for the spiral. This ignores whether 
+            // the spiral is clockwise or not, treating it as if it was always 
+            // clockwise. This uses the target radius of half the diagonal 
+            // length of the area
+        double p1 = getAzimuth(a, k, Math.sqrt(width*width+height*height)/2.0, 
+                angle2,true);
+            // TODO: Add ending azimuth adjustment code here if necessary
+//            // Effectively round it up to the nearest full circle
+//        p1 += (FULL_CIRCLE_DEGREES - (p1 % FULL_CIRCLE_DEGREES)) % FULL_CIRCLE_DEGREES;
         
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
