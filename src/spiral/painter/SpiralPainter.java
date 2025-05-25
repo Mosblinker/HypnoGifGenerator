@@ -270,6 +270,22 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
     }
     /**
+     * 
+     * @param angle
+     * @param thickness
+     * @param clockwise
+     * @return 
+     */
+    protected double unadjustRotation(double angle, double thickness, 
+            boolean clockwise){
+            // Bound the angle of rotation
+        angle = GeometryMath.boundDegrees(angle - (thickness / 2.0)*FULL_CIRCLE_DEGREES);
+            // If the spiral is going clockwise and the angle is not 0
+        if (clockwise && angle > 0.0)
+            angle = FULL_CIRCLE_DEGREES - angle;
+        return angle;
+    }
+    /**
      * This is used to configure the graphics context used to render the spiral. 
      * It's assumed that the returned graphics context is the same as the given 
      * graphics context, or at least that the returned graphics context 
