@@ -65,8 +65,8 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle2,true) / radius;
         
         double r0 = getStartRadius(g);
-        double r1 = Math.sqrt(width*width+height*height)/2.0;
-        double r = getRadius(radius,k,0,angle2,!clockwise);
+        double r2 = Math.sqrt(width*width+height*height)/2.0;
+        double r1 = getRadius(radius,k,0,angle2,!clockwise);
         
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
@@ -76,15 +76,15 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("p1: " + p1);
         System.out.println("m: " + m);
         System.out.println("pR: " + pR);
-        System.out.println("r: " + r);
         System.out.println("r0: " + r0);
-        System.out.println("r/r0: " + (r / r0));
-        System.out.println("(r/r0)/m: " + (r / r0) / m);
-        System.out.println("(r/r0)%m: " + (r / r0) % m);
         System.out.println("r1: " + r1);
-        System.out.println("r1/r: " + (r1 / r));
-        System.out.println("(r1/r)/m: " + (r1 / r) / m);
-        System.out.println("(r1/r)%m: " + (r1 / r) % m);
+        System.out.println("r2: " + r2);
+        System.out.println("r1/r0: " + (r1 / r0));
+        System.out.println("(r/r0)/m: " + (r1 / r0) / m);
+        System.out.println("(r/r0)%m: " + (r1 / r0) % m);
+        System.out.println("r2/r1: " + (r2 / r1));
+        System.out.println("(r2/r1)/m: " + (r2 / r1) / m);
+        System.out.println("(r2/r1)%m: " + (r2 / r1) % m);
         System.out.println();
         
         
@@ -101,7 +101,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         e.setFrame(rect);
         g.draw(rect);
         g.draw(e);
-        e.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+        e.setFrameFromCenter(centerX, centerY, centerX+r1, centerY+r1);
         g.draw(e);
         e.setFrameFromCenter(centerX, centerY, centerX+r0, centerY+r0);
         g.draw(e);
