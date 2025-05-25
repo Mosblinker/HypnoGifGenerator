@@ -153,7 +153,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralPainters = new SpiralPainter[]{
             new LogarithmicSpiralPainter(),
             new ArithmeticSpiralPainter(),
-            new ConcentricSpiralPainter()
+            new ConcentricSpiralPainter(),
+            new RippleSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
             try{
@@ -403,9 +404,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
-        boolean isLog = painter instanceof LogarithmicSpiralPainter;
+        boolean isLog = painter instanceof LogarithmicSpiral;
         if (isLog)
-            baseSpinner.setValue(((LogarithmicSpiralPainter)painter).getBase());
+            baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
         baseSpinner.setVisible(isLog);
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
@@ -1499,8 +1500,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
         SpiralPainter temp = getSpiralPainter();
-        if (temp instanceof LogarithmicSpiralPainter){
-            LogarithmicSpiralPainter painter = (LogarithmicSpiralPainter) temp;
+        if (temp instanceof LogarithmicSpiral){
+            LogarithmicSpiral painter = (LogarithmicSpiral) temp;
             double value = (double) baseSpinner.getValue();
             if (value != painter.getBase())
                 painter.setBase(value);
@@ -3265,6 +3266,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         painter = new ArithmeticSpiralPainter((ArithmeticSpiralPainter)temp);
                     else if (temp instanceof ConcentricSpiralPainter)
                         painter = new ConcentricSpiralPainter((ConcentricSpiralPainter)temp);
+                    else if (temp instanceof RippleSpiralPainter)
+                        painter = new RippleSpiralPainter((RippleSpiralPainter)temp);
                 }
                     // If the overlay mask copy is null
                 if (mask == null)

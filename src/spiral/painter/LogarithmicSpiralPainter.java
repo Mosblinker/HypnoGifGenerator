@@ -13,16 +13,41 @@ import java.nio.ByteBuffer;
  *
  * @author Mosblinker
  */
-public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
+public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements LogarithmicSpiral{
     /**
      * This is the target radius for the start of the spiral. This is set to 0.1 
      * to ensure that the spiral is properly formed in the center of the image 
      * with a pitch that makes it appear that it infinitely gets smaller as it 
      * gets closer to the center of the image.
      */
-    private static final double STARTING_RADIUS = 0.1;
-    
-    public static final String BASE_PROPERTY_CHANGED ="BasePropertyChanged";
+    protected static final double STARTING_RADIUS = 0.1;
+    /**
+     * This returns the target radius for the start of the spiral.
+     * @param tx
+     * @return 
+     */
+    protected static double getStartRadius(AffineTransform tx){
+            // This gets the amount by which to scale the starting radius for 
+            // the spiral
+        double rScale = 1.0;
+            // If there is a non-null transform provided
+        if (tx != null){
+                // Get the larger of the scale factors applied on the transform, 
+                // or 1 if both scale factors are less than 1
+            rScale = Math.max(Math.max(tx.getScaleX(), tx.getScaleY()),1.0);
+        }   // Divide the starting radius by the scale in order to ensure that 
+            // the spiral appears as if it is infinitely getting smaller the 
+            // closer it gets to the center
+        return STARTING_RADIUS / rScale;
+    }
+    /**
+     * This returns the target radius for the start of the spiral.
+     * @param g
+     * @return 
+     */
+    protected static double getStartRadius(Graphics2D g){
+        return getStartRadius(g.getTransform());
+    }
     /**
      * This is the base for the spiral.
      */
@@ -69,6 +94,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      * 
      * @param base 
      */
+    @Override
     public void setBase(double base){
             // If the base is less than 1
         if (base < 1)
@@ -85,6 +111,7 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
      * 
      * @return 
      */
+    @Override
     public double getBase(){
         return base;
     }
@@ -248,31 +275,16 @@ public class LogarithmicSpiralPainter extends GEGLSpiralPainter{
             // completes the path. This is used for the outer spiral curve when 
             // clockwise and the inner spiral curve when counter-clockwise 
         double a = radius;
-            // When the spiral is going clockwise
+            // If the spiral is going clockwise
         if (clockwise)
             a /= lim;
         else
             a *= lim;
         
-            // This gets the amount by which to scale the starting radius for 
-            // the spiral
-        double rScale = 1.0;
-            // Get the transform for the graphics
-        AffineTransform tx = g.getTransform();
-            // If there is a non-null transform applied to the graphics
-        if (tx != null){
-                // Get the larger of the scale factors applied to the graphics, 
-                // or 1 if both scale factors are less than 1
-            rScale = Math.max(Math.max(tx.getScaleX(), tx.getScaleY()),1.0);
-        }
-        
             // This gets the starting azimuth for the spiral. This uses the 
             // multiplier for the secondary curve and ignores whether the spiral 
             // is clockwise or not, treating it as if it was always clockwise.
-            // This divides the starting radius by the scale in order to ensure 
-            // that the spiral appears as if it is infinitely getting smaller 
-            // the closer it gets to the center
-        double p0 = getAzimuth(a,k,STARTING_RADIUS/rScale,angle,true);
+        double p0 = getAzimuth(a,k,getStartRadius(g),angle,true);
             // Subtract the starting azimuth by itself mod 90 degrees to ensure 
             // it ends at a multiple of 90 degrees.
         p0 -= p0 % QUARTER_CIRCLE_DEGREES;
