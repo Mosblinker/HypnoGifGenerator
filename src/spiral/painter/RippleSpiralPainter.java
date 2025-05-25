@@ -41,9 +41,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();
-            // This is the value by which to use to get the actual curve of the 
-            // spiral
-        double lim = Math.exp(k * (1-thickness));
         
             // This gets the starting azimuth for the spiral. This ignores 
             // whether the spiral is clockwise or not, treating it as if it was 
@@ -77,7 +74,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("Angle: " + angle);
         System.out.println("Angle: " + angle2);
         System.out.println("lim: " + lim);
-        System.out.println("a: " + radius);
         System.out.println("p0: "+ p0);
         System.out.println("p1: " + p1);
         System.out.println("m: " + m);
