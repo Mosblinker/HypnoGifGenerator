@@ -12,6 +12,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -106,6 +107,14 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         System.out.println("Index: " + index);
         System.out.println("Is Color Even: " + isColorEven);
         
+        float[] fractions = new float[rList.size()];
+        Color[] colors = new Color[rList.size()];
+        for (int i = 0; i < rList.size(); i++){
+            fractions[i] = (float)(rList.get(i) / r2);
+            colors[i] = ((i % 2 == 0) == isColorEven) ? color : TRANSPARENT_COLOR;
+        }
+        
+        System.out.println("Fractions: " + Arrays.toString(fractions));
         System.out.println();
         
         g.setColor(Color.RED);
