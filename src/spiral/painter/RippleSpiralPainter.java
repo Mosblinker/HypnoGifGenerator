@@ -4,6 +4,7 @@
  */
 package spiral.painter;
 
+import geom.GeometryMath;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
@@ -24,11 +25,23 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         super(painter);
     }
     @Override
+    protected double adjustRotation(double angle, double thickness, 
+            boolean clockwise){
+            // If the spiral is clockwise
+        if (clockwise)
+            angle = -angle;
+        return GeometryMath.boundDegrees(angle);
+    }
+    @Override
+    protected double unadjustRotation(double angle, double thickness, 
+            boolean clockwise){
+        return adjustRotation(angle,thickness,clockwise);
+    }
+    @Override
     protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
             double centerX, double centerY, boolean clockwise, double radius, 
             double thickness) {
         Color color = g.getColor();
-        double angle2 = unadjustRotation(angle,thickness,false);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();
@@ -36,12 +49,12 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Get the azimuth of the point on the spiral where the spiral 
             // radius lies. This ignores whether the spiral is clockwise or not, 
             // treating it as if it was always clockwise. 
-        double pR = getAzimuth(radius, k, radius, angle2,true);
+        double pR = getAzimuth(radius, k, radius, angle,true);
         
-        double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle2,true) / radius;
+        double m = getRadius(radius,k,pR+HALF_CIRCLE_DEGREES,angle,true) / radius;
         
         double r0 = getStartRadius(g);
-        double r1 = getRadius(radius,k,0,angle2,!clockwise);
+        double r1 = getRadius(radius,k,0,angle,!clockwise);
         double r2 = Math.sqrt(width*width+height*height)/2.0;
         
         ArrayList<Double> rList = new ArrayList<>();
