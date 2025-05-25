@@ -12,9 +12,9 @@ public enum SpiralShape {
     
     CIRCLE, 
     
-    SQUARE,
+    SQUARE/*,
     
-    DIAMOND;
+    DIAMOND*/;
     /**
      * 
      * @param shape
