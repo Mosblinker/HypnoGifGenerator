@@ -858,7 +858,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskAlphaCtrlPanel.add(maskDesaturateLabel, gridBagConstraints);
 
-        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Average", "Value (HSL)" }));
+        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Luminance", "Average", "Value (HSV)" }));
         maskDesaturateCombo.setEnabled(false);
         maskDesaturateCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2567,7 +2567,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private float getLuminance(int r, int g, int b){
         switch(maskDesaturateCombo.getSelectedIndex()){
-            case(0):
+            case(1):
                 return ((r+g+b)/3.0f)/255f;
             default:
                 return Color.RGBtoHSB(r, g, b, null)[2];
