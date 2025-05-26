@@ -106,6 +106,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
     
+    public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
+    
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
@@ -1015,7 +1017,6 @@ public class SpiralGeneratorConfig {
     public void setMaskAlphaIndex(ButtonGroup group){
         setMaskAlphaIndex(SwingExtendedUtilities.indexOfSelected(group));
     }
-    
     /**
      * 
      * @param defaultValue
@@ -1037,6 +1038,18 @@ public class SpiralGeneratorConfig {
      */
     public void setMaskImageInverted(boolean value){
         getMaskPreferences().putBoolean(MASK_IMAGE_INVERT_KEY, value);
+    }
+    
+    public int getMaskDesaturateMode(int defaultValue){
+        return getMaskPreferences().getInt(MASK_DESATURATE_MODE_KEY, defaultValue);
+    }
+    
+    public int getMaskDesaturateMode(){
+        return getMaskDesaturateMode(0);
+    }
+    
+    public void setMaskDesaturateMode(int value){
+        getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){

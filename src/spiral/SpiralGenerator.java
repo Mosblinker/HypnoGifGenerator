@@ -268,6 +268,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.loadMaskAlphaIndex(maskAlphaButtons);
         maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
         maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
+        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
+                config.getMaskDesaturateMode(), 
+                maskDesaturateCombo.getItemCount()-1), 0));
+        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -482,6 +486,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaGreenToggle = new javax.swing.JRadioButton();
         maskAlphaBlueToggle = new javax.swing.JRadioButton();
         maskAlphaInvertToggle = new javax.swing.JCheckBox();
+        maskDesaturateLabel = new javax.swing.JLabel();
+        maskDesaturateCombo = new javax.swing.JComboBox<>();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -769,7 +775,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         maskAlphaCtrlPanel.add(maskAlphaToggle, gridBagConstraints);
@@ -785,6 +791,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         maskAlphaCtrlPanel.add(maskAlphaGrayToggle, gridBagConstraints);
@@ -824,8 +831,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, gridBagConstraints);
@@ -839,10 +846,34 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         maskAlphaCtrlPanel.add(maskAlphaInvertToggle, gridBagConstraints);
+
+        maskDesaturateLabel.setLabelFor(maskDesaturateCombo);
+        maskDesaturateLabel.setText("Desaturate:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
+        maskAlphaCtrlPanel.add(maskDesaturateLabel, gridBagConstraints);
+
+        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Average", "Value (HSL)" }));
+        maskDesaturateCombo.setEnabled(false);
+        maskDesaturateCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskDesaturateComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskAlphaCtrlPanel.add(maskDesaturateCombo, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1726,8 +1757,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaToggle.setSelected(true);
         maskAlphaInvertToggle.setSelected(false);
         maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
+        maskDesaturateCombo.setSelectedIndex(0);
+        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
         config.setMaskAlphaIndex(maskAlphaButtons);
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
@@ -1831,6 +1865,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.setMaskAlphaIndex(maskAlphaButtons);
         maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
+        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
         refreshPreview(false,true);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
@@ -1838,6 +1873,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
         refreshPreview(false,true);
     }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
+
+    private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
+        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        refreshPreview(false,true);
+    }//GEN-LAST:event_maskDesaturateComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2345,6 +2385,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox maskAlphaInvertToggle;
     private javax.swing.JRadioButton maskAlphaRedToggle;
     private javax.swing.JRadioButton maskAlphaToggle;
+    private javax.swing.JComboBox<String> maskDesaturateCombo;
+    private javax.swing.JLabel maskDesaturateLabel;
     private javax.swing.JDialog maskDialog;
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
