@@ -1938,17 +1938,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testShowRadiusToggleActionPerformed
 
     private void resetMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMaskButtonActionPerformed
-        overlayImage = null;
+        switch (maskTabbedPane.getSelectedIndex()){
+            case(0):
+                maskTextArea.setText("");
+                break;
+            case(1):
+                overlayImage = null;
+                maskAlphaToggle.setSelected(true);
+                maskAlphaInvertToggle.setSelected(false);
+                maskDesaturateCombo.setSelectedIndex(0);
+                updateMaskAlphaControlsEnabled();
+                config.setMaskAlphaIndex(maskAlphaButtons);
+                config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+                config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        }
         overlayMask.reset();
-        maskTextArea.setText("");
-        maskTabbedPane.setSelectedIndex(0);
-        maskAlphaToggle.setSelected(true);
-        maskAlphaInvertToggle.setSelected(false);
-        maskDesaturateCombo.setSelectedIndex(0);
-        updateMaskAlphaControlsEnabled();
-        config.setMaskAlphaIndex(maskAlphaButtons);
-        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
-        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
     }//GEN-LAST:event_resetMaskButtonActionPerformed
     /**
