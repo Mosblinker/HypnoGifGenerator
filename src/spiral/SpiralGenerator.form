@@ -404,13 +404,13 @@
                         </Constraint>
                       </Constraints>
                     </Component>
-                    <Component class="javax.swing.JRadioButton" name="maskAlphaGreyToggle">
+                    <Component class="javax.swing.JRadioButton" name="maskAlphaGrayToggle">
                       <Properties>
                         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                           <ComponentRef name="maskAlphaButtons"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Greyscale"/>
-                        <Property name="toolTipText" type="java.lang.String" value="Treat the image like a greyscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency."/>
+                        <Property name="text" type="java.lang.String" value="Grayscale"/>
+                        <Property name="toolTipText" type="java.lang.String" value="Treat the image like a grayscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency."/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskAlphaToggleActionPerformed"/>

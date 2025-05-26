@@ -476,7 +476,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaCtrlPanel = new javax.swing.JPanel();
         maskAlphaToggle = new javax.swing.JRadioButton();
-        maskAlphaGreyToggle = new javax.swing.JRadioButton();
+        maskAlphaGrayToggle = new javax.swing.JRadioButton();
         maskAlphaColorCtrlPanel = new javax.swing.JPanel();
         maskAlphaRedToggle = new javax.swing.JRadioButton();
         maskAlphaGreenToggle = new javax.swing.JRadioButton();
@@ -774,10 +774,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         maskAlphaCtrlPanel.add(maskAlphaToggle, gridBagConstraints);
 
-        maskAlphaButtons.add(maskAlphaGreyToggle);
-        maskAlphaGreyToggle.setText("Greyscale");
-        maskAlphaGreyToggle.setToolTipText("Treat the image like a greyscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency.");
-        maskAlphaGreyToggle.addActionListener(new java.awt.event.ActionListener() {
+        maskAlphaButtons.add(maskAlphaGrayToggle);
+        maskAlphaGrayToggle.setText("Grayscale");
+        maskAlphaGrayToggle.setToolTipText("Treat the image like a grayscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency.");
+        maskAlphaGrayToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
             }
@@ -787,7 +787,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
-        maskAlphaCtrlPanel.add(maskAlphaGreyToggle, gridBagConstraints);
+        maskAlphaCtrlPanel.add(maskAlphaGrayToggle, gridBagConstraints);
 
         maskAlphaColorCtrlPanel.setAlignmentX(0.0F);
         maskAlphaColorCtrlPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 7));
@@ -2340,8 +2340,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.ButtonGroup maskAlphaButtons;
     private javax.swing.JPanel maskAlphaColorCtrlPanel;
     private javax.swing.JPanel maskAlphaCtrlPanel;
+    private javax.swing.JRadioButton maskAlphaGrayToggle;
     private javax.swing.JRadioButton maskAlphaGreenToggle;
-    private javax.swing.JRadioButton maskAlphaGreyToggle;
     private javax.swing.JCheckBox maskAlphaInvertToggle;
     private javax.swing.JRadioButton maskAlphaRedToggle;
     private javax.swing.JRadioButton maskAlphaToggle;
@@ -2533,7 +2533,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             colorShift = 16;
         else if (maskAlphaGreenToggle.isSelected())
             colorShift = 8;
-        else if (maskAlphaGreyToggle.isSelected())
+        else if (maskAlphaGrayToggle.isSelected())
             colorMask = 0x00FFFFFF;
         g.drawImage(image, 0, 0, (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK, null);
         g.dispose();
@@ -2551,7 +2551,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 rgb >>= colorShift;
                 rgb &= colorMask;
                 float alpha;
-                if (maskAlphaGreyToggle.isSelected()){
+                if (maskAlphaGrayToggle.isSelected()){
                     double[] comp = new double[3];
                     for (int i = 0; i < comp.length; i++){
                         comp[i] = ((rgb >> (16 - 8*i)) & 0xFF);
