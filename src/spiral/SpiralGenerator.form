@@ -108,6 +108,8 @@
                           <Component id="maskScaleLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="maskScaleSpinner" min="-2" pref="90" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="resetMaskButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -124,6 +126,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="maskScaleLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="maskScaleSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="resetMaskButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -177,7 +180,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="maskTextScrollPane" pref="181" max="32767" attributes="0"/>
+                          <Component id="maskTextScrollPane" pref="178" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="fontButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -554,6 +557,14 @@
           </Properties>
           <Events>
             <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="maskScaleSpinnerStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="resetMaskButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Reset"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetMaskButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
