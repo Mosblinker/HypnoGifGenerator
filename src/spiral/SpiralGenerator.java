@@ -2787,13 +2787,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
-            SpiralPainter spiralPainter, CenteredTextPainter painter){
+            SpiralPainter spiralPainter, CenteredTextPainter painter, 
+            boolean useImage, boolean antialiasing){
             // If the message should be a solid color
         boolean solidColor = Objects.equals(color1, color2);
             // This gets the scale for the mask
         double scale = getMaskScale();
-            // If the overlay is a solid color and using the mask
-        if (solidColor && !isOverlayMaskImage()){
+            // If the overlay is a solid color and using text for the mask 
+            // and a non-null text painter was provided
+        if (solidColor && !useImage && painter != null){
                 // Get the text for the mask 
             String text = maskTextArea.getText();
                 // If the text is null or blank
@@ -2834,7 +2836,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Enable or disable the antialiasing, depending on whether the mask 
             // should be antialiased
         imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                (getOverlayAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                (antialiasing)? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
             // Mask the overlay image pixels with the mask image
         maskImage(imgG,mask);
@@ -2868,7 +2870,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
                 height,mask.getMask(width, height),spiralPainter,
-                mask.textPainter);
+                mask.textPainter,isOverlayMaskImage(),getOverlayAntialiased());
     }
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
