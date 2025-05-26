@@ -26,9 +26,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
@@ -173,6 +175,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralCompLabels = new HashMap<>();
         
         spiralIcon = new SpiralIcon();
+        
+        int spiralType = config.getSpiralType();
+        int maskType = config.getMaskType();
         initComponents();
         for (JLabel label : new JLabel[]{
             radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel,spiralShapeLabel
@@ -258,10 +263,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         
-        spiralTypeCombo.setSelectedIndex(
-                Math.max(Math.min(config.getSpiralType(), 
+        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
                         spiralPainters.length-1), 0));
-        
+        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
+                maskTabbedPane.getTabCount()-1), 0));
+        config.loadMaskAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
+        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
+                config.getMaskDesaturateMode(), 
+                maskDesaturateCombo.getItemCount()-1), 0));
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -465,12 +475,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.Box.Filler filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         loadMaskButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
-        imgMaskNoteLabel1 = new javax.swing.JLabel();
-        imgMaskNoteLabel2 = new javax.swing.JLabel();
-        imgMaskNoteLabel3 = new javax.swing.JLabel();
         imgMaskAntialiasingToggle = new javax.swing.JCheckBox();
         javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        maskAlphaCtrlPanel = new javax.swing.JPanel();
+        maskAlphaToggle = new javax.swing.JRadioButton();
+        maskAlphaGrayToggle = new javax.swing.JRadioButton();
+        maskAlphaColorCtrlPanel = new javax.swing.JPanel();
+        maskAlphaRedToggle = new javax.swing.JRadioButton();
+        maskAlphaGreenToggle = new javax.swing.JRadioButton();
+        maskAlphaBlueToggle = new javax.swing.JRadioButton();
+        maskAlphaInvertToggle = new javax.swing.JCheckBox();
+        maskDesaturateLabel = new javax.swing.JLabel();
+        maskDesaturateCombo = new javax.swing.JComboBox<>();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -485,6 +502,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         showTestSpiralToggle = new javax.swing.JCheckBox();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        maskAlphaButtons = new javax.swing.ButtonGroup();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -678,7 +696,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -713,33 +731,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
-
-        imgMaskNoteLabel1.setText("Note: Mask only considers the alpha component of the source image's pixels.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
-        maskImageCtrlPanel.add(imgMaskNoteLabel1, gridBagConstraints);
-
-        imgMaskNoteLabel2.setText("All opaque pixels, regardless of color will be opaque in the mask.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        maskImageCtrlPanel.add(imgMaskNoteLabel2, gridBagConstraints);
-
-        imgMaskNoteLabel3.setText("In other words, the alpha channel of the source is used as the mask.");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.gridwidth = 4;
-        maskImageCtrlPanel.add(imgMaskNoteLabel3, gridBagConstraints);
 
         imgMaskAntialiasingToggle.setSelected(true);
         imgMaskAntialiasingToggle.setText("Antialiasing");
@@ -764,6 +759,128 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.5;
         maskImageCtrlPanel.add(filler15, gridBagConstraints);
+
+        maskAlphaCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mask Alpha Channel"));
+        maskAlphaCtrlPanel.setLayout(new java.awt.GridBagLayout());
+
+        maskAlphaButtons.add(maskAlphaToggle);
+        maskAlphaToggle.setSelected(true);
+        maskAlphaToggle.setText("Alpha Component Only");
+        maskAlphaToggle.setToolTipText("Use only the alpha component of the image for the mask. The alpha component of a given pixel will be the determining factor of whether that pixel will show in the mask.");
+        maskAlphaToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        maskAlphaCtrlPanel.add(maskAlphaToggle, gridBagConstraints);
+
+        maskAlphaButtons.add(maskAlphaGrayToggle);
+        maskAlphaGrayToggle.setText("Grayscale");
+        maskAlphaGrayToggle.setToolTipText("Treat the image like a grayscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency.");
+        maskAlphaGrayToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        maskAlphaCtrlPanel.add(maskAlphaGrayToggle, gridBagConstraints);
+
+        maskAlphaColorCtrlPanel.setAlignmentX(0.0F);
+        maskAlphaColorCtrlPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 7));
+
+        maskAlphaButtons.add(maskAlphaRedToggle);
+        maskAlphaRedToggle.setText("Red");
+        maskAlphaRedToggle.setToolTipText("Use the red component of the image for the mask. This treats the red component of the image as an alpha channel.");
+        maskAlphaRedToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaRedToggle);
+
+        maskAlphaButtons.add(maskAlphaGreenToggle);
+        maskAlphaGreenToggle.setText("Green");
+        maskAlphaGreenToggle.setToolTipText("Use the green component of the image for the mask. This treats the green component of the image as an alpha channel.");
+        maskAlphaGreenToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaGreenToggle);
+
+        maskAlphaButtons.add(maskAlphaBlueToggle);
+        maskAlphaBlueToggle.setText("Blue");
+        maskAlphaBlueToggle.setToolTipText("Use the blue component of the image for the mask. This treats the blue component of the image as an alpha channel.");
+        maskAlphaBlueToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaToggleActionPerformed(evt);
+            }
+        });
+        maskAlphaColorCtrlPanel.add(maskAlphaBlueToggle);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, gridBagConstraints);
+
+        maskAlphaInvertToggle.setText("Invert Colors");
+        maskAlphaInvertToggle.setToolTipText("This inverts the colors for the image being used as a mask.");
+        maskAlphaInvertToggle.setEnabled(false);
+        maskAlphaInvertToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaInvertToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        maskAlphaCtrlPanel.add(maskAlphaInvertToggle, gridBagConstraints);
+
+        maskDesaturateLabel.setLabelFor(maskDesaturateCombo);
+        maskDesaturateLabel.setText("Desaturate:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
+        maskAlphaCtrlPanel.add(maskDesaturateLabel, gridBagConstraints);
+
+        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Luminance", "Luma", "Lightness (HSL)", "Average", "Value (HSV)" }));
+        maskDesaturateCombo.setEnabled(false);
+        maskDesaturateCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskDesaturateComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskAlphaCtrlPanel.add(maskDesaturateCombo, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -1562,12 +1679,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void spinDirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinDirComboActionPerformed
         config.setSpinClockwise(isSpinClockwise());
-        refreshPreview(false);
+        refreshPreview();
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
         config.setSpiralRotation((double)angleSpinner.getValue());
-        refreshPreview(false);
+        refreshPreview();
     }//GEN-LAST:event_angleSpinnerStateChanged
 
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
@@ -1580,7 +1697,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextArea.setFont(font);
             config.setMaskFont(font);
-            refreshPreview(true);
+            refreshPreview(true,false);
         }
         fontDim = fontSelector.getSize(fontDim);
         config.setMaskFontSelectorSize(fontDim);
@@ -1594,7 +1711,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int style = getFontStyle();
         config.setMaskFontStyle(style);
         maskTextArea.setFont(maskTextArea.getFont().deriveFont(style));
-        refreshPreview(true);
+        refreshPreview(true,false);
     }//GEN-LAST:event_styleToggleActionPerformed
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
@@ -1611,30 +1728,39 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskEditButtonActionPerformed
 
     private void maskTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskTabbedPaneStateChanged
+        config.setMaskType(maskTabbedPane.getSelectedIndex());
         maskPreviewLabel.repaint();
-        refreshPreview(false);
+        refreshPreview();
     }//GEN-LAST:event_maskTabbedPaneStateChanged
 
     private void maskScaleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskScaleSpinnerStateChanged
         config.setMaskScale(getMaskScale());
         maskPreviewLabel.repaint();
-        refreshPreview(false);
+        refreshPreview();
     }//GEN-LAST:event_maskScaleSpinnerStateChanged
 
     private void widthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_widthSpinnerStateChanged
         config.setImageWidth(getImageWidth());
-        refreshPreview(true);
+        refreshPreview(true,true);
     }//GEN-LAST:event_widthSpinnerStateChanged
 
     private void heightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightSpinnerStateChanged
         config.setImageHeight(getImageHeight());
-        refreshPreview(true);
+        refreshPreview(true,true);
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         overlayImage = null;
         overlayMask.reset();
         maskTextArea.setText("");
+        maskTabbedPane.setSelectedIndex(0);
+        maskAlphaToggle.setSelected(true);
+        maskAlphaInvertToggle.setSelected(false);
+        maskDesaturateCombo.setSelectedIndex(0);
+        updateMaskAlphaControlsEnabled();
+        config.setMaskAlphaIndex(maskAlphaButtons);
+        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
@@ -1653,8 +1779,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
         config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
-        maskPreviewLabel.repaint();
-        refreshPreview(false);
+        refreshPreview(false,true);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
     /**
      * 
@@ -1714,7 +1839,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
         config.setSpiralType(spiralTypeCombo.getSelectedIndex());
         loadSpiralPainter();
-        refreshPreview(false);
+        refreshPreview();
     }//GEN-LAST:event_spiralTypeComboActionPerformed
 
     private void delaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySpinnerStateChanged
@@ -1735,6 +1860,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(spiralShapeCombo.getSelectedIndex()));
         }
     }//GEN-LAST:event_spiralShapeComboActionPerformed
+
+    private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
+        config.setMaskAlphaIndex(maskAlphaButtons);
+        updateMaskAlphaControlsEnabled();
+        refreshPreview(false,true);
+    }//GEN-LAST:event_maskAlphaToggleActionPerformed
+
+    private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
+        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        refreshPreview(false,true);
+    }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
+
+    private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
+        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        refreshPreview(false,true);
+    }//GEN-LAST:event_maskDesaturateComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -1826,15 +1967,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void refreshMaskText(){
         config.setMaskText(maskTextArea.getText());
-        refreshPreview(true);
+        refreshPreview(true,false);
     }
     
-    private void refreshPreview(boolean maskChanged){
-        if (maskChanged){
+    private void refreshPreview(boolean textChanged, boolean imgChanged){
+        if (textChanged){
             overlayMask.textMask = null;
             if (!isOverlayMaskImage())
                 maskPreviewLabel.repaint();
         }
+        if (imgChanged){
+            overlayMask.alphaMask = null;
+            overlayMask.imgMask = null;
+            if (isOverlayMaskImage())
+                maskPreviewLabel.repaint();
+        }
+        refreshPreview();
+    }
+    
+    private void refreshPreview(){
         previewLabel.repaint();
     }
     /**
@@ -1882,6 +2033,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
         delaySpinner.setEnabled(enabled);
+        for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
+            button.setEnabled(enabled);
+        }
+        updateMaskAlphaControlsEnabled();
     }
     /**
      * 
@@ -1893,6 +2048,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskEditButton.setEnabled(enabled);
         maskTabbedPane.setEnabled(enabled);
         setValueControlsEnabled(enabled);
+    }
+    /**
+     * 
+     */
+    private void updateMaskAlphaControlsEnabled(){
+        maskAlphaInvertToggle.setEnabled(maskAlphaToggle.isEnabled() && 
+                !maskAlphaToggle.isSelected());
+        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isEnabled() && 
+                maskAlphaGrayToggle.isSelected());
     }
     /**
      * 
@@ -1934,7 +2098,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (color == null)
                 color = DEFAULT_SPIRAL_COLORS[index];
             colorIcons[index].setColor(color);
-            refreshPreview(false);
+            refreshPreview();
             colorButtons.get(colorIcons[index]).repaint();
         }
     }
@@ -2218,14 +2382,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageSizePanel;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
-    private javax.swing.JLabel imgMaskNoteLabel1;
-    private javax.swing.JLabel imgMaskNoteLabel2;
-    private javax.swing.JLabel imgMaskNoteLabel3;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadMaskButton;
+    private javax.swing.JRadioButton maskAlphaBlueToggle;
+    private javax.swing.ButtonGroup maskAlphaButtons;
+    private javax.swing.JPanel maskAlphaColorCtrlPanel;
+    private javax.swing.JPanel maskAlphaCtrlPanel;
+    private javax.swing.JRadioButton maskAlphaGrayToggle;
+    private javax.swing.JRadioButton maskAlphaGreenToggle;
+    private javax.swing.JCheckBox maskAlphaInvertToggle;
+    private javax.swing.JRadioButton maskAlphaRedToggle;
+    private javax.swing.JRadioButton maskAlphaToggle;
+    private javax.swing.JComboBox<String> maskDesaturateCombo;
+    private javax.swing.JLabel maskDesaturateLabel;
     private javax.swing.JDialog maskDialog;
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
@@ -2391,14 +2563,105 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         painter.paint(g, text, width, height);
     }
     
+    private float getLuminance(int rgb){
+        return getLuminance((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF);
+    }
+    
+    private float getLuminance(int r, int g, int b){
+        float[] rgb = new float[]{r, g, b};
+        for (int i = 0; i < rgb.length; i++){
+            rgb[i] /= 255.0f;
+        }
+        switch(maskDesaturateCombo.getSelectedIndex()){
+            case(1):
+                return (float)(0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+            case(2):
+                float min = 1;
+                float max = 0;
+                for (float value : rgb){
+                    min = Math.min(min, value);
+                    max = Math.max(max, value);
+                }
+                return (min + max) / 2.0f;
+            case(4):
+                float v = 0;
+                for (float value : rgb)
+                    v = Math.max(value, v);
+                return v;
+            default:
+                double l = 0;
+                for (float value : rgb)
+                    l += value;
+                return (float)(l / 3.0);
+        }
+    }
+    /**
+     * 
+     * @param image
+     * @param mask
+     * @return 
+     */
+    private BufferedImage getImageAlphaMask(BufferedImage image, BufferedImage mask){
+        if (mask != null)
+            return mask;
+            // If the source image is null
+        if (image == null)
+            return null;
+        if (maskAlphaToggle.isSelected())
+            return image;
+        int width = image.getWidth();
+        int height = image.getHeight();
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = mask.createGraphics();
+        int colorMask = 0x000000FF;
+        int colorShift = 0;
+        if (maskAlphaRedToggle.isSelected())
+            colorShift = 16;
+        else if (maskAlphaGreenToggle.isSelected())
+            colorShift = 8;
+        else if (maskAlphaGrayToggle.isSelected())
+            colorMask = 0x00FFFFFF;
+        Color fillColor = (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK;
+        if (maskAlphaGrayToggle.isSelected() && maskDesaturateCombo.getSelectedIndex() == 0){
+            g.setColor(fillColor);
+            g.fillRect(0, 0, width, height);
+            g.drawImage(image, new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
+        } else
+            g.drawImage(image, 0, 0, fillColor, null);
+        g.dispose();
+        image = mask;
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        int[] imgData = new int[width];
+        for (int y = 0; y < height; y++){
+            image.getRGB(0, y, width, 1, imgData, 0, 1);
+            for (int x = 0; x < width; x++){
+                int rgb = imgData[x];
+                if (maskAlphaInvertToggle.isSelected())
+                    rgb = ~rgb;
+                rgb >>= colorShift;
+                rgb &= colorMask;
+                float alpha;
+                if (maskAlphaGrayToggle.isSelected()){
+                    alpha = getLuminance(rgb);
+                } else 
+                    alpha = rgb / 255f;
+                imgData[x] &= 0x00FFFFFF;
+                imgData[x] |= ((int)(0xFF * alpha)) << 24;
+            }
+            mask.setRGB(0, y, width, 1, imgData, 0, 1);
+        }
+        return mask;
+    }
+    
     private BufferedImage getImageMaskImage(int width, int height, 
             BufferedImage image, BufferedImage mask){
             // If the source image is null
         if (image == null)
             return null;
             // If the mask version of the overlay image is null
-        if (mask == null)
+        if (mask == null){
             mask = image;
+        }
             // If the mask version of the overlay image doesn't match the 
             // size of the area being rendered
             // TODO: Work on implementing user control over the overlay 
@@ -2677,7 +2940,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (painter != null)
                         config.setSpiralData(painter);
             }
-            refreshPreview(maskChanged);
+            refreshPreview(maskChanged,false);
         }
         @Override
         public void actionPerformed(ActionEvent evt) {
@@ -2752,10 +3015,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public BufferedImage textMask = null;
         /**
-         * This is the image used as as a mask for the overlay when a loaded 
+         * This is the unscaled image used  a mask for the overlay when a loaded 
          * image is used for the mask. This is null when the mask needs to be 
          * recreated from {@code overlayImage}, either due to another image 
-         * being loaded in or the resulting image's size being changed.
+         * being loaded in or the image alpha channel is changed.
+         */
+        public BufferedImage alphaMask = null;
+        /**
+         * This is the image used as a mask for the overlay when a loaded 
+         * image is used for the mask. This is null when the mask needs to be 
+         * recreated from {@code alphaMask}, either due to another image being 
+         * loaded in or the resulting image's size being changed.
          */
         public BufferedImage imgMask = null;
         /**
@@ -2774,21 +3044,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         protected OverlayMask(OverlayMask mask){
             this(mask.textPainter);
+            this.alphaMask = mask.alphaMask;
         }
         
         public void reset(){
-            textMask = imgMask = null;
+            textMask = alphaMask = imgMask = null;
         }
         
         public BufferedImage getMask(int width, int height){
                 // This will get the mask to return
             BufferedImage mask;
                 // If a loaded image is being used as the overlay mask
-            if (isOverlayMaskImage())
-                    // Use the mask version of the overlay image as the mask
-                mask = imgMask = getImageMaskImage(width,height,overlayImage,
+            if (isOverlayMaskImage()){
+                    // Get a version of the overlay image with the alpha channel
+                    // applied to it.
+                alphaMask = getImageAlphaMask(overlayImage,alphaMask);
+                    // Use the mask version of the alpha image as the mask
+                mask = imgMask = getImageMaskImage(width,height,alphaMask,
                         imgMask);
-            else 
+            } else 
                     // Use the text mask, creating it if it needs to be made
                 mask = textMask = getTextMaskImage(width,height,
                         maskTextArea.getText(),textMask,textPainter);
@@ -3434,12 +3708,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
-            if (success){
-                overlayMask.imgMask = null;
+            if (success)
                 overlayImage = img;
-            }
-            maskPreviewLabel.repaint();
-            refreshPreview(false);
+            refreshPreview(false,true);
             super.done();
         }
     }
