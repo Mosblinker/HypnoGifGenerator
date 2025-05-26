@@ -828,7 +828,7 @@
                           <Component id="maskEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
                   </Group>
               </Group>
