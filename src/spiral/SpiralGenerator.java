@@ -494,6 +494,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskDesaturateCombo = new javax.swing.JComboBox<>();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
+        resetMaskButton = new javax.swing.JButton();
         maskPopup = new javax.swing.JPopupMenu();
         testDialog = new javax.swing.JDialog(this);
         javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
@@ -555,7 +556,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
-        resetPanel = new javax.swing.JPanel();
         resetButton = new javax.swing.JButton();
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
@@ -700,7 +700,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -899,6 +899,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        resetMaskButton.setText("Reset");
+        resetMaskButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetMaskButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskDialogLayout = new javax.swing.GroupLayout(maskDialog.getContentPane());
         maskDialog.getContentPane().setLayout(maskDialogLayout);
         maskDialogLayout.setHorizontalGroup(
@@ -911,6 +918,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(maskScaleLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(resetMaskButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -922,7 +931,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maskScaleLabel)
-                    .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(resetMaskButton))
                 .addContainerGap())
         );
 
@@ -1434,21 +1444,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralShapeCombo, gridBagConstraints);
 
-        resetPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
-
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetButtonActionPerformed(evt);
             }
         });
-        resetPanel.add(resetButton);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 2;
-        spiralCtrlPanel.add(resetPanel, gridBagConstraints);
+        gridBagConstraints.ipadx = 10;
+        spiralCtrlPanel.add(resetButton, gridBagConstraints);
 
         imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1568,7 +1575,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1599,7 +1606,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(maskEditButton)
                             .addComponent(saveButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1811,18 +1818,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-        overlayImage = null;
-        overlayMask.reset();
-        maskTextArea.setText("");
-        maskTabbedPane.setSelectedIndex(0);
-        maskAlphaToggle.setSelected(true);
-        maskAlphaInvertToggle.setSelected(false);
-        maskDesaturateCombo.setSelectedIndex(0);
-        updateMaskAlphaControlsEnabled();
-        config.setMaskAlphaIndex(maskAlphaButtons);
-        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
-        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
-        maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
             config.setSpiralColor(i, null);
@@ -1835,7 +1830,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             painter.reset();
         }
         loadSpiralPainter();
-        angleSpinner.setValue(0.0);
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
@@ -1942,6 +1936,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
     }//GEN-LAST:event_testShowRadiusToggleActionPerformed
+
+    private void resetMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMaskButtonActionPerformed
+        switch (maskTabbedPane.getSelectedIndex()){
+            case(0):
+                maskTextArea.setText("");
+                break;
+            case(1):
+                overlayImage = null;
+                maskAlphaToggle.setSelected(true);
+                maskAlphaInvertToggle.setSelected(false);
+                maskDesaturateCombo.setSelectedIndex(0);
+                updateMaskAlphaControlsEnabled();
+                config.setMaskAlphaIndex(maskAlphaButtons);
+                config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+                config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        }
+        overlayMask.reset();
+        maskScaleSpinner.setValue(1.0);
+    }//GEN-LAST:event_resetMaskButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2096,6 +2109,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
         resetButton.setEnabled(enabled);
+        resetMaskButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
         delaySpinner.setEnabled(enabled);
         for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
@@ -2485,7 +2499,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel radiusLabel;
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
-    private javax.swing.JPanel resetPanel;
+    private javax.swing.JButton resetMaskButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
