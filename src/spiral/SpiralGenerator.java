@@ -555,8 +555,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
-        resetPanel = new javax.swing.JPanel();
-        resetSpiralButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
@@ -1435,29 +1433,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralShapeCombo, gridBagConstraints);
 
-        resetPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
-
-        resetSpiralButton.setText("Reset Spiral");
-        resetSpiralButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetSpiralButtonActionPerformed(evt);
-            }
-        });
-        resetPanel.add(resetSpiralButton);
-
-        resetButton.setText("Reset All");
+        resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetButtonActionPerformed(evt);
             }
         });
-        resetPanel.add(resetButton);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 2;
-        spiralCtrlPanel.add(resetPanel, gridBagConstraints);
+        gridBagConstraints.ipadx = 10;
+        spiralCtrlPanel.add(resetButton, gridBagConstraints);
 
         imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1577,7 +1564,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1951,10 +1938,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
     }//GEN-LAST:event_testShowRadiusToggleActionPerformed
-
-    private void resetSpiralButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetSpiralButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_resetSpiralButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2109,6 +2092,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
         resetButton.setEnabled(enabled);
+        resetSpiralButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
         delaySpinner.setEnabled(enabled);
         for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
@@ -2498,8 +2482,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel radiusLabel;
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
-    private javax.swing.JPanel resetPanel;
-    private javax.swing.JButton resetSpiralButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
