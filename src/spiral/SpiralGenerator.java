@@ -474,10 +474,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaCtrlPanel = new javax.swing.JPanel();
         maskAlphaToggle = new javax.swing.JRadioButton();
+        maskAlphaGreyToggle = new javax.swing.JRadioButton();
         maskAlphaColorCtrlPanel = new javax.swing.JPanel();
-        maskAlphaBlackToggle = new javax.swing.JRadioButton();
-        maskAlphaWhiteToggle = new javax.swing.JRadioButton();
-        javax.swing.Box.Filler filler17 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         maskAlphaRedToggle = new javax.swing.JRadioButton();
         maskAlphaGreenToggle = new javax.swing.JRadioButton();
         maskAlphaBlueToggle = new javax.swing.JRadioButton();
@@ -754,41 +752,46 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(filler15, gridBagConstraints);
 
         maskAlphaCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mask Alpha Channel"));
-        maskAlphaCtrlPanel.setLayout(new java.awt.BorderLayout(0, 7));
+        maskAlphaCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
         maskAlphaButtons.add(maskAlphaToggle);
         maskAlphaToggle.setSelected(true);
-        maskAlphaToggle.setText("Alpha Component");
+        maskAlphaToggle.setText("Alpha Component Only");
+        maskAlphaToggle.setToolTipText("Use only the alpha component of the image for the mask. The alpha component of a given pixel will be the determining factor of whether that pixel will show in the mask.");
         maskAlphaToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
             }
         });
-        maskAlphaCtrlPanel.add(maskAlphaToggle, java.awt.BorderLayout.PAGE_START);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        maskAlphaCtrlPanel.add(maskAlphaToggle, gridBagConstraints);
 
-        maskAlphaColorCtrlPanel.setLayout(new java.awt.GridLayout(2, 0, 6, 7));
-
-        maskAlphaButtons.add(maskAlphaBlackToggle);
-        maskAlphaBlackToggle.setText("Black");
-        maskAlphaBlackToggle.addActionListener(new java.awt.event.ActionListener() {
+        maskAlphaButtons.add(maskAlphaGreyToggle);
+        maskAlphaGreyToggle.setText("Greyscale");
+        maskAlphaGreyToggle.setToolTipText("Treat the image like a greyscale image and derive the mask from that. Black pixels will become fully transparent and white pixels will become fully opaque, with all other shades of grey being varying levels of transparency.");
+        maskAlphaGreyToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
             }
         });
-        maskAlphaColorCtrlPanel.add(maskAlphaBlackToggle);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        maskAlphaCtrlPanel.add(maskAlphaGreyToggle, gridBagConstraints);
 
-        maskAlphaButtons.add(maskAlphaWhiteToggle);
-        maskAlphaWhiteToggle.setText("White");
-        maskAlphaWhiteToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maskAlphaToggleActionPerformed(evt);
-            }
-        });
-        maskAlphaColorCtrlPanel.add(maskAlphaWhiteToggle);
-        maskAlphaColorCtrlPanel.add(filler17);
+        maskAlphaColorCtrlPanel.setAlignmentX(0.0F);
+        maskAlphaColorCtrlPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 7));
 
         maskAlphaButtons.add(maskAlphaRedToggle);
         maskAlphaRedToggle.setText("Red");
+        maskAlphaRedToggle.setToolTipText("Use the red component of the image for the mask. This treats the red component of the image as an alpha channel.");
         maskAlphaRedToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
@@ -798,6 +801,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         maskAlphaButtons.add(maskAlphaGreenToggle);
         maskAlphaGreenToggle.setText("Green");
+        maskAlphaGreenToggle.setToolTipText("Use the green component of the image for the mask. This treats the green component of the image as an alpha channel.");
         maskAlphaGreenToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
@@ -807,6 +811,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         maskAlphaButtons.add(maskAlphaBlueToggle);
         maskAlphaBlueToggle.setText("Blue");
+        maskAlphaBlueToggle.setToolTipText("Use the blue component of the image for the mask. This treats the blue component of the image as an alpha channel.");
         maskAlphaBlueToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskAlphaToggleActionPerformed(evt);
@@ -814,7 +819,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         maskAlphaColorCtrlPanel.add(maskAlphaBlueToggle);
 
-        maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -2290,15 +2301,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadMaskButton;
-    private javax.swing.JRadioButton maskAlphaBlackToggle;
     private javax.swing.JRadioButton maskAlphaBlueToggle;
     private javax.swing.ButtonGroup maskAlphaButtons;
     private javax.swing.JPanel maskAlphaColorCtrlPanel;
     private javax.swing.JPanel maskAlphaCtrlPanel;
     private javax.swing.JRadioButton maskAlphaGreenToggle;
+    private javax.swing.JRadioButton maskAlphaGreyToggle;
     private javax.swing.JRadioButton maskAlphaRedToggle;
     private javax.swing.JRadioButton maskAlphaToggle;
-    private javax.swing.JRadioButton maskAlphaWhiteToggle;
     private javax.swing.JDialog maskDialog;
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
