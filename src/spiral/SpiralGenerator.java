@@ -1617,6 +1617,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_frameLastButtonActionPerformed
 
     private void printTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTestButtonActionPerformed
+        int selected = spiralTypeCombo.getSelectedIndex();
+        for (int i = 0; i < spiralPainters.length; i++){
+            System.out.printf("%1s Painter %2d: %s%n",(i == selected) ? "*":"",
+                    i,spiralPainters[i]);
+        }
         System.out.println("Bounds: " + getBounds());
         System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue()));
     }//GEN-LAST:event_printTestButtonActionPerformed
