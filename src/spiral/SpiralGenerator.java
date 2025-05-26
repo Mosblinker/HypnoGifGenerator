@@ -2558,6 +2558,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     alpha = rgb / 255f;
                 imgData[x] &= 0x00FFFFFF;
                 imgData[x] |= ((int)(0xFF * alpha)) << 24;
+            }
             mask.setRGB(0, y, width, 1, imgData, 0, 1);
         }
         return mask;
