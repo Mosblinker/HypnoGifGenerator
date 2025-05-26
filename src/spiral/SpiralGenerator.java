@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
@@ -84,7 +85,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private static final int[] ICON_SIZES = {16, 24, 32, 48, 64, 96, 128, 256, 512};
     
-    private static final String ICON_FILE_IMAGE = "/images/icon.png";
+    private static final String ICON_MASK_FILE_IMAGE = "/images/icon_mask.png";
     
     private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff/images";
     /**
@@ -191,29 +192,39 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         BufferedImage iconImg = null;
         try {
-            iconImg = ImageIO.read(this.getClass().getResource(ICON_FILE_IMAGE));
+            iconImg = ImageIO.read(this.getClass().getResource(ICON_MASK_FILE_IMAGE));
         } catch (IOException ex) {
             Logger.getLogger(SpiralGenerator.class.getName()).log(Level.WARNING, null, ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
         for (int size : ICON_SIZES){
+            BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = img.createGraphics();
+            g.setColor(DEFAULT_SPIRAL_COLORS[1]);
+            g.fillRect(0, 0, size, size);
+            g.setColor(DEFAULT_SPIRAL_COLORS[0]);
+            iconPainter.paint(g, 0.0, size, size);
             if (iconImg != null){
-                iconImages.add(Thumbnailator.createThumbnail(iconImg, size, size));
-            } else {
-                iconPainter.setSpiralRadius(size/3.0);
-                BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g = img.createGraphics();
-                int offset = (int)Math.floorDiv(size, 128);
-                g.translate(offset, offset);
-                int imgSize = size-offset-offset;
-                g.setColor(Color.BLACK);
-                g.fillRect(0, 0, imgSize, imgSize);
-                g.setColor(Color.WHITE);
-                iconPainter.paint(g, 0.0, imgSize, imgSize);
-                g.dispose();
-                iconImages.add(img);
+                BufferedImage imgOverlay = new BufferedImage(size, size, 
+                        BufferedImage.TYPE_INT_ARGB);
+                Graphics2D g2 = imgOverlay.createGraphics();
+                g2.setColor(DEFAULT_SPIRAL_COLORS[3]);
+                g2.fillRect(0, 0, size, size);
+                g2.setColor(DEFAULT_SPIRAL_COLORS[2]);
+                iconPainter.paint(g2, 0.0, size, size);
+                maskImage(g2, Thumbnailator.createThumbnail(iconImg, size, size));
+                g2.dispose();
+                g.drawImage(imgOverlay, 0, 0, null);
             }
+            g.setComposite(AlphaComposite.DstIn);
+            float center = size/2.0f;
+            g.setPaint(new RadialGradientPaint(center,center, center, 
+                    new float[]{0.85f, 1.0f}, 
+                    new Color[]{Color.WHITE,RippleSpiralPainter.TRANSPARENT_COLOR}));
+            g.fillRect(0, 0, size, size);
+            g.dispose();
+            iconImages.add(img);
         }
         setIconImages(iconImages);
         
