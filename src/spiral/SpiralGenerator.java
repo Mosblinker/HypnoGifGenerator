@@ -266,6 +266,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
                 maskTabbedPane.getTabCount()-1), 0));
         config.loadMaskAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
+        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -479,6 +481,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaRedToggle = new javax.swing.JRadioButton();
         maskAlphaGreenToggle = new javax.swing.JRadioButton();
         maskAlphaBlueToggle = new javax.swing.JRadioButton();
+        maskAlphaInvertToggle = new javax.swing.JCheckBox();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         maskPopup = new javax.swing.JPopupMenu();
@@ -826,6 +829,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskAlphaCtrlPanel.add(maskAlphaColorCtrlPanel, gridBagConstraints);
+
+        maskAlphaInvertToggle.setText("Invert Colors");
+        maskAlphaInvertToggle.setToolTipText("This inverts the colors for the image being used as a mask.");
+        maskAlphaInvertToggle.setEnabled(false);
+        maskAlphaInvertToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskAlphaInvertToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        maskAlphaCtrlPanel.add(maskAlphaInvertToggle, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -1707,7 +1724,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextArea.setText("");
         maskTabbedPane.setSelectedIndex(0);
         maskAlphaToggle.setSelected(true);
+        maskAlphaInvertToggle.setSelected(false);
+        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
         config.setMaskAlphaIndex(maskAlphaButtons);
+        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
         maskScaleSpinner.setValue(1.0);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
@@ -1811,8 +1831,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.setMaskAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
         refreshPreview(true);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
+
+    private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
+        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        refreshPreview(true);
+    }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2209,6 +2235,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private BufferedImage overlayImage = null;
     /**
+     * This is the mask 
+     */
+    private BufferedImage maskImage = null;
+    /**
      * This contains the masks and painter used for the overlay.
      */
     private OverlayMask overlayMask = new OverlayMask();
@@ -2307,6 +2337,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel maskAlphaCtrlPanel;
     private javax.swing.JRadioButton maskAlphaGreenToggle;
     private javax.swing.JRadioButton maskAlphaGreyToggle;
+    private javax.swing.JCheckBox maskAlphaInvertToggle;
     private javax.swing.JRadioButton maskAlphaRedToggle;
     private javax.swing.JRadioButton maskAlphaToggle;
     private javax.swing.JDialog maskDialog;
