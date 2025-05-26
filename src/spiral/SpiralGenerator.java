@@ -2567,8 +2567,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private float getLuminance(int r, int g, int b){
         switch(maskDesaturateCombo.getSelectedIndex()){
+        double[] rgb = new double[]{r, g, b};
+        for (int i = 0; i < rgb.length; i++){
+            rgb[i] /= 255.0;
+        }
             case(2):
-                return ((r+g+b)/3.0f)/255f;
+                double l = 0;
+                for (double value : rgb)
+                    l += value;
+                return (float)(l / 3.0);
             default:
                 return Color.RGBtoHSB(r, g, b, null)[2];
         }
