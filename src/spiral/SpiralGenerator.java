@@ -1939,6 +1939,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskPreviewLabel.repaint();
         }
         if (imgChanged){
+            overlayMask.alphaMask = null;
             overlayMask.imgMask = null;
             if (isOverlayMaskImage())
                 maskPreviewLabel.repaint();
@@ -2508,6 +2509,59 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
     }
+    /**
+     * 
+     * @param image
+     * @param mask
+     * @return 
+     */
+    private BufferedImage getImageAlphaMask(BufferedImage image, BufferedImage mask){
+        if (mask != null)
+            return mask;
+            // If the source image is null
+        if (image == null)
+            return null;
+        if (maskAlphaToggle.isSelected())
+            return image;
+        int width = image.getWidth();
+        int height = image.getHeight();
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = mask.createGraphics();
+        int colorMask = 0x000000FF;
+        int colorShift = 0;
+        if (maskAlphaRedToggle.isSelected())
+            colorShift = 16;
+        else if (maskAlphaGreenToggle.isSelected())
+            colorShift = 8;
+        else if (maskAlphaGreyToggle.isSelected())
+            colorMask = 0x00FFFFFF;
+        g.drawImage(image, 0, 0, (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK, null);
+        g.dispose();
+        image = mask;
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        
+        int[] imgData = new int[width];
+        for (int y = 0; y < height; y++){
+            image.getRGB(0, y, width, 1, imgData, 0, 1);
+            
+            for (int x = 0; x < width; x++){
+                int rgb = imgData[x];
+                if (maskAlphaInvertToggle.isSelected())
+                    rgb = ~rgb;
+                rgb >>= colorShift;
+                rgb &= colorMask;
+                float alpha;
+                if (maskAlphaGreyToggle.isSelected()){
+                    float[] hsb = Color.RGBtoHSB((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF, null);
+                    alpha = hsb[2];
+                } else 
+                    alpha = rgb / 255f;
+                imgData[x] &= 0x00FFFFFF;
+                imgData[x] |= ((int)(0xFF * alpha)) << 24;
+            mask.setRGB(0, y, width, 1, imgData, 0, 1);
+        }
+        return mask;
+    }
     
     private BufferedImage getImageMaskImage(int width, int height, 
             BufferedImage image, BufferedImage mask){
@@ -2871,10 +2925,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public BufferedImage textMask = null;
         /**
-         * This is the image used as as a mask for the overlay when a loaded 
+         * This is the unscaled image used  a mask for the overlay when a loaded 
          * image is used for the mask. This is null when the mask needs to be 
          * recreated from {@code overlayImage}, either due to another image 
-         * being loaded in or the resulting image's size being changed.
+         * being loaded in or the image alpha channel is changed.
+         */
+        public BufferedImage alphaMask = null;
+        /**
+         * This is the image used as a mask for the overlay when a loaded 
+         * image is used for the mask. This is null when the mask needs to be 
+         * recreated from {@code alphaMask}, either due to another image being 
+         * loaded in or the resulting image's size being changed.
          */
         public BufferedImage imgMask = null;
         /**
@@ -2893,10 +2954,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         protected OverlayMask(OverlayMask mask){
             this(mask.textPainter);
+            this.alphaMask = mask.alphaMask;
         }
         
         public void reset(){
-            textMask = imgMask = null;
+            textMask = alphaMask = imgMask = null;
         }
         
         public BufferedImage getMask(int width, int height){
@@ -2904,8 +2966,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             BufferedImage mask;
                 // If a loaded image is being used as the overlay mask
             if (isOverlayMaskImage()){
-                    // Use the mask version of the overlay image as the mask
-                mask = imgMask = getImageMaskImage(width,height,overlayImage,
+                    // Get a version of the overlay image with the alpha channel
+                    // applied to it.
+                alphaMask = getImageAlphaMask(overlayImage,alphaMask);
+                    // Use the mask version of the alpha image as the mask
+                mask = imgMask = getImageMaskImage(width,height,alphaMask,
                         imgMask);
             } else 
                     // Use the text mask, creating it if it needs to be made
