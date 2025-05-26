@@ -3,7 +3,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar>dist\HypnoGifGenerator.jar</jar>
-  <outfile>C:\Users\Milo Steier\Documents\Programs\Java\My Programs\HypnoGifGenerator\HypnoGifGenerator.exe</outfile>
+  <outfile>C:\Users\mstei\Documents\Programs\Java\My Programs\[Java Based Art]\HypnoGifGenerator\HypnoGifGenerator.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\Users\Milo Steier\Documents\Programs\Java\My Programs\HypnoGifGenerator\Hypno Gif Gen Icon.ico</icon>
+  <icon>C:\Users\mstei\Documents\Programs\Java\My Programs\[Java Based Art]\HypnoGifGenerator\Hypno Gif Gen Icon.ico</icon>
   <jre>
     <path>%JAVA_HOME%;%PATH%</path>
     <requiresJdk>false</requiresJdk>
