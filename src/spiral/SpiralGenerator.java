@@ -860,7 +860,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskAlphaCtrlPanel.add(maskDesaturateLabel, gridBagConstraints);
 
-        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Luminance", "Luma", "Average", "Value (HSV)" }));
+        maskDesaturateCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Luminance", "Luma", "Lightness (HSL)", "Average", "Value (HSV)" }));
         maskDesaturateCombo.setEnabled(false);
         maskDesaturateCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2573,16 +2573,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             rgb[i] /= 255.0f;
         }
         switch(maskDesaturateCombo.getSelectedIndex()){
-            case (1):
+            case(1):
                 return (float)(0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
-            case (0):
-            case (2):
+            case(2):
+                float min = 1;
+                float max = 0;
+                for (float value : rgb){
+                    min = Math.min(min, value);
+                    max = Math.max(max, value);
+                }
+                return (min + max) / 2.0f;
+            case(4):
+                float v = 0;
+                for (float value : rgb)
+                    v = Math.max(value, v);
+                return v;
+            default:
                 double l = 0;
                 for (float value : rgb)
                     l += value;
                 return (float)(l / 3.0);
-            default:
-                return Color.RGBtoHSB(r, g, b, null)[2];
         }
     }
     /**
