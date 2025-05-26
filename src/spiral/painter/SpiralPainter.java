@@ -309,11 +309,11 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     protected double adjustRotation(double angle, double thickness, 
             boolean clockwise){
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
+            angle = -angle;
             // Bound the angle of rotation
         angle = GeometryMath.boundDegrees(angle);
-            // If the spiral is going clockwise and the angle is not 0
-        if (clockwise && angle > 0.0)
-            angle = FULL_CIRCLE_DEGREES - angle;
             // Alter the angle based off the thickness of the spiral
         return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
     }
@@ -326,12 +326,13 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     protected double unadjustRotation(double angle, double thickness, 
             boolean clockwise){
+            // Subtract the thickness from the angle of rotation
+        angle -= (thickness / 2.0)*FULL_CIRCLE_DEGREES;
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
+            angle = -angle;
             // Bound the angle of rotation
-        angle = GeometryMath.boundDegrees(angle - (thickness / 2.0)*FULL_CIRCLE_DEGREES);
-            // If the spiral is going clockwise and the angle is not 0
-        if (clockwise && angle > 0.0)
-            angle = FULL_CIRCLE_DEGREES - angle;
-        return angle;
+        return GeometryMath.boundDegrees(angle);
     }
     /**
      * This is used to configure the graphics context used to render the spiral. 

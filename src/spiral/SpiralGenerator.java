@@ -1994,8 +1994,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private double getFrameRotation(int frameIndex){
             // Get the angle to use for the rotation
         double angle = SPIRAL_FRAME_ROTATION*frameIndex;
-            // If the spin direction is the same as the spiral's direction
-        if (isSpinClockwise() == getSpiralPainter().isClockwise())
+            // If the spin direction is not the same as the spiral's direction
+        if (isSpinClockwise() != getSpiralPainter().isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
             // Bound the angle by 360
