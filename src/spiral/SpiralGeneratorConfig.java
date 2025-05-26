@@ -64,8 +64,6 @@ public class SpiralGeneratorConfig {
     
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
-    public static final String SPIRAL_ROTATION_KEY = "SpiralRotation";
-    
     public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
     
     public static final String SPIRAL_COLOR_KEY_PREFIX = "SpiralColor";
@@ -557,28 +555,6 @@ public class SpiralGeneratorConfig {
      */
     public void setSpiralData(SpiralPainter painter){
         setSpiralData(painter,painter.toByteArray());
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public double getSpiralRotation(double defaultValue){
-        return getPreferences().getDouble(SPIRAL_ROTATION_KEY,defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     */
-    public double getSpiralRotation(){
-        return SpiralGeneratorConfig.this.getSpiralRotation(0.0);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public void setSpiralRotation(double value){
-        getPreferences().putDouble(SPIRAL_ROTATION_KEY, value);
     }
     /**
      * 
