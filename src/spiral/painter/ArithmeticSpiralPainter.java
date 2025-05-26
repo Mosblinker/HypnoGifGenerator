@@ -12,7 +12,7 @@ import java.awt.geom.*;
  *
  * @author Mosblinker
  */
-public class ArithmeticSpiralPainter extends GEGLSpiralPainter {
+public class ArithmeticSpiralPainter extends PolarSpiralPainter {
     /**
      * 
      */

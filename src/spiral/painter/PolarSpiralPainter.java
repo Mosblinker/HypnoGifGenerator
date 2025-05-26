@@ -10,16 +10,16 @@ import java.awt.Graphics2D;
  *
  * @author Mosblinker
  */
-public abstract class GEGLSpiralPainter extends SpiralPainter{
+public abstract class PolarSpiralPainter extends SpiralPainter{
     /**
      * Implicit constructor.
      */
-    protected GEGLSpiralPainter(){}
+    protected PolarSpiralPainter(){}
     /**
      * Copy constructor for the class.
      * @param painter The GEGLSpiralPainter to copy.
      */
-    protected GEGLSpiralPainter(GEGLSpiralPainter painter){
+    protected PolarSpiralPainter(PolarSpiralPainter painter){
         super(painter);
     }
     /**

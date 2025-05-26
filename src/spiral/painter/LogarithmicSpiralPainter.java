@@ -13,7 +13,7 @@ import java.nio.ByteBuffer;
  *
  * @author Mosblinker
  */
-public class LogarithmicSpiralPainter extends GEGLSpiralPainter implements LogarithmicSpiral{
+public class LogarithmicSpiralPainter extends PolarSpiralPainter implements LogarithmicSpiral{
     /**
      * This is the target radius for the start of the spiral. This is set to 0.1 
      * to ensure that the spiral is properly formed in the center of the image 
