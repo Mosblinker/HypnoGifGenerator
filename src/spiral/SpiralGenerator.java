@@ -2509,6 +2509,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
     }
+    
+    private float getLuminance(int rgb){
+        return getLuminance((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF);
+    }
+    
+    private float getLuminance(int r, int g, int b){
+        return ((r+g+b)/3.0f)/255f;
+    }
     /**
      * 
      * @param image
@@ -2552,11 +2560,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 rgb &= colorMask;
                 float alpha;
                 if (maskAlphaGrayToggle.isSelected()){
-                    double[] comp = new double[3];
-                    for (int i = 0; i < comp.length; i++){
-                        comp[i] = ((rgb >> (16 - 8*i)) & 0xFF);
-                    }
-                    alpha = (float) ((comp[0]+comp[1]+comp[2])/3.0f) / 255f;
+                    alpha = getLuminance(rgb);
                 } else 
                     alpha = rgb / 255f;
                 imgData[x] &= 0x00FFFFFF;
