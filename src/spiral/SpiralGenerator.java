@@ -1663,8 +1663,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         System.out.println("Bounds: " + getBounds());
         System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue()));
-        System.out.println(widthSpinner.getSize());
-        System.out.println(heightSpinner.getSize());
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
