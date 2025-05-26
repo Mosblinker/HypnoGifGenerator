@@ -414,6 +414,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
+        angleSpinner.setValue(painter.getRotation());
         boolean isLog = painter instanceof LogarithmicSpiral;
         if (isLog)
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
@@ -1654,8 +1655,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         System.out.println("Bounds: " + getBounds());
         System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue()));
-        System.out.println(widthSpinner.getSize());
-        System.out.println(heightSpinner.getSize());
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
@@ -1720,7 +1719,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
-        config.setSpiralRotation((double)angleSpinner.getValue());
+        getSpiralPainter().setRotation((double)angleSpinner.getValue());
         refreshPreview();
     }//GEN-LAST:event_angleSpinnerStateChanged
 
@@ -1969,9 +1968,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (isSpinClockwise() == getSpiralPainter().isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
-            // Add the angle spinner's value and bound it by 360
-        return (angle + (double) angleSpinner.getValue()) % 
-                SpiralPainter.FULL_CIRCLE_DEGREES;
+            // Bound the angle by 360
+        return angle  % SpiralPainter.FULL_CIRCLE_DEGREES;
     }
     /**
      * @param args the command line arguments
@@ -2975,6 +2973,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(SpiralPainter.THICKNESS_PROPERTY_CHANGED):
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                 case(ShapedSpiral.SHAPE_PROPERTY_CHANGED):
+                case(SpiralPainter.ROTATION_PROPERTY_CHANGED):
                     if (painter != null)
                         config.setSpiralData(painter);
             }
