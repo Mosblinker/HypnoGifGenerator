@@ -2554,15 +2554,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (maskAlphaGreyToggle.isSelected()){
                     double[] comp = new double[3];
                     for (int i = 0; i < comp.length; i++){
-                        comp[i] = ((rgb >> (16 - 8*i)) & 0xFF) / 255;
-                            // Make the color linear
-                        if (comp[i] <= 0.04045){
-                            comp[i] /= 12.92;
-                        } else
-                            comp[i] = Math.pow((comp[i] + 0.055)/1.055, 2.4);
+                        comp[i] = ((rgb >> (16 - 8*i)) & 0xFF);
                     }
-                    double l = (0.2126 * comp[0] + 0.7152 * comp[1] + 0.0722 * comp[2]);
-                    alpha = (float) l;
+                    alpha = (float) ((comp[0]+comp[1]+comp[2])/3.0f) / 255f;
                 } else 
                     alpha = rgb / 255f;
                 imgData[x] &= 0x00FFFFFF;
