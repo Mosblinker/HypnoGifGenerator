@@ -267,11 +267,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskTabbedPane.getTabCount()-1), 0));
         config.loadMaskAlphaIndex(maskAlphaButtons);
         maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
-        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
         maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
                 config.getMaskDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
-        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
         loadSpiralPainter();
         angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -1756,9 +1754,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane.setSelectedIndex(0);
         maskAlphaToggle.setSelected(true);
         maskAlphaInvertToggle.setSelected(false);
-        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
         maskDesaturateCombo.setSelectedIndex(0);
-        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
+        updateMaskAlphaControlsEnabled();
         config.setMaskAlphaIndex(maskAlphaButtons);
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
         config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
@@ -1864,8 +1861,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.setMaskAlphaIndex(maskAlphaButtons);
-        maskAlphaInvertToggle.setEnabled(!maskAlphaToggle.isSelected());
-        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isSelected());
+        updateMaskAlphaControlsEnabled();
         refreshPreview(false,true);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
@@ -2035,6 +2031,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
         delaySpinner.setEnabled(enabled);
+        for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
+            button.setEnabled(enabled);
+        }
+        updateMaskAlphaControlsEnabled();
     }
     /**
      * 
@@ -2046,6 +2046,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskEditButton.setEnabled(enabled);
         maskTabbedPane.setEnabled(enabled);
         setValueControlsEnabled(enabled);
+    }
+    /**
+     * 
+     */
+    private void updateMaskAlphaControlsEnabled(){
+        maskAlphaInvertToggle.setEnabled(maskAlphaToggle.isEnabled() && 
+                !maskAlphaToggle.isSelected());
+        maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isEnabled() && 
+                maskAlphaGrayToggle.isSelected());
     }
     /**
      * 
