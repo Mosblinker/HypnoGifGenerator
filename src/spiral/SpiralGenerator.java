@@ -26,9 +26,11 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedOutputStream;
@@ -2566,16 +2568,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private float getLuminance(int r, int g, int b){
-        double[] rgb = new double[]{r, g, b};
+        float[] rgb = new float[]{r, g, b};
         for (int i = 0; i < rgb.length; i++){
-            rgb[i] /= 255.0;
+            rgb[i] /= 255.0f;
         }
         switch(maskDesaturateCombo.getSelectedIndex()){
             case (1):
                 return (float)(0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+            case (0):
             case (2):
                 double l = 0;
-                for (double value : rgb)
+                for (float value : rgb)
                     l += value;
                 return (float)(l / 3.0);
             default:
@@ -2608,15 +2611,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             colorShift = 8;
         else if (maskAlphaGrayToggle.isSelected())
             colorMask = 0x00FFFFFF;
-        g.drawImage(image, 0, 0, (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK, null);
+        Color fillColor = (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK;
+        if (maskAlphaGrayToggle.isSelected() && maskDesaturateCombo.getSelectedIndex() == 0){
+            g.setColor(fillColor);
+            g.fillRect(0, 0, width, height);
+            g.drawImage(image, new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
+        } else
+            g.drawImage(image, 0, 0, fillColor, null);
         g.dispose();
         image = mask;
         mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        
         int[] imgData = new int[width];
         for (int y = 0; y < height; y++){
             image.getRGB(0, y, width, 1, imgData, 0, 1);
-            
             for (int x = 0; x < width; x++){
                 int rgb = imgData[x];
                 if (maskAlphaInvertToggle.isSelected())
