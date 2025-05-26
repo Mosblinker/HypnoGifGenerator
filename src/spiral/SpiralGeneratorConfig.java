@@ -104,6 +104,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_ALPHA_CHANNEL_INDEX = "MaskAlphaChannelIndex";
     
+    public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
+    
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
@@ -1012,6 +1014,29 @@ public class SpiralGeneratorConfig {
     
     public void setMaskAlphaIndex(ButtonGroup group){
         setMaskAlphaIndex(SwingExtendedUtilities.indexOfSelected(group));
+    }
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isMaskImageInverted(boolean defaultValue){
+        return getMaskPreferences().getBoolean(MASK_IMAGE_INVERT_KEY, defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public boolean isMaskImageInverted(){
+        return isMaskImageInverted(false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskImageInverted(boolean value){
+        getMaskPreferences().putBoolean(MASK_IMAGE_INVERT_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){
