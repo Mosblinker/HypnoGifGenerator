@@ -550,6 +550,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
         resetPanel = new javax.swing.JPanel();
+        resetSpiralButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
@@ -1410,7 +1411,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         resetPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
 
-        resetButton.setText("Reset");
+        resetSpiralButton.setText("Reset Spiral");
+        resetSpiralButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetSpiralButtonActionPerformed(evt);
+            }
+        });
+        resetPanel.add(resetSpiralButton);
+
+        resetButton.setText("Reset All");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resetButtonActionPerformed(evt);
@@ -1542,7 +1551,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1913,6 +1922,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
         refreshPreview(false,true);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
+
+    private void resetSpiralButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetSpiralButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_resetSpiralButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2458,6 +2471,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
     private javax.swing.JPanel resetPanel;
+    private javax.swing.JButton resetSpiralButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;

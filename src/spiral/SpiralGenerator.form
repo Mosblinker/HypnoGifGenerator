@@ -790,7 +790,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="framesPanel" alignment="1" pref="406" max="32767" attributes="0"/>
+                  <Component id="framesPanel" alignment="1" pref="408" max="32767" attributes="0"/>
                   <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -1513,9 +1513,17 @@
             <Property name="rows" type="int" value="1"/>
           </Layout>
           <SubComponents>
+            <Component class="javax.swing.JButton" name="resetSpiralButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Reset Spiral"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetSpiralButtonActionPerformed"/>
+              </Events>
+            </Component>
             <Component class="javax.swing.JButton" name="resetButton">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Reset"/>
+                <Property name="text" type="java.lang.String" value="Reset All"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetButtonActionPerformed"/>
