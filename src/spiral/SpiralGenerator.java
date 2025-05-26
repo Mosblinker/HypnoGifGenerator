@@ -13,6 +13,7 @@ import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
 import files.FilesExtended;
 import files.extensions.ImageExtensions;
+import geom.GeometryMath;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
 import icons.box.DisabledBoxIcon;
@@ -29,6 +30,9 @@ import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.beans.PropertyChangeEvent;
@@ -273,7 +277,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.getMaskDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
         loadSpiralPainter();
-        angleSpinner.setValue(config.getSpiralRotation());
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
@@ -414,6 +417,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
+        angleSpinner.setValue(painter.getRotation());
         boolean isLog = painter instanceof LogarithmicSpiral;
         if (isLog)
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
@@ -502,6 +506,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         showTestSpiralToggle = new javax.swing.JCheckBox();
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        testShowRadiusToggle = new javax.swing.JCheckBox();
+        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaButtons = new javax.swing.ButtonGroup();
         ctrlButtonPanel = new javax.swing.JPanel();
         framesPanel = new javax.swing.JPanel();
@@ -965,8 +971,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         testCtrlPanel.add(testRotateSpinner, gridBagConstraints);
 
@@ -999,16 +1004,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         testCtrlPanel.add(showTestSpiralToggle, gridBagConstraints);
 
         testCtrlPanel2.setLayout(new java.awt.GridLayout(0, 4, 6, 7));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         testCtrlPanel.add(testCtrlPanel2, gridBagConstraints);
@@ -1018,20 +1025,39 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.weighty = 0.9;
         testCtrlPanel.add(filler16, gridBagConstraints);
 
+        testShowRadiusToggle.setText("Show Radius");
+        testShowRadiusToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                testShowRadiusToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        testCtrlPanel.add(testShowRadiusToggle, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        testCtrlPanel.add(filler1, gridBagConstraints);
+
         javax.swing.GroupLayout testDialogLayout = new javax.swing.GroupLayout(testDialog.getContentPane());
         testDialog.getContentPane().setLayout(testDialogLayout);
         testDialogLayout.setHorizontalGroup(
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                 .addContainerGap())
         );
         testDialogLayout.setVerticalGroup(
             testDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1727,7 +1753,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
-        config.setSpiralRotation((double)angleSpinner.getValue());
+        getSpiralPainter().setRotation((double)angleSpinner.getValue());
         refreshPreview();
     }//GEN-LAST:event_angleSpinnerStateChanged
 
@@ -1921,6 +1947,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview(false,true);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
 
+    private void testShowRadiusToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testShowRadiusToggleActionPerformed
+        if (showTestSpiralToggle.isSelected())
+            previewLabel.repaint();
+    }//GEN-LAST:event_testShowRadiusToggleActionPerformed
+
     private void resetSpiralButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetSpiralButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_resetSpiralButtonActionPerformed
@@ -1976,13 +2007,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private double getFrameRotation(int frameIndex){
             // Get the angle to use for the rotation
         double angle = SPIRAL_FRAME_ROTATION*frameIndex;
-            // If the spin direction is the same as the spiral's direction
-        if (isSpinClockwise() == getSpiralPainter().isClockwise())
+            // If the spin direction is not the same as the spiral's direction
+        if (isSpinClockwise() != getSpiralPainter().isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
-            // Add the angle spinner's value and bound it by 360
-        return (angle + (double) angleSpinner.getValue()) % 
-                SpiralPainter.FULL_CIRCLE_DEGREES;
+            // Bound the angle by 360
+        return angle  % SpiralPainter.FULL_CIRCLE_DEGREES;
     }
     /**
      * @param args the command line arguments
@@ -2486,6 +2516,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JDialog testDialog;
     private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testScaleSpinner;
+    private javax.swing.JCheckBox testShowRadiusToggle;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
     private javax.swing.JLabel widthLabel;
@@ -2918,7 +2949,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (scale == 0)
                 scale = 1;
             scale = 1.0/scale;
-            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
+            double centerX = width/2.0;
+            double centerY = height/2.0;
+            scaleMaintainLocation(g,centerX,centerY,scale,scale);
             if (index >= 0 && index < testImages.size()){
                 BufferedImage img = testImages.get(index);
                 if (img.getWidth() != width || img.getHeight() != height)
@@ -2930,7 +2963,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g.fillRect(0, 0, width, height);
                 g.setColor(Color.BLACK);
             }
-            testSpiralPainter.paint(g, (double)testRotateSpinner.getValue(), width, height);
+            double rotation = (double)testRotateSpinner.getValue();
+            testSpiralPainter.paint(g, rotation, width, height);
+            if (testShowRadiusToggle.isSelected()){
+                g.setColor(Color.CYAN);
+                double radius = testSpiralPainter.getSpiralRadius();
+                Ellipse2D e = new Ellipse2D.Double();
+                e.setFrameFromCenter(centerX, centerY, centerX+radius, centerY+radius);
+                g.draw(e);
+                g.setColor(Color.RED);
+                Point2D p = GeometryMath.polarToCartesianDegrees(radius, 
+                        rotation+testSpiralPainter.getRotation(), centerX,
+                        centerY,null);
+                g.draw(new Line2D.Double(centerX, centerY,p.getX(),p.getY()));
+                
+            }
         }
         @Override
         public int getIconWidth() {
@@ -2987,6 +3034,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(SpiralPainter.THICKNESS_PROPERTY_CHANGED):
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                 case(ShapedSpiral.SHAPE_PROPERTY_CHANGED):
+                case(SpiralPainter.ROTATION_PROPERTY_CHANGED):
                     if (painter != null)
                         config.setSpiralData(painter);
             }

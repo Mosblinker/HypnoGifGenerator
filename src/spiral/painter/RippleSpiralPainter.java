@@ -34,9 +34,6 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
     @Override
     protected double adjustRotation(double angle, double thickness, 
             boolean clockwise){
-            // If the spiral is clockwise
-        if (clockwise)
-            angle = -angle;
         return GeometryMath.boundDegrees(angle);
     }
     @Override

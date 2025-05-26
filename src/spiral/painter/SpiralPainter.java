@@ -29,7 +29,10 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     public static final String CLOCKWISE_PROPERTY_CHANGED = 
             "ClockwisePropertyChanged";
     
-    private static final int BYTE_ARRAY_LENGTH = Double.BYTES*2 + 1;
+    public static final String ROTATION_PROPERTY_CHANGED = 
+            "RotationPropertyChanged";
+    
+    private static final int BYTE_ARRAY_LENGTH = Double.BYTES*3 + 1;
     /**
      * This is the angle typically used for interpolating the spiral curve. The
      * end of each segment is {@value INTERPOLATION_ANGLE} degrees away from the 
@@ -48,6 +51,10 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * This is the thickness of the spiral.
      */
     private double thickness;
+    /**
+     * This is the initial angle of rotation for this spiral.
+     */
+    private double rotation = 0.0;
     /**
      * This is a scratch Rectangle2D object typically used to fill the painted 
      * area when the entire area is to be filled. This is initially null and is 
@@ -171,6 +178,27 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     public boolean isClockwise(){
         return clockwise;
     }
+    /**
+     * 
+     * @param angle 
+     */
+    public void setRotation(double angle){
+        if (angle < 0 || angle > FULL_CIRCLE_DEGREES)
+            throw new IllegalArgumentException();
+            // If the angle of rotation would change
+        if (angle != rotation){
+            double old = rotation;
+            rotation = angle;
+            firePropertyChange(ROTATION_PROPERTY_CHANGED,old,rotation);
+        }
+    }
+    /**
+     * 
+     * @return 
+     */
+    public double getRotation(){
+        return rotation;
+    }
     @Override
     public void paint(Graphics2D g, Double angle, int width, int height) {
             // Check if the graphics context is null
@@ -184,9 +212,14 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         g = configureGraphics((Graphics2D)g.create());
             // Clip the graphics context to only include the rendered area
         g.clipRect(0, 0, width, height);
-            // Paint the spiral. If the angle is null, then default to 0. 
-            // Otherwise, keep in in range of (-360, 360), exclusive.
-        paintSpiral(g,(angle!=null)?(angle%FULL_CIRCLE_DEGREES):0.0,width,height,
+            // If the angle is null, default to an angle of zero
+        if (angle == null)
+            angle = 0.0;
+            // Add the rotation to the given angle
+        angle += getRotation();
+            // Paint the spiral. Keep the angle in range of (-360, 360), 
+            // exclusive.
+        paintSpiral(g,angle%FULL_CIRCLE_DEGREES,width,height,
                 width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
@@ -276,11 +309,11 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     protected double adjustRotation(double angle, double thickness, 
             boolean clockwise){
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
+            angle = -angle;
             // Bound the angle of rotation
         angle = GeometryMath.boundDegrees(angle);
-            // If the spiral is going clockwise and the angle is not 0
-        if (clockwise && angle > 0.0)
-            angle = FULL_CIRCLE_DEGREES - angle;
             // Alter the angle based off the thickness of the spiral
         return (angle + (thickness / 2.0)*FULL_CIRCLE_DEGREES) % FULL_CIRCLE_DEGREES;
     }
@@ -293,12 +326,13 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      */
     protected double unadjustRotation(double angle, double thickness, 
             boolean clockwise){
+            // Subtract the thickness from the angle of rotation
+        angle -= (thickness / 2.0)*FULL_CIRCLE_DEGREES;
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
+            angle = -angle;
             // Bound the angle of rotation
-        angle = GeometryMath.boundDegrees(angle - (thickness / 2.0)*FULL_CIRCLE_DEGREES);
-            // If the spiral is going clockwise and the angle is not 0
-        if (clockwise && angle > 0.0)
-            angle = FULL_CIRCLE_DEGREES - angle;
-        return angle;
+        return GeometryMath.boundDegrees(angle);
     }
     /**
      * This is used to configure the graphics context used to render the spiral. 
@@ -374,6 +408,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
         buffer.putDouble(getSpiralRadius());
         buffer.putDouble(getThickness());
+        buffer.putDouble(getRotation());
         if (length > BYTE_ARRAY_LENGTH)
             toByteArray(buffer.slice());
         return arr;
@@ -404,6 +439,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
                 .asReadOnlyBuffer();
         setSpiralRadius(buffer.getDouble());
         setThickness(buffer.getDouble());
+        setRotation(buffer.getDouble());
         if (length > BYTE_ARRAY_LENGTH)
             fromByteArray(buffer.slice());
     }
@@ -426,13 +462,15 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         setClockwise(true);
         setSpiralRadius(getDefaultRadius());
         setThickness(getDefaultThickness());
+        setRotation(0.0);
     }
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so
         return ((isClockwise())?"":"counter-")+"clockwise"+
                 ",spiralRadius="+getSpiralRadius()+
-                ",thickness="+getThickness();
+                ",thickness="+getThickness()+
+                ",rotation="+getRotation();
     }
     /**
      * 
