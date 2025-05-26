@@ -503,6 +503,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.JPanel testCtrlPanel2 = new javax.swing.JPanel();
         javax.swing.Box.Filler filler16 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         maskAlphaButtons = new javax.swing.ButtonGroup();
+        ctrlButtonPanel = new javax.swing.JPanel();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -544,26 +545,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         color2Button = new javax.swing.JButton();
         color3Button = new javax.swing.JButton();
         color4Button = new javax.swing.JButton();
-        maskEditButton = new javax.swing.JButton();
         spiralTypeLabel = new javax.swing.JLabel();
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
-        imageSizePanel = new javax.swing.JPanel();
-        widthLabel = new javax.swing.JLabel();
-        javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        widthSpinner = new javax.swing.JSpinner();
-        javax.swing.Box.Filler filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        heightLabel = new javax.swing.JLabel();
-        javax.swing.Box.Filler filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        heightSpinner = new javax.swing.JSpinner();
-        ctrlButtonPanel = new javax.swing.JPanel();
-        saveButton = new javax.swing.JButton();
+        resetPanel = new javax.swing.JPanel();
         resetButton = new javax.swing.JButton();
+        imageCtrlPanel = new javax.swing.JPanel();
+        widthLabel = new javax.swing.JLabel();
+        widthSpinner = new javax.swing.JSpinner();
+        heightLabel = new javax.swing.JLabel();
+        heightSpinner = new javax.swing.JSpinner();
+        delayLabel = new javax.swing.JLabel();
+        delaySpinner = new javax.swing.JSpinner();
         alwaysScaleToggle = new javax.swing.JCheckBox();
         progressBar = new javax.swing.JProgressBar();
-        delaySpinner = new javax.swing.JSpinner();
-        delayLabel = new javax.swing.JLabel();
+        maskEditButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1036,6 +1034,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap())
         );
 
+        ctrlButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME + " - Version "+ PROGRAM_VERSION);
         setLocationByPlatform(true);
@@ -1361,18 +1361,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralColorPanel, gridBagConstraints);
 
-        maskEditButton.setText("Edit Message Mask");
-        maskEditButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maskEditButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 9;
-        gridBagConstraints.gridwidth = 2;
-        spiralCtrlPanel.add(maskEditButton, gridBagConstraints);
-
         spiralTypeLabel.setLabelFor(spiralTypeCombo);
         spiralTypeLabel.setText("Type:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1420,44 +1408,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralShapeCombo, gridBagConstraints);
 
-        imageSizePanel.setLayout(new javax.swing.BoxLayout(imageSizePanel, javax.swing.BoxLayout.X_AXIS));
-
-        widthLabel.setLabelFor(widthSpinner);
-        widthLabel.setText("Width:");
-        imageSizePanel.add(widthLabel);
-        imageSizePanel.add(filler1);
-
-        widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
-        widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                widthSpinnerStateChanged(evt);
-            }
-        });
-        imageSizePanel.add(widthSpinner);
-        imageSizePanel.add(filler2);
-
-        heightLabel.setLabelFor(heightSpinner);
-        heightLabel.setText("Height:");
-        imageSizePanel.add(heightLabel);
-        imageSizePanel.add(filler3);
-
-        heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
-        heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                heightSpinnerStateChanged(evt);
-            }
-        });
-        imageSizePanel.add(heightSpinner);
-
-        ctrlButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-        ctrlButtonPanel.add(saveButton);
+        resetPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
 
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1465,7 +1416,86 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 resetButtonActionPerformed(evt);
             }
         });
-        ctrlButtonPanel.add(resetButton);
+        resetPanel.add(resetButton);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 2;
+        spiralCtrlPanel.add(resetPanel, gridBagConstraints);
+
+        imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
+
+        widthLabel.setLabelFor(widthSpinner);
+        widthLabel.setText("Width:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(widthLabel, gridBagConstraints);
+
+        widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
+        widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                widthSpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = -9;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(widthSpinner, gridBagConstraints);
+
+        heightLabel.setLabelFor(heightSpinner);
+        heightLabel.setText("Height:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(heightLabel, gridBagConstraints);
+
+        heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
+        heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                heightSpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        imageCtrlPanel.add(heightSpinner, gridBagConstraints);
+
+        delayLabel.setLabelFor(delaySpinner);
+        delayLabel.setText("Duration:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        imageCtrlPanel.add(delayLabel, gridBagConstraints);
+
+        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
+        delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
+        delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                delaySpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 6);
+        imageCtrlPanel.add(delaySpinner, gridBagConstraints);
 
         alwaysScaleToggle.setText("Scale Preview");
         alwaysScaleToggle.addActionListener(new java.awt.event.ActionListener() {
@@ -1473,6 +1503,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 alwaysScaleToggleActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
 
         progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -1485,16 +1521,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
-        delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
-        delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                delaySpinnerStateChanged(evt);
+        maskEditButton.setText("Edit Message Mask");
+        maskEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskEditButtonActionPerformed(evt);
             }
         });
 
-        delayLabel.setLabelFor(delaySpinner);
-        delayLabel.setText("Duration:");
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1503,22 +1542,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                    .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageSizePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(imageCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(alwaysScaleToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(delayLabel)
+                        .addComponent(maskEditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(delaySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -1531,19 +1565,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(framesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(imageSizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(alwaysScaleToggle))
+                        .addComponent(imageCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(delaySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(delayLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(maskEditButton)
+                            .addComponent(saveButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -1624,6 +1654,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         System.out.println("Bounds: " + getBounds());
         System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue()));
+        System.out.println(widthSpinner.getSize());
+        System.out.println(heightSpinner.getSize());
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
@@ -2385,7 +2417,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel framesPanel;
     private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
-    private javax.swing.JPanel imageSizePanel;
+    private javax.swing.JPanel imageCtrlPanel;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
@@ -2425,6 +2457,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel radiusLabel;
     private javax.swing.JSpinner radiusSpinner;
     private javax.swing.JButton resetButton;
+    private javax.swing.JPanel resetPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
