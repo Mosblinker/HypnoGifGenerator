@@ -297,7 +297,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
-            getLogger().log(Level.WARNING, null, ex);
+            log(Level.WARNING,"SpiralGenerator",
+                    "Failed to load icon mask \""+ICON_MASK_FILE_IMAGE+"\"",
+                    ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
@@ -463,7 +465,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     try {
                         testImages.add(ImageIO.read(file));
                     } catch (IOException ex) {
-                        getLogger().log(Level.INFO, null, ex);
+                        log(Level.INFO, "SpiralGenerator", 
+                                "Failed to load test image \""+file.getName()+"\"", 
+                                ex);
                     }
                 }
             }
