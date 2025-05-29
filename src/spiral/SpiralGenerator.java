@@ -143,6 +143,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logSevere(String msg, Throwable thrown){
+        getLogger().log(Level.SEVERE, msg, thrown);
+    }
+    /**
+     * 
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logWarning(String msg, Throwable thrown){
+        getLogger().log(Level.WARNING, msg, thrown);
+    }
+    /**
+     * 
      * @param path
      * @return 
      */
@@ -208,7 +224,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
-            getLogger().log(Level.WARNING, null, ex);
+            logWarning(null, ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
@@ -1680,8 +1696,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            getLogger().log(Level.WARNING,
-                    "Null encountered in frameSliderStateChanged", ex);
+            logWarning("Null encountered in frameSliderStateChanged", ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -2056,7 +2071,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         } catch (ClassNotFoundException | InstantiationException | 
                 IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            getLogger().log(Level.SEVERE, null, ex);
+            logSevere(null, ex);
         }
         //</editor-fold>
         
