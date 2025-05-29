@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -81,6 +82,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the name of the program.
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
+    /**
+     * This is the template for the pattern for the file handler to use for the 
+     * log files of this program.
+     */
+    private static final String PROGRAM_LOG_PATTERN_TEMPLATE = 
+            "%%h/.mosblinker/logs/%s%%g.log";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
@@ -2186,6 +2193,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static void main(String args[]) {
         boolean debug = DebugCapable.checkForDebugArgument(args);
+        try {
+            String dir = SpiralGenerator.class.getSimpleName();
+            dir = String.format(PROGRAM_LOG_PATTERN_TEMPLATE, dir);
+            File file = new File(dir.replace("%h", System.getProperty("user.home"))
+                    .replace('/', File.separatorChar)).getParentFile();
+            if (!file.exists()){
+                try{
+                    Files.createDirectories(file.toPath());
+                } catch (IOException ex){
+                    getLogger().log(Level.WARNING, 
+                            "Failed to create directories for log file", ex);
+                }
+            }
+            getLogger().addHandler(new java.util.logging.FileHandler(dir,0,8));
+        } catch (IOException | SecurityException ex) {
+            getLogger().log(Level.SEVERE, null, ex);
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
