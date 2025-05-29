@@ -673,16 +673,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void loadSpiralPainter(){
         loadSpiralPainter(getSpiralPainter());
     }
-    
-    private BufferedImage createSpiralFrame(int frameIndex,int width,int height, 
-            SpiralPainter spiralPainter,OverlayMask mask){
-        BufferedImage img = new BufferedImage(width, height, 
-                BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        paintSpiralDesign(g,frameIndex,width,height,spiralPainter,mask);
-        g.dispose();
-        return img;
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -4095,9 +4085,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // If the frame is in the frames list
                     if (i < frames.size())
                         frame = frames.get(i);
-                    else {
-                            // Create the frame
-                        frame = createSpiralFrame(i,width,height,painter,mask);
+                    else {  // Create the image for the frame
+                        frame = new BufferedImage(width, height, 
+                                BufferedImage.TYPE_INT_ARGB);
+                            // Get a graphics context for the image
+                        Graphics2D g = frame.createGraphics();
+                            // Paint the spiral design on the image
+                        paintSpiralDesign(g,i,width,height,painter,mask);
+                        g.dispose();
                         frames.add(frame);
                         progressBar.setValue(progressBar.getValue()+1);
                     }   // Set the preview to the current frame
