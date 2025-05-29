@@ -2793,15 +2793,31 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.setComposite(AlphaComposite.DstIn);
         g.drawImage(mask, 0, 0, null);
     }
-    
+    /**
+     * 
+     * @param color
+     * @return 
+     */
     private boolean hasNoColor(Color color){
         return color == null || color.getAlpha() == 0;
     }
-    
+    /**
+     * 
+     * @param color1
+     * @param color2
+     * @return 
+     */
     private boolean hasNoColor(Color color1, Color color2){
         return hasNoColor(color1) && hasNoColor(color2);
     }
-    
+    /**
+     * 
+     * @param g
+     * @param width
+     * @param height
+     * @param text
+     * @param painter 
+     */
     private void paintTextMask(Graphics2D g, int width, int height, String text, 
             CenteredTextPainter painter){
             // Set the graphics context font to the mask font
@@ -2809,33 +2825,57 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
     }
-    
+    /**
+     * 
+     * @param rgb
+     * @return 
+     */
     private float getLuminance(int rgb){
         return getLuminance((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF);
     }
-    
+    /**
+     * 
+     * @param r
+     * @param g
+     * @param b
+     * @return 
+     */
     private float getLuminance(int r, int g, int b){
+            // This will get the RGB values as floating point numbers between 0 
+            // and 1
         float[] rgb = new float[]{r, g, b};
+            // Go through the RGB values
         for (int i = 0; i < rgb.length; i++){
+                // Divide it by 255 to get it within the range of 0 and 1
             rgb[i] /= 255.0f;
-        }
+        }   // Determine how to get the luminance for this pixel
         switch(maskDesaturateCombo.getSelectedIndex()){
+                // If using the Luma mode
             case(1):
+                    // Use the standard luminance equation
                 return (float)(0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+                // If using the Lightness value of HSL
             case(2):
+                    // This will get the minimum of the RGB values
                 float min = 1;
+                    // This will get the maximum of the RGB values
                 float max = 0;
+                    // Go through the RGB values
                 for (float value : rgb){
                     min = Math.min(min, value);
                     max = Math.max(max, value);
                 }
                 return (min + max) / 2.0f;
+                // If using the Value of HSV
             case(4):
+                    // This will get the largest of the RGB values
                 float v = 0;
+                    // Go through the RGB values
                 for (float value : rgb)
                     v = Math.max(value, v);
                 return v;
             default:
+                    // This will get the average of the RGB values
                 double l = 0;
                 for (float value : rgb)
                     l += value;
@@ -2854,61 +2894,92 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the source image is null
         if (image == null)
             return null;
+            // If the alpha channel should be used as-is
         if (maskAlphaToggle.isSelected())
             return image;
+            // Get the width of the image
         int width = image.getWidth();
+            // Get the height of the image
         int height = image.getHeight();
+            // This will get a version of the image with the background filled
         mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            // Get the graphics context for the image
         Graphics2D g = mask.createGraphics();
-        int colorMask = 0x000000FF;
+            // This is the amount by which to shift the RGB values to get the 
+            // byte desired for the color
         int colorShift = 0;
+            // If the red channel should be used as the alpha channel
         if (maskAlphaRedToggle.isSelected())
             colorShift = 16;
+            // If the green channel should be used as the alpha channel
         else if (maskAlphaGreenToggle.isSelected())
             colorShift = 8;
-        else if (maskAlphaGrayToggle.isSelected())
-            colorMask = 0x00FFFFFF;
-        Color fillColor = (maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK;
+            // This sets the color to fill the background of the image. If the 
+            // alpha channel is inverted, then use black. Otherwise, use white. 
+            // This way, the transparent area remains transparent.
+        g.setColor((maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK);
+            // Fill the background area with the fill color
+        g.fillRect(0, 0, width, height);
+            // If the image should be treated as greyscale and using luminance 
+            // to desaturate the image
         if (maskAlphaGrayToggle.isSelected() && maskDesaturateCombo.getSelectedIndex() == 0){
-            g.setColor(fillColor);
-            g.fillRect(0, 0, width, height);
-            g.drawImage(image, new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
-        } else
-            g.drawImage(image, 0, 0, fillColor, null);
+                // Draw a grayscale version of the image
+            g.drawImage(image, new ColorConvertOp(
+                    ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
+        } else  // Draw the image
+            g.drawImage(image, 0, 0, null);
         g.dispose();
+            // Transfer the temporary image to the image variable
         image = mask;
+            // This will be the image to use as a mask
         mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            // This is an array to hold the RGB data of each row of pixels
         int[] imgData = new int[width];
+            // Go through each row of pixels
         for (int y = 0; y < height; y++){
+                // Get the RGB values of the pixels in the current row
             image.getRGB(0, y, width, 1, imgData, 0, 1);
+                // Go through each pixel in the current row
             for (int x = 0; x < width; x++){
+                    // Get the RGB value of the current pixel
                 int rgb = imgData[x];
+                    // If the colors are inverted
                 if (maskAlphaInvertToggle.isSelected())
                     rgb = ~rgb;
+                    // Shift the bits over to get the byte to use into position
                 rgb >>= colorShift;
-                rgb &= colorMask;
+                    // This is the alpha component for the current pixel
                 float alpha;
-                if (maskAlphaGrayToggle.isSelected()){
+                    // If the image should be treated as a grayscale image
+                if (maskAlphaGrayToggle.isSelected())
                     alpha = getLuminance(rgb);
-                } else 
-                    alpha = rgb / 255f;
+                else 
+                    alpha = (rgb & 0x000000FF) / 255.0f;
+                    // Remove the old alpha component of the pixel
                 imgData[x] &= 0x00FFFFFF;
+                    // Add the new alpha component to the pixel
                 imgData[x] |= ((int)(0xFF * alpha)) << 24;
             }
             mask.setRGB(0, y, width, 1, imgData, 0, 1);
         }
         return mask;
     }
-    
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param image
+     * @param mask
+     * @return 
+     */
     private BufferedImage getImageMaskImage(int width, int height, 
             BufferedImage image, BufferedImage mask){
             // If the source image is null
         if (image == null)
             return null;
             // If the mask version of the overlay image is null
-        if (mask == null){
+        if (mask == null)
             mask = image;
-        }
             // If the mask version of the overlay image doesn't match the 
             // size of the area being rendered
             // TODO: Work on implementing user control over the overlay 
@@ -2918,7 +2989,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             return Thumbnailator.createThumbnail(image,width,height);
         return mask;
     }
-    
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param text
+     * @param mask
+     * @param painter
+     * @return 
+     */
     private BufferedImage getTextMaskImage(int width, int height, String text, 
             BufferedImage mask, CenteredTextPainter painter){
             // If the text is null or blank
@@ -2942,7 +3021,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.dispose();
         return mask;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     private boolean getOverlayAntialiased(){
             // If the mask is an image, use whether the image  antialiasing 
             // toggle is selected.
@@ -2950,7 +3032,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             return imgMaskAntialiasingToggle.isSelected();
         return overlayMask.textPainter.isAntialiasingEnabled();
     }
-    
+    /**
+     * 
+     * @param g
+     * @param frameIndex
+     * @param color1
+     * @param color2
+     * @param width
+     * @param height
+     * @param mask
+     * @param spiralPainter
+     * @param painter
+     * @param useImage
+     * @param antialiasing 
+     */
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height, BufferedImage mask, 
             SpiralPainter spiralPainter, CenteredTextPainter painter, 
@@ -2959,8 +3054,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boolean solidColor = Objects.equals(color1, color2);
             // This gets the scale for the mask
         double scale = getMaskScale();
-            // If the overlay is a solid color and using text for the mask 
-            // and a non-null text painter was provided
+            // If the overlay is a solid color and using text for the mask and a 
+            // non-null text painter was provided
         if (solidColor && !useImage && painter != null){
                 // Get the text for the mask 
             String text = maskTextArea.getText();
@@ -3041,36 +3136,56 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
             int width, int height, SpiralPainter spiralPainter){
-        if (width <= 0 || height <= 0)
+            // If the width or height is less than or equal to zero or neither 
+            // color is going to be used
+        if (width <= 0 || height <= 0 || hasNoColor(color1,color2))
             return;
-        if (hasNoColor(color1,color2))
-            return;
+            // If both of the colors are the same color
         else if (Objects.equals(color1, color2)){
             g.setColor(color1);
             g.fillRect(0, 0, width, height);
             return;
-        }
+        }   // Get the angle of rotation for the given index
         double angle = getFrameRotation(frameIndex);
-        if (color2 != null && color2.getAlpha() != 0){
-            if (color1 != null && color1.getAlpha() != 0){
+            // If there is a second color
+        if (!hasNoColor(color2)){
+                // If there are two colors
+            if (!hasNoColor(color1)){
+                    // Fill the background with the first color
                 g.setColor(color1);
                 g.fillRect(0, 0, width, height);
-            }
+            }   // Draw the spiral with the second color
             g.setColor(color2);
             spiralPainter.paint(g, angle, width, height);
         } else {
+                // Get an image to buffer what is drawn
             BufferedImage img = new BufferedImage(width, height, 
                     BufferedImage.TYPE_INT_ARGB);
+                // Get a graphics context for the image buffer
             Graphics2D imgG = img.createGraphics();
+                // Fill the background of the image with the first color
             imgG.setColor(color1);
             imgG.fillRect(0, 0, width, height);
+                // Use the alpha composite to remove any pixels that are in the 
+                // spiral
             imgG.setComposite(AlphaComposite.DstOut);
+                // Draw the spiral to remove the pixels
             spiralPainter.paint(imgG, angle, width, height);
             imgG.dispose();
+                // Draw the buffered image.
             g.drawImage(img, 0, 0, null);
         }
     }
-    
+    /**
+     * 
+     * @param g
+     * @param frameIndex
+     * @param width
+     * @param height
+     * @param color1
+     * @param spiralPainter
+     * @param mask 
+     */
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
             int height, Color color1, SpiralPainter spiralPainter,
             OverlayMask mask){
@@ -3080,7 +3195,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,
                 spiralPainter,mask);
     }
-    
+    /**
+     * 
+     * @param g
+     * @param frameIndex
+     * @param width
+     * @param height
+     * @param spiralPainter
+     * @param mask 
+     */
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
             int height, SpiralPainter spiralPainter,OverlayMask mask){
         paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor(),
@@ -3108,43 +3231,65 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
+                // Get the index for the test image
             int index = (int) testSpiralImageSpinner.getValue();
                 // Get the width of the icon
             int width = getIconWidth();
                 // Get the height of the icon
             int height = getIconHeight();
+                // Get the scale for the icon
             double scale = (double)testScaleSpinner.getValue();
+                // If the scale is 0
             if (scale == 0)
                 scale = 1;
+                // Invert the scale
             scale = 1.0/scale;
+                // Get the center x-coordinate
             double centerX = width/2.0;
+                // Get the center y-coordinate
             double centerY = height/2.0;
+                // Scale the graphics context
             scaleMaintainLocation(g,centerX,centerY,scale,scale);
+                // If the index for the test image is within range of the test 
+                // images
             if (index >= 0 && index < testImages.size()){
+                    // Get the test image at that index
                 BufferedImage img = testImages.get(index);
+                    // If the image's size is not the icon's size
                 if (img.getWidth() != width || img.getHeight() != height)
+                        // Scale the test image
                     img = Thumbnailator.createThumbnail(img, width, height);
+                    // Draw the test image
                 g.drawImage(img, 0, 0, null);
+                    // Set the color to a transparent green
                 g.setColor(new Color(0x8000FF00,true));
             } else {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, width, height);
                 g.setColor(Color.BLACK);
-            }
+            }   // Get the rotation for the test spiral
             double rotation = (double)testRotateSpinner.getValue();
+                // Draw the test spiral
             testSpiralPainter.paint(g, rotation, width, height);
+                // If the radius should be shown
             if (testShowRadiusToggle.isSelected()){
                 g.setColor(Color.CYAN);
+                    // Get the spiral's radius
                 double radius = testSpiralPainter.getSpiralRadius();
+                    // Get an ellipse to draw the circle for the radius
                 Ellipse2D e = new Ellipse2D.Double();
+                    // Set the ellipse to be a circle with the spiral's radius
                 e.setFrameFromCenter(centerX, centerY, centerX+radius, centerY+radius);
+                    // Draw the circle
                 g.draw(e);
                 g.setColor(Color.RED);
+                    // Get the cartesian point with the radius and rotation of 
+                    // the spiral
                 Point2D p = GeometryMath.polarToCartesianDegrees(radius, 
                         rotation+testSpiralPainter.getRotation(), centerX,
                         centerY,null);
+                    // Draw a line to represent the radius of the spiral
                 g.draw(new Line2D.Double(centerX, centerY,p.getX(),p.getY()));
-                
             }
         }
         @Override
@@ -3184,9 +3329,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             ActionListener, DocumentListener{
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+                // This gets the SpiralPainter that's the source of the change
             SpiralPainter painter = null;
+                // If the source of the change is a SpiralPainter
             if (evt.getSource() instanceof SpiralPainter)
                 painter = (SpiralPainter) evt.getSource();
+                // This gets if the text mask should also be repainted
             boolean maskChanged = false;
             switch(evt.getPropertyName()){
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
@@ -3203,6 +3351,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                 case(ShapedSpiral.SHAPE_PROPERTY_CHANGED):
                 case(SpiralPainter.ROTATION_PROPERTY_CHANGED):
+                        // If there is a spiral painter
                     if (painter != null)
                         config.setSpiralData(painter);
             }
