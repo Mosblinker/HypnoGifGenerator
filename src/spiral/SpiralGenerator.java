@@ -455,6 +455,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
                 config.getMaskDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
+        updateMaskAlphaControlsEnabled();
         loadSpiralPainter();
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
