@@ -96,6 +96,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String ICON_MASK_FILE_IMAGE = "/images/icon_mask.png";
     
+    private static final float[] ICON_FADE_FRACTIONS = {0.85f, 1.0f};
+    
+    private static final Color[] ICON_FADE_COLORS = {Color.WHITE,
+        RippleSpiralPainter.TRANSPARENT_COLOR};
+    
     private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff/images";
     /**
      * This is the default width for the spiral image.
@@ -390,8 +395,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.setComposite(AlphaComposite.DstIn);
             float center = size/2.0f;
             g.setPaint(new RadialGradientPaint(center,center, center, 
-                    new float[]{0.85f, 1.0f}, 
-                    new Color[]{Color.WHITE,RippleSpiralPainter.TRANSPARENT_COLOR}));
+                    ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
             g.fillRect(0, 0, size, size);
             g.dispose();
             iconImages.add(img);
