@@ -146,7 +146,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * 
      */
-    private static final Logger logger = Logger.getLogger(SpiralGenerator.class.getName());
+    private static final Logger logger = Logger.getLogger("HypnoGifGenerator");
     /**
      * 
      * @return 
