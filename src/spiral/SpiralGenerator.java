@@ -143,6 +143,95 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg){
+        getLogger().logp(level, sourceClass.getName(), method, msg);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Throwable thrown){
+        getLogger().logp(level, sourceClass.getName(), method, msg, thrown);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param param1
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Object param1){
+        getLogger().logp(level, sourceClass.getName(), method, msg, param1);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param params
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Object[] params){
+        getLogger().logp(level, sourceClass.getName(), method, msg, params);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     */
+    protected final void log(Level level, String method, String msg){
+        log(level,this.getClass(),method,msg);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param thrown
+     */
+    protected final void log(Level level, String method, String msg, 
+            Throwable thrown){
+        log(level,this.getClass(),method,msg,thrown);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param param1 
+     */
+    protected final void log(Level level, String method, String msg, 
+            Object param1){
+        log(level,this.getClass(),method,msg,param1);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param params 
+     */
+    protected final void log(Level level, String method, String msg, 
+            Object[] params){
+        log(level,this.getClass(),method,msg,params);
+    }
+    /**
+     * 
      * @param msg
      * @param thrown 
      */
