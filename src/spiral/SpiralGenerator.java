@@ -43,7 +43,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.file.Files;
@@ -54,7 +53,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -65,6 +63,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import net.coobird.thumbnailator.Thumbnailator;
+import static spiral.SpiralGeneratorUtilities.*;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
 import utils.SwingExtendedUtilities;
@@ -150,70 +149,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     /**
      * 
-     */
-    private static final Logger logger = Logger.getLogger("HypnoGifGenerator");
-    /**
-     * 
-     * @return 
-     */
-    protected static Logger getLogger(){
-        return logger;
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     */
-    protected static void log(Level level, Class sourceClass, String method, 
-            String msg){
-        getLogger().logp(level, sourceClass.getName(), method, msg);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown
-     */
-    protected static void log(Level level, Class sourceClass, String method, 
-            String msg, Throwable thrown){
-        getLogger().logp(level, sourceClass.getName(), method, msg, thrown);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param param1
-     */
-    protected static void log(Level level, Class sourceClass, String method, 
-            String msg, Object param1){
-        getLogger().logp(level, sourceClass.getName(), method, msg, param1);
-    }
-    /**
-     * 
-     * @param level
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param params
-     */
-    protected static void log(Level level, Class sourceClass, String method, 
-            String msg, Object[] params){
-        getLogger().logp(level, sourceClass.getName(), method, msg, params);
-    }
-    /**
-     * 
      * @param level
      * @param method
      * @param msg
      */
     protected final void log(Level level, String method, String msg){
-        log(level,this.getClass(),method,msg);
+        SpiralGeneratorUtilities.log(level,this.getClass(),method,msg);
     }
     /**
      * 
@@ -224,7 +165,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     protected final void log(Level level, String method, String msg, 
             Throwable thrown){
-        log(level,this.getClass(),method,msg,thrown);
+        SpiralGeneratorUtilities.log(level,this.getClass(),method,msg,thrown);
     }
     /**
      * 
@@ -235,7 +176,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     protected final void log(Level level, String method, String msg, 
             Object param1){
-        log(level,this.getClass(),method,msg,param1);
+        SpiralGeneratorUtilities.log(level,this.getClass(),method,msg,param1);
     }
     /**
      * 
@@ -246,17 +187,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     protected final void log(Level level, String method, String msg, 
             Object[] params){
-        log(level,this.getClass(),method,msg,params);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param thrown 
-     */
-    protected static void logThrown(Class sourceClass, String method, 
-            Throwable thrown){
-        getLogger().throwing(sourceClass.getName(), method, thrown);
+        SpiralGeneratorUtilities.log(level,this.getClass(),method,msg,params);
     }
     /**
      * 
@@ -264,30 +195,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param thrown 
      */
     protected final void logThrown(String method, Throwable thrown){
-        logThrown(this.getClass(),method,thrown);
-    }
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    private BufferedImage readImageResource(String path) throws IOException{
-        return ImageIO.read(this.getClass().getResource(path));
-    }
-    /**
-     * 
-     * @return 
-     */
-    protected static File getProgramDirectory(){
-        try{
-            java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
-            if (url != null)
-                return new File(url.toURI()).getParentFile();
-        } catch (URISyntaxException ex) {
-            log(Level.WARNING, SpiralPainter.class, "getProgramDirectory", 
-                    "Failed to retrieve program directory", ex);
-        }
-        return null;
+        SpiralGeneratorUtilities.logThrown(this.getClass(),method,thrown);
     }
     /**
      * Creates new form SpiralGenerator
@@ -3618,7 +3526,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             // Show the failure prompt and get if the user wants 
                         retry = showFailurePrompt(file, null);  // to try again
                 } catch (IOException ex){
-                    log(Level.WARNING, this.getClass(), "doInBackground", 
+                    SpiralGeneratorUtilities.log(Level.WARNING, this.getClass(),
+                            "doInBackground", 
                             "Error processing file \""+file+"\"", ex);
                     success = false;
                     useWaitCursor(false);

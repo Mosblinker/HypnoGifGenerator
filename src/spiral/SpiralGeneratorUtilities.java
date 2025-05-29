@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import spiral.painter.SpiralPainter;
 
 /**
  *
@@ -109,7 +108,8 @@ public final class SpiralGeneratorUtilities {
             if (url != null)
                 return new File(url.toURI()).getParentFile();
         } catch (URISyntaxException ex) {
-            log(Level.WARNING, SpiralPainter.class, "getProgramDirectory", 
+            log(Level.WARNING, SpiralGeneratorUtilities.class, 
+                    "getProgramDirectory", 
                     "Failed to retrieve program directory", ex);
         }
         return null;
