@@ -2715,16 +2715,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateControlsEnabled();
     }
     
-    private void scaleMaintainLocation(Graphics2D g, double x, double y, 
-            double scaleX, double scaleY){
-            // Translate the graphics context to the given point
-        g.translate(x, y);
-            // Scale the graphics context
-        g.scale(scaleX, scaleY);
-            // Translate the graphics context back to where would be before 
-            // scaling it
-        g.translate(-x, -y);
-    }
     
     private Graphics2D configureGraphics(Graphics2D g){
             // Prioritize rendering quality over speed
