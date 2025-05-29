@@ -139,14 +139,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * 
      */
-    private static Logger logger = null;
+    private static final Logger logger = Logger.getLogger(SpiralGenerator.class.getName());
     /**
      * 
      * @return 
      */
     protected static Logger getLogger(){
-        if (logger == null)
-            logger = Logger.getLogger(SpiralGenerator.class.getName());
         return logger;
     }
     /**
@@ -263,6 +261,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private BufferedImage readImageResource(String path) throws IOException{
         return ImageIO.read(this.getClass().getResource(path));
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static File getProgramDirectory(){
+        try{
+            java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
+            if (url != null)
+                return new File(url.toURI()).getParentFile();
+        } catch (URISyntaxException ex) {
+            log(Level.WARNING, SpiralPainter.class, "getProgramDirectory", 
+                    "Failed to retrieve program directory", ex);
+        }
+        return null;
     }
     /**
      * Creates new form SpiralGenerator
@@ -467,20 +480,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
-            File prgDir = null;
-            try{
-                java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
-                if (url != null){
-                    prgDir = new File(url.toURI()).getParentFile();
-                    if (prgDir.getParentFile() != null)
-                        prgDir = prgDir.getParentFile();
-                }
-            } catch (URISyntaxException ex) {
-                log(Level.INFO, "SpiralGenerator", "Failed to find program directory", 
-                        ex);
-            }
+            File prgDir = getProgramDirectory();
             if (prgDir == null)
                 prgDir = new File(System.getProperty("user.dir"));
+            else if (prgDir.getParentFile() != null)
+                prgDir = prgDir.getParentFile();
             File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
             if (imgDir.exists()){
                 List<File> files = FilesExtended.getFilesFromFolder(imgDir, (File pathname) -> {
