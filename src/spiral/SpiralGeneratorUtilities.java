@@ -225,30 +225,53 @@ public final class SpiralGeneratorUtilities {
     }
     /**
      * 
+     * @param g
+     * @param image
+     * @param width
+     * @param height 
+     */
+    public static void drawCenteredImage(Graphics2D g, BufferedImage image, 
+            int width, int height){
+            // Center and draw the image
+        g.drawImage(image, 
+                Math.max(0, Math.floorDiv(width-image.getWidth(), 2)), 
+                Math.max(0, Math.floorDiv(height-image.getHeight(), 2)), 
+                null);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static BufferedImage getCenteredImage(BufferedImage image, 
+            int width, int height){
+            // If the image's width and height already match the given size
+        if (image.getWidth() == width && image.getHeight() == height)
+            return image;
+            // Get an image with the given size
+        BufferedImage img = new BufferedImage(width,height,
+                BufferedImage.TYPE_INT_ARGB);
+            // Get the graphics context for the new image
+        Graphics2D g = img.createGraphics();
+            // Draw the old image centered on the new image
+        drawCenteredImage(g,image,width,height);
+        g.dispose();
+        return img;
+    }
+    /**
+     * 
      * @param image
      * @return 
      */
-    public static BufferedImage squareImage(BufferedImage image){
-            // If the image is null
-        if (image == null)
-            return null;
+    public static BufferedImage getSquareImage(BufferedImage image){
             // If the image width is the same as its height
         if (image.getWidth() == image.getHeight())
             return image;
             // Get the larger of the two sizes
         int size = Math.max(image.getWidth(), image.getHeight());
-            // Get a square image with the size
-        BufferedImage img = new BufferedImage(size,size,
-                BufferedImage.TYPE_INT_ARGB);
-            // Get the graphics context for the image
-        Graphics2D g = img.createGraphics();
-            // Draw the original image to the new image
-        g.drawImage(image, 
-                Math.max(0, Math.floorDiv(size-image.getWidth(), 2)), 
-                Math.max(0, Math.floorDiv(size-image.getHeight(), 2)), 
-                null);
-        g.dispose();
-        return img;
+        return getCenteredImage(image,size,size);
     }
     /**
      * 
