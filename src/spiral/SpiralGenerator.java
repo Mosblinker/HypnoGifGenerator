@@ -318,19 +318,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         };
         log(Level.FINE, "SpiralGenerator", "Loading SpiralPainters");
         for (SpiralPainter painter : spiralPainters){
+                // Get the byte array for the painter
             byte[] arr = config.getSpiralData(painter);
             try{
                 painter.fromByteArray(arr);
             } catch (IllegalArgumentException | BufferOverflowException | 
                     BufferUnderflowException ex) {
+                    // This is the byte array as a String
                 String arrText;
+                    // If the byte array is null
                 if (arr == null)
                     arrText = "null";
                 else{
                     arrText = "";
+                        // Go through the bytes in the array
                     for (byte value : arr){
                         arrText += String.format("0x%02X, ", Byte.toUnsignedInt(value));
-                    }
+                    }   // If the string is not empty
                     if (!arrText.isEmpty())
                         arrText = arrText.substring(0, arrText.length()-2);
                     arrText = "["+arrText+"]";
@@ -363,6 +367,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             spiralCompLabels.put(label.getLabelFor(), label);
         }
         
+            // This is the image to use as a mask for the icon
         BufferedImage iconImg = null;
         try {
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
@@ -370,32 +375,49 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             log(Level.WARNING,"SpiralGenerator",
                     "Failed to load icon mask \""+ICON_MASK_FILE_IMAGE+"\"",
                     ex);
-        }
+        }   // This is the painter to use to paint the icons for the program
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
+            // This is an array to get the images to use for the icon of the 
+            // program
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
+            // Go through the icon sizes
         for (int size : ICON_SIZES){
-            BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+                // This is the image for the current size
+            BufferedImage img = new BufferedImage(size, size, 
+                    BufferedImage.TYPE_INT_ARGB);
+                // Get a graphics context for the image
             Graphics2D g = img.createGraphics();
             g.setColor(DEFAULT_SPIRAL_COLORS[0]);
             g.fillRect(0, 0, size, size);
             g.setColor(DEFAULT_SPIRAL_COLORS[1]);
+                // Draw the spiral for the icon
             iconPainter.paint(g, 0.0, size, size);
+                // If there is a mask for the overlay for the icon
             if (iconImg != null){
+                    // This is the image for the overlay
                 BufferedImage imgOverlay = new BufferedImage(size, size, 
                         BufferedImage.TYPE_INT_ARGB);
+                    // Get a graphics context for the overlay
                 Graphics2D g2 = imgOverlay.createGraphics();
                 g2.setColor(DEFAULT_SPIRAL_COLORS[2]);
                 g2.fillRect(0, 0, size, size);
                 g2.setColor(DEFAULT_SPIRAL_COLORS[3]);
+                    // Draw the spiral for the overlay
                 iconPainter.paint(g2, 0.0, size, size);
-                maskImage(g2, Thumbnailator.createThumbnail(iconImg, size, size));
+                    // Mask the overlay using the mask
+                maskImage(g2,Thumbnailator.createThumbnail(iconImg,size,size));
                 g2.dispose();
+                    // Draw the overlay
                 g.drawImage(imgOverlay, 0, 0, null);
-            }
+            }   // Set the composite mode to only include pixels that are drawn
             g.setComposite(AlphaComposite.DstIn);
+                // Get the center of the image
             float center = size/2.0f;
+                // Set the paint to a radial gradient that will make the icon 
+                // circular while also fading out near the edge
             g.setPaint(new RadialGradientPaint(center,center, center, 
                     ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
+                // Fill the area to mask the icon
             g.fillRect(0, 0, size, size);
             g.dispose();
             iconImages.add(img);
@@ -494,39 +516,57 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
+                // Get the program's directory
             File prgDir = getProgramDirectory();
+                // If the program's directory is null
             if (prgDir == null)
                 prgDir = new File(System.getProperty("user.dir"));
+                // If the program's directory's parent is not null
             else if (prgDir.getParentFile() != null)
                 prgDir = prgDir.getParentFile();
+                // Get the folder for the test images
             File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
+                // If the test image folder exists
             if (imgDir.exists()){
+                    // Get a list of the files in that folder that match the 
+                    // pattern for the test images
                 List<File> files = FilesExtended.getFilesFromFolder(imgDir, (File pathname) -> {
+                        // If the file is null
                     if (pathname == null)
                         return false;
+                        // If the file is the test image folder
                     if (imgDir.equals(pathname))
                         return true;
+                        // Get the name of the file
                     String name = pathname.getName();
+                        // If the file somehow doesn't have a name
                     if (name == null) 
                         return false;
+                        // If the name matches the pattern
                     if (name.startsWith("test") && name.endsWith(".png")) {
-                        try {
+                        try {   // Try to check if the rest of the name is a 
+                                // number
                             Integer.valueOf(name.substring(4, name.length()-4));
                             return true;
                         }catch (NumberFormatException ex){}
                     }
                     return false;
                 }, 1);
+                    // Remove the test image folder from the list
                 files.remove(imgDir);
+                    // Sort the file names
                 files.sort((File o1, File o2) -> {
+                        // Get the name of the first file
                     String name1 = o1.getName();
+                        // Get the name of the second file
                     String name2 = o2.getName();
+                        // Compare the numbers in the file names
                     return Integer.compare(
                             Integer.parseInt(name1.substring(4,name1.length()-4)),
                             Integer.parseInt(name2.substring(4,name2.length()-4)));
-                });
+                }); // Go through the files for the test images
                 for (File file : files){
-                    try {
+                    try {   // Try to load the image
                         testImages.add(ImageIO.read(file));
                     } catch (IOException ex) {
                         log(Level.INFO, "SpiralGenerator", 
@@ -534,7 +574,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                                 ex);
                     }
                 }
-            }
+            }   // If the test images list is empty
             if (testImages.isEmpty())
                 testSpiralImageSpinner.setEnabled(false);
             else
@@ -543,32 +583,50 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         testImages.size()-1, 1));
             testRotateSpinner.setValue(config.getDebugTestRotation());
             testScaleSpinner.setValue(config.getDebugTestScale());
+                // Add the components for the test double values
             testComponents.put(Double.class, Arrays.asList());
+                // Add the components for the test boolean values
             testComponents.put(Boolean.class, Arrays.asList());
+                // Add the components for the test integer values
             testComponents.put(Integer.class, Arrays.asList());
+                // This is a handler to listen to the test value components
             DebugTestComponentHandler debugHandler = new DebugTestComponentHandler();
+                // Go through the list of components and their types
             for (Map.Entry<Class, List<Component>> entry : testComponents.entrySet()){
+                    // Get the type of value set for these components
                 Class type = entry.getKey();
+                    // Get the list of components
                 List<Component> list = entry.getValue();
+                    // Go through the components
                 for (int i = 0; i < list.size(); i++){
+                        // This will get the value for the component
                     Object value = null;
+                        // Get the current component
                     Component c = list.get(i);
+                        // If the component is for test doubles
                     if (Double.class.equals(type))
                         value = config.getDebugTestDouble(i);
+                        // If the component is for test integers
                     else if (Integer.class.equals(type))
                         value = config.getDebugTestInteger(i);
+                        // If the component is for test booleans
                     else if (Boolean.class.equals(type)){
+                            // If the component is a toggle button
                         if (c instanceof JToggleButton){
+                                // Get the component as a toggle button
                             JToggleButton b = (JToggleButton)c;
                             b.setSelected(config.getDebugTestBoolean(i,b.isSelected()));
                         } else 
                             value = config.getDebugTestBoolean(i);
-                    }
+                    }   // If the component is for test strings
                     else if (String.class.equals(type))
                         value = config.getDebugTestString(i);
+                        // If the component is a toggle button
                     if (c instanceof JToggleButton)
                         ((JToggleButton)c).addActionListener(debugHandler);
+                        // If the test component is a spinner
                     else if (c instanceof JSpinner){
+                            // If the test value for this spinner is not null
                         if (value != null)
                             ((JSpinner)c).setValue(value);
                         ((JSpinner)c).addChangeListener(debugHandler);
