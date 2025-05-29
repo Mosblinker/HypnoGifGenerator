@@ -2125,15 +2125,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | 
-                IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logSevere(null, ex);
+                IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            logSevere("Failed to load Nimbus LnF", ex);
         }
         //</editor-fold>
         
