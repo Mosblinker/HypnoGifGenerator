@@ -311,6 +311,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ConcentricSpiralPainter(),
             new RippleSpiralPainter()
         };
+        log(Level.FINE, "SpiralGenerator", "Loading SpiralPainters");
         for (SpiralPainter painter : spiralPainters){
             byte[] arr = config.getSpiralData(painter);
             try{
@@ -334,6 +335,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         painter.getClass(),arrText), ex);
             }
         }
+        log(Level.FINE, "SpiralGenerator", "Finished loading SpiralPainters");
         
         overlayMask.textPainter.setAntialiasingEnabled(
                 config.isMaskTextAntialiased(
