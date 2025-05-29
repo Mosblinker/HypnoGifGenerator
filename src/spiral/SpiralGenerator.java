@@ -371,17 +371,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (int size : ICON_SIZES){
             BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = img.createGraphics();
-            g.setColor(DEFAULT_SPIRAL_COLORS[1]);
-            g.fillRect(0, 0, size, size);
             g.setColor(DEFAULT_SPIRAL_COLORS[0]);
+            g.fillRect(0, 0, size, size);
+            g.setColor(DEFAULT_SPIRAL_COLORS[1]);
             iconPainter.paint(g, 0.0, size, size);
             if (iconImg != null){
                 BufferedImage imgOverlay = new BufferedImage(size, size, 
                         BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g2 = imgOverlay.createGraphics();
-                g2.setColor(DEFAULT_SPIRAL_COLORS[3]);
-                g2.fillRect(0, 0, size, size);
                 g2.setColor(DEFAULT_SPIRAL_COLORS[2]);
+                g2.fillRect(0, 0, size, size);
+                g2.setColor(DEFAULT_SPIRAL_COLORS[3]);
                 iconPainter.paint(g2, 0.0, size, size);
                 maskImage(g2, Thumbnailator.createThumbnail(iconImg, size, size));
                 g2.dispose();
