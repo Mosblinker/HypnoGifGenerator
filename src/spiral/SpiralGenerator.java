@@ -232,24 +232,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 painter.fromByteArray(arr);
             } catch (IllegalArgumentException | BufferOverflowException | 
                     BufferUnderflowException ex) {
-                    // This is the byte array as a String
-                String arrText;
-                    // If the byte array is null
-                if (arr == null)
-                    arrText = "null";
-                else{
-                    arrText = "";
-                        // Go through the bytes in the array
-                    for (byte value : arr){
-                        arrText += String.format("0x%02X, ", Byte.toUnsignedInt(value));
-                    }   // If the string is not empty
-                    if (!arrText.isEmpty())
-                        arrText = arrText.substring(0, arrText.length()-2);
-                    arrText = "["+arrText+"]";
-                }
                 log(Level.WARNING, "SpiralGenerator", String.format(
                         "Failed to load %s from preferences using %s", 
-                        painter.getClass(),arrText), ex);
+                        painter.getClass(),toByteString(arr)), ex);
             }
         }
         log(Level.FINE, "SpiralGenerator", "Finished loading SpiralPainters");

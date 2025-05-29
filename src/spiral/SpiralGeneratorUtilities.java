@@ -114,5 +114,23 @@ public final class SpiralGeneratorUtilities {
         }
         return null;
     }
-    
+    /**
+     * 
+     * @param arr
+     * @return 
+     */
+    public static String toByteString(byte[] arr){
+            // If the array is null
+        if (arr == null)
+            return "null";
+            // If the array is empty
+        if (arr.length == 0)
+            return "[]";
+        String str = "[";
+            // Go through the bytes in the array
+        for (byte value : arr){
+            str += String.format("0x%02X, ", Byte.toUnsignedInt(value));
+        }
+        return str.substring(0, str.length()-2) + "]";
+    }
 }
