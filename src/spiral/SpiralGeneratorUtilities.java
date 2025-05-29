@@ -102,7 +102,7 @@ public final class SpiralGeneratorUtilities {
      * 
      * @return 
      */
-    protected static File getProgramDirectory(){
+    public static File getProgramDirectory(){
         try{
             java.net.URL url = SpiralGenerator.class.getProtectionDomain().getCodeSource().getLocation();
             if (url != null)
