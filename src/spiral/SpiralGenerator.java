@@ -2766,7 +2766,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param mask
      * @return 
      */
-    private BufferedImage getImageAlphaMask(BufferedImage image, BufferedImage mask){
+    private BufferedImage getImageAlphaMask(BufferedImage image, 
+            BufferedImage mask){
         if (mask != null)
             return mask;
             // If the source image is null
@@ -2862,9 +2863,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // size of the area being rendered
             // TODO: Work on implementing user control over the overlay 
             // image's size and stuff
-        if (mask.getWidth() != width || mask.getHeight() != height)
-                // Scale the overlay image
-            return Thumbnailator.createThumbnail(image,width,height);
+        if (mask.getWidth() != width || mask.getHeight() != height){
+                // Scale and center the overlay image
+            return getCenteredImage(
+                    Thumbnailator.createThumbnail(image,width,height),
+                    width,height);
+        }
         return mask;
     }
     /**
@@ -3979,7 +3983,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
-            img = squareImage(ImageIO.read(file));
+            img = ImageIO.read(file);
             return img != null;
         }
         @Override
