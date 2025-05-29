@@ -209,15 +209,11 @@ public class SpiralGeneratorConfig {
      */
     public void putDimension(String key, Dimension dim){
             // If the dimension object is null
-        if (dim == null){
-            try{    // Remove the key
-                node.remove(key);
-            } catch (IllegalStateException ex){
-                System.out.println("Node has been removed: " + ex);
-            }
-        } else {
+        if (dim == null)
+                // Remove the key
+            node.remove(key);
+        else 
             putDimension(key,dim.width,dim.height);
-        }
     }
     /**
      * 
@@ -273,15 +269,11 @@ public class SpiralGeneratorConfig {
      */
     public void putRectangle(String key, Rectangle value){
             // If the rectangle object is null
-        if (value == null){
-            try{    // Remove the key
-                node.remove(key);
-            } catch (IllegalStateException ex){
-                System.out.println("Node has been removed: " + ex);
-            }
-        } else {
+        if (value == null)
+                // Remove the key
+            node.remove(key);
+        else 
             putRectangle(key,value.x,value.y,value.width,value.height);
-        }
     }
     /**
      * 

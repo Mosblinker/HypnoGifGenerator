@@ -44,6 +44,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -79,6 +82,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the name of the program.
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
+    /**
+     * This is the template for the pattern for the file handler to use for the 
+     * log files of this program.
+     */
+    private static final String PROGRAM_LOG_PATTERN_TEMPLATE = 
+            "%%h/.mosblinker/logs/%s%%g.log";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
@@ -134,22 +143,161 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
-    
+    /**
+     * 
+     */
+    private static final Logger logger = Logger.getLogger(SpiralGenerator.class.getName());
+    /**
+     * 
+     * @return 
+     */
+    protected static Logger getLogger(){
+        return logger;
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg){
+        getLogger().logp(level, sourceClass.getName(), method, msg);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Throwable thrown){
+        getLogger().logp(level, sourceClass.getName(), method, msg, thrown);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param param1
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Object param1){
+        getLogger().logp(level, sourceClass.getName(), method, msg, param1);
+    }
+    /**
+     * 
+     * @param level
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param params
+     */
+    protected static void log(Level level, Class sourceClass, String method, 
+            String msg, Object[] params){
+        getLogger().logp(level, sourceClass.getName(), method, msg, params);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     */
+    protected final void log(Level level, String method, String msg){
+        log(level,this.getClass(),method,msg);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param thrown
+     */
+    protected final void log(Level level, String method, String msg, 
+            Throwable thrown){
+        log(level,this.getClass(),method,msg,thrown);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param param1 
+     */
+    protected final void log(Level level, String method, String msg, 
+            Object param1){
+        log(level,this.getClass(),method,msg,param1);
+    }
+    /**
+     * 
+     * @param level
+     * @param method
+     * @param msg
+     * @param params 
+     */
+    protected final void log(Level level, String method, String msg, 
+            Object[] params){
+        log(level,this.getClass(),method,msg,params);
+    }
+    /**
+     * 
+     * @param sourceClass
+     * @param method
+     * @param thrown 
+     */
+    protected static void logThrown(Class sourceClass, String method, 
+            Throwable thrown){
+        getLogger().throwing(sourceClass.getName(), method, thrown);
+    }
+    /**
+     * 
+     * @param method
+     * @param thrown 
+     */
+    protected final void logThrown(String method, Throwable thrown){
+        logThrown(this.getClass(),method,thrown);
+    }
+    /**
+     * 
+     * @param path
+     * @return 
+     */
+    private BufferedImage readImageResource(String path) throws IOException{
+        return ImageIO.read(this.getClass().getResource(path));
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected static File getProgramDirectory(){
+        try{
+            java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
+            if (url != null)
+                return new File(url.toURI()).getParentFile();
+        } catch (URISyntaxException ex) {
+            log(Level.WARNING, SpiralPainter.class, "getProgramDirectory", 
+                    "Failed to retrieve program directory", ex);
+        }
+        return null;
+    }
     /**
      * Creates new form SpiralGenerator
      * @param debugMode
      */
     public SpiralGenerator(boolean debugMode) {
         this.debugMode = debugMode;
-            // This will get the preference node for the program
-        Preferences node = null;
         try{    // Try to get the preference node used for the program
-            node = Preferences.userRoot().node(PREFERENCE_NODE_NAME);
+            config = new SpiralGeneratorConfig(Preferences.userRoot()
+                    .node(PREFERENCE_NODE_NAME));
         } catch (SecurityException | IllegalStateException ex){
-            System.out.println("Unable to load preference node: " +ex);
+            log(Level.SEVERE, "SpiralGenerator", 
+                    "Unable to load preference node", ex);
             // TODO: Error message window
         }
-        config = new SpiralGeneratorConfig(node);
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
             // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
@@ -164,9 +312,27 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new RippleSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
+            byte[] arr = config.getSpiralData(painter);
             try{
-                painter.fromByteArray(config.getSpiralData(painter));
-            } catch (IllegalArgumentException ex) {}
+                painter.fromByteArray(arr);
+            } catch (IllegalArgumentException | BufferOverflowException | 
+                    BufferUnderflowException ex) {
+                String arrText;
+                if (arr == null)
+                    arrText = "null";
+                else{
+                    arrText = "";
+                    for (byte value : arr){
+                        arrText += String.format("0x%02X, ", Byte.toUnsignedInt(value));
+                    }
+                    if (!arrText.isEmpty())
+                        arrText = arrText.substring(0, arrText.length()-2);
+                    arrText = "["+arrText+"]";
+                }
+                log(Level.WARNING, "SpiralGenerator", String.format(
+                        "Failed to load %s from preferences using %s", 
+                        painter.getClass(),arrText), ex);
+            }
         }
         
         overlayMask.textPainter.setAntialiasingEnabled(
@@ -192,9 +358,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         BufferedImage iconImg = null;
         try {
-            iconImg = ImageIO.read(this.getClass().getResource(ICON_MASK_FILE_IMAGE));
+            iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
-            Logger.getLogger(SpiralGenerator.class.getName()).log(Level.WARNING, null, ex);
+            log(Level.WARNING,"SpiralGenerator",
+                    "Failed to load icon mask \""+ICON_MASK_FILE_IMAGE+"\"",
+                    ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
@@ -319,17 +487,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
-            File prgDir = null;
-            try{
-                java.net.URL url = SpiralPainter.class.getProtectionDomain().getCodeSource().getLocation();
-                if (url != null){
-                    prgDir = new File(url.toURI()).getParentFile();
-                    if (prgDir.getParentFile() != null)
-                        prgDir = prgDir.getParentFile();
-                }
-            } catch (URISyntaxException ex) {}
+            File prgDir = getProgramDirectory();
             if (prgDir == null)
                 prgDir = new File(System.getProperty("user.dir"));
+            else if (prgDir.getParentFile() != null)
+                prgDir = prgDir.getParentFile();
             File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
             if (imgDir.exists()){
                 List<File> files = FilesExtended.getFilesFromFolder(imgDir, (File pathname) -> {
@@ -360,8 +522,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     try {
                         testImages.add(ImageIO.read(file));
                     } catch (IOException ex) {
-                        Logger.getLogger(SpiralGenerator.class.getName()).log(
-                                Level.INFO, null, ex);
+                        log(Level.INFO, "SpiralGenerator", 
+                                "Failed to load test image \""+file.getName()+"\"", 
+                                ex);
                     }
                 }
             }
@@ -1667,9 +1830,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            Logger.getLogger(SpiralGenerator.class.getName()).log(
-                    Level.WARNING,"Null encountered in frameSliderStateChanged", 
-                    ex);
+            log(Level.WARNING, "frameSliderStateChanged", 
+                    "Null encountered while repainting preview label", ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -1923,7 +2085,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
         SpiralPainter painter = getSpiralPainter();
         if (painter instanceof ShapedSpiral){
-            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(spiralShapeCombo.getSelectedIndex()));
+            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(
+                    spiralShapeCombo.getSelectedIndex()));
         }
     }//GEN-LAST:event_spiralShapeComboActionPerformed
 
@@ -2029,28 +2192,45 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        boolean debug = DebugCapable.checkForDebugArgument(args);
+        try {
+            String dir = SpiralGenerator.class.getSimpleName();
+            dir = String.format(PROGRAM_LOG_PATTERN_TEMPLATE, dir);
+            File file = new File(dir.replace("%h", System.getProperty("user.home"))
+                    .replace('/', File.separatorChar)).getParentFile();
+            if (!file.exists()){
+                try{
+                    Files.createDirectories(file.toPath());
+                } catch (IOException ex){
+                    getLogger().log(Level.WARNING, 
+                            "Failed to create directories for log file", ex);
+                }
+            }
+            getLogger().addHandler(new java.util.logging.FileHandler(dir,0,8));
+        } catch (IOException | SecurityException ex) {
+            getLogger().log(Level.SEVERE, null, ex);
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | 
-                IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SpiralGenerator.class.getName()).
-                    log(java.util.logging.Level.SEVERE, null, ex);
+                IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            getLogger().log(Level.SEVERE, "Failed to load Nimbus LnF", ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new SpiralGenerator(DebugCapable.checkForDebugArgument(args)).setVisible(true);
+            new SpiralGenerator(debug).setVisible(true);
         });
     }
     
@@ -2170,10 +2350,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
                     diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
         }
+        int frame = frameSlider.getValue();
+        int next = (frame+1)%SPIRAL_FRAME_COUNT;
         try{
-            frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
+            frameSlider.setValue(next);
         } catch (NullPointerException ex){
-            System.out.println("Null? "+evt);
+            log(Level.WARNING, "progressAnimation", 
+                    "Null encountered while incrementing frame ("+frame+" -> "+
+                            next + ")", ex);
         }
     }
     /**
@@ -2182,7 +2366,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void setColor(int index){
         int option = colorSelector.showDialog(this, colorIcons[index].getColor());
-        if(option == JColorSelector.ACCEPT_OPTION || option == JColorSelector.CLEAR_COLOR_OPTION){
+        if (option == JColorSelector.ACCEPT_OPTION || 
+                option == JColorSelector.CLEAR_COLOR_OPTION){
             Color color = colorSelector.getColor();
             config.setSpiralColor(index, color);
             if (color == null)
@@ -3242,6 +3427,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected Void doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
             setInputEnabled(false);
             progressBar.setValue(0);
             progressBar.setIndeterminate(true);
@@ -3259,7 +3445,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             // Show the failure prompt and get if the user wants 
                         retry = showFailurePrompt(file, null);  // to try again
                 } catch (IOException ex){
-                    System.out.println("Error: " + ex);
+                    log(Level.WARNING, this.getClass(), "doInBackground", 
+                            "Error processing file \""+file+"\"", ex);
                     success = false;
                     useWaitCursor(false);
                         // Show the failure prompt and get if the user wants to 
@@ -3267,6 +3454,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             }   // While the file failed to be processed and the user wants to 
             while(!success && retry);   // try again
+            getLogger().exiting(this.getClass().getName(), "doInBackground");
             return null;
         }
         /**
