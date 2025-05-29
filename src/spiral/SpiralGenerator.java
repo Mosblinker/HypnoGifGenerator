@@ -83,11 +83,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
     /**
-     * This is the template for the pattern for the file handler to use for the 
-     * log files of this program.
+     * This is the pattern for the file handler to use for the log files of this 
+     * program.
      */
-    private static final String PROGRAM_LOG_PATTERN_TEMPLATE = 
-            "%%h/.mosblinker/logs/%s%%g.log";
+    private static final String PROGRAM_LOG_PATTERN = 
+            "%h/.mosblinker/logs/HypnoGifGenerator-%g.log";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
@@ -2195,9 +2195,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     public static void main(String args[]) {
         boolean debug = DebugCapable.checkForDebugArgument(args);
         try {
-            String dir = SpiralGenerator.class.getSimpleName();
-            dir = String.format(PROGRAM_LOG_PATTERN_TEMPLATE, dir);
-            File file = new File(dir.replace("%h", System.getProperty("user.home"))
+            File file = new File(PROGRAM_LOG_PATTERN.replace("%h", 
+                    System.getProperty("user.home"))
                     .replace('/', File.separatorChar)).getParentFile();
             if (!file.exists()){
                 try{
@@ -2207,7 +2206,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             "Failed to create directories for log file", ex);
                 }
             }
-            getLogger().addHandler(new java.util.logging.FileHandler(dir,0,8));
+            getLogger().addHandler(new java.util.logging.FileHandler(
+                    PROGRAM_LOG_PATTERN,0,8));
         } catch (IOException | SecurityException ex) {
             getLogger().log(Level.SEVERE, null, ex);
         }
