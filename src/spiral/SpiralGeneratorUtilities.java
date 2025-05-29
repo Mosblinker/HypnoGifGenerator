@@ -4,6 +4,7 @@
  */
 package spiral;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -161,5 +162,22 @@ public final class SpiralGeneratorUtilities {
      */
     public static void scale(Graphics2D g, double x, double y, double scale){
         scale(g,x,y,scale,scale);
+    }
+    /**
+     * 
+     * @param color
+     * @return 
+     */
+    public static boolean hasNoColor(Color color){
+        return color == null || color.getAlpha() == 0;
+    }
+    /**
+     * 
+     * @param color1
+     * @param color2
+     * @return 
+     */
+    public static boolean hasNoColor(Color color1, Color color2){
+        return hasNoColor(color1) && hasNoColor(color2);
     }
 }

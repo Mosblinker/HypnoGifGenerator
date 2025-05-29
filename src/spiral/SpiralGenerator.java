@@ -2732,23 +2732,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @param color
-     * @return 
-     */
-    private boolean hasNoColor(Color color){
-        return color == null || color.getAlpha() == 0;
-    }
-    /**
-     * 
-     * @param color1
-     * @param color2
-     * @return 
-     */
-    private boolean hasNoColor(Color color1, Color color2){
-        return hasNoColor(color1) && hasNoColor(color2);
-    }
-    /**
-     * 
      * @param g
      * @param width
      * @param height
