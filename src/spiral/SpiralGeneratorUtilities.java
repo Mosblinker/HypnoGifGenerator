@@ -365,11 +365,11 @@ public final class SpiralGeneratorUtilities {
         double centerX = x + (w / 2.0);
         path.moveTo(centerX, y + (h * HEART_CONTROL_POINTS[0][0]));
         for (int i = HEART_CONTROL_POINTS.length-1; i >= 0; i--){
-            path.curveTo(centerX, y + (h * HEART_CONTROL_POINTS[i][0]), 
-                    x + (w * HEART_CONTROL_POINTS[i][1]), 
+            path.curveTo(x + (w * HEART_CONTROL_POINTS[i][1]), 
                     y + (h * HEART_CONTROL_POINTS[i][2]), 
                     x + (w * HEART_CONTROL_POINTS[i][3]), 
-                    y + (h * HEART_CONTROL_POINTS[i][4]));
+                    y + (h * HEART_CONTROL_POINTS[i][4]),
+                    centerX, y + (h * HEART_CONTROL_POINTS[i][0]));
         }
         path.closePath();
         return path;
