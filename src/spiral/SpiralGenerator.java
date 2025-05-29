@@ -2788,37 +2788,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return g;
     }
     
-    private void maskImage(BufferedImage img, BufferedImage mask){
-        int width = img.getWidth();
-        int height = img.getHeight();
-        if (mask.getWidth() != width && mask.getHeight() != height){
-            mask = Thumbnailator.createThumbnail(mask, width, height);
-        }
-        int[] imgData = new int[width];
-        int[] maskData = new int[width];
-        
-        for (int y = 0; y < height; y++){
-            img.getRGB(0, y, width, 1, imgData, 0, 1);
-            mask.getRGB(0, y, width, 1, maskData, 0, 1);
-            
-            for (int x = 0; x < width; x++){
-                //Normalize (0 - 1)
-                float maskAlpha = (maskData[x] & 0x000000FF)/ 255f;
-                float imageAlpha = ((imgData[x] >> 24) & 0x000000FF) / 255f;
-
-                //Image without alpha channel
-                int rgb = imgData[x] & 0x00FFFFFF;
-
-                //Multiplied alpha
-                int alpha = ((int) ((maskAlpha * imageAlpha) * 255)) << 24;
-
-                //Add alpha to image
-                imgData[x] = rgb | alpha;
-            }
-            img.setRGB(0, y, width, 1, imgData, 0, 1);
-        }
-    }
-    
     private void maskImage(Graphics2D g, Image mask){
         g.setComposite(AlphaComposite.DstIn);
         g.drawImage(mask, 0, 0, null);
