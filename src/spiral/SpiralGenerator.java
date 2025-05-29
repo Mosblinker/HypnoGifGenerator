@@ -134,7 +134,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
-    
+    /**
+     * 
+     * @return 
+     */
+    protected static Logger getLogger(){
+        return Logger.getLogger(SpiralGenerator.class.getName());
+    }
     /**
      * Creates new form SpiralGenerator
      * @param debugMode
@@ -194,7 +200,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {
             iconImg = ImageIO.read(this.getClass().getResource(ICON_MASK_FILE_IMAGE));
         } catch (IOException ex) {
-            Logger.getLogger(SpiralGenerator.class.getName()).log(Level.WARNING, null, ex);
+            getLogger().log(Level.WARNING, null, ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
@@ -360,8 +366,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     try {
                         testImages.add(ImageIO.read(file));
                     } catch (IOException ex) {
-                        Logger.getLogger(SpiralGenerator.class.getName()).log(
-                                Level.INFO, null, ex);
+                        getLogger().log(Level.INFO, null, ex);
                     }
                 }
             }
@@ -1667,9 +1672,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            Logger.getLogger(SpiralGenerator.class.getName()).log(
-                    Level.WARNING,"Null encountered in frameSliderStateChanged", 
-                    ex);
+            getLogger().log(Level.WARNING,
+                    "Null encountered in frameSliderStateChanged", ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -2029,6 +2033,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        boolean debug = DebugCapable.checkForDebugArgument(args);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -2043,14 +2048,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         } catch (ClassNotFoundException | InstantiationException | 
                 IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SpiralGenerator.class.getName()).
-                    log(java.util.logging.Level.SEVERE, null, ex);
+            getLogger().log(Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new SpiralGenerator(DebugCapable.checkForDebugArgument(args)).setVisible(true);
+            new SpiralGenerator(debug).setVisible(true);
         });
     }
     
