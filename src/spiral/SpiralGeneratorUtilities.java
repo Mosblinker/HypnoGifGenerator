@@ -4,8 +4,10 @@
  */
 package spiral;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -179,5 +181,45 @@ public final class SpiralGeneratorUtilities {
      */
     public static boolean hasNoColor(Color color1, Color color2){
         return hasNoColor(color1) && hasNoColor(color2);
+    }
+    /**
+     * 
+     * @param g
+     * @param mask
+     * @param x
+     * @param y
+     * @param invert 
+     */
+    public static void maskImage(Graphics2D g, Image mask, int x, int y, 
+            boolean invert){
+        g.setComposite((invert)?AlphaComposite.DstOut:AlphaComposite.DstIn);
+        g.drawImage(mask, x, y, null);
+    }
+    /**
+     * 
+     * @param g
+     * @param mask
+     * @param x
+     * @param y 
+     */
+    public static void maskImage(Graphics2D g, Image mask, int x, int y){
+        maskImage(g,mask,x,y,false);
+    }
+    /**
+     * 
+     * @param g
+     * @param mask
+     * @param invert 
+     */
+    public static void maskImage(Graphics2D g, Image mask, boolean invert){
+        maskImage(g,mask,0,0,invert);
+    }
+    /**
+     * 
+     * @param g
+     * @param mask 
+     */
+    public static void maskImage(Graphics2D g, Image mask){
+        maskImage(g,mask,false);
     }
 }

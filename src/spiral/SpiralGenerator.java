@@ -25,7 +25,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
@@ -2724,11 +2723,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
                 RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         return g;
-    }
-    
-    private void maskImage(Graphics2D g, Image mask){
-        g.setComposite(AlphaComposite.DstIn);
-        g.drawImage(mask, 0, 0, null);
     }
     /**
      * 
