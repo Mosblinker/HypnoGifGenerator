@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.color.ColorSpace;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,13 @@ import javax.imageio.ImageIO;
  * @author Mosblinker
  */
 public final class SpiralGeneratorUtilities {
+    /**
+     * 
+     */
+    private static final double[][] HEART_CONTROL_POINTS = {
+        {0.15, 1.468, 0.328, 0.781, -0.295},
+        { 1.0, 0.219, -0.295, -0.468, 0.328}
+    };
     /**
      * This class cannot be constructed.
      */
@@ -338,5 +346,32 @@ public final class SpiralGeneratorUtilities {
      */
     public static float toGrayscale(int rgb, int mode){
         return toGrayscale((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF,mode);
+    }
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param path
+     * @return 
+     */
+    public static Path2D getHeartShape(double x, double y, double w, double h, 
+            Path2D path){
+        if (path == null)
+            path = new Path2D.Double();
+        else
+            path.reset();
+        double centerX = x + (w / 2.0);
+        path.moveTo(centerX, y + (h * HEART_CONTROL_POINTS[0][0]));
+        for (int i = HEART_CONTROL_POINTS.length-1; i >= 0; i--){
+            path.curveTo(centerX, y + (h * HEART_CONTROL_POINTS[i][0]), 
+                    x + (w * HEART_CONTROL_POINTS[i][1]), 
+                    y + (h * HEART_CONTROL_POINTS[i][2]), 
+                    x + (w * HEART_CONTROL_POINTS[i][3]), 
+                    y + (h * HEART_CONTROL_POINTS[i][4]));
+        }
+        path.closePath();
+        return path;
     }
 }
