@@ -138,10 +138,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     /**
      * 
+     */
+    private static Logger logger = null;
+    /**
+     * 
      * @return 
      */
     protected static Logger getLogger(){
-        return Logger.getLogger(SpiralGenerator.class.getName());
+        if (logger == null)
+            logger = Logger.getLogger(SpiralGenerator.class.getName());
+        return logger;
     }
     /**
      * 
