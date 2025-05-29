@@ -469,7 +469,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (prgDir.getParentFile() != null)
                         prgDir = prgDir.getParentFile();
                 }
-            } catch (URISyntaxException ex) {}
+            } catch (URISyntaxException ex) {
+                log(Level.INFO, "SpiralGenerator", "Failed to find program directory", 
+                        ex);
+            }
             if (prgDir == null)
                 prgDir = new File(System.getProperty("user.dir"));
             File imgDir = new File(prgDir,TEST_IMAGE_FILE_FOLDER);
@@ -1810,7 +1813,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            getLogger().log(Level.WARNING, "Null encountered in frameSliderStateChanged", ex);
+            log(Level.WARNING, "frameSliderStateChanged", 
+                    "Null encountered while repainting preview label", ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -2064,7 +2068,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
         SpiralPainter painter = getSpiralPainter();
         if (painter instanceof ShapedSpiral){
-            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(spiralShapeCombo.getSelectedIndex()));
+            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(
+                    spiralShapeCombo.getSelectedIndex()));
         }
     }//GEN-LAST:event_spiralShapeComboActionPerformed
 
@@ -2311,10 +2316,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
                     diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
         }
+        int frame = frameSlider.getValue();
+        int next = (frame+1)%SPIRAL_FRAME_COUNT;
         try{
-            frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
+            frameSlider.setValue(next);
         } catch (NullPointerException ex){
-            System.out.println("Null? "+evt);
+            log(Level.WARNING, "progressAnimation", 
+                    "Null encountered while incrementing frame ("+frame+" -> "+
+                            next + ")", ex);
         }
     }
     /**
@@ -2323,7 +2332,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void setColor(int index){
         int option = colorSelector.showDialog(this, colorIcons[index].getColor());
-        if(option == JColorSelector.ACCEPT_OPTION || option == JColorSelector.CLEAR_COLOR_OPTION){
+        if (option == JColorSelector.ACCEPT_OPTION || 
+                option == JColorSelector.CLEAR_COLOR_OPTION){
             Color color = colorSelector.getColor();
             config.setSpiralColor(index, color);
             if (color == null)
@@ -3383,6 +3393,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected Void doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
             setInputEnabled(false);
             progressBar.setValue(0);
             progressBar.setIndeterminate(true);
@@ -3400,7 +3411,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             // Show the failure prompt and get if the user wants 
                         retry = showFailurePrompt(file, null);  // to try again
                 } catch (IOException ex){
-                    System.out.println("Error: " + ex);
+                    log(Level.WARNING, this.getClass(), "doInBackground", 
+                            "Error processing file \""+file+"\"", ex);
                     success = false;
                     useWaitCursor(false);
                         // Show the failure prompt and get if the user wants to 
@@ -3408,6 +3420,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             }   // While the file failed to be processed and the user wants to 
             while(!success && retry);   // try again
+            getLogger().exiting(this.getClass().getName(), "doInBackground");
             return null;
         }
         /**
