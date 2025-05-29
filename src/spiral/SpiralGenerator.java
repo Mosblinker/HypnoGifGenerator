@@ -177,7 +177,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param msg
      * @param thrown 
      */
-    protected void logSevere(String method, String msg, Throwable thrown){
+    protected final void logSevere(String method, String msg, Throwable thrown){
         logSevere(this.getClass(),method,msg,thrown);
     }
     /**
@@ -216,7 +216,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param msg
      * @param thrown 
      */
-    protected void logWarning(String method, String msg, Throwable thrown){
+    protected final void logWarning(String method, String msg, Throwable thrown){
         logWarning(this.getClass(),method,msg,thrown);
     }
     /**
