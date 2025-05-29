@@ -232,6 +232,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param sourceClass
+     * @param method
+     * @param thrown 
+     */
+    protected static void logThrown(Class sourceClass, String method, 
+            Throwable thrown){
+        getLogger().throwing(sourceClass.getName(), method, thrown);
+    }
+    /**
+     * 
+     * @param method
+     * @param thrown 
+     */
+    protected final void logThrown(String method, Throwable thrown){
+        logThrown(this.getClass(),method,thrown);
+    }
+    /**
+     * 
      * @param path
      * @return 
      */
