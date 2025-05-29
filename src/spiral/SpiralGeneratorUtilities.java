@@ -4,6 +4,7 @@
  */
 package spiral;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -132,5 +133,33 @@ public final class SpiralGeneratorUtilities {
             str += String.format("0x%02X, ", Byte.toUnsignedInt(value));
         }
         return str.substring(0, str.length()-2) + "]";
+    }
+    /**
+     * 
+     * @param g
+     * @param x
+     * @param y
+     * @param scaleX
+     * @param scaleY 
+     */
+    public static void scale(Graphics2D g, double x, double y, double scaleX, 
+            double scaleY){
+            // Translate the graphics context to the given point
+        g.translate(x, y);
+            // Scale the graphics context
+        g.scale(scaleX, scaleY);
+            // Translate the graphics context back to where would be before 
+            // scaling it
+        g.translate(-x, -y);
+    }
+    /**
+     * 
+     * @param g
+     * @param x
+     * @param y
+     * @param scale 
+     */
+    public static void scale(Graphics2D g, double x, double y, double scale){
+        scale(g,x,y,scale,scale);
     }
 }

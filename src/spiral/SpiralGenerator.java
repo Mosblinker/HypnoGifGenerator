@@ -3014,7 +3014,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Set the color to the first color
             g.setColor(color1);
                 // Scale the graphics, maintaining the center
-            scaleMaintainLocation(g,width/2.0,height/2.0,scale,scale);
+            scale(g,width/2.0,height/2.0,scale);
                // Paint the mask's text
             paintTextMask(g,width,height,text,painter);
                 // Dispose of the graphics context
@@ -3040,7 +3040,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Paint a spiral with the two colors
             paintSpiral(imgG,frameIndex,color1,color2,width,height,spiralPainter);
         }   // Scale the image, maintaining its center
-        scaleMaintainLocation(imgG,width/2.0,height/2.0,scale,scale);
+        scale(imgG,width/2.0,height/2.0,scale);
             // Enable or disable the antialiasing, depending on whether the mask 
             // should be antialiased
         imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
@@ -3196,7 +3196,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the center y-coordinate
             double centerY = height/2.0;
                 // Scale the graphics context
-            scaleMaintainLocation(g,centerX,centerY,scale,scale);
+            scale(g,centerX,centerY,scale);
                 // If the index for the test image is within range of the test 
                 // images
             if (index >= 0 && index < testImages.size()){
