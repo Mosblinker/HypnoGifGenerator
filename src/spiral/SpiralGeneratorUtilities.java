@@ -8,6 +8,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -248,5 +249,71 @@ public final class SpiralGeneratorUtilities {
                 null);
         g.dispose();
         return img;
+    }
+    /**
+     * 
+     * @param r
+     * @param g
+     * @param b
+     * @param mode
+     * @return 
+     */
+    public static float toGrayscale(int r, int g, int b, int mode){
+            // This will get the RGB values as floating point numbers between 0 
+            // and 1
+        float[] rgb = new float[]{r, g, b};
+            // Go through the RGB values
+        for (int i = 0; i < rgb.length; i++){
+                // Divide it by 255 to get it within the range of 0 and 1
+            rgb[i] /= 255.0f;
+        }   // Determine how to get the luminance for this pixel
+        switch(mode){
+                // If using the Luma mode
+            case(1):
+                    // Use the standard luminance equation
+                return (float)(0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]);
+                // If using the Lightness value of HSL
+            case(2):
+                    // This will get the minimum of the RGB values
+                float min = 1;
+                    // This will get the maximum of the RGB values
+                float max = 0;
+                    // Go through the RGB values
+                for (float value : rgb){
+                    min = Math.min(min, value);
+                    max = Math.max(max, value);
+                }
+                return (min + max) / 2.0f;
+                // If using the Value of HSV
+            case(4):
+                    // This will get the largest of the RGB values
+                float v = 0;
+                    // Go through the RGB values
+                for (float value : rgb)
+                    v = Math.max(value, v);
+                return v;
+                // If using the Luminance
+            case(0):
+                    // Convert the color to gray using the gray color space
+                rgb = ColorSpace.getInstance(ColorSpace.CS_GRAY).fromRGB(rgb);
+                    // If there is now only one value in the array
+                if (rgb.length == 1)
+                    return rgb[0];
+            default:
+                    // This will get the average of the RGB values
+                double l = 0;
+                for (float value : rgb)
+                    l += value;
+                return (float)(l / rgb.length);
+        }
+    }
+    /**
+     * 
+     * @param rgb
+     * @param mode
+     * @return 
+     */
+    public static float toGrayscale(int rgb, int mode){
+        return toGrayscale((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF,mode);
     }
 }
