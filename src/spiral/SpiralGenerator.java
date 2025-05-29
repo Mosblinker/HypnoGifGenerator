@@ -142,6 +142,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return Logger.getLogger(SpiralGenerator.class.getName());
     }
     /**
+     * 
+     * @param path
+     * @return 
+     */
+    private BufferedImage readImageResource(String path) throws IOException{
+        return ImageIO.read(this.getClass().getResource(path));
+    }
+    /**
      * Creates new form SpiralGenerator
      * @param debugMode
      */
@@ -198,7 +206,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         BufferedImage iconImg = null;
         try {
-            iconImg = ImageIO.read(this.getClass().getResource(ICON_MASK_FILE_IMAGE));
+            iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
             getLogger().log(Level.WARNING, null, ex);
         }
