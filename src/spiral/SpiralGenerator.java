@@ -262,15 +262,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public SpiralGenerator(boolean debugMode) {
         this.debugMode = debugMode;
-            // This will get the preference node for the program
-        Preferences node = null;
         try{    // Try to get the preference node used for the program
-            node = Preferences.userRoot().node(PREFERENCE_NODE_NAME);
+            config = new SpiralGeneratorConfig(Preferences.userRoot()
+                    .node(PREFERENCE_NODE_NAME));
         } catch (SecurityException | IllegalStateException ex){
-            System.out.println("Unable to load preference node: " +ex);
+            log(Level.SEVERE, "SpiralGenerator", 
+                    "Unable to load preference node", ex);
             // TODO: Error message window
         }
-        config = new SpiralGeneratorConfig(node);
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
             // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
