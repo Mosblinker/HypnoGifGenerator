@@ -44,6 +44,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -284,9 +286,27 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new RippleSpiralPainter()
         };
         for (SpiralPainter painter : spiralPainters){
+            byte[] arr = config.getSpiralData(painter);
             try{
-                painter.fromByteArray(config.getSpiralData(painter));
-            } catch (IllegalArgumentException ex) {}
+                painter.fromByteArray(arr);
+            } catch (IllegalArgumentException | BufferOverflowException | 
+                    BufferUnderflowException ex) {
+                String arrText;
+                if (arr == null)
+                    arrText = "null";
+                else{
+                    arrText = "";
+                    for (byte value : arr){
+                        arrText += String.format("0x%02X, ", Byte.toUnsignedInt(value));
+                    }
+                    if (!arrText.isEmpty())
+                        arrText = arrText.substring(0, arrText.length()-2);
+                    arrText = "["+arrText+"]";
+                }
+                log(Level.WARNING, "SpiralGenerator", String.format(
+                        "Failed to load %s from preferences using %s", 
+                        painter.getClass(),arrText), ex);
+            }
         }
         
         overlayMask.textPainter.setAntialiasingEnabled(
