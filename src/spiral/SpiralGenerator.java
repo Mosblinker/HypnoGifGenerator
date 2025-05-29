@@ -151,11 +151,73 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logSevere(String sourceClass, String method, 
+            String msg, Throwable thrown){
+        getLogger().logp(Level.SEVERE, sourceClass, method, msg, thrown);
+    }
+    /**
+     * 
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logSevere(Class sourceClass, String method, 
+            String msg, Throwable thrown){
+        logSevere(sourceClass.getName(),method,msg,thrown);
+    }
+    /**
+     * 
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected void logSevere(String method, String msg, Throwable thrown){
+        logSevere(this.getClass(),method,msg,thrown);
+    }
+    /**
+     * 
      * @param msg
      * @param thrown 
      */
     protected static void logWarning(String msg, Throwable thrown){
         getLogger().log(Level.WARNING, msg, thrown);
+    }
+    /**
+     * 
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logWarning(String sourceClass, String method, 
+            String msg, Throwable thrown){
+        getLogger().logp(Level.WARNING, sourceClass, method, msg, thrown);
+    }
+    /**
+     * 
+     * @param sourceClass
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected static void logWarning(Class sourceClass, String method, 
+            String msg, Throwable thrown){
+        logWarning(sourceClass.getName(),method,msg,thrown);
+    }
+    /**
+     * 
+     * @param method
+     * @param msg
+     * @param thrown 
+     */
+    protected void logWarning(String method, String msg, Throwable thrown){
+        logWarning(this.getClass(),method,msg,thrown);
     }
     /**
      * 
