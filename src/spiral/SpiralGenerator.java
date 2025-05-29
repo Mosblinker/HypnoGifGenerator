@@ -232,84 +232,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logSevere(String msg, Throwable thrown){
-        getLogger().log(Level.SEVERE, msg, thrown);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logSevere(String sourceClass, String method, 
-            String msg, Throwable thrown){
-        getLogger().logp(Level.SEVERE, sourceClass, method, msg, thrown);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logSevere(Class sourceClass, String method, 
-            String msg, Throwable thrown){
-        logSevere(sourceClass.getName(),method,msg,thrown);
-    }
-    /**
-     * 
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected final void logSevere(String method, String msg, Throwable thrown){
-        logSevere(this.getClass(),method,msg,thrown);
-    }
-    /**
-     * 
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logWarning(String msg, Throwable thrown){
-        getLogger().log(Level.WARNING, msg, thrown);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logWarning(String sourceClass, String method, 
-            String msg, Throwable thrown){
-        getLogger().logp(Level.WARNING, sourceClass, method, msg, thrown);
-    }
-    /**
-     * 
-     * @param sourceClass
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected static void logWarning(Class sourceClass, String method, 
-            String msg, Throwable thrown){
-        logWarning(sourceClass.getName(),method,msg,thrown);
-    }
-    /**
-     * 
-     * @param method
-     * @param msg
-     * @param thrown 
-     */
-    protected final void logWarning(String method, String msg, Throwable thrown){
-        logWarning(this.getClass(),method,msg,thrown);
-    }
-    /**
-     * 
      * @param path
      * @return 
      */
@@ -375,7 +297,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
-            logWarning(null, ex);
+            getLogger().log(Level.WARNING, null, ex);
         }
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
         ArrayList<BufferedImage> iconImages = new ArrayList<>();
@@ -1847,7 +1769,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            logWarning("Null encountered in frameSliderStateChanged", ex);
+            getLogger().log(Level.WARNING, "Null encountered in frameSliderStateChanged", ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -2222,7 +2144,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         } catch (ClassNotFoundException | InstantiationException | 
                 IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            logSevere("Failed to load Nimbus LnF", ex);
+            getLogger().log(Level.SEVERE, "Failed to load Nimbus LnF", ex);
         }
         //</editor-fold>
         
