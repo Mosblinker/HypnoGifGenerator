@@ -4015,18 +4015,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
-            img = ImageIO.read(file);
-            if (img != null && img.getWidth() != img.getHeight()){
-                BufferedImage temp = img;
-                int size = Math.max(img.getWidth(), img.getHeight());
-                img = new BufferedImage(size, size,BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g = img.createGraphics();
-                g.drawImage(temp, 
-                        Math.max(0, Math.floorDiv(size-temp.getWidth(), 2)), 
-                        Math.max(0, Math.floorDiv(size-temp.getHeight(), 2)), 
-                        null);
-                g.dispose();
-            }
+            img = squareImage(ImageIO.read(file));
             return img != null;
         }
         @Override

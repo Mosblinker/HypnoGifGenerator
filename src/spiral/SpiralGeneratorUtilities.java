@@ -222,4 +222,31 @@ public final class SpiralGeneratorUtilities {
     public static void maskImage(Graphics2D g, Image mask){
         maskImage(g,mask,false);
     }
+    /**
+     * 
+     * @param image
+     * @return 
+     */
+    public static BufferedImage squareImage(BufferedImage image){
+            // If the image is null
+        if (image == null)
+            return null;
+            // If the image width is the same as its height
+        if (image.getWidth() == image.getHeight())
+            return image;
+            // Get the larger of the two sizes
+        int size = Math.max(image.getWidth(), image.getHeight());
+            // Get a square image with the size
+        BufferedImage img = new BufferedImage(size,size,
+                BufferedImage.TYPE_INT_ARGB);
+            // Get the graphics context for the image
+        Graphics2D g = img.createGraphics();
+            // Draw the original image to the new image
+        g.drawImage(image, 
+                Math.max(0, Math.floorDiv(size-image.getWidth(), 2)), 
+                Math.max(0, Math.floorDiv(size-image.getHeight(), 2)), 
+                null);
+        g.dispose();
+        return img;
+    }
 }
