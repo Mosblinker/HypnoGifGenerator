@@ -2765,6 +2765,59 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * 
      * @param g
+     * @param frameIndex
+     * @param color1
+     * @param color2
+     * @param width
+     * @param height
+     * @param spiralPainter 
+     */
+    private void paintSpiral(Graphics2D g, int frameIndex, 
+            Color color1, Color color2, int width, int height, 
+            SpiralPainter spiralPainter){
+            // If the width or height is less than or equal to zero or neither 
+            // color is going to be used
+        if (width <= 0 || height <= 0 || hasNoColor(color1,color2))
+            return;
+            // If both of the colors are the same color
+        else if (Objects.equals(color1, color2)){
+            g.setColor(color1);
+            g.fillRect(0, 0, width, height);
+            return;
+        }   // Get the angle of rotation for the given index
+        double angle = getFrameRotation(frameIndex);
+            // If there is a second color
+        if (!hasNoColor(color2)){
+                // If there are two colors
+            if (!hasNoColor(color1)){
+                    // Fill the background with the first color
+                g.setColor(color1);
+                g.fillRect(0, 0, width, height);
+            }   // Draw the spiral with the second color
+            g.setColor(color2);
+            spiralPainter.paint(g, angle, width, height);
+        } else {
+                // Get an image to buffer what is drawn
+            BufferedImage img = new BufferedImage(width, height, 
+                    BufferedImage.TYPE_INT_ARGB);
+                // Get a graphics context for the image buffer
+            Graphics2D imgG = img.createGraphics();
+                // Fill the background of the image with the first color
+            imgG.setColor(color1);
+            imgG.fillRect(0, 0, width, height);
+                // Use the alpha composite to remove any pixels that are in the 
+                // spiral
+            imgG.setComposite(AlphaComposite.DstOut);
+                // Draw the spiral to remove the pixels
+            spiralPainter.paint(imgG, angle, width, height);
+            imgG.dispose();
+                // Draw the buffered image.
+            g.drawImage(img, 0, 0, null);
+        }
+    }
+    /**
+     * 
+     * @param g
      * @param width
      * @param height
      * @param text
@@ -2776,6 +2829,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.setFont(maskTextArea.getFont());
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
+    }
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param text
+     * @param mask
+     * @param painter
+     * @return 
+     */
+    private BufferedImage getTextMaskImage(int width, int height, String text, 
+            BufferedImage mask, CenteredTextPainter painter){
+            // If the text is null or blank
+        if (text == null || text.isBlank())
+            return null;
+            // If the overlay mask is not null and is the same width and height 
+            // as the given width and height
+        if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
+            return mask;
+        
+            // Overlay mask needs to be refreshed
+            
+            // Create a new image for the overlay mask
+        mask = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create the graphics context for the image
+        Graphics2D g = mask.createGraphics();
+            // Paint the mask's text
+        paintTextMask(g,width,height,text,painter);
+            // Dispose of the graphics context
+        g.dispose();
+        return mask;
     }
     /**
      * 
@@ -2893,35 +2978,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param g
      * @param width
      * @param height
-     * @param text
-     * @param mask
-     * @param painter
+     * @param path
      * @return 
      */
-    private BufferedImage getTextMaskImage(int width, int height, String text, 
-            BufferedImage mask, CenteredTextPainter painter){
-            // If the text is null or blank
-        if (text == null || text.isBlank())
-            return null;
-            // If the overlay mask is not null and is the same width and height 
-            // as the given width and height
-        if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
-            return mask;
-        
-            // Overlay mask needs to be refreshed
-            
-            // Create a new image for the overlay mask
-        mask = new BufferedImage(width, height, 
-                BufferedImage.TYPE_INT_ARGB);
-            // Create the graphics context for the image
-        Graphics2D g = mask.createGraphics();
-            // Paint the mask's text
-        paintTextMask(g,width,height,text,painter);
-            // Dispose of the graphics context
-        g.dispose();
-        return mask;
     private Path2D paintShapeMask(Graphics2D g, int width, int height, Path2D path){
         double size = (double) maskShapeSizeSpinner.getValue();
         size = Math.min(width * size, height * size);
@@ -3041,49 +3103,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
                 height,mask.getMask(width, height),spiralPainter,
                 mask.textPainter,isOverlayMaskImage(),getOverlayAntialiased());
-    }
-    
-    private void paintSpiral(Graphics2D g, int frameIndex, Color color1, Color color2,
-            int width, int height, SpiralPainter spiralPainter){
-            // If the width or height is less than or equal to zero or neither 
-            // color is going to be used
-        if (width <= 0 || height <= 0 || hasNoColor(color1,color2))
-            return;
-            // If both of the colors are the same color
-        else if (Objects.equals(color1, color2)){
-            g.setColor(color1);
-            g.fillRect(0, 0, width, height);
-            return;
-        }   // Get the angle of rotation for the given index
-        double angle = getFrameRotation(frameIndex);
-            // If there is a second color
-        if (!hasNoColor(color2)){
-                // If there are two colors
-            if (!hasNoColor(color1)){
-                    // Fill the background with the first color
-                g.setColor(color1);
-                g.fillRect(0, 0, width, height);
-            }   // Draw the spiral with the second color
-            g.setColor(color2);
-            spiralPainter.paint(g, angle, width, height);
-        } else {
-                // Get an image to buffer what is drawn
-            BufferedImage img = new BufferedImage(width, height, 
-                    BufferedImage.TYPE_INT_ARGB);
-                // Get a graphics context for the image buffer
-            Graphics2D imgG = img.createGraphics();
-                // Fill the background of the image with the first color
-            imgG.setColor(color1);
-            imgG.fillRect(0, 0, width, height);
-                // Use the alpha composite to remove any pixels that are in the 
-                // spiral
-            imgG.setComposite(AlphaComposite.DstOut);
-                // Draw the spiral to remove the pixels
-            spiralPainter.paint(imgG, angle, width, height);
-            imgG.dispose();
-                // Draw the buffered image.
-            g.drawImage(img, 0, 0, null);
-        }
     }
     /**
      * 
