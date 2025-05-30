@@ -377,6 +377,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.getMaskDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
         updateMaskAlphaControlsEnabled();
+        updateMaskShapeControlsEnabled();
         loadSpiralPainter();
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
@@ -2140,8 +2141,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskAlphaIndex(maskAlphaButtons);
                 config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+                break;
+            case(2):
+                maskShapeLinkSizeToggle.setSelected(true);
+                maskShapeWidthSpinner.setValue(0.1);
+                updateMaskShapeControlsEnabled();
         }
-        overlayMask.reset();
+        overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
     }//GEN-LAST:event_resetMaskButtonActionPerformed
 
@@ -2159,6 +2165,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeHeightSpinnerStateChanged
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
+        updateMaskShapeControlsEnabled();
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
             refreshPreview(2);
@@ -2339,6 +2346,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             button.setEnabled(enabled);
         }
         updateMaskAlphaControlsEnabled();
+        maskShapeWidthSpinner.setEnabled(enabled);
+        maskShapeLinkSizeToggle.setEnabled(enabled);
+        updateMaskShapeControlsEnabled();
     }
     /**
      * 
@@ -2359,6 +2369,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 !maskAlphaToggle.isSelected());
         maskDesaturateCombo.setEnabled(maskAlphaGrayToggle.isEnabled() && 
                 maskAlphaGrayToggle.isSelected());
+    }
+    /**
+     * 
+     */
+    private void updateMaskShapeControlsEnabled(){
+        maskShapeHeightSpinner.setEnabled(maskShapeWidthSpinner.isEnabled() && 
+                !maskShapeLinkSizeToggle.isSelected());
     }
     /**
      * 
