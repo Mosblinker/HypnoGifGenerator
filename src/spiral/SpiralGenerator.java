@@ -409,7 +409,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextArea.getDocument().addDocumentListener(handler);
         
         if (debugMode){
-            testSpiralPainter = spiralPainters[spiralPainters.length-1];
+            testSpiralPainter = spiralPainters[2];
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
             testImages = new ArrayList<>();
