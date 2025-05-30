@@ -377,6 +377,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.getMaskDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
         updateMaskAlphaControlsEnabled();
+        maskShapeLinkSizeToggle.setSelected(config.isMaskShapeSizeLinked());
+        maskShapeWidthSpinner.setValue(config.getMaskShapeWidth());
+        maskShapeHeightSpinner.setValue(config.getMaskShapeHeight());
         updateMaskShapeControlsEnabled();
         loadSpiralPainter();
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
@@ -2146,6 +2149,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskShapeLinkSizeToggle.setSelected(true);
                 maskShapeWidthSpinner.setValue(0.1);
                 updateMaskShapeControlsEnabled();
+                config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
@@ -2153,12 +2157,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
         double value = (double) maskShapeWidthSpinner.getValue();
+        config.setMaskShapeWidth(value);
         if (maskShapeLinkSizeToggle.isSelected())
             maskShapeHeightSpinner.setValue(value);
         refreshPreview(2);
     }//GEN-LAST:event_maskShapeWidthSpinnerStateChanged
 
     private void maskShapeHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeHeightSpinnerStateChanged
+        config.setMaskShapeHeight((double) maskShapeHeightSpinner.getValue());
         if (maskShapeLinkSizeToggle.isSelected())
             return;
         refreshPreview(2);
@@ -2166,6 +2172,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
         updateMaskShapeControlsEnabled();
+        config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
             refreshPreview(2);
