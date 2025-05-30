@@ -2994,17 +2994,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @return 
-     */
-    private boolean getOverlayAntialiased(){
-            // If the mask is an image, use whether the image  antialiasing 
-            // toggle is selected.
-        if (isOverlayMaskImage())
-            return imgMaskAntialiasingToggle.isSelected();
-        return overlayMask.textPainter.isAntialiasingEnabled();
-    }
-    /**
-     * 
      * @param g
      * @param frameIndex
      * @param color1
@@ -3102,7 +3091,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
                 height,mask.getMask(width, height),spiralPainter,
-                mask.textPainter,isOverlayMaskImage(),getOverlayAntialiased());
+                mask.textPainter,isOverlayMaskImage(),mask.isAntialiased());
     }
     /**
      * 
@@ -3421,6 +3410,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
             return null;
         }
+        /**
+         * 
+         * @return 
+         */
+        public boolean isAntialiased(){
+                // Determine what to return based off the index
+            switch (maskTabbedPane.getSelectedIndex()){
+                    // The mask is using text
+                case (0):
+                    return textPainter.isAntialiasingEnabled();
+                    // The mask is an image
+                case(1):
+                    return imgMaskAntialiasingToggle.isSelected();
+            }
+            return true;
         }
     }
     /**
