@@ -3388,6 +3388,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         /**
          * 
+         * @param index 
+         */
+        public boolean reset(int index){
+            switch(index){
+                case(0):
+                    textMask = null;
+                    break;
+                case(1):
+                    alphaMask = imgMask = null;
+                    break;
+                case(2):
+                    shapeMask = null;
+            }
+            return index == maskTabbedPane.getSelectedIndex();
+        }
+        /**
+         * 
          * @param width
          * @param height
          * @return 
