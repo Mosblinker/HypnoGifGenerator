@@ -2991,7 +2991,36 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.fill(path);
         return path;
     }
-    
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param mask
+     * @param path
+     * @return 
+     */
+    private BufferedImage getShapeMaskImage(int width, int height, 
+            BufferedImage mask, Path2D path){
+        double size = (double) maskShapeSizeSpinner.getValue();
+        if (size <= 0)
+            return null;
+            // If the overlay mask is not null and is the same width and height 
+            // as the given width and height
+        if (mask != null && mask.getWidth() == width && mask.getHeight() == height)
+            return mask;
+        
+            // Overlay mask needs to be refreshed
+            
+            // Create a new image for the overlay mask
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            // Create the graphics context for the image
+        Graphics2D g = mask.createGraphics();
+            // Paint the mask's shape
+        paintShapeMask(g,width,height,path);
+            // Dispose of the graphics context
+        g.dispose();
+        return mask;
+    }
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height,SpiralPainter spiralPainter, 
@@ -3323,6 +3352,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public BufferedImage imgMask = null;
         /**
+         * This is the image used as a mask for the overlay when a shape is 
+         * being used for the mask. When this is null, then the mask will be 
+         * generated the next time it is used.
+         */
+        public BufferedImage shapeMask = null;
+        /**
          * This is the painter used to paint the text used as the mask for the 
          * message when text is being used for the mask.
          */
@@ -3349,7 +3384,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * 
          */
         public void reset(){
-            textMask = alphaMask = imgMask = null;
+            textMask = alphaMask = imgMask = shapeMask = null;
         }
         /**
          * 
@@ -3373,7 +3408,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // Use the mask version of the alpha image as the mask
                     return imgMask = getImageMaskImage(width,height,alphaMask,
                             imgMask);
-                    
+                case(2):
+                    if (path == null)
+                        path = new Path2D.Double();
+                    return shapeMask = getShapeMaskImage(width,height,shapeMask,path);
             }
             return null;
         }
@@ -3459,10 +3497,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         public void maskOverlay(Graphics2D g, int width, int height){
                 // Get the mask to use
             BufferedImage mask = getMask(width, height);
-                // If the mask is using a shape
-            boolean isShape = maskTabbedPane.getSelectedIndex() == 2;
-                // If the mask is null and we're not using a shape
-            if (mask == null && !isShape)
+                // If the mask is null
+            if (mask == null)
                 return;
                 // Scale the graphics for the masl, maintaining the center
             scale(g,width/2.0,height/2.0,getMaskScale());
@@ -3471,16 +3507,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                     (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
-                // If the mask is using a shape
-            if (isShape){
-                    // Set the alpha composite to only include the pixels to be 
-                    // included
-                g.setComposite(AlphaComposite.DstIn);
-                    // Paint the shape
-                path = paintShapeMask(g,width,height,path);
-            } else 
                 // Mask the overlay pixels with the mask image
-                maskImage(g,mask);
+            maskImage(g,mask);
         }
     }
     /**
