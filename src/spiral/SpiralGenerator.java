@@ -2852,8 +2852,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Overlay mask needs to be refreshed
             
             // Create a new image for the overlay mask
-        mask = new BufferedImage(width, height, 
-                BufferedImage.TYPE_INT_ARGB);
+        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             // Create the graphics context for the image
         Graphics2D g = mask.createGraphics();
             // Paint the mask's text
@@ -2992,84 +2991,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.fill(path);
         return path;
     }
-    /**
-     * 
-     * @param g
-     * @param frameIndex
-     * @param color1
-     * @param color2
-     * @param width
-     * @param height
-     * @param mask
-     * @param spiralPainter
-     * @param painter
-     * @param useImage
-     * @param antialiasing 
-     */
-    private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
-            Color color2, int width, int height, BufferedImage mask, 
-            SpiralPainter spiralPainter, CenteredTextPainter painter, 
-            boolean useImage, boolean antialiasing){
-            // If the message should be a solid color
-        boolean solidColor = Objects.equals(color1, color2);
-            // This gets the scale for the mask
-        double scale = getMaskScale();
-            // If the overlay is a solid color and using text for the mask and a 
-            // non-null text painter was provided
-        if (solidColor && !useImage && painter != null){
-                // Get the text for the mask 
-            String text = maskTextArea.getText();
-                // If the text is null or blank
-            if (text == null || text.isBlank())
-                return;
-                // Create a copy of the given graphics context
-            g = (Graphics2D) g.create();
-                // Set the color to the first color
-            g.setColor(color1);
-                // Scale the graphics, maintaining the center
-            scale(g,width/2.0,height/2.0,scale);
-               // Paint the mask's text
-            paintTextMask(g,width,height,text,painter);
-                // Dispose of the graphics context
-            g.dispose();
-            return;
-        }
-            // If the mask is somehow null at this point
-        if (mask == null)
-            return;
-            // Create an image to render the overlay to
-        BufferedImage overlay = new BufferedImage(width, height, 
-                BufferedImage.TYPE_INT_ARGB);
-            // Create a graphics context for the image
-        Graphics2D imgG = overlay.createGraphics();
-            // Configure the image graphics
-        imgG = configureGraphics(imgG);
-            // If the overlay is being rendered in a solid color
-        if (solidColor){
-                // Fill the image with the first color
-            imgG.setColor(color1);
-            imgG.fillRect(0, 0, width, height);
-        } else {
-                // Paint a spiral with the two colors
-            paintSpiral(imgG,frameIndex,color1,color2,width,height,spiralPainter);
-        }   // Scale the image, maintaining its center
-        scale(imgG,width/2.0,height/2.0,scale);
-            // Enable or disable the antialiasing, depending on whether the mask 
-            // should be antialiased
-        imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                (antialiasing)? RenderingHints.VALUE_ANTIALIAS_ON : 
-                        RenderingHints.VALUE_ANTIALIAS_OFF);
-            // Mask the overlay image pixels with the mask image
-        maskImage(imgG,mask);
-            // Dispose of the image graphics
-        imgG.dispose();
-            // Create a copy of the given graphics context and configure it
-        g = configureGraphics((Graphics2D) g.create());
-            // Draw the overlay image
-        g.drawImage(overlay, 0, 0, null);
-            // Dispose of the copy of the graphics context
-        g.dispose();
-    }
+    
     
     private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
             Color color2, int width, int height,SpiralPainter spiralPainter, 
@@ -3099,10 +3021,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Create an image to render the overlay to
                 img = new BufferedImage(width, height, 
                         BufferedImage.TYPE_INT_ARGB);
-                    // Create and configure the image graphics
-                imgG = configureGraphics(img.createGraphics());
+                    // Create a graphics context for the image
+                imgG = img.createGraphics();
             } else  // Create a copy of the given graphics context
                 imgG = (Graphics2D) g.create();
+                // Configure the graphics context
+            imgG = configureGraphics(imgG);
                 // Set the color to the first color
             imgG.setColor(color1);
                 // Paint the overlay as a solid color
@@ -3113,10 +3037,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g.drawImage(img, 0, 0, null);
             return;
         }
-            // Paint the overlay
-        paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
-                height,mask.getMask(width, height),spiralPainter,
-                mask.textPainter,isOverlayMaskImage(),mask.isAntialiased());
+            // Create an image to render the overlay to
+        BufferedImage overlay = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Create and configure a graphics context for the image
+        Graphics2D imgG = configureGraphics(overlay.createGraphics());
+            // Paint a spiral with the two colors
+        paintSpiral(imgG,frameIndex,color1,color2,width,height,spiralPainter);
+            // Apply the mask for the overlay
+        mask.maskOverlay(imgG, width, height);
+            // Dispose of the image graphics
+        imgG.dispose();
+            // Create a copy of the given graphics context and configure it
+        g = configureGraphics((Graphics2D) g.create());
+            // Draw the overlay image
+        g.drawImage(overlay, 0, 0, null);
+            // Dispose of the copy of the graphics context
+        g.dispose();
     }
     /**
      * 
