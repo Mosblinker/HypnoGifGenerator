@@ -3361,6 +3361,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
             if (maskChanged)
                 refreshPreview(0);
+            else
+                refreshPreview();
         }
         @Override
         public void actionPerformed(ActionEvent evt) {
