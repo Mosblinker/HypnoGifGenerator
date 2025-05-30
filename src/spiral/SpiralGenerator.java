@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -2752,7 +2753,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateControlsEnabled();
     }
     
-    
     private Graphics2D configureGraphics(Graphics2D g){
             // Prioritize rendering quality over speed
         g.setRenderingHint(RenderingHints.KEY_RENDERING, 
@@ -2922,6 +2922,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Dispose of the graphics context
         g.dispose();
         return mask;
+    private Path2D paintShapeMask(Graphics2D g, int width, int height, Path2D path){
+        double size = (double) maskShapeSizeSpinner.getValue();
+        size = Math.min(width * size, height * size);
+        path = SpiralGeneratorUtilities.getHeartShape(
+                (width-size)/2.0, (height-size)/2.0, size, size, path);
+        g.fill(path);
+        return path;
     }
     /**
      * 
