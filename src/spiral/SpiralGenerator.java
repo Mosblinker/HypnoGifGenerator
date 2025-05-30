@@ -1917,7 +1917,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextArea.setFont(font);
             config.setMaskFont(font);
-            refreshPreview(true,false);
+            refreshPreview(0);
         }
         fontDim = fontSelector.getSize(fontDim);
         config.setMaskFontSelectorSize(fontDim);
@@ -1931,7 +1931,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int style = getFontStyle();
         config.setMaskFontStyle(style);
         maskTextArea.setFont(maskTextArea.getFont().deriveFont(style));
-        refreshPreview(true,false);
+        refreshPreview(0);
     }//GEN-LAST:event_styleToggleActionPerformed
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
@@ -1961,12 +1961,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void widthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_widthSpinnerStateChanged
         config.setImageWidth(getImageWidth());
-        refreshPreview(true,true);
+        refreshPreview(-1);
     }//GEN-LAST:event_widthSpinnerStateChanged
 
     private void heightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightSpinnerStateChanged
         config.setImageHeight(getImageHeight());
-        refreshPreview(true,true);
+        refreshPreview(-1);
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -1986,7 +1986,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
         config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
-        refreshPreview(false,true);
+        refreshPreview(1);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
     /**
      * 
@@ -2072,17 +2072,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.setMaskAlphaIndex(maskAlphaButtons);
         updateMaskAlphaControlsEnabled();
-        refreshPreview(false,true);
+        refreshPreview(1);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
     private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
-        refreshPreview(false,true);
+        refreshPreview(1);
     }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
 
     private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
         config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
-        refreshPreview(false,true);
+        refreshPreview(1);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
 
     private void testShowRadiusToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testShowRadiusToggleActionPerformed
@@ -2219,19 +2219,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void refreshMaskText(){
         config.setMaskText(maskTextArea.getText());
-        refreshPreview(true,false);
+        refreshPreview(0);
     }
     
-    private void refreshPreview(boolean textChanged, boolean imgChanged){
-        if (textChanged){
-            overlayMask.textMask = null;
-            if (!isOverlayMaskImage())
-                maskPreviewLabel.repaint();
-        }
-        if (imgChanged){
-            overlayMask.alphaMask = null;
-            overlayMask.imgMask = null;
-            if (isOverlayMaskImage())
+    
+    private void refreshPreview(int index){
+        if (index < 0){
+            overlayMask.reset();
+            maskPreviewLabel.repaint();
+        } else {
+            if (overlayMask.reset(index))
                 maskPreviewLabel.repaint();
         }
         refreshPreview();
@@ -3263,7 +3260,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (painter != null)
                         config.setSpiralData(painter);
             }
-            refreshPreview(maskChanged,false);
+            if (maskChanged)
+                refreshPreview(0);
         }
         @Override
         public void actionPerformed(ActionEvent evt) {
@@ -4167,7 +4165,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         protected void done(){
             if (success)
                 overlayImage = img;
-            refreshPreview(false,true);
+            refreshPreview(1);
             super.done();
         }
     }
