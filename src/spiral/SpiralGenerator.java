@@ -2779,27 +2779,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @param rgb
-     * @return 
-     */
-    private float getLuminance(int rgb){
-        return getLuminance((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF);
-    }
-    /**
-     * 
-     * @param r
-     * @param g
-     * @param b
-     * @return 
-     */
-    private float getLuminance(int r, int g, int b){
-        int mode = maskDesaturateCombo.getSelectedIndex();
-        if (mode == 0)
-            mode = 3;
-        return toGrayscale(r,g,b,mode);
-    }
-    /**
-     * 
      * @param image
      * @param mask
      * @return 
@@ -2831,6 +2810,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the green channel should be used as the alpha channel
         else if (maskAlphaGreenToggle.isSelected())
             colorShift = 8;
+            // Get the desaturation mode
+        int mode = maskDesaturateCombo.getSelectedIndex();
             // This sets the color to fill the background of the image. If the 
             // alpha channel is inverted, then use black. Otherwise, use white. 
             // This way, the transparent area remains transparent.
@@ -2839,10 +2820,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.fillRect(0, 0, width, height);
             // If the image should be treated as greyscale and using luminance 
             // to desaturate the image
-        if (maskAlphaGrayToggle.isSelected() && maskDesaturateCombo.getSelectedIndex() == 0){
+        if (maskAlphaGrayToggle.isSelected() && mode == 0){
                 // Draw a grayscale version of the image
             g.drawImage(image, new ColorConvertOp(
                     ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
+            mode = 3;
         } else  // Draw the image
             g.drawImage(image, 0, 0, null);
         g.dispose();
@@ -2869,7 +2851,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 float alpha;
                     // If the image should be treated as a grayscale image
                 if (maskAlphaGrayToggle.isSelected())
-                    alpha = getLuminance(rgb);
+                    alpha = toGrayscale(rgb,mode);
                 else 
                     alpha = (rgb & 0x000000FF) / 255.0f;
                     // Remove the old alpha component of the pixel
