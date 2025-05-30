@@ -3389,27 +3389,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             this(mask.textPainter);
             this.alphaMask = mask.alphaMask;
         }
-        
+        /**
+         * 
+         */
         public void reset(){
             textMask = alphaMask = imgMask = null;
         }
-        
+        /**
+         * 
+         * @param width
+         * @param height
+         * @return 
+         */
         public BufferedImage getMask(int width, int height){
-                // This will get the mask to return
-            BufferedImage mask;
-                // If a loaded image is being used as the overlay mask
-            if (isOverlayMaskImage()){
-                    // Get a version of the overlay image with the alpha channel
-                    // applied to it.
-                alphaMask = getImageAlphaMask(overlayImage,alphaMask);
-                    // Use the mask version of the alpha image as the mask
-                mask = imgMask = getImageMaskImage(width,height,alphaMask,
-                        imgMask);
-            } else 
-                    // Use the text mask, creating it if it needs to be made
-                mask = textMask = getTextMaskImage(width,height,
-                        maskTextArea.getText(),textMask,textPainter);
-            return mask;
+                // Determine what to return based off the index
+            switch (maskTabbedPane.getSelectedIndex()){
+                    // The mask is using text
+                case (0):
+                        // Use the text mask, creating it if need be
+                    return textMask = getTextMaskImage(width,height,
+                            maskTextArea.getText(),textMask,textPainter);
+                    // The mask is an image
+                case(1):
+                        // Get the alpha channel for the overlay image, creating 
+                        // it if need be
+                    alphaMask = getImageAlphaMask(overlayImage,alphaMask);
+                        // Use the mask version of the alpha image as the mask
+                    return imgMask = getImageMaskImage(width,height,alphaMask,
+                            imgMask);
+                    
+            }
+            return null;
+        }
         }
     }
     /**
