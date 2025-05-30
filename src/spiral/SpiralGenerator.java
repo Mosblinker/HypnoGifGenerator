@@ -3088,6 +3088,31 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }   // If both colors are non-existant
         else if (hasNoColor(color1,color2))
             return;
+            // If the overlay is a solid color and isn't an image
+        if (solidColor){
+                // A buffered image to paint to if need be
+            BufferedImage img = null;
+                // The graphics context to render to
+            Graphics2D imgG;
+                // If the overlay is an image
+            if (isOverlayMaskImage()){
+                    // Create an image to render the overlay to
+                img = new BufferedImage(width, height, 
+                        BufferedImage.TYPE_INT_ARGB);
+                    // Create and configure the image graphics
+                imgG = configureGraphics(img.createGraphics());
+            } else  // Create a copy of the given graphics context
+                imgG = (Graphics2D) g.create();
+                // Set the color to the first color
+            imgG.setColor(color1);
+                // Paint the overlay as a solid color
+            mask.paintOverlay(imgG, width, height);
+            imgG.dispose();
+                // If an image was rendered to
+            if (img != null)
+                g.drawImage(img, 0, 0, null);
+            return;
+        }
             // Paint the overlay
         paintOverlay(g,frameIndex,color1,(solidColor)?color1:color2,width,
                 height,mask.getMask(width, height),spiralPainter,
