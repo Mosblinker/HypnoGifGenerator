@@ -106,6 +106,12 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
     
+    public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
+    
+    public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
+    
+    public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
+    
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
@@ -1018,6 +1024,42 @@ public class SpiralGeneratorConfig {
     
     public void setMaskDesaturateMode(int value){
         getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
+    }
+    
+    public double getMaskShapeWidth(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
+    }
+    
+    public double getMaskShapeWidth(){
+        return getMaskShapeWidth(0.1);
+    }
+    
+    public void setMaskShapeWidth(double value){
+        getMaskPreferences().putDouble(MASK_SHAPE_WIDTH_KEY, value);
+    }
+    
+    public double getMaskShapeHeight(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_SHAPE_HEIGHT_KEY, defaultValue);
+    }
+    
+    public double getMaskShapeHeight(){
+        return getMaskShapeHeight(0.1);
+    }
+    
+    public void setMaskShapeHeight(double value){
+        getMaskPreferences().putDouble(MASK_SHAPE_HEIGHT_KEY, value);
+    }
+    
+    public boolean isMaskShapeSizeLinked(boolean defaultValue){
+        return getMaskPreferences().getBoolean(MASK_SHAPE_LINK_SIZE_KEY, defaultValue);
+    }
+    
+    public boolean isMaskShapeSizeLinked(){
+        return isMaskShapeSizeLinked(true);
+    }
+    
+    public void setMaskShapeSizeLinked(boolean value){
+        getMaskPreferences().putBoolean(MASK_SHAPE_LINK_SIZE_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){
