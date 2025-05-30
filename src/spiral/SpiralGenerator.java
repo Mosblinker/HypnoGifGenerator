@@ -3094,6 +3094,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             // Create the graphics context for the image
         Graphics2D g = mask.createGraphics();
+            // Enable antialiasing
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
             // Paint the mask's shape
         paintShapeMask(g,width,height,w,h,path);
             // Dispose of the graphics context
@@ -3141,8 +3144,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             mask.paintOverlay(imgG, width, height);
             imgG.dispose();
                 // If an image was rendered to
-            if (img != null)
+            if (img != null){
+                    // Create a copy of the given graphics context and configure it
+                g = configureGraphics((Graphics2D) g.create());
+                    // Enable or disable the antialiasing, depending on whether the 
+                    // mask should be antialiased
+                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                        (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                                RenderingHints.VALUE_ANTIALIAS_OFF);
                 g.drawImage(img, 0, 0, null);
+                g.dispose();
+            }
             return;
         }
             // Create an image to render the overlay to
@@ -3158,6 +3170,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgG.dispose();
             // Create a copy of the given graphics context and configure it
         g = configureGraphics((Graphics2D) g.create());
+            // Enable or disable the antialiasing, depending on whether the 
+            // mask should be antialiased
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                        RenderingHints.VALUE_ANTIALIAS_OFF);
             // Draw the overlay image
         g.drawImage(overlay, 0, 0, null);
             // Dispose of the copy of the graphics context
