@@ -292,7 +292,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.fillRect(0, 0, size, size);
             g.setColor(iconModel.getColor2());
                 // Draw the spiral for the icon
-            iconPainter.paint(g, iconModel.getRotation(), size, size);
+            iconPainter.paint(g, iconModel, size, size);
                 // If there is a mask for the overlay for the icon
             if (iconImg != null){
                     // This is the image for the overlay
@@ -304,7 +304,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g2.fillRect(0, 0, size, size);
                 g2.setColor(iconMsgModel.getColor2());
                     // Draw the spiral for the overlay
-                iconPainter.paint(g2, iconMsgModel.getRotation(), size, size);
+                iconPainter.paint(g2, iconMsgModel, size, size);
                     // Mask the overlay using the mask
                 maskImage(g2,Thumbnailator.createThumbnail(iconImg,size,size));
                 g2.dispose();
@@ -2883,7 +2883,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 g.fillRect(0, 0, width, height);
             }   // Draw the spiral with the second color
             g.setColor(model.getColor1());
-            spiralPainter.paint(g, model.getRotation(), width, height);
+            spiralPainter.paint(g, model, width, height);
         } else {
                 // Get an image to buffer what is drawn
             BufferedImage img = new BufferedImage(width, height, 
@@ -2897,7 +2897,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // spiral
             imgG.setComposite(AlphaComposite.DstOut);
                 // Draw the spiral to remove the pixels
-            spiralPainter.paint(imgG, model.getRotation(), width, height);
+            spiralPainter.paint(imgG, model, width, height);
             imgG.dispose();
                 // Draw the buffered image.
             g.drawImage(img, 0, 0, null);
@@ -3295,7 +3295,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }   // Get the rotation for the test spiral
             testModel.setRotation((double)testRotateSpinner.getValue());
                 // Draw the test spiral
-            testSpiralPainter.paint(g, testModel.getRotation(), width, height);
+            testSpiralPainter.paint(g, testModel, width, height);
                 // If the radius should be shown
             if (testShowRadiusToggle.isSelected()){
                 g.setColor(Color.CYAN);

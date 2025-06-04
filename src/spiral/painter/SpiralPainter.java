@@ -11,14 +11,14 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.util.Objects;
-import spiral.SpiralGeneratorUtilities;
+import spiral.*;
 import swing.ListenedPainter;
 
 /**
  *
  * @author Mosblinker
  */
-public abstract class SpiralPainter extends ListenedPainter<Double> implements 
+public abstract class SpiralPainter extends ListenedPainter<SpiralModel> implements 
         GeometryMathConstants, Cloneable{
     
     public static final String SPIRAL_RADIUS_PROPERTY_CHANGED = 
@@ -32,6 +32,9 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     
     public static final String ROTATION_PROPERTY_CHANGED = 
             "RotationPropertyChanged";
+    
+    protected static final SpiralModel DEFAULT_SPIRAL_MODEL = 
+            new ImmutableSpiralModel(Color.WHITE,Color.BLACK,0.0);
     
     private static final int BYTE_ARRAY_LENGTH = Double.BYTES*3 + 1;
     /**
@@ -201,7 +204,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         return rotation;
     }
     @Override
-    public void paint(Graphics2D g, Double angle, int width, int height) {
+    public void paint(Graphics2D g, SpiralModel model, int width, int height) {
             // Check if the graphics context is null
         Objects.requireNonNull(g);
             // If either the width or height are less than or equal to zero 
@@ -213,11 +216,11 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         g = configureGraphics((Graphics2D)g.create());
             // Clip the graphics context to only include the rendered area
         g.clipRect(0, 0, width, height);
-            // If the angle is null, default to an angle of zero
-        if (angle == null)
-            angle = 0.0;
+            // If the model is null, default to the default model
+        if (model == null)
+            model = DEFAULT_SPIRAL_MODEL;
             // Add the rotation to the given angle
-        angle += getRotation();
+        double angle = model.getRotation() + getRotation();
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
         paintSpiral(g,angle%FULL_CIRCLE_DEGREES,width,height,
