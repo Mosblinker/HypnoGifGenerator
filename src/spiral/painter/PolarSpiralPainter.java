@@ -206,18 +206,18 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
     protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
             int width,int height, double centerX, double centerY, 
             boolean clockwise, double radius, double thickness) {
-            // If the thickness is greater than zero
-        if (thickness > 0.0){
-                // If the thickness is greater than or equal to 1 or the fill 
-                // condition value is equal to 1
-            if (thickness >= 1.0 || fillConditionValue() == 1.0){
-                    // Fill the area with a solid color
-                fillWithTransparency(g,width,height,thickness);
-            } else {
-                    // Paint the spiral
-                paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
-                        width,height,centerX,centerY,clockwise,radius,thickness);
-            }
+            // If the thickness is less than or equal to zero or the thickness 
+            // is greater than or equal to 1 or the fill condition value is 
+            // equal to 1
+        if (thickness <= 0.0 || thickness >= 1.0 || fillConditionValue() == 1.0){
+                // Set the color to use
+            g.setColor(model.blend(thickness));
+                // Fill the area
+            fillArea(g,width,height);
+        } else {
+                // Paint the spiral
+            paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
+                    width,height,centerX,centerY,clockwise,radius,thickness);
         }
     }
     /**
