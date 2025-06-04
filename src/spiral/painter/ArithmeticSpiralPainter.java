@@ -187,12 +187,10 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // This is the ending azimuth
         double p1 = getAzimuth(radius,Math.sqrt(width*width+height*height)/2.0, 
                 angle, true);
-            // If the spiral is going anti-clockwise
-        if (!clockwise){
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
             p1 = -p1-FULL_CIRCLE_DEGREES;
-            p0 = p0 + (HALF_CIRCLE_DEGREES);
-            p0 -= offset;
-        }   // Effectively round the ending azimuth up to the nearest quarter angle
+            // Effectively round the ending azimuth up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
             // Process the first spiral from out to in
         path = processLinearSpiral(radius,p0,p1,angle,clockwise,centerX,
@@ -264,10 +262,6 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // If the given path is null
         if (path == null)
             path = new Path2D.Double();
-            // Calculate the first azimuth rounded to the nearest interpolation 
-            // angle
-        double p2 = p0 + (INTERPOLATION_ANGLE - (p0 % INTERPOLATION_ANGLE)) 
-                % INTERPOLATION_ANGLE;
             // This gets the azimuth for the first point. If this is going in 
             // reverse, then this will be the last azimuth. Otherwise get the 
             // first azimuth.
