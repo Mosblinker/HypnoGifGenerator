@@ -252,6 +252,21 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * 
      * @param g
      * @param width
+     * @param height 
+     */
+    protected void fillArea(Graphics2D g, double width, double height){
+            // If the rectangle object has not been initialized yet
+        if (rect == null)
+            rect = new Rectangle2D.Double();
+            // Set the frame of the rectangle to cover the entire area
+        rect.setFrame(0, 0, width, height);
+            // Fill the area
+        g.fill(rect);
+    }
+    /**
+     * 
+     * @param g
+     * @param width
      * @param height
      * @param thickness 
      * @param color
@@ -262,13 +277,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         if (thickness > 0.0){
                 // Set the color to use
             g.setColor(SpiralGeneratorUtilities.getTranslucentColor(color,thickness));
-                // If the rectangle object has not been initialized yet
-            if (rect == null)
-                rect = new Rectangle2D.Double();
-                // Set the frame of the rectangle to cover the entire area
-            rect.setFrame(0, 0, width, height);
                 // Fill the area
-            g.fill(rect);
+            fillArea(g,width,height);
         }
     }
     /**
@@ -281,6 +291,22 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
     protected void fillWithTransparency(Graphics2D g, double width, 
             double height, double thickness){
         fillWithTransparency(g,width,height,thickness,g.getColor());
+    }
+    /**
+     * 
+     * @param g
+     * @param width
+     * @param height
+     * @param thickness
+     * @param color1
+     * @param color2 
+     */
+    protected void fillWithBlend(Graphics2D g, double width, 
+            double height, double thickness, Color color1, Color color2){
+            // Set the color to use
+        g.setColor(SpiralGeneratorUtilities.blendColor(color1, color2, thickness));
+            // Fill the area
+        fillArea(g,width,height);
     }
     /**
      * This is used to adjust the angle of rotation for the spiral.
