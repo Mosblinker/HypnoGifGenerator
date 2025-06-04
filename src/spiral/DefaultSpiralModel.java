@@ -25,6 +25,18 @@ public class DefaultSpiralModel implements SpiralModel{
         this.rotation = angle;
     }
     
+    public DefaultSpiralModel(Color color1, Color color2){
+        this(color1,color2,0.0);
+    }
+    
+    public DefaultSpiralModel(double angle){
+        this(Color.WHITE,Color.BLACK,angle);
+    }
+    
+    public DefaultSpiralModel(){
+        this(0.0);
+    }
+    
     public DefaultSpiralModel(SpiralModel model){
         this(model.getColor1(),model.getColor2(),model.getRotation());
     }
