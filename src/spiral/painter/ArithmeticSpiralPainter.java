@@ -308,6 +308,14 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // don't reverse the spiral and the spiral is counter-clockwise), 
             // then decrement the azimuths
         double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
+            // If the path is not going in reverse
+        if (!reverse){
+                // If the spiral is going clockwise
+            if (clockwise)
+                maxP += INTERPOLATION_ANGLE;
+            else
+                minP -= INTERPOLATION_ANGLE;
+        }
             // A for loop to go through the points on the spiral 
         for (double p = prevP + inc;     
                     // Go up until it reaches the opposite azimuth extreme
