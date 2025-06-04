@@ -50,7 +50,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Invert the thickness
             thickness = 1.0-thickness;
                 // Shift it by 180 degrees
-            angle += 180;
+            angle += HALF_CIRCLE_DEGREES;
                 // Set the color to use to the background color
             g.setColor(model.getColor1());
         } else {
