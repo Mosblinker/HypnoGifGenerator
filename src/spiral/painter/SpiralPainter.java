@@ -223,7 +223,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         double angle = model.getRotation() + getRotation();
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
-        paintSpiral(g,angle%FULL_CIRCLE_DEGREES,width,height,
+        paintSpiral(g,model,angle%FULL_CIRCLE_DEGREES,width,height,
                 width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
@@ -231,6 +231,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * This is used to paint the spiral. This is given a copy of the graphics 
      * context that is clipped to the painted region.
      * @param g The graphics context to render to.
+     * @param model The model containing data for the spiral
      * @param angle The angle for the spiral. This is in the range of -{@value 
      * MAXIMUM_ANGLE}, exclusive, to {@value MAXIMUM_ANGLE}, exclusive.
      * @param width This is the width of the area to fill with the spiral.
@@ -244,8 +245,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * @see #paint
      * @see #isClockwise() 
      */
-    protected abstract void paintSpiral(Graphics2D g, double angle, 
-            int width, int height, double centerX, double centerY, 
+    protected abstract void paintSpiral(Graphics2D g, SpiralModel model, 
+            double angle, int width, int height, double centerX, double centerY, 
             boolean clockwise, double radius, double thickness);
     /**
      * 

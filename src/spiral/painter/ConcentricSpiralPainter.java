@@ -9,6 +9,7 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 import java.nio.ByteBuffer;
+import spiral.SpiralModel;
 
 /**
  *
@@ -32,9 +33,9 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
         this.shape = painter.shape;
     }
     @Override
-    protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise, double radius, 
-            double thickness) {
+    protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
+            int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
             // If the thickness is greater than zero
         if (thickness > 0.0){
                 // If the thickness is greater than or equal to 1
