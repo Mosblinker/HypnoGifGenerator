@@ -292,11 +292,11 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // center azimuth is different from the first interpolation azimuth
         if (!reverse && mismatch){ 
                 // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,p2,p0,angle,clockwise,x,y,point1,point2,
-                    point3,path);
-            point1.setLocation(point3);
-            p0 = p2;
-            prevP = p0;
+//            processLinearSpiral(b,p2,p0,angle,clockwise,x,y,point1,point2,
+//                    point3,path);
+//            point1.setLocation(point3);
+//            p0 = p2;
+//            prevP = p0;
         }   // Get the smaller of the two azimuths
         double minP = Math.min(p0, p1);
             // Get the larger of the two azimuths
@@ -327,9 +327,10 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             prevP = p;
         }   // If the spiral is reversed and has not reached the center of the 
             // spiral due to the mismatch
-        if (reverse && mismatch){
+        if (reverse && prevP != p0){
+            System.out.println("Adjusting 1 " + prevP + " " + p2);
                 // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,p0,p2,angle,clockwise,x,y,point1,point2,
+            processLinearSpiral(b,prevP,p0,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
         }
