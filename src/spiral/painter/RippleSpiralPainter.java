@@ -53,8 +53,16 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             rList = new ArrayList<>();
         else
             rList.clear();
-            // Get the color of the graphics context
-        Color color = g.getColor();
+            // Get the first color in the model
+        Color color1 = model.getColor1();
+            // If the first color is null, use a transparent color
+        if (color1 == null)
+            color1 = TRANSPARENT_COLOR;
+            // Get the second color in the model
+        Color color2 = model.getColor2();
+            // If the second color is null, use a transparent color
+        if (color2 == null)
+            color2 = TRANSPARENT_COLOR;
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();
@@ -143,7 +151,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
                 // even indexes are colored, or if this index is odd and odd 
                 // indexes are colored. If nether condition is met, then the 
                 // color is transparent
-            colors[fIndex] = (isEven == isColorEven) ? color : TRANSPARENT_COLOR;
+            colors[fIndex] = (isEven == isColorEven) ? color1 : color2;
                 // If the thickness is not 0.5 and either this index is even and 
                 // even indexes are thicker or this index is odd and odd indexes 
                 // are thicker
