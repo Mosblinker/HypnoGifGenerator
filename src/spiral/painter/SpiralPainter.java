@@ -211,14 +211,26 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             // (nothing would be rendered anyway)
         if (width <= 0 || height <= 0)
             return;
+            // If the model is null, default to the default model
+        if (model == null)
+            model = DEFAULT_SPIRAL_MODEL;
+            // If the model has no color
+        if (SpiralGeneratorUtilities.hasNoColor(model.getColor1(), model.getColor2()))
+            return;
             // Create a copy of the given graphics context and configure it to 
             // render the spiral
         g = configureGraphics((Graphics2D)g.create());
             // Clip the graphics context to only include the rendered area
         g.clipRect(0, 0, width, height);
-            // If the model is null, default to the default model
-        if (model == null)
-            model = DEFAULT_SPIRAL_MODEL;
+            // If the two colors in the model are the same
+        if (Objects.equals(model.getColor1(), model.getColor2())){
+                // Set the color to the first color
+            g.setColor(model.getColor1());
+                // Fill the area
+            fillArea(g,width,height);
+            g.dispose();
+            return;
+        }
             // Add the rotation to the given angle
         double angle = model.getRotation() + getRotation();
             // Paint the spiral. Keep the angle in range of (-360, 360), 
