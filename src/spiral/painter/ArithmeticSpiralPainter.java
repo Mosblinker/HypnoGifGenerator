@@ -188,12 +188,10 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // This is the ending azimuth
         double p1 = getAzimuth(radius,Math.sqrt(width*width+height*height)/2.0, 
                 angle, true);
-            // If the spiral is going anti-clockwise
-        if (!clockwise){
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
             p1 = -p1-FULL_CIRCLE_DEGREES;
-            p0 = FULL_CIRCLE_DEGREES-p0;
-            p0 -= offset;
-        }   // Effectively round the ending azimuth up to the nearest quarter angle
+            // Effectively round the ending azimuth up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
             // Process the first spiral from out to in
         path = processLinearSpiral(radius,p0,p1,angle,clockwise,centerX,
@@ -265,20 +263,13 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // If the given path is null
         if (path == null)
             path = new Path2D.Double();
-            // Calculate the first azimuth rounded to the nearest interpolation 
-            // angle
-        double p2 = p0 + (INTERPOLATION_ANGLE - (p0 % INTERPOLATION_ANGLE)) 
-                % INTERPOLATION_ANGLE;
-            // Get whether the first interpolation angle is the same as the 
-            // first azimuth
-        boolean mismatch = p2 != p0;
             // This gets the azimuth for the first point. If this is going in 
             // reverse, then this will be the last azimuth. Otherwise get the 
             // first azimuth.
-        double startP = (reverse) ? p1 : p0;
+        double prevP = (reverse) ? p1 : p0;
             // Get the point for the starting azimuth
-        point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,startP,angle,
-                clockwise),startP,x,y,point1);
+        point1 = GeometryMath.polarToCartesianDegrees(getRadius(b,prevP,angle,
+                clockwise),prevP,x,y,point1);
             // Get the current position of the path
         Point2D currPoint = path.getCurrentPoint();
             // If the path is empty
@@ -287,18 +278,7 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // If the path is not at the first point
         else if (!currPoint.equals(point1))
             path.lineTo(point1.getX(), point1.getY());
-            // This is the previous azimuth for the point
-        double prevP = startP;
-            // If the path is not starting from the center outwards and the 
-            // center azimuth is different from the first interpolation azimuth
-        if (!reverse && mismatch){ 
-                // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,p2,p0,angle,clockwise,x,y,point1,point2,
-                    point3,path);
-            point1.setLocation(point3);
-            p0 = p2;
-            prevP = p0;
-        }   // Get the smaller of the two azimuths
+            // Get the smaller of the two azimuths
         double minP = Math.min(p0, p1);
             // Get the larger of the two azimuths
         double maxP = Math.max(p0, p1);
@@ -309,6 +289,14 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // don't reverse the spiral and the spiral is counter-clockwise), 
             // then decrement the azimuths
         double inc = (reverse == clockwise) ? -INTERPOLATION_ANGLE : INTERPOLATION_ANGLE;
+            // If the path is not going in reverse
+        if (!reverse){
+                // If the spiral is going clockwise
+            if (clockwise)
+                maxP += INTERPOLATION_ANGLE;
+            else
+                minP -= INTERPOLATION_ANGLE;
+        }
             // A for loop to go through the points on the spiral 
         for (double p = prevP + inc;     
                     // Go up until it reaches the opposite azimuth extreme
@@ -320,9 +308,9 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             prevP = p;
         }   // If the spiral is reversed and has not reached the center of the 
             // spiral due to the mismatch
-        if (reverse && mismatch){
+        if (reverse && prevP != p0){
                 // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,p0,p2,angle,clockwise,x,y,point1,point2,
+            processLinearSpiral(b,prevP,p0,angle,clockwise,x,y,point1,point2,
                     point3,path);
             point1.setLocation(point3);
         }
