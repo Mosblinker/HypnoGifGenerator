@@ -193,14 +193,13 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
     /**
      * This is the value that, when equal to 1.0, results in the entire area for 
      * the spiral to be filled with a translucent version of the color set on 
-     * the graphics context. When this value is equal to 1.0, the spiral paint 
-     * code will exit early.
+     * the graphics context.When this value is equal to 1.0, the spiral paint 
+ code will exit early.
      * @return The value to check to see if the area should be filled with a 
      * translucent color.
      * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
      * boolean, double, double) 
-     * @see #paintSpiralGegl(java.awt.Graphics2D, double, int, int, double, 
-     * double, boolean, double, double) 
+     * @see #paintSpiralPolar(java.awt.Graphics2D, double, int, int, double, double, boolean, double, double) 
      */
     protected abstract double fillConditionValue();
     @Override
@@ -216,7 +215,7 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
                 fillWithTransparency(g,width,height,thickness);
             } else {
                     // Paint the spiral
-                paintSpiralGegl(g,adjustRotation(angle,thickness,clockwise),
+                paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
                         width,height,centerX,centerY,clockwise,radius,thickness);
             }
         }
@@ -225,6 +224,7 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
      * This is used to paint the spiral. This is given a copy of the graphics 
      * context that is clipped to the painted region.
      * @param g The graphics context to render to.
+     * @param model The model containing data for the spiral
      * @param angle The angle for the spiral. This is in the range of {@code 0} 
      * to {@value MAXIMUM_ANGLE}, exclusive.
      * @param width This is the width of the area to fill with the spiral.
@@ -242,7 +242,7 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
      * @see #getSpiralRadius() 
      * @see #getThickness() 
      */
-    protected abstract void paintSpiralGegl(Graphics2D g, double angle, int width, 
-            int height, double centerX, double centerY, boolean clockwise, 
-            double radius, double thickness); 
+    protected abstract void paintSpiralPolar(Graphics2D g, SpiralModel model, 
+            double angle, int width, int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness); 
 }

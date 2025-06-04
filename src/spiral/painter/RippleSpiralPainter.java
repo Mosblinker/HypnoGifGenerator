@@ -12,6 +12,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import static spiral.SpiralGeneratorUtilities.TRANSPARENT_COLOR;
+import spiral.SpiralModel;
 
 /**
  *
@@ -41,9 +42,9 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         return adjustRotation(angle,thickness,clockwise);
     }
     @Override
-    protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise, double radius, 
-            double thickness) {
+    protected void paintSpiralPolar(Graphics2D g, SpiralModel model, 
+            double angle, int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
             // If the rectangle object has not been initialized yet
         if (rect == null)
             rect = new Rectangle2D.Double();
