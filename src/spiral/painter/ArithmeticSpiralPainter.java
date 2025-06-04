@@ -190,7 +190,7 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // If the spiral is going anti-clockwise
         if (!clockwise){
             p1 = -p1-FULL_CIRCLE_DEGREES;
-            p0 = FULL_CIRCLE_DEGREES-p0;
+            p0 = p0 + (HALF_CIRCLE_DEGREES);
             p0 -= offset;
         }   // Effectively round the ending azimuth up to the nearest quarter angle
         p1 += (QUARTER_CIRCLE_DEGREES - (p1 % QUARTER_CIRCLE_DEGREES)) % QUARTER_CIRCLE_DEGREES;
