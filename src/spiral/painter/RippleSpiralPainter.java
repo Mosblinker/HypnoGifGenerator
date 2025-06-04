@@ -11,14 +11,13 @@ import java.awt.RadialGradientPaint;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import static spiral.SpiralGeneratorUtilities.TRANSPARENT_COLOR;
 
 /**
  *
  * @author Mosblinker
  */
 public class RippleSpiralPainter extends LogarithmicSpiralPainter{
-    
-    public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     /**
      * This is a scratch list to use to get the radiuses for the points on the 
      * spiral where the color changes. This is initially null and is initialized 

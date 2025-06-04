@@ -98,7 +98,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final float[] ICON_FADE_FRACTIONS = {0.85f, 1.0f};
     
     private static final Color[] ICON_FADE_COLORS = {Color.WHITE,
-        RippleSpiralPainter.TRANSPARENT_COLOR};
+        TRANSPARENT_COLOR};
     
     private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff/images";
     /**

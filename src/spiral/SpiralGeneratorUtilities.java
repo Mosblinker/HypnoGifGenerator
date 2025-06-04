@@ -23,6 +23,8 @@ import javax.imageio.ImageIO;
  * @author Mosblinker
  */
 public final class SpiralGeneratorUtilities {
+    
+    public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     /**
      * 
      */
