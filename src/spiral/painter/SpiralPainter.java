@@ -348,6 +348,19 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         return GeometryMath.boundDegrees(angle);
     }
     /**
+     * 
+     * @param width
+     * @param height
+     * @param model
+     * @return 
+     */
+    protected double getMaximumRadius(double width, double height, 
+            SpiralModel model){
+        width *= 0.5 + Math.abs(model.getCenterX()-0.5);
+        height *= 0.5 + Math.abs(model.getCenterY()-0.5);
+        return GeometryMath.getPolarRadius(width, height);
+    }
+    /**
      * This is used to configure the graphics context used to render the spiral. 
      * It's assumed that the returned graphics context is the same as the given 
      * graphics context, or at least that the returned graphics context 
