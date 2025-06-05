@@ -186,7 +186,7 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
             // This is the starting azimuth
         double p0 = angle;
             // This is the ending azimuth
-        double p1 = getAzimuth(radius,Math.sqrt(width*width+height*height)/2.0, 
+        double p1 = getAzimuth(radius,getMaximumRadius(width,height,model),
                 angle, true);
             // If the spiral is going counter-clockwise
         if (!clockwise)

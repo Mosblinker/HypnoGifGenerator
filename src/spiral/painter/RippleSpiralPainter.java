@@ -90,7 +90,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // This gets the radius of the polar point at (r1, 0).
         double r1 = getRadius(radius,k,0,angle,!clockwise);
             // This gets the target ending radius for the spiral
-        double r2 = Math.sqrt(width*width+height*height)/2.0;
+        double r2 = getMaximumRadius(width,height,model);
         
             // Go through and calculates the radiuses between the radius for the 
             // polar point (r1, 0) and target starting radius
