@@ -298,17 +298,6 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * @param g
      * @param width
      * @param height
-     * @param thickness 
-     */
-    protected void fillWithTransparency(Graphics2D g, double width, 
-            double height, double thickness){
-        fillWithTransparency(g,width,height,thickness,g.getColor());
-    }
-    /**
-     * 
-     * @param g
-     * @param width
-     * @param height
      * @param thickness
      * @param color1
      * @param color2 
