@@ -236,7 +236,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
         paintSpiral(g,model,angle%FULL_CIRCLE_DEGREES,width,height,
-                width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
+                width*model.getCenterX(),height*model.getCenterY(),
+                isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
     /**
