@@ -366,16 +366,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
-        config.loadFileChooser(maskFC);
-        config.loadFileChooser(saveFC);
-        config.loadComponentSize(colorSelector);
-//        config.loadComponentSize(fontSelector);
+        for (Component c : config.getComponentNames().keySet()){
+            if (c instanceof JFileChooser)
+                config.loadFileChooser((JFileChooser)c);
+            else
+                config.loadComponentSize(c);
+        }
         
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
         config.getProgramBounds(SpiralGenerator.this);
         
         spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
-                        spiralPainters.length-1), 0));
+                spiralPainters.length-1), 0));
         maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
                 maskTabbedPane.getTabCount()-1), 0));
         config.loadMaskAlphaIndex(maskAlphaButtons);
