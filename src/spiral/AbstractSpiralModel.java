@@ -5,6 +5,7 @@
 package spiral;
 
 import java.awt.Color;
+import java.util.Objects;
 
 /**
  *
@@ -45,5 +46,23 @@ public abstract class AbstractSpiralModel implements SpiralModel{
             throw new IllegalArgumentException("Center Y out of range");
         setCenterX(x);
         setCenterY(y);
+    }
+    /**
+     * 
+     * @return 
+     */
+    protected String paramString(){
+        return "color1="+Objects.toString(getColor1(), "")+
+                ",color2="+Objects.toString(getColor2(), "")+
+                ",rotation="+getRotation()+
+                ",center=("+getCenterX()+","+getCenterY()+")";
+    }
+    /**
+     * This returns a string representation of this model and its values.
+     * @return A string representation of this model and its values.
+     */
+    @Override
+    public String toString(){
+        return getClass().getName()+"["+paramString()+"]";
     }
 }
