@@ -3129,9 +3129,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void paintOverlay(Graphics2D g, SpiralModel model, int width, 
             int height,SpiralPainter spiralPainter, OverlayMask mask){
-            // If the width or height are less than or equal to zero (nothing 
-            // would be drawn)
-        if (width <= 0 || height <= 0)
+            // If the width or height are less than or equal to zero or there is 
+            // nothing visible for the overlay (nothing  would be drawn)
+        if (width <= 0 || height <= 0 || mask.isOverlayRendered())
             return;
             // Create an image to render the overlay to
         BufferedImage overlay = new BufferedImage(width, height, 
@@ -3536,11 +3536,39 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         /**
          * 
+         * @return 
+         */
+        public boolean isOverlayRendered(){
+                // Determine what to return based off the index
+            switch (maskTabbedPane.getSelectedIndex()){
+                    // The mask is using text
+                case (0):
+                        // Get the text for the mask 
+                    String text = maskTextArea.getText();
+                        // Return if the text is neither null nor blank
+                    return text != null && !text.isBlank();
+                    // The mask is an image
+                case(1):
+                        // Return if there is an overlay image
+                    return overlayImage != null;
+                    // The mask is using a shape
+                case(2):
+                        // Return if both of the size spinners are set to values 
+                        // greater than zero
+                    return (double)maskShapeWidthSpinner.getValue() > 0 && 
+                            (double)maskShapeHeightSpinner.getValue() > 0;
+            }
+            return false;
+        }
+        /**
+         * 
          * @param width
          * @param height
          * @return 
          */
         public BufferedImage getMask(int width, int height){
+            if (!isOverlayRendered())
+                return null;
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
