@@ -70,7 +70,7 @@ public class DefaultSpiralModel implements SpiralModel{
     }
     @Override
     public void setColor1(Color color) {
-        this.color1 = color;
+        this.color1 = Objects.requireNonNull(color);
     }
     @Override
     public Color getColor2() {
@@ -78,7 +78,7 @@ public class DefaultSpiralModel implements SpiralModel{
     }
     @Override
     public void setColor2(Color color) {
-        this.color2 = color;
+        this.color2 = Objects.requireNonNull(color);
     }
     @Override
     public double getRotation() {
