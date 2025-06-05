@@ -3098,7 +3098,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             int height,SpiralPainter spiralPainter, OverlayMask mask){
             // If the width or height are less than or equal to zero or there is 
             // nothing visible for the overlay (nothing  would be drawn)
-        if (width <= 0 || height <= 0 || mask.isOverlayRendered())
+        if (width <= 0 || height <= 0 || !mask.isOverlayRendered())
             return;
             // Create an image to render the overlay to
         BufferedImage overlay = new BufferedImage(width, height, 
