@@ -19,16 +19,31 @@ public class ImmutableSpiralModel implements SpiralModel{
     
     private double rotation;
     
-    public ImmutableSpiralModel(Color color1, Color color2, double angle){
+    private double x;
+    
+    private double y;
+    
+    public ImmutableSpiralModel(Color color1, Color color2, double angle, 
+            double x, double y){
         this.color1 = Objects.requireNonNull(color1);
         this.color2 = Objects.requireNonNull(color2);
+        if (x < 0.0 || x > 1.0)
+            throw new IllegalArgumentException("Center X out of range");
+        if (y < 0.0 || y > 1.0)
+            throw new IllegalArgumentException("Center y out of range");
         this.rotation = angle;
+        this.x = x;
+        this.y = y;
+    }
+    
+    public ImmutableSpiralModel(Color color1, Color color2, double angle){
+        this(color1,color2,angle,0.5,0.5);
     }
     
     public ImmutableSpiralModel(SpiralModel model){
-        this(model.getColor1(),model.getColor2(),model.getRotation());
+        this(model.getColor1(),model.getColor2(),model.getRotation(),
+                model.getCenterX(),model.getCenterY());
     }
-
     @Override
     public Color getColor1() {
         return color1;
@@ -52,5 +67,13 @@ public class ImmutableSpiralModel implements SpiralModel{
     @Override
     public void setRotation(double angle) {
         throw new UnsupportedOperationException("Immutable Spiral Model");
+    }
+    @Override
+    public double getCenterX(){
+        return x;
+    }
+    @Override
+    public double getCenterY(){
+        return y;
     }
 }

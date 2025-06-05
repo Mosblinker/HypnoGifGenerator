@@ -94,7 +94,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
             // Get the maximum radius for any of the shapes
-        double r1 = Math.sqrt(width*width+height*height)/2.0+lineWidth;
+        double r1 = getMaximumRadius(width,height,model)+lineWidth;
             // Get the radius for the first shape
         double startR = m * (angle / FULL_CIRCLE_DEGREES);
             // If the spiral is going counter-clockwise

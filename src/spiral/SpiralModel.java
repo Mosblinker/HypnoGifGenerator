@@ -32,4 +32,25 @@ public interface SpiralModel {
     public double getRotation();
     
     public void setRotation(double angle);
+    
+    public default double getCenterX(){
+        return 0.5;
+    }
+    
+    public default void setCenterX(double x){
+        throw new UnsupportedOperationException("Position cannot be changed");
+    }
+    
+    public default double getCenterY(){
+        return 0.5;
+    }
+    
+    public default void setCenterY(double y){
+        throw new UnsupportedOperationException("Position cannot be changed");
+    }
+    
+    public default void setCenter(double x, double y){
+        setCenterX(x);
+        setCenterY(y);
+    }
 }

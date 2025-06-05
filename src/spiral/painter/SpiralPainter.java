@@ -236,7 +236,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
         paintSpiral(g,model,angle%FULL_CIRCLE_DEGREES,width,height,
-                width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
+                width*model.getCenterX(),height*model.getCenterY(),
+                isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
     /**
@@ -345,6 +346,19 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             angle = -angle;
             // Bound the angle of rotation
         return GeometryMath.boundDegrees(angle);
+    }
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param model
+     * @return 
+     */
+    protected double getMaximumRadius(double width, double height, 
+            SpiralModel model){
+        width *= 0.5 + Math.abs(model.getCenterX()-0.5);
+        height *= 0.5 + Math.abs(model.getCenterY()-0.5);
+        return GeometryMath.getPolarRadius(width, height);
     }
     /**
      * This is used to configure the graphics context used to render the spiral. 
