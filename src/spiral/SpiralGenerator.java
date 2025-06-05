@@ -3080,22 +3080,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Create a copy of the given graphics context and configure it
         g = configureGraphics((Graphics2D) g.create());
             // Set the color to the first color
-        imgG.setColor(color);
-            // Paint the overlay as a solid color
-        mask.paintOverlay(imgG, width, height);
-        imgG.dispose();
-            // If an image was rendered to
-        if (img != null){
-                // Create a copy of the given graphics context and configure it
-            g = configureGraphics((Graphics2D) g.create());
-                // Enable or disable the antialiasing, depending on whether the 
-                // mask should be antialiased
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                            RenderingHints.VALUE_ANTIALIAS_OFF);
-            g.drawImage(img, 0, 0, null);
-            g.dispose();
-        }
+        g.setColor(color);
+            // Paint the overlay
+        mask.paintOverlay(g, width, height);
+        g.dispose();
     }
     /**
      * 
