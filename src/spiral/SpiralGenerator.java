@@ -3175,7 +3175,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         paintOverlay(g,models[1],width,height,spiralPainter,mask);
     }
     
-    private class ColorIconSpiralModel implements SpiralModel{
+    private class ColorIconSpiralModel extends AbstractSpiralModel{
         
         private int index1;
         

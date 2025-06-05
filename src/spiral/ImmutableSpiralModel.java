@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Mosblinker
  */
-public class ImmutableSpiralModel implements SpiralModel{
+public class ImmutableSpiralModel extends AbstractSpiralModel{
     
     private Color color1;
     
