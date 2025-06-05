@@ -421,10 +421,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextArea.getDocument().addDocumentListener(handler);
         
         if (debugMode){
-            testSpiralPainter = spiralPainters[spiralPainters.length-1];
+            testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
             testComponents = new HashMap<>();
             previewLabel.setComponentPopupMenu(debugPopup);
-            testImages = new ArrayList<>();
                 // Get the program's directory
             File prgDir = getProgramDirectory();
                 // If the program's directory is null
@@ -476,7 +475,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }); // Go through the files for the test images
                 for (File file : files){
                     try {   // Try to load the image
-                        testImages.add(ImageIO.read(file));
+                        testSpiralIcon.images.add(ImageIO.read(file));
                     } catch (IOException ex) {
                         log(Level.INFO, "SpiralGenerator", 
                                 "Failed to load test image \""+file.getName()+"\"", 
@@ -484,12 +483,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     }
                 }
             }   // If the test images list is empty
-            if (testImages.isEmpty())
+            if (testSpiralIcon.images.isEmpty())
                 testSpiralImageSpinner.setEnabled(false);
             else
                 testSpiralImageSpinner.setModel(new SpinnerNumberModel(
-                        config.getDebugTestImage(testImages.size()), -1, 
-                        testImages.size()-1, 1));
+                        config.getDebugTestImage(testSpiralIcon.images.size()), 
+                        -1, testSpiralIcon.images.size()-1, 1));
             testRotateSpinner.setValue(config.getDebugTestRotation());
             testScaleSpinner.setValue(config.getDebugTestScale());
                 // Add the components for the test double values
@@ -2070,7 +2069,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_inputEnableToggleActionPerformed
 
     private void showTestSpiralToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestSpiralToggleActionPerformed
-        previewLabel.setIcon((showTestSpiralToggle.isSelected()) ? new TestSpiralIcon() : spiralIcon);
+        previewLabel.setIcon((showTestSpiralToggle.isSelected()) ? testSpiralIcon : spiralIcon);
     }//GEN-LAST:event_showTestSpiralToggleActionPerformed
 
     private void showTestDialogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTestDialogButtonActionPerformed
@@ -2080,13 +2079,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void testSpiralImageSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testSpiralImageSpinnerStateChanged
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
-        config.setDebugTestImage((int)testSpiralImageSpinner.getValue());
+            // Get the index for the test image
+        int index = (int) testSpiralImageSpinner.getValue();
+        config.setDebugTestImage(index);
+           // If the index for the test image is within range of the test images
+        if (index >= 0 && index < testSpiralIcon.images.size()){
+                // Set the first color of the spiral to transparent
+            testSpiralIcon.model.setColor1(TRANSPARENT_COLOR);
+                // Set the second color to a transparent green
+            testSpiralIcon.model.setColor2(new Color(0x8000FF00,true));
+        } else {
+                // Set the first color of the spiral to white
+            testSpiralIcon.model.setColor1(Color.WHITE);
+                // Set the second color of the spiral to black
+            testSpiralIcon.model.setColor2(Color.BLACK);
+        }
     }//GEN-LAST:event_testSpiralImageSpinnerStateChanged
 
     private void testRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testRotateSpinnerStateChanged
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
-        config.setDebugTestRotation((double)testRotateSpinner.getValue());
+            // Get the rotation for the test spiral
+        double rotation = (double)testRotateSpinner.getValue();
+        config.setDebugTestRotation(rotation);
+        testSpiralIcon.model.setRotation(rotation);
     }//GEN-LAST:event_testRotateSpinnerStateChanged
 
     private void testScaleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testScaleSpinnerStateChanged
@@ -2616,17 +2632,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private Icon spiralIcon;
     /**
-     * This is an array containing the test images to display while testing.
+     * This is the icon used to display the spiral when testing the program.
      */
-    private ArrayList<BufferedImage> testImages = null;
+    private TestSpiralIcon testSpiralIcon = null;
     /**
      * These are the painters used to paint the spiral.
      */
     private SpiralPainter[] spiralPainters;
-    /**
-     * 
-     */
-    private SpiralPainter testSpiralPainter;
     /**
      * 
      */
@@ -3242,15 +3254,32 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             return getImageHeight();
         }
     }
-    
+    /**
+     * 
+     */
     private class TestSpiralIcon implements Icon2D{
-        
-        private SpiralModel testModel = new DefaultSpiralModel();
+        /**
+         * The Spiral model used for drawing the test spiral.
+         */
+        SpiralModel model = new DefaultSpiralModel();
+        /**
+         * This is an array containing the test images to display while testing.
+         */
+        ArrayList<BufferedImage> images = new ArrayList<>();
+        /**
+         * This is the spiral painter being tested.
+         */
+        SpiralPainter painter;
+        /**
+         * 
+         * @param painter 
+         */
+        TestSpiralIcon(SpiralPainter painter){
+            this.painter = painter;
+        }
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-                // Get the index for the test image
-            int index = (int) testSpiralImageSpinner.getValue();
                 // Get the width of the icon
             int width = getIconWidth();
                 // Get the height of the icon
@@ -3268,40 +3297,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             double centerY = height/2.0;
                 // Scale the graphics context
             scale(g,centerX,centerY,scale);
+                // Get the index for the test image
+            int index = (int) testSpiralImageSpinner.getValue();
                 // If the index for the test image is within range of the test 
                 // images
-            if (index >= 0 && index < testImages.size()){
-                    // Set the first color of the spiral to transparent
-                testModel.setColor1(TRANSPARENT_COLOR);
-                    // Set the second color to a transparent green
-                testModel.setColor2(new Color(0x8000FF00,true));
+            if (index >= 0 && index < images.size()){
                     // Get the test image at that index
-                BufferedImage img = testImages.get(index);
+                BufferedImage img = images.get(index);
                     // If the image's size is not the icon's size
                 if (img.getWidth() != width || img.getHeight() != height)
                         // Scale the test image
                     img = Thumbnailator.createThumbnail(img, width, height);
                     // Draw the test image
                 g.drawImage(img, 0, 0, null);
-                    // Set the color to a transparent green
-                g.setColor(testModel.getColor2());
             } else {
-                    // Set the first color of the spiral to white
-                testModel.setColor1(Color.WHITE);
-                    // Set the second color of the spiral to black
-                testModel.setColor2(Color.BLACK);
-                g.setColor(testModel.getColor1());
+                g.setColor(model.getColor1());
                 g.fillRect(0, 0, width, height);
-                g.setColor(testModel.getColor2());
-            }   // Get the rotation for the test spiral
-            testModel.setRotation((double)testRotateSpinner.getValue());
-                // Draw the test spiral
-            testSpiralPainter.paint(g, testModel, width, height);
+            }   // Draw the test spiral
+            painter.paint(g, model, width, height);
                 // If the radius should be shown
             if (testShowRadiusToggle.isSelected()){
                 g.setColor(Color.CYAN);
                     // Get the spiral's radius
-                double radius = testSpiralPainter.getSpiralRadius();
+                double radius = painter.getSpiralRadius();
                     // Get an ellipse to draw the circle for the radius
                 Ellipse2D e = new Ellipse2D.Double();
                     // Set the ellipse to be a circle with the spiral's radius
@@ -3312,7 +3330,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Get the cartesian point with the radius and rotation of 
                     // the spiral
                 Point2D p = GeometryMath.polarToCartesianDegrees(radius, 
-                        testModel.getRotation()+testSpiralPainter.getRotation(), centerX,
+                        model.getRotation()+painter.getRotation(), centerX,
                         centerY,null);
                     // Draw a line to represent the radius of the spiral
                 g.draw(new Line2D.Double(centerX, centerY,p.getX(),p.getY()));
