@@ -2225,14 +2225,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return (double)maskScaleSpinner.getValue();
     }
     /**
-     * This returns whether the mask for the overlay message is created using an 
-     * image.
-     * @return Whether the message mask is created using an image.
-     */
-    private boolean isOverlayMaskImage(){
-        return maskTabbedPane != null && maskTabbedPane.getSelectedIndex() == 1;
-    }
-    /**
      * This returns the style set for the font.
      * @return The style for the font.
      */
@@ -3085,21 +3077,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // would be drawn)
         if (width <= 0 || height <= 0)
             return;
-            // A buffered image to paint to if need be
-        BufferedImage img = null;
-            // The graphics context to render to
-        Graphics2D imgG;
-            // If the overlay is an image
-        if (isOverlayMaskImage()){
-                // Create an image to render the overlay to
-            img = new BufferedImage(width, height, 
-                    BufferedImage.TYPE_INT_ARGB);
-                // Create a graphics context for the image
-            imgG = img.createGraphics();
-        } else  // Create a copy of the given graphics context
-            imgG = (Graphics2D) g.create();
-            // Configure the graphics context
-        imgG = configureGraphics(imgG);
+            // Create a copy of the given graphics context and configure it
+        g = configureGraphics((Graphics2D) g.create());
             // Set the color to the first color
         imgG.setColor(color);
             // Paint the overlay as a solid color
@@ -3614,58 +3593,55 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         public void paintOverlay(Graphics2D g, int width, int height){
-                // This is the text for the mask if text is used
-            String text = null;
-                // Determine how to check based off the index
-            switch (maskTabbedPane.getSelectedIndex()){
-                    // The mask is using text
-                case (0):
-                        // Get the text for the mask 
-                    text = maskTextArea.getText();
-                        // If the text is null or blank
-                    if (text == null || text.isBlank())
-                        return;
-                    break;
-                    // The mask is an image
-                case(1):
-                        // If there is no overlay image
-                    if (overlayImage == null)
-                        return;
-                    break;
-                    // The mask is using a shape
-                case(2):
-                        // If either of the size spinners are set to less than 
-                        // or equal to zero
-                    if ((double)maskShapeWidthSpinner.getValue() <= 0 || 
-                            (double)maskShapeHeightSpinner.getValue() <= 0)
-                        return;
-            }   // Scale the graphics for the masl, maintaining the center
-            scale(g,width/2.0,height/2.0,getMaskScale());
-                // Enable or disable the antialiasing, depending on whether the 
+            if (!isOverlayRendered())
+                return;
+                // This is a buffered image to draw to if the mask needs to be 
+                // drawn to a buffer image
+            BufferedImage img = null;
+                // This is the graphics context to draw to
+            Graphics2D imgG = g;
+                // If the mask is an image
+            if (maskTabbedPane.getSelectedIndex() == 1){
+                img = new BufferedImage(width,height,
+                        BufferedImage.TYPE_INT_ARGB);
+                imgG = img.createGraphics();
+                    // Enable or disable the antialiasing, depending on 
+                    // whether the mask should be antialiased
+                imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                        (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                                RenderingHints.VALUE_ANTIALIAS_OFF);
+            }   // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                     (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
+                // Scale the graphics for the mask, maintaining the center
+            scale(imgG,width/2.0,height/2.0,getMaskScale());
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
                 case(0):
                         // Paint the text mask
-                    paintTextMask(g,width,height,text,textPainter);
+                    paintTextMask(imgG,width,height,maskTextArea.getText(),textPainter);
                     break;
                     // The mask is an image
                 case(1):
                         // Fill the area
-                    g.fillRect(0, 0, width, height);
+                    imgG.fillRect(0, 0, width, height);
                         // Mask the area to be filled with the image
-                    maskImage(g,getMask(width,height));
+                    maskImage(imgG,getMask(width,height));
                     break;
                     // The mask is using a shape
                 case(2):
                         // Paint the shape
-                    path = paintShapeMask(g,width,height,
+                    path = paintShapeMask(imgG,width,height,
                             (double)maskShapeWidthSpinner.getValue(),
                             (double)maskShapeHeightSpinner.getValue(),path);
+            }   // If this rendered to an image as a buffer 
+           if (img != null){
+                imgG.dispose();
+                    // Draw the image
+                g.drawImage(img, 0, 0, null);
             }
         }
         /**
