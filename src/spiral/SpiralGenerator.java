@@ -51,7 +51,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
@@ -353,6 +352,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             button.setIcon(icon);
             button.setDisabledIcon(new DisabledBoxIcon(icon));
         }
+        
+        models = new SpiralModel[]{
+            new ColorIconSpiralModel(0,1),
+            new ColorIconSpiralModel(2,3)
+        };
         
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
         progressBar.setMaximum(SPIRAL_FRAME_COUNT);
@@ -2657,6 +2661,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private Map<JButton, Integer> colorIndexes;
     /**
+     * These are the models to use to render the spiral preview.
+     */
+    private SpiralModel[] models;
+    /**
      * A configuration object to store the configuration for the program.
      */
     private SpiralGeneratorConfig config;
@@ -2846,30 +2854,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
                 RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         return g;
-    }
-    /**
-     * 
-     * @param g
-     * @param frameIndex
-     * @param color1
-     * @param color2
-     * @param width
-     * @param height
-     * @param spiralPainter 
-     */
-    private void paintSpiral(Graphics2D g, int frameIndex, 
-            Color color1, Color color2, int width, int height, 
-            SpiralPainter spiralPainter){
-            // If the width or height is less than or equal to zero or neither 
-            // color is going to be used
-        if (width <= 0 || height <= 0 || hasNoColor(color1,color2))
-            return;
-            // Get a model for the spiral with the angle of rotation for the 
-            // given index.
-        SpiralModel model = new ImmutableSpiralModel(color1,color2,
-                getFrameRotation(frameIndex));
-            // Paint the spiral
-        spiralPainter.paint(g, model, width, height);
     }
     /**
      * 
@@ -3082,67 +3066,75 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.dispose();
         return mask;
     }
-    
-    private void paintOverlay(Graphics2D g, int frameIndex, Color color1, 
-            Color color2, int width, int height,SpiralPainter spiralPainter, 
-            OverlayMask mask){
+    /**
+     * 
+     * @param g
+     * @param color
+     * @param width
+     * @param height
+     * @param mask 
+     */
+    private void paintOverlay(Graphics2D g, Color color, int width, 
+            int height, OverlayMask mask){
             // If the width or height are less than or equal to zero (nothing 
             // would be drawn)
         if (width <= 0 || height <= 0)
             return;
-            // Determine if the overlay is being rendered in a solid color
-        boolean solidColor = frameIndex < 0 || Objects.equals(color1, color2);
-            // If the overlay is a solid color
-        if (solidColor){
-                // If the first color is non-existant
-            if (hasNoColor(color1))
-                return;
-        }   // If both colors are non-existant
-        else if (hasNoColor(color1,color2))
-            return;
-            // If the overlay is a solid color and isn't an image
-        if (solidColor){
-                // A buffered image to paint to if need be
-            BufferedImage img = null;
-                // The graphics context to render to
-            Graphics2D imgG;
-                // If the overlay is an image
-            if (isOverlayMaskImage()){
-                    // Create an image to render the overlay to
-                img = new BufferedImage(width, height, 
-                        BufferedImage.TYPE_INT_ARGB);
-                    // Create a graphics context for the image
-                imgG = img.createGraphics();
-            } else  // Create a copy of the given graphics context
-                imgG = (Graphics2D) g.create();
-                // Configure the graphics context
-            imgG = configureGraphics(imgG);
-                // Set the color to the first color
-            imgG.setColor(color1);
-                // Paint the overlay as a solid color
-            mask.paintOverlay(imgG, width, height);
-            imgG.dispose();
-                // If an image was rendered to
-            if (img != null){
-                    // Create a copy of the given graphics context and configure it
-                g = configureGraphics((Graphics2D) g.create());
-                    // Enable or disable the antialiasing, depending on whether the 
-                    // mask should be antialiased
-                g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                        (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                                RenderingHints.VALUE_ANTIALIAS_OFF);
-                g.drawImage(img, 0, 0, null);
-                g.dispose();
-            }
-            return;
+            // A buffered image to paint to if need be
+        BufferedImage img = null;
+            // The graphics context to render to
+        Graphics2D imgG;
+            // If the overlay is an image
+        if (isOverlayMaskImage()){
+                // Create an image to render the overlay to
+            img = new BufferedImage(width, height, 
+                    BufferedImage.TYPE_INT_ARGB);
+                // Create a graphics context for the image
+            imgG = img.createGraphics();
+        } else  // Create a copy of the given graphics context
+            imgG = (Graphics2D) g.create();
+            // Configure the graphics context
+        imgG = configureGraphics(imgG);
+            // Set the color to the first color
+        imgG.setColor(color);
+            // Paint the overlay as a solid color
+        mask.paintOverlay(imgG, width, height);
+        imgG.dispose();
+            // If an image was rendered to
+        if (img != null){
+                // Create a copy of the given graphics context and configure it
+            g = configureGraphics((Graphics2D) g.create());
+                // Enable or disable the antialiasing, depending on whether the 
+                // mask should be antialiased
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                    (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                            RenderingHints.VALUE_ANTIALIAS_OFF);
+            g.drawImage(img, 0, 0, null);
+            g.dispose();
         }
+    }
+    /**
+     * 
+     * @param g
+     * @param model
+     * @param width
+     * @param height
+     * @param spiralPainter
+     * @param mask 
+     */
+    private void paintOverlay(Graphics2D g, SpiralModel model, int width, 
+            int height,SpiralPainter spiralPainter, OverlayMask mask){
+            // If the width or height are less than or equal to zero (nothing 
+            // would be drawn)
+        if (width <= 0 || height <= 0)
+            return;
             // Create an image to render the overlay to
         BufferedImage overlay = new BufferedImage(width, height, 
                 BufferedImage.TYPE_INT_ARGB);
             // Create and configure a graphics context for the image
         Graphics2D imgG = configureGraphics(overlay.createGraphics());
-            // Paint a spiral with the two colors
-        paintSpiral(imgG,frameIndex,color1,color2,width,height,spiralPainter);
+            // Paint a spiral
+        spiralPainter.paint(imgG, model, width, height);
             // Apply the mask for the overlay
         mask.maskOverlay(imgG, width, height);
             // Dispose of the image graphics
@@ -3165,32 +3157,73 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param frameIndex
      * @param width
      * @param height
-     * @param color1
-     * @param spiralPainter
-     * @param mask 
-     */
-    private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
-            int height, Color color1, SpiralPainter spiralPainter,
-            OverlayMask mask){
-        paintSpiral(g,frameIndex,color1,colorIcons[1].getColor(),width,height,
-                spiralPainter);
-        paintOverlay(g,frameIndex,
-                colorIcons[2].getColor(),colorIcons[3].getColor(),width,height,
-                spiralPainter,mask);
-    }
-    /**
-     * 
-     * @param g
-     * @param frameIndex
-     * @param width
-     * @param height
      * @param spiralPainter
      * @param mask 
      */
     private void paintSpiralDesign(Graphics2D g, int frameIndex, int width, 
             int height, SpiralPainter spiralPainter,OverlayMask mask){
-        paintSpiralDesign(g,frameIndex,width,height,colorIcons[0].getColor(),
-                spiralPainter,mask);
+            // If the width or height is less than or equal to zero
+        if (width <= 0 || height <= 0)
+            return;
+            // Get the angle of rotation for the spiral
+        double angle = getFrameRotation(frameIndex);
+            // Go through the spiral models
+        for (SpiralModel model : models)
+            model.setRotation(angle);
+            // Paint the spiral
+        spiralPainter.paint(g, models[0], width, height);
+        paintOverlay(g,models[1],width,height,spiralPainter,mask);
+    }
+    
+    private class ColorIconSpiralModel implements SpiralModel{
+        
+        private int index1;
+        
+        private int index2;
+        
+        private double rotation = 0.0;
+        
+        public ColorIconSpiralModel(int index1, int index2){
+            this.index1 = index1;
+            this.index2 = index2;
+        }
+        @Override
+        public Color getColor1() {
+            return colorIcons[index1].getColor();
+        }
+        /**
+         * 
+         * @param index
+         * @param color 
+         */
+        private void setColor(int index, Color color){
+            config.setSpiralColor(index, color);
+            if (color == null && index >= 0 && index < DEFAULT_SPIRAL_COLORS.length)
+                color = DEFAULT_SPIRAL_COLORS[index];
+            colorIcons[index].setColor(color);
+            refreshPreview();
+            colorButtons.get(colorIcons[index]).repaint();
+        }
+        @Override
+        public void setColor1(Color color) {
+            setColor(index1,color);
+        }
+        @Override
+        public Color getColor2() {
+            return colorIcons[index2].getColor();
+        }
+        @Override
+        public void setColor2(Color color) {
+            setColor(index2,color);
+        }
+        @Override
+        public double getRotation() {
+            return rotation;
+        }
+        @Override
+        public void setRotation(double angle) {
+            this.rotation = angle;
+        }
     }
     
     private class SpiralIcon implements Icon2D{
@@ -3305,8 +3338,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the height of the icon
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
-            paintOverlay(g,-1,Color.WHITE,Color.WHITE, width, height,
-                    getSpiralPainter(),overlayMask);
+            paintOverlay(g,Color.WHITE, width, height,overlayMask);
         }
         @Override
         public int getIconWidth() {
