@@ -19,6 +19,13 @@ public class ImmutableSpiralModel implements SpiralModel{
     
     private double rotation;
     
+    private double x;
+    
+    private double y;
+    
+    public ImmutableSpiralModel(Color color1, Color color2, double angle, 
+            double x){
+    
     public ImmutableSpiralModel(Color color1, Color color2, double angle){
         this.color1 = Objects.requireNonNull(color1);
         this.color2 = Objects.requireNonNull(color2);
