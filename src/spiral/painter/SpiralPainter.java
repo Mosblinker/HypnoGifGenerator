@@ -203,6 +203,16 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
     public double getRotation(){
         return rotation;
     }
+    /**
+     * 
+     * @param thickness
+     * @return 
+     */
+    protected boolean willFillAreaWithoutSpiral(double thickness){
+            // If the thickness is less than or equal to zero or the thickness 
+            // is greater than or equal to 1
+        return thickness <= 0.0 || thickness >= 1.0;
+    }
     @Override
     public void paint(Graphics2D g, SpiralModel model, int width, int height) {
             // Check if the graphics context is null
@@ -230,14 +240,24 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             fillArea(g,width,height);
             g.dispose();
             return;
-        }
-            // Add the rotation to the given angle
+        }   // Get the thickness for the spiral
+        double t = getThickness();
+            // If the painter should skip painting the spiral and should instead 
+            // just fill the area
+        if (willFillAreaWithoutSpiral(t)){
+                // Set the color to use from the blended version of the colors
+            g.setColor(model.blend(t));
+                // Fill the area
+            fillArea(g,width,height);
+            g.dispose();
+            return;
+        }   // Add the rotation to the given angle
         double angle = model.getRotation() + getRotation();
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
         paintSpiral(g,model,angle%FULL_CIRCLE_DEGREES,width,height,
                 width*model.getCenterX(),height*model.getCenterY(),
-                isClockwise(),getSpiralRadius(),getThickness());
+                isClockwise(),getSpiralRadius(),t);
         g.dispose();
     }
     /**

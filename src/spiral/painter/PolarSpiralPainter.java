@@ -240,35 +240,33 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
         }
     }
     @Override
-    protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
-            int width,int height, double centerX, double centerY, 
-            boolean clockwise, double radius, double thickness) {
+    protected boolean willFillAreaWithoutSpiral(double thickness){
             // If the thickness is less than or equal to zero or the thickness 
             // is greater than or equal to 1 or the fill condition value is 
             // equal to 1
-        if (thickness <= 0.0 || thickness >= 1.0 || fillConditionValue() == 1.0){
-                // Set the color to use
-            g.setColor(model.blend(thickness));
-                // Fill the area
-            fillArea(g,width,height);
+        return super.willFillAreaWithoutSpiral(thickness) || 
+                fillConditionValue() == 1.0;
+    }
+    @Override
+    protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
+            int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
+            // If there is no foreground color
+        if (SpiralGeneratorUtilities.hasNoColor(model.getColor2())){
+                // Alter the thickness
+            thickness = alterThicknessWhenNoColor2(thickness);
+                // Alter the angle of rotation
+            angle = alterRotationWhenNoColor2(angle);
+                // Set the color to use to the background color
+            g.setColor(model.getColor1());
         } else {
-                // If there is no foreground color
-            if (SpiralGeneratorUtilities.hasNoColor(model.getColor2())){
-                    // Alter the thickness
-                thickness = alterThicknessWhenNoColor2(thickness);
-                    // Alter the angle of rotation
-                angle = alterRotationWhenNoColor2(angle);
-                    // Set the color to use to the background color
-                g.setColor(model.getColor1());
-            } else {
-                    // Fill the background
-                fillBackground(g,model,width,height);
-                    // Set the color to use to the foreground color
-                g.setColor(model.getColor2());
-            }   // Paint the spiral
-            paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
-                    width,height,centerX,centerY,clockwise,radius,thickness);
-        }
+                // Fill the background
+            fillBackground(g,model,width,height);
+                // Set the color to use to the foreground color
+            g.setColor(model.getColor2());
+        }   // Paint the spiral
+        paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
+                width,height,centerX,centerY,clockwise,radius,thickness);
     }
     /**
      * This is used to paint the spiral. This is given a copy of the graphics 

@@ -37,15 +37,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
     protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
             int width,int height, double centerX, double centerY, 
             boolean clockwise, double radius, double thickness) {
-            // If the thickness is less than or equal to zero or the thickness 
-            // is greater than or equal to 1
-        if (thickness <= 0.0 || thickness >= 1.0){
-                // Set the color to use
-            g.setColor(model.blend(thickness));
-                // Fill the area
-            fillArea(g,width,height);
-            return;
-        }   // If there is no foreground color
+            // If there is no foreground color
         if (SpiralGeneratorUtilities.hasNoColor(model.getColor2())){
                 // Invert the thickness
             thickness = 1.0-thickness;
