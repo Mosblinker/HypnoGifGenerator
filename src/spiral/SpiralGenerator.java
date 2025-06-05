@@ -210,11 +210,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     "Unable to load preference node", ex);
             // TODO: Error message window
         }
+        
+        SpiralHandler handler = new SpiralHandler();
+        
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
+        colorButtons = new HashMap<>();
+        colorIndexes = new HashMap<>();
+        
             // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, 
                     DEFAULT_SPIRAL_COLORS[i]));
+            JButton button = new JButton(colorIcons[i]);
+            button.setDisabledIcon(new DisabledBoxIcon(colorIcons[i]));
+            button.addActionListener(handler);
+            colorButtons.put(colorIcons[i], button);
+            colorIndexes.put(button, i);
         }
         
         spiralPainters = new SpiralPainter[]{
@@ -244,8 +255,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(
                 overlayMask.textPainter.getLineSpacing()));
         
-        colorButtons = new HashMap<>();
-        colorIndexes = new HashMap<>();
         spiralCompLabels = new HashMap<>();
         
         spiralIcon = new SpiralIcon();
@@ -338,20 +347,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         editCommands.addToTextComponent();
         undoCommands.addToTextComponent(maskTextArea);
-        
-        SpiralHandler handler = new SpiralHandler();
-        colorIndexes.put(color1Button, 0);
-        colorIndexes.put(color2Button, 1);
-        colorIndexes.put(color3Button, 2);
-        colorIndexes.put(color4Button, 3);
-        for (Map.Entry<JButton,Integer> entry : colorIndexes.entrySet()){
-            JButton button = entry.getKey();
-            ColorBoxIcon icon = colorIcons[entry.getValue()];
-            colorButtons.put(icon, button);
-            button.addActionListener(handler);
-            button.setIcon(icon);
-            button.setDisabledIcon(new DisabledBoxIcon(icon));
-        }
         
         models = new SpiralModel[]{
             new ColorIconSpiralModel(0,1),
@@ -696,10 +691,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spinLabel = new javax.swing.JLabel();
         spinDirCombo = new javax.swing.JComboBox<>();
         spiralColorPanel = new javax.swing.JPanel();
-        color1Button = new javax.swing.JButton();
-        color2Button = new javax.swing.JButton();
-        color3Button = new javax.swing.JButton();
-        color4Button = new javax.swing.JButton();
+        javax.swing.JButton color1Button = colorButtons.get(colorIcons[0]);
+        javax.swing.JButton color2Button = colorButtons.get(colorIcons[1]);
+        javax.swing.JButton color3Button = colorButtons.get(colorIcons[2]);
+        javax.swing.JButton color4Button = colorButtons.get(colorIcons[3]);
         spiralTypeLabel = new javax.swing.JLabel();
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
@@ -2714,10 +2709,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel baseLabel;
     private javax.swing.JSpinner baseSpinner;
     private javax.swing.JCheckBox boldToggle;
-    private javax.swing.JButton color1Button;
-    private javax.swing.JButton color2Button;
-    private javax.swing.JButton color3Button;
-    private javax.swing.JButton color4Button;
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JPopupMenu debugPopup;
