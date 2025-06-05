@@ -11,14 +11,14 @@ import java.awt.RadialGradientPaint;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import spiral.SpiralGeneratorUtilities;
+import spiral.SpiralModel;
 
 /**
  *
  * @author Mosblinker
  */
 public class RippleSpiralPainter extends LogarithmicSpiralPainter{
-    
-    public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     /**
      * This is a scratch list to use to get the radiuses for the points on the 
      * spiral where the color changes. This is initially null and is initialized 
@@ -42,9 +42,20 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         return adjustRotation(angle,thickness,clockwise);
     }
     @Override
-    protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise, double radius, 
-            double thickness) {
+    protected double alterRotationWhenNoColor2(double angle){ 
+        return angle;
+    }
+    @Override
+    protected double alterThicknessWhenNoColor2(double thickness){
+        return thickness;
+    }
+    @Override
+    protected void fillBackground(Graphics2D g, SpiralModel model, double width, 
+            double height){ }
+    @Override
+    protected void paintSpiralPolar(Graphics2D g, SpiralModel model, 
+            double angle, int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
             // If the rectangle object has not been initialized yet
         if (rect == null)
             rect = new Rectangle2D.Double();
@@ -53,8 +64,16 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             rList = new ArrayList<>();
         else
             rList.clear();
-            // Get the color of the graphics context
-        Color color = g.getColor();
+            // Get the first color in the model
+        Color color1 = model.getColor1();
+            // Get the second color in the model
+        Color color2 = model.getColor2();
+            // If thre is no first color, use a transparent color
+        if (SpiralGeneratorUtilities.hasNoColor(color1))
+            color1 = SpiralGeneratorUtilities.getTranslucentColor(color2, 0.0);
+            // If there is no second color, use a transparent color
+        else if (SpiralGeneratorUtilities.hasNoColor(color2))
+            color2 = SpiralGeneratorUtilities.getTranslucentColor(color1, 0.0);
             // This gets the amount by which to multiply the angle when 
             // computing the spiral.
         double k = getLogarithmicK();
@@ -143,7 +162,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
                 // even indexes are colored, or if this index is odd and odd 
                 // indexes are colored. If nether condition is met, then the 
                 // color is transparent
-            colors[fIndex] = (isEven == isColorEven) ? color : TRANSPARENT_COLOR;
+            colors[fIndex] = (isEven == isColorEven) ? color2 : color1;
                 // If the thickness is not 0.5 and either this index is even and 
                 // even indexes are thicker or this index is odd and odd indexes 
                 // are thicker

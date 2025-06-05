@@ -4,7 +4,10 @@
  */
 package spiral.painter;
 
+import geom.GeometryMath;
 import java.awt.Graphics2D;
+import spiral.SpiralGeneratorUtilities;
+import spiral.SpiralModel;
 
 /**
  *
@@ -198,32 +201,80 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
      * translucent color.
      * @see #paintSpiral(java.awt.Graphics2D, double, int, int, double, double, 
      * boolean, double, double) 
-     * @see #paintSpiralGegl(java.awt.Graphics2D, double, int, int, double, 
-     * double, boolean, double, double) 
+     * @see #paintSpiralPolar(java.awt.Graphics2D, double, int, int, double, double, boolean, double, double) 
      */
     protected abstract double fillConditionValue();
+    /**
+     * 
+     * @param angle
+     * @return 
+     */
+    protected double alterRotationWhenNoColor2(double angle){
+            // Shift it by 180 degrees
+        return GeometryMath.boundDegrees(angle+HALF_CIRCLE_DEGREES);
+    }
+    /**
+     * 
+     * @param thickness
+     * @return 
+     */
+    protected double alterThicknessWhenNoColor2(double thickness){
+            // Invert the thickness
+        return 1.0-thickness;
+    }
+    /**
+     * 
+     * @param g
+     * @param model
+     * @param width
+     * @param height 
+     */
+    protected void fillBackground(Graphics2D g, SpiralModel model, 
+            double width, double height){
+            // If there is a background color
+        if (!SpiralGeneratorUtilities.hasNoColor(model.getColor1())){
+                // Set the color to use to the background color
+            g.setColor(model.getColor1());
+                // Fill the area
+            fillArea(g,width,height);
+        }
+    }
     @Override
-    protected void paintSpiral(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise, double radius, 
-            double thickness) {
-            // If the thickness is greater than zero
-        if (thickness > 0.0){
-                // If the thickness is greater than or equal to 1 or the fill 
-                // condition value is equal to 1
-            if (thickness >= 1.0 || fillConditionValue() == 1.0){
-                    // Fill the area with a solid color
-                fillWithTransparency(g,width,height,thickness);
+    protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
+            int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
+            // If the thickness is less than or equal to zero or the thickness 
+            // is greater than or equal to 1 or the fill condition value is 
+            // equal to 1
+        if (thickness <= 0.0 || thickness >= 1.0 || fillConditionValue() == 1.0){
+                // Set the color to use
+            g.setColor(model.blend(thickness));
+                // Fill the area
+            fillArea(g,width,height);
+        } else {
+                // If there is no foreground color
+            if (SpiralGeneratorUtilities.hasNoColor(model.getColor2())){
+                    // Alter the thickness
+                thickness = alterThicknessWhenNoColor2(thickness);
+                    // Alter the angle of rotation
+                angle = alterRotationWhenNoColor2(angle);
+                    // Set the color to use to the background color
+                g.setColor(model.getColor1());
             } else {
-                    // Paint the spiral
-                paintSpiralGegl(g,adjustRotation(angle,thickness,clockwise),
-                        width,height,centerX,centerY,clockwise,radius,thickness);
-            }
+                    // Fill the background
+                fillBackground(g,model,width,height);
+                    // Set the color to use to the foreground color
+                g.setColor(model.getColor2());
+            }   // Paint the spiral
+            paintSpiralPolar(g,model,adjustRotation(angle,thickness,clockwise),
+                    width,height,centerX,centerY,clockwise,radius,thickness);
         }
     }
     /**
      * This is used to paint the spiral. This is given a copy of the graphics 
      * context that is clipped to the painted region.
      * @param g The graphics context to render to.
+     * @param model The model containing data for the spiral
      * @param angle The angle for the spiral. This is in the range of {@code 0} 
      * to {@value MAXIMUM_ANGLE}, exclusive.
      * @param width This is the width of the area to fill with the spiral.
@@ -241,7 +292,7 @@ public abstract class PolarSpiralPainter extends SpiralPainter{
      * @see #getSpiralRadius() 
      * @see #getThickness() 
      */
-    protected abstract void paintSpiralGegl(Graphics2D g, double angle, int width, 
-            int height, double centerX, double centerY, boolean clockwise, 
-            double radius, double thickness); 
+    protected abstract void paintSpiralPolar(Graphics2D g, SpiralModel model, 
+            double angle, int width, int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness); 
 }

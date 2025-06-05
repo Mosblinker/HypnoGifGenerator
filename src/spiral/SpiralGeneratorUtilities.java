@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -23,6 +24,8 @@ import javax.imageio.ImageIO;
  * @author Mosblinker
  */
 public final class SpiralGeneratorUtilities {
+    
+    public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     /**
      * 
      */
@@ -346,6 +349,61 @@ public final class SpiralGeneratorUtilities {
      */
     public static float toGrayscale(int rgb, int mode){
         return toGrayscale((rgb >> 16) & 0xFF,(rgb >> 8) & 0xFF,rgb & 0xFF,mode);
+    }
+    /**
+     * 
+     * @param color
+     * @param alpha
+     * @return 
+     */
+    public static Color getTranslucentColor(Color color, double alpha){
+            // If the alpha is greater than or equal to 1
+        if (alpha >= 1.0)
+            return color;
+            // Get the RGB value of the color without the alpha component
+        int rgb = color.getRGB() & 0x00FFFFFF;
+            // If the alpha is greater than zero
+        if (alpha > 0.0)
+                // Multiply the color's alpha component by the alpha and shift 
+                // it into the last 8 bits to use the result as the alpha 
+                // component
+            rgb |= ((int)Math.floor(color.getAlpha()*alpha)) << 24;
+        return new Color(rgb, true);
+    }
+    /**
+     * 
+     * @param ratio
+     * @param color1
+     * @param color2
+     * @return 
+     */
+    private static double blendColorValue(double ratio, int color1, int color2){
+        double c = (color1 / 255.0);
+        return c + ratio * ((color2 / 255.0) - c);
+    }
+    /**
+     * 
+     * @param color1
+     * @param color2
+     * @param t
+     * @return 
+     */
+    public static Color blendColor(Color color1, Color color2, double t){
+        if (hasNoColor(color1, color2))
+            return TRANSPARENT_COLOR;
+        if (Objects.equals(color1, color2) || t <= 0.0)
+            return color1;
+        if (t >= 1.0)
+            return color2;
+        double alpha = blendColorValue(t,color1.getAlpha(),color2.getAlpha());
+        if (alpha <= 0.0)
+            return getTranslucentColor(color1, alpha);
+        double ratio = t * ((color2.getAlpha() / 255.0) / alpha);
+        return new Color(
+                (float)blendColorValue(ratio,color1.getRed(),color2.getRed()),
+                (float)blendColorValue(ratio,color1.getGreen(),color2.getGreen()),
+                (float)blendColorValue(ratio,color1.getBlue(),color2.getBlue()),
+                (float)alpha);
     }
     /**
      * 

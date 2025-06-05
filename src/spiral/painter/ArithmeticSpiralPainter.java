@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import spiral.SpiralModel;
 
 /**
  *
@@ -158,9 +159,9 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
         return getSpiralRadius();
     }
     @Override
-    protected void paintSpiralGegl(Graphics2D g, double angle, int width,int height, 
-            double centerX, double centerY, boolean clockwise, double radius, 
-            double thickness) {
+    protected void paintSpiralPolar(Graphics2D g, SpiralModel model, 
+            double angle, int width,int height, double centerX, double centerY, 
+            boolean clockwise, double radius, double thickness) {
             // If the path has not been initialized yet
         if (path == null)
             path = new Path2D.Double();

@@ -11,13 +11,14 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.nio.ByteBuffer;
 import java.util.Objects;
+import spiral.*;
 import swing.ListenedPainter;
 
 /**
  *
  * @author Mosblinker
  */
-public abstract class SpiralPainter extends ListenedPainter<Double> implements 
+public abstract class SpiralPainter extends ListenedPainter<SpiralModel> implements 
         GeometryMathConstants, Cloneable{
     
     public static final String SPIRAL_RADIUS_PROPERTY_CHANGED = 
@@ -31,6 +32,9 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     
     public static final String ROTATION_PROPERTY_CHANGED = 
             "RotationPropertyChanged";
+    
+    protected static final SpiralModel DEFAULT_SPIRAL_MODEL = 
+            new ImmutableSpiralModel(Color.WHITE,Color.BLACK,0.0);
     
     private static final int BYTE_ARRAY_LENGTH = Double.BYTES*3 + 1;
     /**
@@ -200,26 +204,38 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
         return rotation;
     }
     @Override
-    public void paint(Graphics2D g, Double angle, int width, int height) {
+    public void paint(Graphics2D g, SpiralModel model, int width, int height) {
             // Check if the graphics context is null
         Objects.requireNonNull(g);
             // If either the width or height are less than or equal to zero 
             // (nothing would be rendered anyway)
         if (width <= 0 || height <= 0)
             return;
+            // If the model is null, default to the default model
+        if (model == null)
+            model = DEFAULT_SPIRAL_MODEL;
+            // If the model has no color
+        if (SpiralGeneratorUtilities.hasNoColor(model.getColor1(), model.getColor2()))
+            return;
             // Create a copy of the given graphics context and configure it to 
             // render the spiral
         g = configureGraphics((Graphics2D)g.create());
             // Clip the graphics context to only include the rendered area
         g.clipRect(0, 0, width, height);
-            // If the angle is null, default to an angle of zero
-        if (angle == null)
-            angle = 0.0;
+            // If the two colors in the model are the same
+        if (Objects.equals(model.getColor1(), model.getColor2())){
+                // Set the color to the first color
+            g.setColor(model.getColor1());
+                // Fill the area
+            fillArea(g,width,height);
+            g.dispose();
+            return;
+        }
             // Add the rotation to the given angle
-        angle += getRotation();
+        double angle = model.getRotation() + getRotation();
             // Paint the spiral. Keep the angle in range of (-360, 360), 
             // exclusive.
-        paintSpiral(g,angle%FULL_CIRCLE_DEGREES,width,height,
+        paintSpiral(g,model,angle%FULL_CIRCLE_DEGREES,width,height,
                 width/2.0,height/2.0,isClockwise(),getSpiralRadius(),getThickness());
         g.dispose();
     }
@@ -227,6 +243,7 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * This is used to paint the spiral. This is given a copy of the graphics 
      * context that is clipped to the painted region.
      * @param g The graphics context to render to.
+     * @param model The model containing data for the spiral
      * @param angle The angle for the spiral. This is in the range of -{@value 
      * MAXIMUM_ANGLE}, exclusive, to {@value MAXIMUM_ANGLE}, exclusive.
      * @param width This is the width of the area to fill with the spiral.
@@ -240,28 +257,23 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
      * @see #paint
      * @see #isClockwise() 
      */
-    protected abstract void paintSpiral(Graphics2D g, double angle, 
-            int width, int height, double centerX, double centerY, 
+    protected abstract void paintSpiral(Graphics2D g, SpiralModel model, 
+            double angle, int width, int height, double centerX, double centerY, 
             boolean clockwise, double radius, double thickness);
     /**
      * 
-     * @param color
-     * @param alpha
-     * @return 
+     * @param g
+     * @param width
+     * @param height 
      */
-    protected Color getTranslucentColor(Color color, double alpha){
-            // If the alpha is greater than or equal to 1
-        if (alpha >= 1.0)
-            return color;
-            // Get the RGB value of the color without the alpha component
-        int rgb = color.getRGB() & 0x00FFFFFF;
-            // If the alpha is greater than zero
-        if (alpha > 0.0)
-                // Multiply the color's alpha component by the alpha and shift 
-                // it into the last 8 bits to use the result as the alpha 
-                // component
-            rgb |= ((int)Math.floor(color.getAlpha()*alpha)) << 24;
-        return new Color(rgb, true);
+    protected void fillArea(Graphics2D g, double width, double height){
+            // If the rectangle object has not been initialized yet
+        if (rect == null)
+            rect = new Rectangle2D.Double();
+            // Set the frame of the rectangle to cover the entire area
+        rect.setFrame(0, 0, width, height);
+            // Fill the area
+        g.fill(rect);
     }
     /**
      * 
@@ -276,14 +288,9 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
             // If the thickness is greater than zero
         if (thickness > 0.0){
                 // Set the color to use
-            g.setColor(getTranslucentColor(color,thickness));
-                // If the rectangle object has not been initialized yet
-            if (rect == null)
-                rect = new Rectangle2D.Double();
-                // Set the frame of the rectangle to cover the entire area
-            rect.setFrame(0, 0, width, height);
+            g.setColor(SpiralGeneratorUtilities.getTranslucentColor(color,thickness));
                 // Fill the area
-            g.fill(rect);
+            fillArea(g,width,height);
         }
     }
     /**
@@ -296,6 +303,22 @@ public abstract class SpiralPainter extends ListenedPainter<Double> implements
     protected void fillWithTransparency(Graphics2D g, double width, 
             double height, double thickness){
         fillWithTransparency(g,width,height,thickness,g.getColor());
+    }
+    /**
+     * 
+     * @param g
+     * @param width
+     * @param height
+     * @param thickness
+     * @param color1
+     * @param color2 
+     */
+    protected void fillWithBlend(Graphics2D g, double width, 
+            double height, double thickness, Color color1, Color color2){
+            // Set the color to use
+        g.setColor(SpiralGeneratorUtilities.blendColor(color1, color2, thickness));
+            // Fill the area
+        fillArea(g,width,height);
     }
     /**
      * This is used to adjust the angle of rotation for the spiral.
