@@ -2864,44 +2864,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // color is going to be used
         if (width <= 0 || height <= 0 || hasNoColor(color1,color2))
             return;
-            // If both of the colors are the same color
-        else if (Objects.equals(color1, color2)){
-            g.setColor(color1);
-            g.fillRect(0, 0, width, height);
-            return;
-        }
             // Get a model for the spiral with the angle of rotation for the 
             // given index.
         SpiralModel model = new ImmutableSpiralModel(color1,color2,
                 getFrameRotation(frameIndex));
-            // If there is a second color
-        if (!hasNoColor(model.getColor2())){
-                // If there are two colors
-            if (!hasNoColor(model.getColor1())){
-                    // Fill the background with the first color
-                g.setColor(model.getColor1());
-                g.fillRect(0, 0, width, height);
-            }   // Draw the spiral with the second color
-            g.setColor(model.getColor1());
-            spiralPainter.paint(g, model, width, height);
-        } else {
-                // Get an image to buffer what is drawn
-            BufferedImage img = new BufferedImage(width, height, 
-                    BufferedImage.TYPE_INT_ARGB);
-                // Get a graphics context for the image buffer
-            Graphics2D imgG = img.createGraphics();
-                // Fill the background of the image with the first color
-            imgG.setColor(model.getColor1());
-            imgG.fillRect(0, 0, width, height);
-                // Use the alpha composite to remove any pixels that are in the 
-                // spiral
-            imgG.setComposite(AlphaComposite.DstOut);
-                // Draw the spiral to remove the pixels
-            spiralPainter.paint(imgG, model, width, height);
-            imgG.dispose();
-                // Draw the buffered image.
-            g.drawImage(img, 0, 0, null);
-        }
+            // Paint the spiral
+        spiralPainter.paint(g, model, width, height);
     }
     /**
      * 
