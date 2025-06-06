@@ -378,7 +378,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             SpiralModel model){
         width *= 0.5 + Math.abs(model.getCenterX()-0.5);
         height *= 0.5 + Math.abs(model.getCenterY()-0.5);
-        return GeometryMath.getPolarRadius(width, height);
+        return GeometryMath.getPolarRadius(height,width);
     }
     /**
      * This is used to configure the graphics context used to render the spiral. 
