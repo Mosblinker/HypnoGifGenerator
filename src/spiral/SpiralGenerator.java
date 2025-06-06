@@ -2346,8 +2346,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param enabled 
      */
     private void setValueControlsEnabled(boolean enabled){
-        for (Component comp : spiralCompLabels.keySet())
-            comp.setEnabled(enabled);
+        angleSpinner.setEnabled(enabled);
         spinDirCombo.setEnabled(enabled);
         maskTextArea.setEnabled(enabled);
         fontButton.setEnabled(enabled);
@@ -2839,6 +2838,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setEnabled(enabled);
         heightSpinner.setEnabled(enabled);
         delaySpinner.setEnabled(enabled);
+        for (Component comp : spiralCompLabels.keySet())
+            if (angleSpinner != comp)
+                comp.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
