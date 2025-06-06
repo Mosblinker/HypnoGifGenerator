@@ -285,45 +285,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 DEFAULT_SPIRAL_COLORS[3],DEFAULT_SPIRAL_COLORS[2],0.0);
             // Go through the icon sizes
         for (int size : ICON_SIZES){
-                // This is the image for the current size
-            BufferedImage img = new BufferedImage(size, size, 
-                    BufferedImage.TYPE_INT_ARGB);
-                // Get a graphics context for the image
-            Graphics2D g = img.createGraphics();
-            g.setColor(iconModel.getColor1());
-            g.fillRect(0, 0, size, size);
-            g.setColor(iconModel.getColor2());
-                // Draw the spiral for the icon
-            iconPainter.paint(g, iconModel, size, size);
-                // If there is a mask for the overlay for the icon
-            if (iconImg != null){
-                    // This is the image for the overlay
-                BufferedImage imgOverlay = new BufferedImage(size, size, 
-                        BufferedImage.TYPE_INT_ARGB);
-                    // Get a graphics context for the overlay
-                Graphics2D g2 = imgOverlay.createGraphics();
-                g2.setColor(iconMsgModel.getColor1());
-                g2.fillRect(0, 0, size, size);
-                g2.setColor(iconMsgModel.getColor2());
-                    // Draw the spiral for the overlay
-                iconPainter.paint(g2, iconMsgModel, size, size);
-                    // Mask the overlay using the mask
-                maskImage(g2,Thumbnailator.createThumbnail(iconImg,size,size));
-                g2.dispose();
-                    // Draw the overlay
-                g.drawImage(imgOverlay, 0, 0, null);
-            }   // Set the composite mode to only include pixels that are drawn
-            g.setComposite(AlphaComposite.DstIn);
-                // Get the center of the image
-            float center = size/2.0f;
-                // Set the paint to a radial gradient that will make the icon 
-                // circular while also fading out near the edge
-            g.setPaint(new RadialGradientPaint(center,center, center, 
-                    ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
-                // Fill the area to mask the icon
-            g.fillRect(0, 0, size, size);
-            g.dispose();
-            iconImages.add(img);
+            iconImages.add(getProgramIcon(size,size,iconModel,iconMsgModel,
+                    iconPainter,iconImg));
         }
         setIconImages(iconImages);
         
@@ -537,6 +500,43 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     public SpiralGenerator() {
         this(false);
+    }
+    
+    private BufferedImage getProgramIcon(int width, int height, 
+            SpiralModel model, SpiralModel maskModel, SpiralPainter painter, 
+            BufferedImage mask){
+            // This is the image for the current size
+        BufferedImage img = new BufferedImage(width, height, 
+                BufferedImage.TYPE_INT_ARGB);
+            // Get a graphics context for the image
+        Graphics2D g = img.createGraphics();
+            // Draw the spiral for the icon
+        painter.paint(g, model, width, height);
+            // If there is a mask for the overlay for the icon
+        if (mask != null){
+                // This is the image for the overlay
+            BufferedImage imgOverlay = new BufferedImage(width, height, 
+                    BufferedImage.TYPE_INT_ARGB);
+                // Get a graphics context for the overlay
+            Graphics2D g2 = imgOverlay.createGraphics();
+                // Draw the spiral for the overlay
+            painter.paint(g2, maskModel, width, height);
+                // Mask the overlay using the mask
+            maskImage(g2,Thumbnailator.createThumbnail(mask,width, height));
+            g2.dispose();
+                // Draw the overlay
+            g.drawImage(imgOverlay, 0, 0, null);
+        }   // Set the composite mode to only include pixels that are drawn
+        g.setComposite(AlphaComposite.DstIn);
+            // Set the paint to a radial gradient that will make the icon 
+            // circular while also fading out near the edge
+        g.setPaint(new RadialGradientPaint(width/2.0f,height/2.0f, 
+                (float)GeometryMath.getPolarRadius(height/2.0,width/2.0), 
+                ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
+            // Fill the area to mask the icon
+        g.fillRect(0, 0, width, height);
+        g.dispose();
+        return img;
     }
     
     private SpiralPainter getSpiralPainter(int index){
