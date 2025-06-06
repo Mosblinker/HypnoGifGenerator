@@ -2347,22 +2347,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void setValueControlsEnabled(boolean enabled){
         angleSpinner.setEnabled(enabled);
-        maskTextArea.setEnabled(enabled);
-        fontButton.setEnabled(enabled);
-        lineSpacingSpinner.setEnabled(enabled);
-        boldToggle.setEnabled(enabled);
-        italicToggle.setEnabled(enabled);
-        fontAntialiasingToggle.setEnabled(enabled);
-        maskScaleSpinner.setEnabled(enabled);
-        imgMaskAntialiasingToggle.setEnabled(enabled);
-        resetMaskButton.setEnabled(enabled);
-        for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
-            button.setEnabled(enabled);
-        }
-        updateMaskAlphaControlsEnabled();
-        maskShapeWidthSpinner.setEnabled(enabled);
-        maskShapeLinkSizeToggle.setEnabled(enabled);
-        updateMaskShapeControlsEnabled();
     }
     /**
      * 
@@ -2370,9 +2354,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void updateControlsEnabled(){
         boolean enabled = frameSlider.isEnabled();
         saveButton.setEnabled(enabled);
-        loadMaskButton.setEnabled(enabled);
-        maskEditButton.setEnabled(enabled);
-        maskTabbedPane.setEnabled(enabled);
         setValueControlsEnabled(enabled);
     }
     /**
@@ -2841,6 +2822,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             button.setEnabled(enabled);
         }
         resetButton.setEnabled(enabled);
+        maskEditButton.setEnabled(enabled);
+        maskTabbedPane.setEnabled(enabled);
+        maskTextArea.setEnabled(enabled);
+        fontButton.setEnabled(enabled);
+        lineSpacingSpinner.setEnabled(enabled);
+        boldToggle.setEnabled(enabled);
+        italicToggle.setEnabled(enabled);
+        fontAntialiasingToggle.setEnabled(enabled);
+        maskScaleSpinner.setEnabled(enabled);
+        loadMaskButton.setEnabled(enabled);
+        for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
+            button.setEnabled(enabled);
+        }
+        updateMaskAlphaControlsEnabled();
+        imgMaskAntialiasingToggle.setEnabled(enabled);
+        maskShapeWidthSpinner.setEnabled(enabled);
+        maskShapeLinkSizeToggle.setEnabled(enabled);
+        updateMaskShapeControlsEnabled();
+        resetMaskButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
