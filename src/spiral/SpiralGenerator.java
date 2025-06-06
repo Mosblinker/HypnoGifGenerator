@@ -531,8 +531,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Set the paint to a radial gradient that will make the icon 
             // circular while also fading out near the edge
         g.setPaint(new RadialGradientPaint(width/2.0f,height/2.0f, 
-                (float)GeometryMath.getPolarRadius(height/2.0,width/2.0), 
-                ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
+                (width+height)/4.0f, ICON_FADE_FRACTIONS, ICON_FADE_COLORS));
             // Fill the area to mask the icon
         g.fillRect(0, 0, width, height);
         g.dispose();
