@@ -413,7 +413,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         
+            // Configure the mask text pane to have centered text
         StyledDocument doc = maskTextPane.getStyledDocument();
+        SimpleAttributeSet centeredText = new SimpleAttributeSet();
+        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
         
         Font font = config.getMaskFont(maskTextPane.getFont());
         maskTextPane.setFont(font);
