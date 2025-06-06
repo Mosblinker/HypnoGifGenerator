@@ -298,11 +298,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // This is the model for the main part of the spiral for the program 
             // icon
         SpiralModel iconModel = new ImmutableSpiralModel(
-                DEFAULT_SPIRAL_COLORS[1],DEFAULT_SPIRAL_COLORS[0],0.0);
+                DEFAULT_SPIRAL_COLORS[0],DEFAULT_SPIRAL_COLORS[1],0.0);
             // This is the model for the message part of the spiral for the 
             // program icon
         SpiralModel iconMsgModel = new ImmutableSpiralModel(
-                DEFAULT_SPIRAL_COLORS[3],DEFAULT_SPIRAL_COLORS[2],0.0);
+                DEFAULT_SPIRAL_COLORS[2],DEFAULT_SPIRAL_COLORS[1],0.0);
             // Go through the icon sizes
         for (int size : ICON_SIZES){
             iconImages.add(getProgramIcon(size,size,iconModel,iconMsgModel,
