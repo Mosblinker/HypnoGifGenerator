@@ -1315,7 +1315,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle(PROGRAM_NAME + " - Version "+ PROGRAM_VERSION);
+        setTitle(PROGRAM_NAME);
         setLocationByPlatform(true);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentMoved(java.awt.event.ComponentEvent evt) {
