@@ -993,14 +993,14 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="imageCtrlPanel" alignment="0" pref="247" max="32767" attributes="0"/>
-                  <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
-                  <Component id="progressBar" max="32767" attributes="0"/>
+                  <Component id="spiralCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
+                  <Component id="progressBar" min="-2" pref="247" max="-2" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="ctrlButtonPanel" max="32767" attributes="0"/>
+                      <Component id="ctrlButtonPanel" min="-2" pref="145" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="imageCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
