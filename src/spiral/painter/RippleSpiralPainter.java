@@ -64,6 +64,9 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             rList = new ArrayList<>();
         else
             rList.clear();
+            // If the spiral is counter-clockwise
+        if (!clockwise)
+            angle += HALF_CIRCLE_DEGREES;
             // Get the first color in the model
         Color color1 = model.getColor1();
             // Get the second color in the model
@@ -113,11 +116,10 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Get the largest radius in the list and use it as the radius for 
             // the gradient
         r2 = rList.get(rList.size()-1);
-            // Get whether the index of r1 is even when the spiral is clockwise 
-            // and odd when the spiral is counter-clockwise. This is used to 
-            // indicate whether the radiuses with even indexes should be the 
-            // second color, with the others getting the first color.
-        boolean isColorEven = ((rList.indexOf(r1) % 2) == 0) == clockwise;
+            // Get whether the index of r1 is even. This is used to determine 
+            // whether the radiuses at even indexes should be the second color, 
+            // with the others getting the first color.
+        boolean isColorEven = (rList.indexOf(r1) % 2) == 0;
             // This gets whether the thickness should be applied to the radiuses 
             // at the even indexes
         boolean isThickerEven = false;
