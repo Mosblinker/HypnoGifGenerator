@@ -116,8 +116,7 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             // Get whether the index of r1 is even when the spiral is clockwise 
             // and odd when the spiral is counter-clockwise. This is used to 
             // indicate whether the radiuses with even indexes should be the 
-            // graphics context's color, whith the others getting the 
-            // transparent color.
+            // second color, with the others getting the first color.
         boolean isColorEven = ((rList.indexOf(r1) % 2) == 0) == clockwise;
             // This gets whether the thickness should be applied to the radiuses 
             // at the even indexes
@@ -126,9 +125,9 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
         int length = rList.size();
             // If the thickness is not 0.5 (i.e. one color is thicker than the 
         if (thickness != 0.5){  // other color)
-                // Get if the thickness is greater than 0.5 when the color is 
-                // is on even indexes, or if the thickness is less than 0.5 and 
-                // the color is on odd indexes
+                // Get if the thickness is greater than 0.5 when the second 
+                // color is is on even indexes, or if the thickness is less than 
+                // 0.5 and the second color is on odd indexes
             isThickerEven = thickness > 0.5 == isColorEven;
                 // Add half the list length to the array length to be 1.5 times 
                 // the list length
@@ -158,10 +157,10 @@ public class RippleSpiralPainter extends LogarithmicSpiralPainter{
             double r = rList.get(i);
                 // Get if the current index is even
             boolean isEven = i % 2 == 0;
-                // Set the color to the graphics color if this index is even and 
-                // even indexes are colored, or if this index is odd and odd 
-                // indexes are colored. If nether condition is met, then the 
-                // color is transparent
+                // Set the color to the first color if this index is even and 
+                // even indexes use the second color, or if this index is odd 
+                // and odd indexes use the second color. If nether condition is 
+                // met, then the first color
             colors[fIndex] = (isEven == isColorEven) ? color2 : color1;
                 // If the thickness is not 0.5 and either this index is even and 
                 // even indexes are thicker or this index is odd and odd indexes 
