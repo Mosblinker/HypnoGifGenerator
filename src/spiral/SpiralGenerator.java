@@ -225,7 +225,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     "Unable to load preference node", ex);
             // TODO: Error message window
         }
-        
+            // This is the handler to listen to the painters and color buttons
         SpiralHandler handler = new SpiralHandler();
         
         colorIcons = new ColorBoxIcon[DEFAULT_SPIRAL_COLORS.length];
@@ -236,13 +236,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, 
                     DEFAULT_SPIRAL_COLORS[i]));
+                // Create a button for this icon
             JButton button = new JButton(colorIcons[i]);
+                // Set its disabled icon to a disabled version of the icon
             button.setDisabledIcon(new DisabledBoxIcon(colorIcons[i]));
             button.addActionListener(handler);
             colorButtons.put(colorIcons[i], button);
             colorIndexes.put(button, i);
         }
-        
+            // Create the spiral models using the color icons
+        models = new SpiralModel[]{
+                // Base spiral model
+            new ColorIconSpiralModel(0,1),
+                // Overlay spiral model
+            new ColorIconSpiralModel(2,3)
+        };
+            // Create an array with the spiral painters that are available
         spiralPainters = new SpiralPainter[]{
             new LogarithmicSpiralPainter(),
             new ArithmeticSpiralPainter(),
@@ -250,10 +259,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new RippleSpiralPainter()
         };
         log(Level.FINE, "SpiralGenerator", "Loading SpiralPainters");
+            // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
                 // Get the byte array for the painter
             byte[] arr = config.getSpiralData(painter);
-            try{
+            try{    // Load the current spiral painter from the byte array
                 painter.fromByteArray(arr);
             } catch (IllegalArgumentException | BufferOverflowException | 
                     BufferUnderflowException ex) {
@@ -273,10 +283,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralCompLabels = new HashMap<>();
         
         spiralIcon = new SpiralIcon();
-        
+            // Get the spiral type from the configuration
         int spiralType = config.getSpiralType();
+            // Get the mask type from the configuration
         int maskType = config.getMaskType();
+            // Initialize the components
         initComponents();
+            // Go through the labels for the components used to set the 
+            // parameters for the spirals
         for (JLabel label : new JLabel[]{
             radiusLabel,baseLabel,balanceLabel,dirLabel,angleLabel,spiralShapeLabel
         }){
@@ -285,7 +299,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // This is the image to use as a mask for the icon
         BufferedImage iconImg = null;
-        try {
+        try {   // Load the mask for the program icon
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
             log(Level.WARNING,"SpiralGenerator",
@@ -314,22 +328,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Get it to shut up about iconImg not being effectively final
         BufferedImage iconMask = iconImg;
         aboutIcon = new Icon2D(){
+                // The painter for the about icon
             SpiralPainter painter = iconPainter;
+                // The mask for the about icon
             BufferedImage mask = iconMask;
+                // The model for the spiral for the about icon
             SpiralModel model = iconModel;
+                // The model for the spiral overlay for the about icon
             SpiralModel maskModel = iconMsgModel;
             @Override
             public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+                    // Get the icon's width
                 int width = getIconWidth();
+                    // Get the icon's height
                 int height = getIconHeight();
+                    // Get any scaling transform that's been applied to the 
+                    // graphics context
                 AffineTransform tx = g.getTransform();
-                if (tx.getScaleX() > 1.0)
-                    width = (int) Math.ceil(width * tx.getScaleX());
-                if (tx.getScaleY() > 1.0)
-                    height = (int) Math.ceil(height * tx.getScaleY());
+                    // Configure the graphics context
                 g = configureGraphics(g);
-                g.drawImage(getProgramIcon(width,height,model,maskModel,painter,
-                        mask), x, y, getIconWidth(), getIconHeight(), c);
+                    // Generate the image for the program icon and draw it to 
+                    // the graphics context
+                g.drawImage(getProgramIcon((int)Math.ceil(width*tx.getScaleX()),
+                        (int) Math.ceil(height * tx.getScaleY()),model,maskModel,
+                        painter,mask), x, y, width, height, c);
             }
             @Override
             public int getIconWidth() {
@@ -355,11 +377,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         editCommands.addToTextComponent();
         undoCommands.addToTextComponent(maskTextPane);
-        
-        models = new SpiralModel[]{
-            new ColorIconSpiralModel(0,1),
-            new ColorIconSpiralModel(2,3)
-        };
         
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
         progressBar.setMaximum(SPIRAL_FRAME_COUNT);
