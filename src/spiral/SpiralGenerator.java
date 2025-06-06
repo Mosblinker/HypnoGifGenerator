@@ -2347,19 +2347,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void setValueControlsEnabled(boolean enabled){
         angleSpinner.setEnabled(enabled);
-        spinDirCombo.setEnabled(enabled);
         maskTextArea.setEnabled(enabled);
         fontButton.setEnabled(enabled);
         lineSpacingSpinner.setEnabled(enabled);
         boldToggle.setEnabled(enabled);
         italicToggle.setEnabled(enabled);
         fontAntialiasingToggle.setEnabled(enabled);
-        for (JButton button : colorButtons.values()){
-            button.setEnabled(enabled);
-        }
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
-        resetButton.setEnabled(enabled);
         resetMaskButton.setEnabled(enabled);
         for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
             button.setEnabled(enabled);
@@ -2841,6 +2836,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (angleSpinner != comp)
                 comp.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
+        spinDirCombo.setEnabled(enabled);
+        for (JButton button : colorButtons.values()){
+            button.setEnabled(enabled);
+        }
+        resetButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
