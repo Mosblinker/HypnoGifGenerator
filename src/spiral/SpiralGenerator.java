@@ -2358,8 +2358,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (JButton button : colorButtons.values()){
             button.setEnabled(enabled);
         }
-        widthSpinner.setEnabled(enabled);
-        heightSpinner.setEnabled(enabled);
         maskScaleSpinner.setEnabled(enabled);
         imgMaskAntialiasingToggle.setEnabled(enabled);
         resetButton.setEnabled(enabled);
@@ -2839,6 +2837,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void setInputEnabled(boolean enabled){
         inputEnableToggle.setSelected(enabled);
         framePlayButton.setEnabled(enabled);
+        widthSpinner.setEnabled(enabled);
+        heightSpinner.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
