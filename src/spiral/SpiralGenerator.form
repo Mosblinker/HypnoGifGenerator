@@ -946,14 +946,6 @@
     </Container>
     <Component class="javax.swing.ButtonGroup" name="maskAlphaButtons">
     </Component>
-    <Container class="javax.swing.JPanel" name="ctrlButtonPanel">
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
-        <Property name="columns" type="int" value="0"/>
-        <Property name="horizontalGap" type="int" value="6"/>
-        <Property name="rows" type="int" value="1"/>
-      </Layout>
-    </Container>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -988,19 +980,18 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="framesPanel" alignment="1" pref="405" max="32767" attributes="0"/>
+                  <Component id="framesPanel" alignment="1" pref="404" max="32767" attributes="0"/>
                   <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="imageCtrlPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="imageCtrlPanel" alignment="0" pref="247" max="32767" attributes="0"/>
                   <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
                   <Component id="progressBar" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="saveButton" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="ctrlButtonPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -1022,9 +1013,9 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="imageCtrlPanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="maskEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="ctrlButtonPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
@@ -1852,13 +1843,28 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskEditButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="saveButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Save"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
-      </Events>
-    </Component>
+    <Container class="javax.swing.JPanel" name="ctrlButtonPanel">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+        <Property name="columns" type="int" value="0"/>
+        <Property name="horizontalGap" type="int" value="6"/>
+        <Property name="rows" type="int" value="1"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="saveButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="aboutButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="About"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
   </SubComponents>
 </Form>
