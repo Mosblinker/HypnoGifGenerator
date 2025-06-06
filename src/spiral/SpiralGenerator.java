@@ -290,6 +290,36 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         setIconImages(iconImages);
         
+            // Get it to shut up about iconImg not being effectively final
+        BufferedImage iconMask = iconImg;
+        aboutIcon = new Icon2D(){
+            SpiralPainter painter = iconPainter;
+            BufferedImage mask = iconMask;
+            SpiralModel model = iconModel;
+            SpiralModel maskModel = iconMsgModel;
+            @Override
+            public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+                int width = getIconWidth();
+                int height = getIconHeight();
+                AffineTransform tx = g.getTransform();
+                if (tx.getScaleX() > 1.0)
+                    width = (int) Math.ceil(width * tx.getScaleX());
+                if (tx.getScaleY() > 1.0)
+                    height = (int) Math.ceil(height * tx.getScaleY());
+                g = configureGraphics(g);
+                g.drawImage(getProgramIcon(width,height,model,maskModel,painter,
+                        mask), x, y, getIconWidth(), getIconHeight(), c);
+            }
+            @Override
+            public int getIconWidth() {
+                return 128;
+            }
+            @Override
+            public int getIconHeight() {
+                return getIconWidth();
+            }
+        };
+        
         editCommands = new TextComponentCommands(maskTextArea);
         undoCommands = new UndoManagerCommands(new CompoundUndoManager());
         maskPopup.add(undoCommands.getUndoAction());
@@ -2672,6 +2702,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is a map to map the test components to their corresponding classes.
      */
     private Map<Class, List<Component>> testComponents;
+    /**
+     * This is the icon to display on the about window.
+     */
+    private Icon aboutIcon;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutButton;
     private javax.swing.JCheckBox alwaysScaleToggle;
