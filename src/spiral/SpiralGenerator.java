@@ -1767,6 +1767,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         ctrlButtonPanel.add(saveButton);
 
         aboutButton.setText("About");
+        aboutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutButtonActionPerformed(evt);
+            }
+        });
         ctrlButtonPanel.add(aboutButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -2202,6 +2207,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             refreshPreview(2);
         }
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
+
+    private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_aboutButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
