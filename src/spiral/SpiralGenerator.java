@@ -754,7 +754,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         saveFC.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         saveFC.setFileFilter(ImageExtensions.GIF_FILTER);
 
-        maskDialog.setTitle("Edit Message Mask");
+        maskDialog.setTitle("Edit Overlay");
         maskDialog.setMinimumSize(new java.awt.Dimension(640, 480));
         maskDialog.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -1084,7 +1084,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane.addTab("Heart", shapeMaskCtrlPanel);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
-        maskScaleLabel.setText("Mask Scale:");
+        maskScaleLabel.setText("Overlay Scale:");
 
         maskScaleSpinner.setModel(new javax.swing.SpinnerNumberModel(1.0d, 0.0001d, 10.0d, 0.01d));
         maskScaleSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(maskScaleSpinner, "0.##%"));
@@ -1749,7 +1749,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        maskEditButton.setText("Edit Message Mask");
+        maskEditButton.setText("Edit Overlay");
+        maskEditButton.setToolTipText("Edit the overlay that appears over the spiral.");
         maskEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskEditButtonActionPerformed(evt);

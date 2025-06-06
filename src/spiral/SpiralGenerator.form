@@ -85,7 +85,7 @@
     </Component>
     <Container class="javax.swing.JDialog" name="maskDialog">
       <Properties>
-        <Property name="title" type="java.lang.String" value="Edit Message Mask"/>
+        <Property name="title" type="java.lang.String" value="Edit Overlay"/>
         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[640, 480]"/>
         </Property>
@@ -700,7 +700,7 @@
             <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
               <ComponentRef name="maskScaleSpinner"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Mask Scale:"/>
+            <Property name="text" type="java.lang.String" value="Overlay Scale:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JSpinner" name="maskScaleSpinner">
@@ -1845,7 +1845,8 @@
     </Component>
     <Component class="javax.swing.JButton" name="maskEditButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Edit Message Mask"/>
+        <Property name="text" type="java.lang.String" value="Edit Overlay"/>
+        <Property name="toolTipText" type="java.lang.String" value="Edit the overlay that appears over the spiral."/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskEditButtonActionPerformed"/>
