@@ -2363,7 +2363,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton.setEnabled(enabled);
         resetMaskButton.setEnabled(enabled);
         spiralTypeCombo.setEnabled(enabled);
-        delaySpinner.setEnabled(enabled);
         for (AbstractButton button : SwingExtendedUtilities.toArray(maskAlphaButtons)){
             button.setEnabled(enabled);
         }
@@ -2839,6 +2838,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         framePlayButton.setEnabled(enabled);
         widthSpinner.setEnabled(enabled);
         heightSpinner.setEnabled(enabled);
+        delaySpinner.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
