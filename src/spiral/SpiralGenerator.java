@@ -55,6 +55,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
 import spiral.painter.*;
@@ -340,7 +341,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         };
         
-        editCommands = new TextComponentCommands(maskTextArea);
+        editCommands = new TextComponentCommands(maskTextPane);
         undoCommands = new UndoManagerCommands(new CompoundUndoManager());
         maskPopup.add(undoCommands.getUndoAction());
         maskPopup.add(undoCommands.getRedoAction());
@@ -353,7 +354,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPopup.add(editCommands.getSelectAllAction());
         
         editCommands.addToTextComponent();
-        undoCommands.addToTextComponent(maskTextArea);
+        undoCommands.addToTextComponent(maskTextPane);
         
         models = new SpiralModel[]{
             new ColorIconSpiralModel(0,1),
@@ -412,17 +413,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         
-        Font font = config.getMaskFont(maskTextArea.getFont());
-        maskTextArea.setFont(font);
+        StyledDocument doc = maskTextPane.getStyledDocument();
+        
+        Font font = config.getMaskFont(maskTextPane.getFont());
+        maskTextPane.setFont(font);
         boldToggle.setSelected(font.isBold());
         italicToggle.setSelected(font.isItalic());
         
-        maskTextArea.setText(config.getMaskText());
+        maskTextPane.setText(config.getMaskText());
         
         for (SpiralPainter painter : spiralPainters)
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
-        maskTextArea.getDocument().addDocumentListener(handler);
+        doc.addDocumentListener(handler);
         
         if (debugMode){
             testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
@@ -645,7 +648,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane = new javax.swing.JTabbedPane();
         textMaskCtrlPanel = new javax.swing.JPanel();
         maskTextScrollPane = new javax.swing.JScrollPane();
-        maskTextArea = new javax.swing.JTextArea();
+        javax.swing.JPanel maskTextPanel = new javax.swing.JPanel();
+        maskTextPane = new javax.swing.JTextPane();
         fontButton = new javax.swing.JButton();
         boldToggle = new javax.swing.JCheckBox();
         italicToggle = new javax.swing.JCheckBox();
@@ -818,10 +822,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        maskTextArea.setColumns(20);
-        maskTextArea.setRows(5);
-        maskTextArea.setComponentPopupMenu(maskPopup);
-        maskTextScrollPane.setViewportView(maskTextArea);
+        maskTextPanel.setLayout(new java.awt.BorderLayout());
+        maskTextPanel.add(maskTextPane, java.awt.BorderLayout.CENTER);
+
+        maskTextScrollPane.setViewportView(maskTextPanel);
 
         fontButton.setText("Select Font");
         fontButton.addActionListener(new java.awt.event.ActionListener() {
@@ -869,7 +873,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(maskTextScrollPane)
                     .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                         .addComponent(fontButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -882,7 +885,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(lineSpacingLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 30, Short.MAX_VALUE)))
+                        .addGap(0, 30, Short.MAX_VALUE))
+                    .addComponent(maskTextScrollPane))
                 .addContainerGap())
         );
         textMaskCtrlPanelLayout.setVerticalGroup(
@@ -2012,11 +2016,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         FontDialog fontSelector = new FontDialog(this,"Select Font",true);
         config.loadMaskFontSelectorSize(fontSelector);
         fontSelector.setLocationRelativeTo(this);
-        fontSelector.setSelectedFont(maskTextArea.getFont().deriveFont(Font.PLAIN));
+        fontSelector.setSelectedFont(maskTextPane.getFont().deriveFont(Font.PLAIN));
         fontSelector.setVisible(true);
         if (!fontSelector.isCancelSelected()){
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
-            maskTextArea.setFont(font);
+            maskTextPane.setFont(font);
             config.setMaskFont(font);
             refreshPreview(0);
         }
@@ -2031,7 +2035,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void styleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_styleToggleActionPerformed
         int style = getFontStyle();
         config.setMaskFontStyle(style);
-        maskTextArea.setFont(maskTextArea.getFont().deriveFont(style));
+        maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
         refreshPreview(0);
     }//GEN-LAST:event_styleToggleActionPerformed
 
@@ -2211,7 +2215,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void resetMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMaskButtonActionPerformed
         switch (maskTabbedPane.getSelectedIndex()){
             case(0):
-                maskTextArea.setText("");
+                maskTextPane.setText("");
                 break;
             case(1):
                 overlayImage = null;
@@ -2366,7 +2370,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private void refreshMaskText(){
-        config.setMaskText(maskTextArea.getText());
+        config.setMaskText(maskTextPane.getText());
         refreshPreview(0);
     }
     
@@ -2798,7 +2802,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel maskShapeWidthLabel;
     private javax.swing.JSpinner maskShapeWidthSpinner;
     private javax.swing.JTabbedPane maskTabbedPane;
-    private javax.swing.JTextArea maskTextArea;
+    private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
@@ -2894,7 +2898,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton.setEnabled(enabled);
         maskEditButton.setEnabled(enabled);
         maskTabbedPane.setEnabled(enabled);
-        maskTextArea.setEnabled(enabled);
+        maskTextPane.setEnabled(enabled);
         fontButton.setEnabled(enabled);
         lineSpacingSpinner.setEnabled(enabled);
         boldToggle.setEnabled(enabled);
@@ -2935,7 +2939,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void paintTextMask(Graphics2D g, int width, int height, String text, 
             CenteredTextPainter painter){
             // Set the graphics context font to the mask font
-        g.setFont(maskTextArea.getFont());
+        g.setFont(maskTextPane.getFont());
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
     }
@@ -3583,7 +3587,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // The mask is using text
                 case (0):
                         // Get the text for the mask 
-                    String text = maskTextArea.getText();
+                    String text = maskTextPane.getText();
                         // Return if the text is neither null nor blank
                     return text != null && !text.isBlank();
                     // The mask is an image
@@ -3614,7 +3618,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case (0):
                         // Use the text mask, creating it if need be
                     return textMask = getTextMaskImage(width,height,
-                            maskTextArea.getText(),textMask,textPainter);
+                            maskTextPane.getText(),textMask,textPainter);
                     // The mask is an image
                 case(1):
                         // Get the alpha channel for the overlay image, creating 
@@ -3682,7 +3686,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // The mask is using text
                 case(0):
                         // Paint the text mask
-                    paintTextMask(imgG,width,height,maskTextArea.getText(),textPainter);
+                    paintTextMask(imgG,width,height,maskTextPane.getText(),
+                            textPainter);
                     break;
                     // The mask is an image
                 case(1):
