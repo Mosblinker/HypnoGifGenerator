@@ -75,6 +75,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
     /**
+     * This is the credits for the program. This is currently private as I plan 
+     * to rework it.
+     * @todo Rework this and then make it public. Also add any additional 
+     * credits necessary
+     */
+    private static final String[] CREDITS = {
+        "                         ---- Developers ----",
+        "Mosblinker - Main developer and artist."
+    };
+    /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
      */
@@ -2238,7 +2248,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-        // TODO add your handling code here:
+            // TODO: Rework the about window to look good.
+        String message = "About "+PROGRAM_NAME+
+                "\nVersion: "+PROGRAM_VERSION+
+                "\n\nCredits: ";
+        for (String value : CREDITS)
+            message += "\n"+value;
+        
+        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
+                JOptionPane.PLAIN_MESSAGE,aboutIcon);
     }//GEN-LAST:event_aboutButtonActionPerformed
     /**
      * This returns the width for the image.
