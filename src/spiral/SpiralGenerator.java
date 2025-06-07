@@ -298,6 +298,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         spiralCompLabels = new HashMap<>();
         
+        try{
+            updateChecker = new UpdateChecker(AUTHOR_NAME,INTERNAL_PROGRAM_NAME,
+                    PROGRAM_VERSION);
+        } catch (RuntimeException ex){
+            log(Level.WARNING, "SpiralGenerator", 
+                    "UpdateChecker could not be constructed", ex);
+        }
         spiralIcon = new SpiralIcon();
             // Get the spiral type from the configuration
         int spiralType = config.getSpiralType();
@@ -2645,12 +2652,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         try{
-            UpdateChecker checker = new UpdateChecker(AUTHOR_NAME,
-                    INTERNAL_PROGRAM_NAME,PROGRAM_VERSION);
-            checker.check();
-            if (checker.isUpdateAvailable()){
-                String url = checker.getUpdateUrl();
-                String latestVersion = checker.getLatestVersion();
+            updateChecker.check();
+            if (updateChecker.isUpdateAvailable()){
+                String url = updateChecker.getUpdateUrl();
+                String latestVersion = updateChecker.getLatestVersion();
                 latestVersLabel.setText(latestVersion);
                 updateCheckDialog.setLocationRelativeTo(aboutDialog);
                 updateCheckDialog.setVisible(true);
@@ -3165,6 +3170,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is a map to map the test components to their corresponding classes.
      */
     private Map<Class, List<Component>> testComponents;
+    /**
+     * This is the checker to use to check for updates for the program.
+     */
+    private UpdateChecker updateChecker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
