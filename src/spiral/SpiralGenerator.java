@@ -358,7 +358,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Get it to shut up about iconImg not being effectively final
         BufferedImage iconMask = iconImg;
             // Create the icon for the about window
-        aboutIcon = new Icon2D(){
+        aboutIconLabel.setIcon(new Icon2D(){
                 // The painter for the about icon
             SpiralPainter painter = iconPainter;
                 // The mask for the about icon
@@ -392,7 +392,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             public int getIconHeight() {
                 return getIconWidth();
             }
-        };
+        });
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
@@ -2990,10 +2990,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is a map to map the test components to their corresponding classes.
      */
     private Map<Class, List<Component>> testComponents;
-    /**
-     * This is the icon to display on the about window.
-     */
-    private Icon aboutIcon;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
