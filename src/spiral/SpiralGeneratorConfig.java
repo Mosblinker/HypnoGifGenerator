@@ -106,6 +106,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
     
+    public static final String MASK_IMAGE_FILE_KEY = "MaskImageFile";
+    
     public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
     
     public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
@@ -1024,6 +1026,18 @@ public class SpiralGeneratorConfig {
     
     public void setMaskDesaturateMode(int value){
         getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
+    }
+    
+    public File getMaskImageFile(File defaultValue){
+        return getFile(MASK_IMAGE_FILE_KEY,defaultValue);
+    }
+    
+    public File getMaskImageFile(){
+        return getMaskImageFile(null);
+    }
+    
+    public void setMaskImageFile(File value){
+        putFile(MASK_IMAGE_FILE_KEY,value);
     }
     
     public double getMaskShapeWidth(double defaultValue){
