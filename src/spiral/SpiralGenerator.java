@@ -1948,6 +1948,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
             // Get the file to save to
         File file = showSaveFileChooser(saveFC);
+        config.setSelectedFile(saveFC);
             // If a file was selected
         if (file != null){
             fileWorker = new AnimationSaver(file);
@@ -1958,6 +1959,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void loadMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMaskButtonActionPerformed
             // Get the image file to load
         File file = showOpenFileChooser(maskFC);
+        config.setSelectedFile(maskFC);
             // If a file was selected
         if (file != null){
             fileWorker = new ImageLoader(file);
