@@ -251,7 +251,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Load the color from the preferences and use it for the color 
                 // of the icon
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, 
-                    DEFAULT_SPIRAL_COLORS[i]));
+                    DEFAULT_SPIRAL_COLORS[i]),false);
                 // Create a button for this icon
             JButton button = new JButton(colorIcons[i]);
                 // Set its disabled icon to a disabled version of the icon
