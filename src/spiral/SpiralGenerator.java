@@ -238,6 +238,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // A for loop to create the color icons with their respective colors
         for (int i = 0; i < colorIcons.length; i++){
+                // Load the color from the preferences and use it for the color 
+                // of the icon
             colorIcons[i] = new ColorBoxIcon(16,16,config.getSpiralColor(i, 
                     DEFAULT_SPIRAL_COLORS[i]));
                 // Create a button for this icon
@@ -262,10 +264,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ConcentricSpiralPainter(),
             new RippleSpiralPainter()
         };
+        
         log(Level.FINE, "SpiralGenerator", "Loading SpiralPainters");
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
-                // Get the byte array for the painter
+                // Get the byte array for the painter from the preferences
             byte[] arr = config.getSpiralData(painter);
             try{    // Load the current spiral painter from the byte array
                 painter.fromByteArray(arr);
@@ -278,6 +281,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         log(Level.FINE, "SpiralGenerator", "Finished loading SpiralPainters");
         
+            // Configure the overlay mask's text painter's settings from the 
+            // preferences
         overlayMask.textPainter.setAntialiasingEnabled(
                 config.isMaskTextAntialiased(
                         overlayMask.textPainter.isAntialiasingEnabled()));
@@ -324,6 +329,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 DEFAULT_SPIRAL_COLORS[2],DEFAULT_SPIRAL_COLORS[3],0.0);
             // Go through the icon sizes
         for (int size : ICON_SIZES){
+                // Create and add an image of the given size to the icons
             iconImages.add(getProgramIcon(size,size,iconModel,iconMsgModel,
                     iconPainter,iconImg));
         }
@@ -331,6 +337,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // Get it to shut up about iconImg not being effectively final
         BufferedImage iconMask = iconImg;
+            // Create the icon for the about window
         aboutIcon = new Icon2D(){
                 // The painter for the about icon
             SpiralPainter painter = iconPainter;
@@ -367,8 +374,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         };
         
+            // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
         undoCommands = new UndoManagerCommands(new CompoundUndoManager());
+            // Add the actions to the popup menu for the mask text pane
         maskPopup.add(undoCommands.getUndoAction());
         maskPopup.add(undoCommands.getRedoAction());
         maskPopup.addSeparator();
@@ -378,33 +387,44 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPopup.add(editCommands.getDeleteAction());
         maskPopup.addSeparator();
         maskPopup.add(editCommands.getSelectAllAction());
-        
+            // Add the listeners to the mask text pane
         editCommands.addToTextComponent();
         undoCommands.addToTextComponent(maskTextPane);
         
-        frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
+            // Set the maximum for the progress bar. The only thing that uses it 
+            // in this program is saving the animation
         progressBar.setMaximum(SPIRAL_FRAME_COUNT);
+            // Configure the frame slider
+        frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
+            // Update the number for the frame being displayed
         updateFrameNumberDisplayed();
         animationTimer = new javax.swing.Timer(SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
             progressAnimation(e);
         });
         previewLabel.setIcon(spiralIcon);
         maskPreviewLabel.setIcon(new MaskPreviewIcon());
+        
+            // Add the components and their names to the preferences
         config.setComponentName(maskFC, OVERLAY_MASK_FILE_CHOOSER_NAME);
         config.setComponentName(saveFC, SAVE_FILE_CHOOSER_NAME);
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
+            // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
+                // If the component is a file chooser
             if (c instanceof JFileChooser)
+                    // Load the file chooser from the preferences
                 config.loadFileChooser((JFileChooser)c);
-            else
+            else    // Load the component's size from the preferences
                 config.loadComponentSize(c);
         }
-        
+            // Ensure the program's size is at least 960x575
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
+            // Load the program's bounds from the preferences
         config.getProgramBounds(SpiralGenerator.this);
         
+            // Load the settings for the program from the preferences
         spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
                 spiralPainters.length-1), 0));
         maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
@@ -419,43 +439,54 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeWidthSpinner.setValue(config.getMaskShapeWidth());
         maskShapeHeightSpinner.setValue(config.getMaskShapeHeight());
         updateMaskShapeControlsEnabled();
-        loadSpiralPainter();
         spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
         lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         maskScaleSpinner.setValue(config.getMaskScale());
         delaySpinner.setValue(config.getFrameDuration(SPIRAL_FRAME_DURATION));
-        
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
-        
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         
+            // Load the values for the components for controlling the spiral 
+            // from the current spiral painter
+        loadSpiralPainter();
+        
             // Configure the mask text pane to have centered text
+            
+            // Get the document for the mask text pane
         StyledDocument doc = maskTextPane.getStyledDocument();
+            // Create a style to use to center the text on the text pane
         SimpleAttributeSet centeredText = new SimpleAttributeSet();
+            // Make the style center the text
         StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+            // Apply the centered text style to the entire pane
         doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
         
+            // Get the font for the text mask from the preferences
         Font font = config.getMaskFont(maskTextPane.getFont());
         maskTextPane.setFont(font);
         boldToggle.setSelected(font.isBold());
         italicToggle.setSelected(font.isItalic());
-        
+            // Load the size of the font selector from the preferences
         fontDim = config.getMaskFontSelectorSize();
+            // Load the text for the mask from the preferences
         maskTextPane.setText(config.getMaskText());
         
+            // Go through hte spiral painters
         for (SpiralPainter painter : spiralPainters)
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         doc.addDocumentListener(handler);
         
+            // If the program is in debug mode
         if (debugMode){
             testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
             testComponents = new HashMap<>();
+                // Set the popup menu for the preview label to be the debug menu
             previewLabel.setComponentPopupMenu(debugPopup);
                 // Get the program's directory
             File prgDir = getProgramDirectory();
@@ -616,37 +647,53 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.dispose();
         return img;
     }
-    
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     private SpiralPainter getSpiralPainter(int index){
+            // If the index is a valid index in the spiral painter array
         if (index >= 0 && index < spiralPainters.length)
             return spiralPainters[index];
         return null;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     private SpiralPainter getSpiralPainter(){
         return getSpiralPainter(spiralTypeCombo.getSelectedIndex());
     }
     
     private void loadSpiralPainter(SpiralPainter painter){
+            // If the painter is null
         if (painter == null)
             return;
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
         angleSpinner.setValue(painter.getRotation());
+            // Get if the painter is logarithmic
         boolean isLog = painter instanceof LogarithmicSpiral;
+            // If the painter is logaritmic
         if (isLog)
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
         baseSpinner.setVisible(isLog);
+            // Get if the painter has a shape
         boolean hasShape = painter instanceof ShapedSpiral;
+            // If the painter has a shape
         if (hasShape)
             spiralShapeCombo.setSelectedItem(((ShapedSpiral)painter).getShape());
         spiralShapeCombo.setVisible(hasShape);
+            // Go through the components for the spirals and their labels
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
         }
     }
-    
+    /**
+     * 
+     */
     private void loadSpiralPainter(){
         loadSpiralPainter(getSpiralPainter());
     }
@@ -1899,7 +1946,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+            // Get the file to save to
         File file = showSaveFileChooser(saveFC);
+            // If a file was selected
         if (file != null){
             fileWorker = new AnimationSaver(file);
             fileWorker.execute();
@@ -1907,7 +1956,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void loadMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadMaskButtonActionPerformed
+            // Get the image file to load
         File file = showOpenFileChooser(maskFC);
+            // If a file was selected
         if (file != null){
             fileWorker = new ImageLoader(file);
             fileWorker.execute();
@@ -1928,6 +1979,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         frameTime = System.currentTimeMillis();
         frameTimeTotal = 0;
         frameTotal = 0;
+            // If the animation is now playing
         if (framePlayButton.isSelected()){
             animationTimer.restart();
         } else{
@@ -1941,7 +1993,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             previewLabel.repaint();
         } catch (NullPointerException ex){
             log(Level.WARNING, "frameSliderStateChanged", 
-                    "Null encountered while repainting preview label", ex);
+                    "Null encountered while repainting preview label for frame " 
+                            + frameSlider.getValue(), ex);
         }
         updateFrameNumberDisplayed();
     }//GEN-LAST:event_frameSliderStateChanged
@@ -1963,7 +2016,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_frameLastButtonActionPerformed
 
     private void printTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTestButtonActionPerformed
+            // Get the index of the selected spiral type
         int selected = spiralTypeCombo.getSelectedIndex();
+            // Go through the spiral painters
         for (int i = 0; i < spiralPainters.length; i++){
             System.out.printf("%1s Painter %2d: %s%n",(i == selected) ? "*":"",
                     i,spiralPainters[i]);
@@ -1991,27 +2046,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_formComponentMoved
 
     private void radiusSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiusSpinnerStateChanged
-        SpiralPainter painter = getSpiralPainter();
-        double value = (double) radiusSpinner.getValue();
-        if (value != painter.getSpiralRadius())
-            painter.setSpiralRadius(value);
+            // Set the radius for the currently selected spiral painter
+        getSpiralPainter().setSpiralRadius((double) radiusSpinner.getValue());
     }//GEN-LAST:event_radiusSpinnerStateChanged
 
     private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
-        SpiralPainter temp = getSpiralPainter();
-        if (temp instanceof LogarithmicSpiral){
-            LogarithmicSpiral painter = (LogarithmicSpiral) temp;
-            double value = (double) baseSpinner.getValue();
-            if (value != painter.getBase())
-                painter.setBase(value);
+            // Get the currently selected spiral painter
+        SpiralPainter painter = getSpiralPainter();
+            // If the spiral painter is logarithmic in nature
+        if (painter instanceof LogarithmicSpiral){
+                // Set the spiral's base
+            ((LogarithmicSpiral) painter).setBase((double) baseSpinner.getValue());
         }
     }//GEN-LAST:event_baseSpinnerStateChanged
 
     private void balanceSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_balanceSpinnerStateChanged
-        SpiralPainter painter = getSpiralPainter();
-        double value = (double) balanceSpinner.getValue();
-        if (value != painter.getBalance())
-            painter.setBalance(value);
+            // Set the balance for the currently selected spiral painter
+        getSpiralPainter().setBalance((double) balanceSpinner.getValue());
     }//GEN-LAST:event_balanceSpinnerStateChanged
 
     private void alwaysScaleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwaysScaleToggleActionPerformed
@@ -2025,6 +2076,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_printFPSToggleActionPerformed
 
     private void dirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dirComboActionPerformed
+            // Set the direction for the currently selected spiral
         getSpiralPainter().setClockwise(dirCombo.getSelectedIndex() == 0);
     }//GEN-LAST:event_dirComboActionPerformed
 
@@ -2034,25 +2086,35 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
+            // Set the base rotation for the currently selected spiral painter
         getSpiralPainter().setRotation((double)angleSpinner.getValue());
         refreshPreview();
     }//GEN-LAST:event_angleSpinnerStateChanged
 
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
+            // Create a font dialog to select the font to use
         FontDialog fontSelector = new FontDialog(this,"Select Font For Overlay",true);
+            // If the font selector's size is not null
         if (fontDim != null){
             fontDim.width = Math.max(fontDim.width, 540);
             fontDim.height = Math.max(fontDim.height, 400);
         } else
             fontDim = new Dimension(540, 400);
+            // Set the size for the font dialog
         SwingExtendedUtilities.setComponentSize(fontSelector, fontDim);
+            // Set the font dialog's location to be relative to this program
         fontSelector.setLocationRelativeTo(this);
+            // Set the currently selected font to the current font
         fontSelector.setSelectedFont(maskTextPane.getFont().deriveFont(Font.PLAIN));
+            // Show the font dialog
         fontSelector.setVisible(true);
+            // If the user did not cancel the font selection
         if (!fontSelector.isCancelSelected()){
+                // Get the selected font and set its style
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextPane.setFont(font);
             config.setMaskFont(font);
+                // Refresh the text mask and preview
             refreshPreview(0);
         }
         fontDim = fontSelector.getSize(fontDim);
@@ -2064,9 +2126,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskDialogComponentResized
 
     private void styleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_styleToggleActionPerformed
+            // Get the font's style
         int style = getFontStyle();
         config.setMaskFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
+            // Refresh the text mask and preview
         refreshPreview(0);
     }//GEN-LAST:event_styleToggleActionPerformed
 
@@ -2097,15 +2161,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void widthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_widthSpinnerStateChanged
         config.setImageWidth(getImageWidth());
+            // Refresh the mask and preview
         refreshPreview(-1);
     }//GEN-LAST:event_widthSpinnerStateChanged
 
     private void heightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightSpinnerStateChanged
         config.setImageHeight(getImageHeight());
+            // Refresh the mask and preview
         refreshPreview(-1);
     }//GEN-LAST:event_heightSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+            // Go through the color icons
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
             config.setSpiralColor(i, null);
@@ -2114,6 +2181,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
         heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
         spinDirCombo.setSelectedIndex(0);
+            // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
             painter.reset();
         }
@@ -2122,6 +2190,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
         config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
+            // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
     /**
@@ -2162,6 +2231,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_showTestDialogButtonActionPerformed
 
     private void testSpiralImageSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testSpiralImageSpinnerStateChanged
+            // If the test spiral is being shown
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
             // Get the index for the test image
@@ -2182,6 +2252,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testSpiralImageSpinnerStateChanged
 
     private void testRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testRotateSpinnerStateChanged
+            // If the test spiral is being shown
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
             // Get the rotation for the test spiral
@@ -2191,6 +2262,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testRotateSpinnerStateChanged
 
     private void testScaleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_testScaleSpinnerStateChanged
+            // If the test spiral is being shown
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
         config.setDebugTestScale((double)testScaleSpinner.getValue());
@@ -2203,9 +2275,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spiralTypeComboActionPerformed
 
     private void delaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySpinnerStateChanged
+            // Get the value for the duration from the duration spinner
         int value = ((Integer) delaySpinner.getValue());
+            // If the duration is not a multiple of 10
         if (value % 10 != 0){
+                // Provide error feedback
             UIManager.getLookAndFeel().provideErrorFeedback(delaySpinner);
+                // Make it to be a multiple of 10
             delaySpinner.setValue(value - (value % 10));
             return;
         }
@@ -2215,8 +2291,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_delaySpinnerStateChanged
 
     private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
+            // Get the currently selected spiral painter
         SpiralPainter painter = getSpiralPainter();
+            // If the spiral is shaped
         if (painter instanceof ShapedSpiral){
+                // Set the shape of the spiral for the currently selected spiral
             ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(
                     spiralShapeCombo.getSelectedIndex()));
         }
@@ -2225,29 +2304,36 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.setMaskAlphaIndex(maskAlphaButtons);
         updateMaskAlphaControlsEnabled();
+            // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
     private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+            // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
 
     private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
         config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+            // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
 
     private void testShowRadiusToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testShowRadiusToggleActionPerformed
+            // If the test spiral is being shown
         if (showTestSpiralToggle.isSelected())
             previewLabel.repaint();
     }//GEN-LAST:event_testShowRadiusToggleActionPerformed
 
     private void resetMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMaskButtonActionPerformed
+            // Determine which mask to reset based off the current mask
         switch (maskTabbedPane.getSelectedIndex()){
+                // If the mask is text
             case(0):
                 maskTextPane.setText("");
                 break;
+                // If the mask is an image
             case(1):
                 overlayImage = null;
                 maskAlphaToggle.setSelected(true);
@@ -2258,6 +2344,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 break;
+                // If the mask is a shape
             case(2):
                 maskShapeLinkSizeToggle.setSelected(true);
                 maskShapeWidthSpinner.setValue(0.1);
@@ -2269,37 +2356,48 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_resetMaskButtonActionPerformed
 
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
+            // Get the value for the width of the mask shape
         double value = (double) maskShapeWidthSpinner.getValue();
         config.setMaskShapeWidth(value);
+            // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
+                // Set the height of the mask shape to the width
             maskShapeHeightSpinner.setValue(value);
+            // Refresh the shape mask and preview
         refreshPreview(2);
     }//GEN-LAST:event_maskShapeWidthSpinnerStateChanged
 
     private void maskShapeHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeHeightSpinnerStateChanged
         config.setMaskShapeHeight((double) maskShapeHeightSpinner.getValue());
+            // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
             return;
+            // Refresh the shape mask and preview
         refreshPreview(2);
     }//GEN-LAST:event_maskShapeHeightSpinnerStateChanged
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
         updateMaskShapeControlsEnabled();
         config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+            // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
+                // Refresh the shape mask and preview
             refreshPreview(2);
         }
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
             // TODO: Rework the about window to look good.
+            
+            // The message to display describing the program
         String message = "About "+PROGRAM_NAME+
                 "\nVersion: "+PROGRAM_VERSION+
                 "\n\nCredits: ";
+            // Go through the credits for the program
         for (String value : CREDITS)
             message += "\n"+value;
-        
+            // Display a message dialog about this program
         JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
                 JOptionPane.PLAIN_MESSAGE,aboutIcon);
     }//GEN-LAST:event_aboutButtonActionPerformed
@@ -2358,20 +2456,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+            // Get whether the program is in debug mode
         boolean debug = DebugCapable.checkForDebugArgument(args);
+            // Set the logger's level to the lowest level in order to log all
         getLogger().setLevel(Level.FINEST);
-        try {
+        try {   // Get the parent file for the log file
             File file = new File(PROGRAM_LOG_PATTERN.replace("%h", 
                     System.getProperty("user.home"))
                     .replace('/', File.separatorChar)).getParentFile();
+                // If the parent of the log file doesn't exist
             if (!file.exists()){
-                try{
+                try{    // Try to create the directories for the log file
                     Files.createDirectories(file.toPath());
                 } catch (IOException ex){
                     getLogger().log(Level.WARNING, 
                             "Failed to create directories for log file", ex);
                 }
-            }
+            }   // Add a file handler to log messages to a log file
             getLogger().addHandler(new java.util.logging.FileHandler(
                     PROGRAM_LOG_PATTERN,0,8));
         } catch (IOException | SecurityException ex) {
@@ -2403,18 +2504,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void refreshMaskText(){
         config.setMaskText(maskTextPane.getText());
+            // Refresh the text mask and preview
         refreshPreview(0);
     }
     
-    
     private void refreshPreview(int index){
+            // If the index for the mask that changed is -1 (reset all masks and 
+            // refresh the mask preview)
         if (index < 0){
             overlayMask.reset();
             maskPreviewLabel.repaint();
         } else {
+                // If the mask at the given index is the one being reset
             if (overlayMask.reset(index))
                 maskPreviewLabel.repaint();
-        }
+        }   // Refresh the preview
         refreshPreview();
     }
     
@@ -2453,6 +2557,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * 
      */
     private void updateControlsEnabled(){
+            // Get whether the controls should be enabled
         boolean enabled = frameSlider.isEnabled();
         saveButton.setEnabled(enabled);
         setValueControlsEnabled(enabled);
@@ -2477,6 +2582,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * 
      */
     private void updateFrameNumberDisplayed(){
+            // Get the text to display on the frame number label
         String text = String.format("Frame: %d / %d", frameSlider.getValue()+1,
                 SPIRAL_FRAME_COUNT);
         frameNumberLabel.setText(text);
@@ -2486,16 +2592,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param evt 
      */
     private void progressAnimation(java.awt.event.ActionEvent evt){
+            // Get the current time
         long temp = System.currentTimeMillis();
+            // Get the difference in the time to get how long it took before the 
+            // frame updated
         long diff = temp - frameTime;
         frameTimeTotal += diff;
         frameTotal++;
         frameTime = temp;
+            // If the FPS should be printed to the console
         if (printFPSToggle.isSelected()){
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
                     diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
-        }
+        }   // Get the current frame index
         int frame = frameSlider.getValue();
+            // Get the index for the next frame
         int next = (frame+1)%SPIRAL_FRAME_COUNT;
         try{
             frameSlider.setValue(next);
@@ -2510,11 +2621,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param index 
      */
     private void setColor(int index){
+            // Show the color selector dialog and get the option selected by the 
+            // user
         int option = colorSelector.showDialog(this, colorIcons[index].getColor());
+            // If the user chose to accept or clear the color
         if (option == JColorSelector.ACCEPT_OPTION || 
                 option == JColorSelector.CLEAR_COLOR_OPTION){
+                // Get the selected color
             Color color = colorSelector.getColor();
             config.setSpiralColor(index, color);
+                // If the selected color is null (reset the color to its default)
             if (color == null)
                 color = DEFAULT_SPIRAL_COLORS[index];
             colorIcons[index].setColor(color);
@@ -3465,10 +3581,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // If there is a spiral painter
                     if (painter != null)
                         config.setSpiralData(painter);
-            }
+            }   // If the text mask has changed in any way
             if (maskChanged)
+                    // Refresh the text mask and preview
                 refreshPreview(0);
-            else
+            else    // Refresh the preview
                 refreshPreview();
         }
         @Override
@@ -4401,8 +4518,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
+                // If this was successful in loading the image
             if (success)
                 overlayImage = img;
+                // Refresh the image mask and preview
             refreshPreview(1);
             super.done();
         }
