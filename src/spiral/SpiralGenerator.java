@@ -492,6 +492,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 fileWorker = new ImageLoader(overlayFile, true);
                 fileWorker.execute();
             }
+        } else {
+            config.setMaskImageFile(null);
         }
         
             // If the program is in debug mode
