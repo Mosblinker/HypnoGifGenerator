@@ -393,6 +393,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 return getIconWidth();
             }
         });
+            // This is a String to get the credits text
+        String credits = "";
+            // Go through the credits arrays
+        for (int i = 0; i < CREDITS.length; i++){
+                // If this is not the first array
+            if (i > 0)
+                credits += System.lineSeparator()+System.lineSeparator();
+                // Add the header for this section
+            credits += "---- "+CREDITS[i][0]+" ----";
+                // Go through the credits in this section
+            for (int j = 1; j < CREDITS[i].length; j++){
+                credits += System.lineSeparator()+CREDITS[i][j];
+            }
+        }
+        aboutCreditsTextPane.setText(credits);
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
