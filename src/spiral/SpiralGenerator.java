@@ -100,6 +100,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //            "Testers",
 //            "*Insert Testers Here*"
 //        },{
+            "Special Thanks",
+            "Special thanks to JWolf for the inspiration for this program and for being my friend."
+        },{
             "Libraries",
             "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
             "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
@@ -113,9 +116,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             "webp-imageio - https://github.com/darkxanter/webp-imageio",
             "FontChooser - Daniel Heid - https://gitlab.com/dheid/fontchooser",
             "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
-        },{
-            "Special Thanks",
-            "Special thanks to JWolf for the inspiration for this program and for being my friend."
+        
     }};
     /**
      * This is the pattern for the file handler to use for the log files of this 
