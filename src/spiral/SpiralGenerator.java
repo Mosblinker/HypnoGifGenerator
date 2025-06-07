@@ -3192,17 +3192,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Shift the bits over to get the byte to use into position
                 rgb >>= colorShift;
                     // This is the alpha component for the current pixel
-                float alpha;
+                int alpha;
                     // If the image should be treated as a grayscale image and 
                     // this is not using luminance to desaturate the image
                 if (maskAlphaGrayToggle.isSelected() && mode > 0)
-                    alpha = toGrayscale(rgb,mode);
+                    alpha = (int)(0xFF * toGrayscale(rgb,mode));
                 else 
-                    alpha = (rgb & 0x000000FF) / 255.0f;
+                    alpha = rgb & 0x000000FF;
                     // Remove the old alpha component of the pixel
                 imgData[x] &= 0x00FFFFFF;
                     // Add the new alpha component to the pixel
-                imgData[x] |= ((int)(0xFF * alpha)) << 24;
+                imgData[x] |= alpha << 24;
             }
             mask.setRGB(0, y, width, 1, imgData, 0, 1);
         }
