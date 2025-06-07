@@ -301,6 +301,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Initialize the components
         initComponents();
         
+            // Configure the mask text pane to have centered text
+            
+            // Get the document for the mask text pane
+        StyledDocument doc = maskTextPane.getStyledDocument();
+            // Create a style to use to center the text on the text pane
+        SimpleAttributeSet centeredText = new SimpleAttributeSet();
+            // Make the style center the text
+        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+            // Apply the centered text style to the entire pane
+        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
+        
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
             maskFC.addChoosableFileFilter(filter);
@@ -467,17 +478,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
         loadSpiralPainter();
-        
-            // Configure the mask text pane to have centered text
-            
-            // Get the document for the mask text pane
-        StyledDocument doc = maskTextPane.getStyledDocument();
-            // Create a style to use to center the text on the text pane
-        SimpleAttributeSet centeredText = new SimpleAttributeSet();
-            // Make the style center the text
-        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
-            // Apply the centered text style to the entire pane
-        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
         
             // Get the font for the text mask from the preferences
         Font font = config.getMaskFont(maskTextPane.getFont());
