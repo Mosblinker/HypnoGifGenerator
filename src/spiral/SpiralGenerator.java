@@ -2651,10 +2651,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (checker.isUpdateAvailable()){
                 String url = checker.getUpdateUrl();
                 String latestVersion = checker.getLatestVersion();
-                JOptionPane.showMessageDialog(this, "Update " + 
-                        latestVersion + "  available at \n" + 
-                        url,"Update Available", 
-                        JOptionPane.INFORMATION_MESSAGE);
+                latestVersLabel.setText(latestVersion);
+                updateCheckDialog.setLocationRelativeTo(aboutDialog);
+                updateCheckDialog.setVisible(true);
                 System.out.println(url);
                 url = url.substring(0, url.lastIndexOf("/")+1)+"tags/"+latestVersion;
                 System.out.println(url);
@@ -2664,8 +2663,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 System.out.println("Latest version JAR: " + url+".jar");
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "This program is already up to date,","No Update Available", 
-                        JOptionPane.INFORMATION_MESSAGE);
+                        "This program is already up to date,",
+                        updateCheckDialog.getTitle(), 
+                        JOptionPane.INFORMATION_MESSAGE, 
+                        updateIconLabel.getIcon());
             }
         } catch (Exception ex){
             System.out.println("Error: " + ex);
@@ -2673,7 +2674,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
-        // TODO add your handling code here:
+        updateCheckDialog.setVisible(false);
     }//GEN-LAST:event_updateContinueButtonActionPerformed
 
     private void updateOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateOpenButtonActionPerformed
