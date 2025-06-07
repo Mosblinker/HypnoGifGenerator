@@ -2498,18 +2498,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-            // TODO: Rework the about window to look good.
-            
-            // The message to display describing the program
-        String message = "About "+PROGRAM_NAME+
-                "\nVersion: "+PROGRAM_VERSION+
-                "\n\nCredits: ";
-            // Go through the credits for the program
-        for (String value : CREDITS)
-            message += "\n"+value;
-            // Display a message dialog about this program
-        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
-                JOptionPane.PLAIN_MESSAGE,aboutIcon);
+            // Make the about dialog location relative to the program
+        aboutDialog.setLocationRelativeTo(this);
+            // Show the about dialog
+        aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
 
     private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
