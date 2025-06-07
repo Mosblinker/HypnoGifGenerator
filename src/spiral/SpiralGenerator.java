@@ -2538,6 +2538,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testScaleSpinnerStateChanged
 
     private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
+        getLogger().fine("Setting spiral type to type "+spiralTypeCombo.getSelectedIndex());
         config.setSpiralType(spiralTypeCombo.getSelectedIndex());
         loadSpiralPainter();
         refreshPreview();
