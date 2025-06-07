@@ -2670,7 +2670,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 System.out.println("Latest version Fallback: " + url+"-"+latestVersion+".7z");
                 System.out.println("Latest version JAR: " + url+".jar");
             } else {
-                JOptionPane.showMessageDialog(this, 
+                JOptionPane.showMessageDialog(aboutDialog, 
                         "This program is already up to date,",
                         updateCheckDialog.getTitle(), 
                         JOptionPane.INFORMATION_MESSAGE, 
