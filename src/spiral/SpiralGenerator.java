@@ -635,6 +635,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             }
         }
+        
+        updateWorker = new UpdateCheckWorker(true);
+        updateWorker.execute();
     }
     
     public SpiralGenerator() {
@@ -4943,7 +4946,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         UpdateCheckWorker(boolean isAtStart){
             this.isAtStart = isAtStart;
         }
-
         @Override
         protected Boolean doInBackground() throws Exception {
             getLogger().entering(this.getClass().getName(), "doInBackground");
