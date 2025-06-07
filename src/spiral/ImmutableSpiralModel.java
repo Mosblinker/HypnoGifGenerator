@@ -30,7 +30,7 @@ public class ImmutableSpiralModel extends AbstractSpiralModel{
         if (x < 0.0 || x > 1.0)
             throw new IllegalArgumentException("Center X out of range");
         if (y < 0.0 || y > 1.0)
-            throw new IllegalArgumentException("Center y out of range");
+            throw new IllegalArgumentException("Center Y out of range");
         this.rotation = angle;
         this.x = x;
         this.y = y;
