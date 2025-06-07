@@ -834,6 +834,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutCreditsTextPane = new javax.swing.JTextPane();
         aboutBottomPanel = new javax.swing.JPanel();
         aboutButtonsPanel = new javax.swing.JPanel();
+        updateButton = new javax.swing.JButton();
+        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         aboutOkButton = new javax.swing.JButton();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
@@ -1489,7 +1491,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         aboutBottomPanel.setLayout(new java.awt.BorderLayout());
 
-        aboutButtonsPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+        aboutButtonsPanel.setLayout(new javax.swing.BoxLayout(aboutButtonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        updateButton.setText("Check For Updates");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(updateButton);
+        aboutButtonsPanel.add(filler19);
 
         aboutOkButton.setText("OK");
         aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1509,7 +1520,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(aboutDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                 .addContainerGap())
         );
         aboutDialogLayout.setVerticalGroup(
@@ -2528,6 +2539,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
         aboutDialog.setVisible(false);
     }//GEN-LAST:event_aboutOkButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3038,6 +3053,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner delaySpinner;
     private javax.swing.JComboBox<String> dirCombo;
     private javax.swing.JLabel dirLabel;
+    private javax.swing.Box.Filler filler19;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton frameFirstButton;
@@ -3119,6 +3135,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox testShowRadiusToggle;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
+    private javax.swing.JButton updateButton;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
