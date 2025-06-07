@@ -85,20 +85,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @todo Rework this and then make it public. Also add any additional 
      * credits necessary
      */
-    private static final String[] CREDITS = {
-        "                         ---- Developers ----",
-        "Mosblinker - Main developer and artist.",
-//        "                          ---- Testers ----",
-//        "*Insert Testers Here*",
-//        "                           ---- Libraries ----",
-//        "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-//        "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-//        "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-//        "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-        "                       ---- Special Thanks ----",
-        "Special thanks to JWolf for the inspiration for this program and for ",
-        "    being my friend."
-    };
+    private static final String[][] CREDITS = {{
+            "Developers",
+            "Mosblinker - Main developer and artist."
+        },{
+//            "Testers",
+//            "*Insert Testers Here*"
+//        },{
+//            "Libraries",
+//            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
+//            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+//            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+//            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+//        },{
+            "Special Thanks",
+            "Special thanks to JWolf for the inspiration for this program and for being my friend."
+    }};
     /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
@@ -299,6 +301,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Initialize the components
         initComponents();
         
+            // Configure the mask text pane to have centered text
+            
+            // Get the document for the mask text pane
+        StyledDocument doc = maskTextPane.getStyledDocument();
+            // Create a style to use to center the text on the text pane
+        SimpleAttributeSet centeredText = new SimpleAttributeSet();
+            // Make the style center the text
+        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
+            // Apply the centered text style to the entire pane
+        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
+        
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
             maskFC.addChoosableFileFilter(filter);
@@ -345,7 +358,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Get it to shut up about iconImg not being effectively final
         BufferedImage iconMask = iconImg;
             // Create the icon for the about window
-        aboutIcon = new Icon2D(){
+        aboutIconLabel.setIcon(new Icon2D(){
                 // The painter for the about icon
             SpiralPainter painter = iconPainter;
                 // The mask for the about icon
@@ -379,7 +392,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             public int getIconHeight() {
                 return getIconWidth();
             }
-        };
+        });
+            // Get the document for the credits text pane
+        StyledDocument creditsDoc = aboutCreditsTextPane.getStyledDocument();
+            // This is a String to get the credits text
+        String credits = "";
+            // Go through the credits arrays
+        for (int i = 0; i < CREDITS.length; i++){
+                // If this is not the first array
+            if (i > 0)
+                credits += System.lineSeparator()+System.lineSeparator();
+                // Add the header for this section
+            credits += "---- "+CREDITS[i][0]+" ----";
+                // Go through the credits in this section
+            for (int j = 1; j < CREDITS[i].length; j++){
+                credits += System.lineSeparator()+CREDITS[i][j];
+            }
+        }
+        aboutCreditsTextPane.setText(credits);
+        creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
+                centeredText, false);
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
@@ -465,17 +497,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
         loadSpiralPainter();
-        
-            // Configure the mask text pane to have centered text
-            
-            // Get the document for the mask text pane
-        StyledDocument doc = maskTextPane.getStyledDocument();
-            // Create a style to use to center the text on the text pane
-        SimpleAttributeSet centeredText = new SimpleAttributeSet();
-            // Make the style center the text
-        StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
-            // Apply the centered text style to the entire pane
-        doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
         
             // Get the font for the text mask from the preferences
         Font font = config.getMaskFont(maskTextPane.getFont());
@@ -800,6 +821,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testShowRadiusToggle = new javax.swing.JCheckBox();
         javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaButtons = new javax.swing.ButtonGroup();
+        aboutDialog = new javax.swing.JDialog(this);
+        aboutPanel = new javax.swing.JPanel();
+        aboutIconLabel = new javax.swing.JLabel();
+        aboutMainPanel = new javax.swing.JPanel();
+        aboutNameLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutVersionLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutCreditsPanel = new javax.swing.JPanel();
+        aboutCreditsScrollPane = new javax.swing.JScrollPane();
+        aboutCreditsTextPane = new javax.swing.JTextPane();
+        aboutBottomPanel = new javax.swing.JPanel();
+        aboutButtonsPanel = new javax.swing.JPanel();
+        aboutOkButton = new javax.swing.JButton();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -1413,6 +1448,75 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        aboutDialog.setTitle("About "+PROGRAM_NAME);
+        aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
+        aboutDialog.setResizable(false);
+
+        aboutPanel.setLayout(new java.awt.BorderLayout(6, 7));
+
+        aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        aboutIconLabel.setAlignmentX(0.5F);
+        aboutPanel.add(aboutIconLabel, java.awt.BorderLayout.LINE_START);
+
+        aboutMainPanel.setLayout(new javax.swing.BoxLayout(aboutMainPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        aboutNameLabel.setFont(aboutNameLabel.getFont().deriveFont(aboutNameLabel.getFont().getStyle() | java.awt.Font.BOLD, aboutNameLabel.getFont().getSize()+9));
+        aboutNameLabel.setText(PROGRAM_NAME);
+        aboutNameLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutNameLabel);
+        aboutMainPanel.add(filler20);
+
+        aboutVersionLabel.setFont(aboutVersionLabel.getFont().deriveFont((aboutVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD, aboutVersionLabel.getFont().getSize()+5));
+        aboutVersionLabel.setText("Version "+PROGRAM_VERSION);
+        aboutVersionLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutVersionLabel);
+        aboutMainPanel.add(filler21);
+
+        aboutCreditsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Credits"));
+        aboutCreditsPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutCreditsTextPane.setEditable(false);
+        aboutCreditsScrollPane.setViewportView(aboutCreditsTextPane);
+
+        aboutCreditsPanel.add(aboutCreditsScrollPane, java.awt.BorderLayout.CENTER);
+
+        aboutMainPanel.add(aboutCreditsPanel);
+
+        aboutPanel.add(aboutMainPanel, java.awt.BorderLayout.CENTER);
+
+        aboutBottomPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutButtonsPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        aboutOkButton.setText("OK");
+        aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutOkButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(aboutOkButton);
+
+        aboutBottomPanel.add(aboutButtonsPanel, java.awt.BorderLayout.LINE_END);
+
+        aboutPanel.add(aboutBottomPanel, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
+        aboutDialogLayout.setHorizontalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        aboutDialogLayout.setVerticalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2415,19 +2519,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
 
     private void aboutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutButtonActionPerformed
-            // TODO: Rework the about window to look good.
-            
-            // The message to display describing the program
-        String message = "About "+PROGRAM_NAME+
-                "\nVersion: "+PROGRAM_VERSION+
-                "\n\nCredits: ";
-            // Go through the credits for the program
-        for (String value : CREDITS)
-            message += "\n"+value;
-            // Display a message dialog about this program
-        JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
-                JOptionPane.PLAIN_MESSAGE,aboutIcon);
+            // Make the about dialog location relative to the program
+        aboutDialog.setLocationRelativeTo(this);
+            // Show the about dialog
+        aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
+        aboutDialog.setVisible(false);
+    }//GEN-LAST:event_aboutOkButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2909,12 +3009,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is a map to map the test components to their corresponding classes.
      */
     private Map<Class, List<Component>> testComponents;
-    /**
-     * This is the icon to display on the about window.
-     */
-    private Icon aboutIcon;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
+    private javax.swing.JPanel aboutButtonsPanel;
+    private javax.swing.JPanel aboutCreditsPanel;
+    private javax.swing.JScrollPane aboutCreditsScrollPane;
+    private javax.swing.JTextPane aboutCreditsTextPane;
+    private javax.swing.JDialog aboutDialog;
+    private javax.swing.JLabel aboutIconLabel;
+    private javax.swing.JPanel aboutMainPanel;
+    private javax.swing.JLabel aboutNameLabel;
+    private javax.swing.JButton aboutOkButton;
+    private javax.swing.JPanel aboutPanel;
+    private javax.swing.JLabel aboutVersionLabel;
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
     private javax.swing.JSpinner angleSpinner;
