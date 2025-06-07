@@ -2039,7 +2039,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_angleSpinnerStateChanged
 
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
-        FontDialog fontSelector = new FontDialog(this,"Select Font",true);
+        FontDialog fontSelector = new FontDialog(this,"Select Font For Overlay",true);
+        if (fontDim != null){
+            fontDim.width = Math.max(fontDim.width, 540);
+            fontDim.height = Math.max(fontDim.height, 400);
+        } else
+            fontDim = new Dimension(540, 400);
         SwingExtendedUtilities.setComponentSize(fontSelector, fontDim);
         fontSelector.setLocationRelativeTo(this);
         fontSelector.setSelectedFont(maskTextPane.getFont().deriveFont(Font.PLAIN));
