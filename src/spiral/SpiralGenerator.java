@@ -4994,16 +4994,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             useWaitCursor(false);
             if (success){
                 if (updateAvailable){
-                    String url = updateChecker.getUpdateUrl();
-                    String latestVersion = latestVersLabel.getText();
-                    System.out.println(url);
-                    url = url.substring(0, url.lastIndexOf("/")+1)+"tags/"+latestVersion;
-                    System.out.println(url);
-                    url += "/"+INTERNAL_PROGRAM_NAME;
-                    System.out.println("Latest version: " + url+".7z");
-                    System.out.println("Latest version Fallback: " + url+"-"+latestVersion+".7z");
-                    System.out.println("Latest version JAR: " + url+".jar");
-                    
                     updateChecker.logUpdateMessage(getLogger());
                     updateCheckDialog.setLocationRelativeTo(
                             (isAtStart)?SpiralGenerator.this:aboutDialog);
