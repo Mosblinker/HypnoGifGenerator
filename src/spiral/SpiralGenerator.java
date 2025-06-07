@@ -475,6 +475,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
+        checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -635,9 +636,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             }
         }
-        
-        updateWorker = new UpdateCheckWorker(true);
-        updateWorker.execute();
+            // If the program should check for updates at startup
+        if (checkUpdatesAtStartToggle.isSelected()){
+            updateWorker = new UpdateCheckWorker(true);
+            updateWorker.execute();
+        }
     }
     
     public SpiralGenerator() {
@@ -1577,7 +1580,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         checkUpdatesAtStartToggle.setSelected(true);
         checkUpdatesAtStartToggle.setText("Check for Updates at startup");
-        checkUpdatesAtStartToggle.setEnabled(false);
         checkUpdatesAtStartToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkUpdatesAtStartToggleActionPerformed(evt);
@@ -2675,7 +2677,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_updateOpenButtonActionPerformed
 
     private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
-        // TODO add your handling code here:
+        config.setCheckForUpdateAtStartup(checkUpdatesAtStartToggle.isSelected());
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
     /**
      * This returns the width for the image.

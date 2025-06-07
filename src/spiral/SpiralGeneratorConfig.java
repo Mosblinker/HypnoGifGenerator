@@ -129,6 +129,8 @@ public class SpiralGeneratorConfig {
     public static final String TEST_SPIRAL_SCALE_KEY = "TestScale";
     
     public static final String FRAME_DURATION_KEY = "FrameDuration";
+    
+    public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
     /**
      * This is a preference node to store the settings for this program.
      */
@@ -1173,6 +1175,18 @@ public class SpiralGeneratorConfig {
     
     public void setImageHeight(int value){
         getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
+    }
+    
+    public boolean getCheckForUpdateAtStartup(boolean defaultValue){
+        return getPreferences().getBoolean(CHECK_FOR_UPDATES_AT_START_KEY, defaultValue);
+    }
+    
+    public boolean getCheckForUpdateAtStartup(){
+        return getCheckForUpdateAtStartup(true);
+    }
+    
+    public void setCheckForUpdateAtStartup(boolean value){
+        getPreferences().putBoolean(CHECK_FOR_UPDATES_AT_START_KEY, value);
     }
     
     public Preferences getDebugTestNode(){
