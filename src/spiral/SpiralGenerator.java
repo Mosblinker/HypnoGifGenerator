@@ -2345,6 +2345,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskAlphaIndex(maskAlphaButtons);
                 config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+                config.setMaskImageFile(null);
                 break;
                 // If the mask is a shape
             case(2):
@@ -4494,11 +4495,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         private BufferedImage img = null;
         /**
+         * Whether this is being used during the initial loading of the program
+         */
+        private boolean initLoad;
+        /**
          * 
          * @param file 
          */
-        ImageLoader(File file) {
+        ImageLoader(File file, boolean initialLoad) {
             super(file);
+            this.initLoad = initialLoad;
+        }
+        /**
+         * 
+         * @param file 
+         */
+        ImageLoader(File file){
+            this(file,false);
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
@@ -4523,8 +4536,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         protected void done(){
                 // If this was successful in loading the image
-            if (success)
+            if (success){
                 overlayImage = img;
+                    // If the program is not loading this image at the start of 
+                    // the program
+                if (!initLoad)
+                    config.setMaskImageFile(file);
+            }
                 // Refresh the image mask and preview
             refreshPreview(1);
             super.done();
