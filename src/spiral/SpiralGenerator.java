@@ -393,6 +393,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 return getIconWidth();
             }
         });
+            // Get the document for the credits text pane
+        StyledDocument creditsDoc = aboutCreditsTextPane.getStyledDocument();
             // This is a String to get the credits text
         String credits = "";
             // Go through the credits arrays
@@ -408,6 +410,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         }
         aboutCreditsTextPane.setText(credits);
+        creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
+                centeredText, false);
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
