@@ -2652,31 +2652,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_aboutOkButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        try{
-            updateChecker.check();
-            if (updateChecker.isUpdateAvailable()){
-                String url = updateChecker.getUpdateUrl();
-                String latestVersion = updateChecker.getLatestVersion();
-                latestVersLabel.setText(latestVersion);
-                updateCheckDialog.setLocationRelativeTo(aboutDialog);
-                updateCheckDialog.setVisible(true);
-                System.out.println(url);
-                url = url.substring(0, url.lastIndexOf("/")+1)+"tags/"+latestVersion;
-                System.out.println(url);
-                url += "/"+INTERNAL_PROGRAM_NAME;
-                System.out.println("Latest version: " + url+".7z");
-                System.out.println("Latest version Fallback: " + url+"-"+latestVersion+".7z");
-                System.out.println("Latest version JAR: " + url+".jar");
-            } else {
-                JOptionPane.showMessageDialog(aboutDialog, 
-                        "This program is already up to date,",
-                        updateCheckDialog.getTitle(), 
-                        JOptionPane.INFORMATION_MESSAGE, 
-                        updateIconLabel.getIcon());
-            }
-        } catch (Exception ex){
-            System.out.println("Error: " + ex);
-        }
+        updateWorker = new UpdateCheckWorker(false);
+        updateWorker.execute();
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
@@ -3182,6 +3159,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the checker to use to check for updates for the program.
      */
     private UpdateChecker updateChecker = null;
+    /**
+     * This is the swing worker used to check for updates.
+     */
+    private UpdateCheckWorker updateWorker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
@@ -4944,6 +4925,93 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Refresh the image mask and preview
             refreshPreview(1);
             super.done();
+        }
+    }
+    /**
+     * 
+     */
+    private class UpdateCheckWorker extends SwingWorker<Boolean, Void>{
+        /**
+         * This gets whether there is an update available for the program.
+         */
+        private boolean updateAvailable = false;
+        
+        private boolean success = false;
+        
+        private boolean isAtStart;
+        
+        UpdateCheckWorker(boolean isAtStart){
+            this.isAtStart = isAtStart;
+        }
+
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
+            setInputEnabled(false);
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(true);
+            setProgressString("Checking For Updates");
+            boolean retry = false;
+            do{
+                useWaitCursor(true);
+                try{
+                    updateChecker.check();
+                } catch (Exception ex){
+                    SpiralGeneratorUtilities.log(Level.WARNING, this.getClass(),
+                            "doInBackground", "An error occurred while checking the latest version", ex);
+                    useWaitCursor(false);
+                        // Ask the user if they would like to try checking for 
+                        // updates again
+                    retry = JOptionPane.showConfirmDialog(SpiralGenerator.this,
+                        "Failed to check for updates.\nWould you like to try again?",
+                        "Update Checker Failed",JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+                }
+            }
+            while (retry);
+            updateAvailable = updateChecker.isUpdateAvailable();
+            success = true;
+            getLogger().exiting(this.getClass().getName(), "doInBackground", 
+                    updateAvailable);
+            return updateAvailable;
+        }
+        @Override
+        protected void done(){
+            if (success){
+                latestVersLabel.setText((updateAvailable) ? 
+                        updateChecker.getLatestVersion() : 
+                        updateChecker.getCurrentVersion());
+            }
+            System.gc();        // Run the garbage collector
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(false);
+            setProgressString(null);
+            setInputEnabled(true);
+            useWaitCursor(false);
+            if (success){
+                if (updateAvailable){
+                    String url = updateChecker.getUpdateUrl();
+                    String latestVersion = latestVersLabel.getText();
+                    System.out.println(url);
+                    url = url.substring(0, url.lastIndexOf("/")+1)+"tags/"+latestVersion;
+                    System.out.println(url);
+                    url += "/"+INTERNAL_PROGRAM_NAME;
+                    System.out.println("Latest version: " + url+".7z");
+                    System.out.println("Latest version Fallback: " + url+"-"+latestVersion+".7z");
+                    System.out.println("Latest version JAR: " + url+".jar");
+                    
+                    updateChecker.logUpdateMessage(getLogger());
+                    updateCheckDialog.setLocationRelativeTo(
+                            (isAtStart)?SpiralGenerator.this:aboutDialog);
+                    updateCheckDialog.setVisible(true);
+                } else if (!isAtStart){
+                        JOptionPane.showMessageDialog(aboutDialog, 
+                                "This program is already up to date,",
+                                updateCheckDialog.getTitle(), 
+                                JOptionPane.INFORMATION_MESSAGE, 
+                                updateIconLabel.getIcon());
+                }
+            }
         }
     }
 }
