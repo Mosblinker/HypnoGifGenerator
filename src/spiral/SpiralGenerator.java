@@ -3129,21 +3129,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @return 
      */
     private BufferedImage getImageAlphaMask(BufferedImage image, 
-            BufferedImage mask){
-        if (mask != null)
-            return mask;
+            BufferedImage mask, int width, int height){
             // If the source image is null
         if (image == null)
             return null;
+            // Get the width of the image
+        int w = image.getWidth();
+            // Get the height of the image
+        int h = image.getHeight();
+        if (mask != null)
+            return mask;
             // If the alpha channel should be used as-is
         if (maskAlphaToggle.isSelected())
             return image;
-            // Get the width of the image
-        int width = image.getWidth();
-            // Get the height of the image
-        int height = image.getHeight();
             // This will get a version of the image with the background filled
-        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        mask = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             // Get the graphics context for the image
         Graphics2D g = mask.createGraphics();
             // This is the amount by which to shift the RGB values to get the 
@@ -3162,7 +3162,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // This way, the transparent area remains transparent.
         g.setColor((maskAlphaInvertToggle.isSelected()) ? Color.WHITE : Color.BLACK);
             // Fill the background area with the fill color
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, w, h);
             // If the image should be treated as greyscale and using luminance 
             // to desaturate the image
         if (maskAlphaGrayToggle.isSelected() && mode == 0)
@@ -3175,15 +3175,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Transfer the temporary image to the image variable
         image = mask;
             // This will be the image to use as a mask
-        mask = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        mask = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
             // This is an array to hold the RGB data of each row of pixels
-        int[] imgData = new int[width];
+        int[] imgData = new int[w];
             // Go through each row of pixels
-        for (int y = 0; y < height; y++){
+        for (int y = 0; y < h; y++){
                 // Get the RGB values of the pixels in the current row
-            image.getRGB(0, y, width, 1, imgData, 0, 1);
+            image.getRGB(0, y, w, 1, imgData, 0, 1);
                 // Go through each pixel in the current row
-            for (int x = 0; x < width; x++){
+            for (int x = 0; x < w; x++){
                     // Get the RGB value of the current pixel
                 int rgb = imgData[x];
                     // If the colors are inverted
@@ -3204,7 +3204,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Add the new alpha component to the pixel
                 imgData[x] |= alpha << 24;
             }
-            mask.setRGB(0, y, width, 1, imgData, 0, 1);
+            mask.setRGB(0, y, w, 1, imgData, 0, 1);
         }
         return mask;
     }
@@ -3772,7 +3772,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(1):
                         // Get the alpha channel for the overlay image, creating 
                         // it if need be
-                    alphaMask = getImageAlphaMask(overlayImage,alphaMask);
+                    alphaMask = getImageAlphaMask(overlayImage,alphaMask,
+                            width,height);
                         // Use the mask version of the alpha image as the mask
                     return imgMask = getImageMaskImage(width,height,alphaMask,
                             imgMask);
