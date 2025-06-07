@@ -230,6 +230,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param debugMode
      */
     public SpiralGenerator(boolean debugMode) {
+        getLogger().entering(this.getClass().getName(), "SpiralGenerator");
         this.debugMode = debugMode;
         try{    // Try to get the preference node used for the program
             config = new SpiralGeneratorConfig(Preferences.userRoot()
@@ -640,6 +641,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             updateWorker = new UpdateCheckWorker(true);
             updateWorker.execute();
         }
+        getLogger().exiting(this.getClass().getName(), "SpiralGenerator");
     }
     
     public SpiralGenerator() {
@@ -2244,6 +2246,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_framePlayButtonActionPerformed
 
     private void frameSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_frameSliderStateChanged
+        getLogger().entering(this.getClass().getName(), "frameSliderStateChanged", evt);
         updateFrameNavigation();
         try{
             previewLabel.repaint();
@@ -2253,6 +2256,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             + frameSlider.getValue(), ex);
         }
         updateFrameNumberDisplayed();
+        getLogger().exiting(this.getClass().getName(), "frameSliderStateChanged");
     }//GEN-LAST:event_frameSliderStateChanged
 
     private void frameStopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frameStopButtonActionPerformed
@@ -2869,6 +2873,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param evt 
      */
     private void progressAnimation(java.awt.event.ActionEvent evt){
+        getLogger().entering(this.getClass().getName(), "progressAnimation", evt);
             // Get the current time
         long temp = System.currentTimeMillis();
             // Get the difference in the time to get how long it took before the 
@@ -2892,6 +2897,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     "Null encountered while incrementing frame ("+frame+" -> "+
                             next + ")", ex);
         }
+        getLogger().exiting(this.getClass().getName(), "progressAnimation");
     }
     /**
      * 
