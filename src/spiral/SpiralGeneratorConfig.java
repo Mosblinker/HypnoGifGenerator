@@ -293,17 +293,27 @@ public class SpiralGeneratorConfig {
     }
     /**
      * 
+     * @param node
      * @param key
      * @param defaultFile
      * @return 
      */
-    public File getFile(String key, File defaultFile){
+    protected File getFile(Preferences node, String key, File defaultFile){
             // Get the name of the file from the preference node, or null
         String name = node.get(key, null);
             // If there is no value set for that key
         if (name == null)
             return defaultFile;
         return new File(name);
+    }
+    /**
+     * 
+     * @param key
+     * @param defaultFile
+     * @return 
+     */
+    public File getFile(String key, File defaultFile){
+        return getFile(getPreferences(),key,defaultFile);
     }
     /**
      * 
@@ -315,14 +325,23 @@ public class SpiralGeneratorConfig {
     }
     /**
      * 
+     * @param node
      * @param key
      * @param value 
      */
-    public void putFile(String key, File value){
+    protected void putFile(Preferences node, String key, File value){
         if (value == null)
             node.remove(key);
         else
             node.put(key, value.toString());
+    }
+    /**
+     * 
+     * @param key
+     * @param value 
+     */
+    public void putFile(String key, File value){
+        putFile(getPreferences(),key,value);
     }
     /**
      * This returns the color mapped to the given key in the preference node, or 
@@ -1029,7 +1048,7 @@ public class SpiralGeneratorConfig {
     }
     
     public File getMaskImageFile(File defaultValue){
-        return getFile(MASK_IMAGE_FILE_KEY,defaultValue);
+        return getFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,defaultValue);
     }
     
     public File getMaskImageFile(){
@@ -1037,7 +1056,7 @@ public class SpiralGeneratorConfig {
     }
     
     public void setMaskImageFile(File value){
-        putFile(MASK_IMAGE_FILE_KEY,value);
+        putFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,value);
     }
     
     public double getMaskShapeWidth(double defaultValue){
