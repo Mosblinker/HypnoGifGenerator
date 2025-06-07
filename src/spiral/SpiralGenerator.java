@@ -85,20 +85,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @todo Rework this and then make it public. Also add any additional 
      * credits necessary
      */
-    private static final String[] CREDITS = {
-        "                         ---- Developers ----",
-        "Mosblinker - Main developer and artist.",
-//        "                          ---- Testers ----",
-//        "*Insert Testers Here*",
-//        "                           ---- Libraries ----",
-//        "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-//        "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-//        "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-//        "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-        "                       ---- Special Thanks ----",
-        "Special thanks to JWolf for the inspiration for this program and for ",
-        "    being my friend."
-    };
+    private static final String[][] CREDITS = {{
+            "Developers",
+            "Mosblinker - Main developer and artist."
+        },{
+//            "Testers",
+//            "*Insert Testers Here*"
+//        },{
+//            "Libraries",
+//            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
+//            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+//            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+//            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+//        },{
+            "Special Thanks",
+            "Special thanks to JWolf for the inspiration for this program and for being my friend."
+    }};
     /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
