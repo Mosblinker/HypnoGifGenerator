@@ -513,7 +513,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // If the program is in debug mode
         if (debugMode){
-//            updateButton.setEnabled(false);
             testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
             testComponents = new HashMap<>();
                 // Set the popup menu for the preview label to be the debug menu
@@ -4942,9 +4941,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         private boolean updateAvailable = false;
         
         private boolean success = false;
-        
+        /**
+         * Whether this is being called at the start of the program.
+         */
         private boolean isAtStart;
-        
+        /**
+         * 
+         * @param isAtStart 
+         */
         UpdateCheckWorker(boolean isAtStart){
             this.isAtStart = isAtStart;
         }
@@ -4955,15 +4959,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             progressBar.setValue(0);
             progressBar.setIndeterminate(true);
             setProgressString("Checking For Updates");
+                // Whether this should retry to check for an update
             boolean retry = false;
             do{
                 useWaitCursor(true);
-                try{
+                try{    // Check for an update
                     updateChecker.check();
                     success = true;
                 } catch (Exception ex){
                     SpiralGeneratorUtilities.log(Level.WARNING, this.getClass(),
-                            "doInBackground", "An error occurred while checking the latest version", ex);
+                            "doInBackground", 
+                            "An error occurred while checking the latest version",
+                            ex);
                     useWaitCursor(false);
                         // Ask the user if they would like to try checking for 
                         // updates again
@@ -4972,8 +4979,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         "Update Checker Failed",JOptionPane.YES_NO_OPTION,
                         JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
                 }
-            }
+            }   // While this has not checked for an update and the user wants 
+                // to try again
             while (!success && retry);
+                // Get whether there is an update available
             updateAvailable = updateChecker.isUpdateAvailable();
             getLogger().exiting(this.getClass().getName(), "doInBackground", 
                     updateAvailable);
@@ -4981,7 +4990,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
+                // If this was successful at checking for an update
             if (success){
+                    // If there's an update available, then set the text for the 
+                    // latest version label to be the latest version for the 
+                    // program. Otherwise, just state the current version
                 latestVersLabel.setText((updateAvailable) ? 
                         updateChecker.getLatestVersion() : 
                         updateChecker.getCurrentVersion());
@@ -4992,18 +5005,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             setProgressString(null);
             setInputEnabled(true);
             useWaitCursor(false);
+                // If this was successful at checking for an update
             if (success){
+                    // If there is an update available for the program
                 if (updateAvailable){
+                        // Log the update
                     updateChecker.logUpdateMessage(getLogger());
+                        // Set the update check dialog's location relative to 
+                        // this if at startup and relative to the about dialog 
+                        // if the check was initialized from there.
                     updateCheckDialog.setLocationRelativeTo(
                             (isAtStart)?SpiralGenerator.this:aboutDialog);
                     updateCheckDialog.setVisible(true);
                 } else if (!isAtStart){
-                        JOptionPane.showMessageDialog(aboutDialog, 
-                                "This program is already up to date,",
-                                updateCheckDialog.getTitle(), 
-                                JOptionPane.INFORMATION_MESSAGE, 
-                                updateIconLabel.getIcon());
+                    JOptionPane.showMessageDialog(aboutDialog, 
+                            "This program is already up to date,",
+                            updateCheckDialog.getTitle(), 
+                            JOptionPane.INFORMATION_MESSAGE, 
+                            updateIconLabel.getIcon());
                 }
             }
         }
