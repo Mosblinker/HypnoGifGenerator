@@ -6,6 +6,7 @@ package spiral;
 
 import anim.*;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import com.technicjelle.UpdateChecker;
 import components.JColorSelector;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
@@ -75,6 +76,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the name of the program.
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
+    /**
+     * The name of the author and main developer.
+     */
+    protected static final String AUTHOR_NAME = "Mosblinker";
     /**
      * This is the name by which the program internally references itself as.
      */
@@ -530,6 +535,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // If the program is in debug mode
         if (debugMode){
+//            updateButton.setEnabled(false);
             testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
             testComponents = new HashMap<>();
                 // Set the popup menu for the preview label to be the debug menu
@@ -2541,7 +2547,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_aboutOkButtonActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        // TODO add your handling code here:
+        try{
+            UpdateChecker checker = new UpdateChecker(AUTHOR_NAME,
+                    INTERNAL_PROGRAM_NAME,PROGRAM_VERSION);
+            checker.check();
+            if (checker.isUpdateAvailable()){
+                JOptionPane.showMessageDialog(this, "Update " + 
+                        checker.getLatestVersion() + "  available at \n" + 
+                        checker.getUpdateUrl(),"Update Available", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                        "This program is already up to date,","No Update Available", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex){
+            System.out.println("Error: " + ex);
+        }
     }//GEN-LAST:event_updateButtonActionPerformed
     /**
      * This returns the width for the image.
@@ -3215,6 +3237,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle.setEnabled(enabled);
         updateMaskShapeControlsEnabled();
         resetMaskButton.setEnabled(enabled);
+        updateButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
