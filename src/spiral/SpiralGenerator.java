@@ -6,6 +6,7 @@ package spiral;
 
 import anim.*;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import com.technicjelle.UpdateChecker;
 import components.JColorSelector;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
@@ -22,6 +23,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -40,6 +42,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.file.Files;
@@ -70,11 +74,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the current version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.15.0";
+    public static final String PROGRAM_VERSION = "0.16.0";
     /**
      * This is the name of the program.
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
+    /**
+     * The name of the author and main developer.
+     */
+    protected static final String AUTHOR_NAME = "Mosblinker";
     /**
      * This is the name by which the program internally references itself as.
      */
@@ -293,6 +301,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         spiralCompLabels = new HashMap<>();
         
+        try{
+            updateChecker = new UpdateChecker(AUTHOR_NAME,INTERNAL_PROGRAM_NAME,
+                    PROGRAM_VERSION);
+        } catch (RuntimeException ex){
+            log(Level.WARNING, "SpiralGenerator", 
+                    "UpdateChecker could not be constructed", ex);
+        }
         spiralIcon = new SpiralIcon();
             // Get the spiral type from the configuration
         int spiralType = config.getSpiralType();
@@ -355,44 +370,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         setIconImages(iconImages);
         
-            // Get it to shut up about iconImg not being effectively final
-        BufferedImage iconMask = iconImg;
             // Create the icon for the about window
-        aboutIconLabel.setIcon(new Icon2D(){
-                // The painter for the about icon
-            SpiralPainter painter = iconPainter;
-                // The mask for the about icon
-            BufferedImage mask = iconMask;
-                // The model for the spiral for the about icon
-            SpiralModel model = iconModel;
-                // The model for the spiral overlay for the about icon
-            SpiralModel maskModel = iconMsgModel;
-            @Override
-            public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
-                    // Get the icon's width
-                int width = getIconWidth();
-                    // Get the icon's height
-                int height = getIconHeight();
-                    // Get any scaling transform that's been applied to the 
-                    // graphics context
-                AffineTransform tx = g.getTransform();
-                    // Configure the graphics context
-                g = configureGraphics(g);
-                    // Generate the image for the program icon and draw it to 
-                    // the graphics context
-                g.drawImage(getProgramIcon((int)Math.ceil(width*tx.getScaleX()),
-                        (int) Math.ceil(height * tx.getScaleY()),model,maskModel,
-                        painter,mask), x, y, width, height, c);
-            }
-            @Override
-            public int getIconWidth() {
-                return 128;
-            }
-            @Override
-            public int getIconHeight() {
-                return getIconWidth();
-            }
-        });
+        aboutIconLabel.setIcon(new ProgramIcon(128,iconPainter,iconImg,iconModel,
+                iconMsgModel));
+        updateIconLabel.setIcon(new ProgramIcon(64,iconPainter,iconImg,iconModel,
+                iconMsgModel));
             // Get the document for the credits text pane
         StyledDocument creditsDoc = aboutCreditsTextPane.getStyledDocument();
             // This is a String to get the credits text
@@ -493,6 +475,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
+        checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -651,6 +634,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     }
                 }
             }
+        }
+            // If the program should check for updates at startup
+        if (checkUpdatesAtStartToggle.isSelected()){
+            updateWorker = new UpdateCheckWorker(true);
+            updateWorker.execute();
         }
     }
     
@@ -834,7 +822,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutCreditsTextPane = new javax.swing.JTextPane();
         aboutBottomPanel = new javax.swing.JPanel();
         aboutButtonsPanel = new javax.swing.JPanel();
+        updateButton = new javax.swing.JButton();
+        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         aboutOkButton = new javax.swing.JButton();
+        updateCheckDialog = new javax.swing.JDialog(this);
+        updatePanel = new javax.swing.JPanel();
+        updateIconLabel = new javax.swing.JLabel();
+        updateTextLabel = new javax.swing.JLabel();
+        currentVersTextLabel = new javax.swing.JLabel();
+        latestVersTextLabel = new javax.swing.JLabel();
+        checkUpdatesAtStartToggle = new javax.swing.JCheckBox();
+        currentVersLabel = new javax.swing.JLabel();
+        latestVersLabel = new javax.swing.JLabel();
+        updateContinueButton = new javax.swing.JButton();
+        updateOpenButton = new javax.swing.JButton();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -1455,7 +1456,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
         aboutDialog.setResizable(false);
 
-        aboutPanel.setLayout(new java.awt.BorderLayout(6, 7));
+        aboutPanel.setLayout(new java.awt.BorderLayout(18, 7));
 
         aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         aboutIconLabel.setAlignmentX(0.5F);
@@ -1489,7 +1490,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         aboutBottomPanel.setLayout(new java.awt.BorderLayout());
 
-        aboutButtonsPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+        aboutButtonsPanel.setLayout(new javax.swing.BoxLayout(aboutButtonsPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        updateButton.setText("Check For Updates");
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(updateButton);
+        aboutButtonsPanel.add(filler19);
 
         aboutOkButton.setText("OK");
         aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1509,7 +1519,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(aboutDialogLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                 .addContainerGap())
         );
         aboutDialogLayout.setVerticalGroup(
@@ -1517,6 +1527,122 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(aboutDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        updateCheckDialog.setTitle(PROGRAM_NAME+" Update Checker");
+        updateCheckDialog.setMinimumSize(new java.awt.Dimension(400, 196));
+        updateCheckDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        updateCheckDialog.setResizable(false);
+
+        updatePanel.setLayout(new java.awt.GridBagLayout());
+
+        updateIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 18);
+        updatePanel.add(updateIconLabel, gridBagConstraints);
+
+        updateTextLabel.setText("A new version of "+PROGRAM_NAME+" is available.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 18, 0);
+        updatePanel.add(updateTextLabel, gridBagConstraints);
+
+        currentVersTextLabel.setLabelFor(currentVersLabel);
+        currentVersTextLabel.setText("Current Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 12);
+        updatePanel.add(currentVersTextLabel, gridBagConstraints);
+
+        latestVersTextLabel.setLabelFor(latestVersLabel);
+        latestVersTextLabel.setText("Latest Version:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 12);
+        updatePanel.add(latestVersTextLabel, gridBagConstraints);
+
+        checkUpdatesAtStartToggle.setSelected(true);
+        checkUpdatesAtStartToggle.setText("Check for Updates at startup");
+        checkUpdatesAtStartToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkUpdatesAtStartToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(13, 0, 0, 0);
+        updatePanel.add(checkUpdatesAtStartToggle, gridBagConstraints);
+
+        currentVersLabel.setText(PROGRAM_VERSION);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
+        updatePanel.add(currentVersLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        updatePanel.add(latestVersLabel, gridBagConstraints);
+
+        updateContinueButton.setText("Continue");
+        updateContinueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateContinueButtonActionPerformed(evt);
+            }
+        });
+
+        updateOpenButton.setText("Go to web page");
+        updateOpenButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateOpenButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout updateCheckDialogLayout = new javax.swing.GroupLayout(updateCheckDialog.getContentPane());
+        updateCheckDialog.getContentPane().setLayout(updateCheckDialogLayout);
+        updateCheckDialogLayout.setHorizontalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, updateCheckDialogLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(updateOpenButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(updateContinueButton)))
+                .addContainerGap())
+        );
+        updateCheckDialogLayout.setVerticalGroup(
+            updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(updateCheckDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(updatePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(13, 13, 13)
+                .addGroup(updateCheckDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(updateContinueButton)
+                    .addComponent(updateOpenButton))
                 .addContainerGap())
         );
 
@@ -2528,6 +2654,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
         aboutDialog.setVisible(false);
     }//GEN-LAST:event_aboutOkButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        updateWorker = new UpdateCheckWorker(false);
+        updateWorker.execute();
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
+        updateCheckDialog.setVisible(false);
+    }//GEN-LAST:event_updateContinueButtonActionPerformed
+
+    private void updateOpenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateOpenButtonActionPerformed
+            // Get the update URL
+        String url = updateChecker.getUpdateUrl();
+        try {   // Try to open the update URL in the user's web browser
+            Desktop.getDesktop().browse(new URL(url).toURI());
+        } catch (URISyntaxException | IOException ex) {
+            log(Level.WARNING,"updateOpenButtonActionPerformed",
+                    "Could not open update URL "+url,ex);
+        }
+    }//GEN-LAST:event_updateOpenButtonActionPerformed
+
+    private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
+        config.setCheckForUpdateAtStartup(checkUpdatesAtStartToggle.isSelected());
+    }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3009,6 +3159,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is a map to map the test components to their corresponding classes.
      */
     private Map<Class, List<Component>> testComponents;
+    /**
+     * This is the checker to use to check for updates for the program.
+     */
+    private UpdateChecker updateChecker = null;
+    /**
+     * This is the swing worker used to check for updates.
+     */
+    private UpdateCheckWorker updateWorker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
@@ -3031,13 +3189,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel baseLabel;
     private javax.swing.JSpinner baseSpinner;
     private javax.swing.JCheckBox boldToggle;
+    private javax.swing.JCheckBox checkUpdatesAtStartToggle;
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel ctrlButtonPanel;
+    private javax.swing.JLabel currentVersLabel;
+    private javax.swing.JLabel currentVersTextLabel;
     private javax.swing.JPopupMenu debugPopup;
     private javax.swing.JLabel delayLabel;
     private javax.swing.JSpinner delaySpinner;
     private javax.swing.JComboBox<String> dirCombo;
     private javax.swing.JLabel dirLabel;
+    private javax.swing.Box.Filler filler19;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton frameFirstButton;
@@ -3056,6 +3218,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
+    private javax.swing.JLabel latestVersLabel;
+    private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadMaskButton;
@@ -3119,6 +3283,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox testShowRadiusToggle;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
+    private javax.swing.JButton updateButton;
+    private javax.swing.JDialog updateCheckDialog;
+    private javax.swing.JButton updateContinueButton;
+    private javax.swing.JLabel updateIconLabel;
+    private javax.swing.JButton updateOpenButton;
+    private javax.swing.JPanel updatePanel;
+    private javax.swing.JLabel updateTextLabel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     // End of variables declaration//GEN-END:variables
@@ -3198,6 +3369,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle.setEnabled(enabled);
         updateMaskShapeControlsEnabled();
         resetMaskButton.setEnabled(enabled);
+        updateButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
@@ -3685,6 +3857,82 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public int getIconHeight() {
             return getImageHeight();
+        }
+    }
+    /**
+     * 
+     */
+    private class ProgramIcon implements Icon2D{
+        /**
+         * The width and height for this icon.
+         */
+        private int size;
+        /**
+         * The painter for this icon.
+         */
+        private SpiralPainter painter;
+        /**
+         * The mask for the overlay for this icon.
+         */
+        private BufferedImage mask;
+        /**
+         * The model for the main part of the spiral.
+         */
+        private SpiralModel model;
+        /**
+         * The model for the spiral overlay.
+         */
+        private SpiralModel maskModel;
+        /**
+         * This is the image drawn by this icon. This will be null until it's 
+         * used for the first time.
+         */
+        private BufferedImage img = null;
+        /**
+         * 
+         * @param size
+         * @param painter
+         * @param mask
+         * @param model
+         * @param maskModel 
+         */
+        ProgramIcon(int size, SpiralPainter painter, BufferedImage mask, 
+                SpiralModel model, SpiralModel maskModel){
+            this.size = size;
+            this.painter = painter;
+            this.mask = mask;
+            this.model = model;
+            this.maskModel = maskModel;
+        }
+        @Override
+        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+                // Get the icon's width
+            int width = getIconWidth();
+                // Get the icon's height
+            int height = getIconHeight();
+                // Get any scaling transform that's been applied to the graphics 
+                // context
+            AffineTransform tx = g.getTransform();
+                // Configure the graphics context
+            g = configureGraphics(g);
+                // The width for the image
+            int w = (int) Math.ceil(width*tx.getScaleX());
+                // The height for the image
+            int h = (int) Math.ceil(height*tx.getScaleY());
+                // If the image is null or the width or height doesn't match
+            if (img == null || img.getWidth() != w || img.getHeight() != h)
+                    // Generate the image for the program icon
+                img = getProgramIcon(w,h,model,maskModel,painter,mask);
+                // Draw the program icon to the graphics context
+            g.drawImage(img, x, y, width, height, c);
+        }
+        @Override
+        public int getIconWidth() {
+            return size;
+        }
+        @Override
+        public int getIconHeight() {
+            return getIconWidth();
         }
     }
     
@@ -4681,6 +4929,102 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Refresh the image mask and preview
             refreshPreview(1);
             super.done();
+        }
+    }
+    /**
+     * 
+     */
+    private class UpdateCheckWorker extends SwingWorker<Boolean, Void>{
+        /**
+         * This gets whether there is an update available for the program.
+         */
+        private boolean updateAvailable = false;
+        
+        private boolean success = false;
+        /**
+         * Whether this is being called at the start of the program.
+         */
+        private boolean isAtStart;
+        /**
+         * 
+         * @param isAtStart 
+         */
+        UpdateCheckWorker(boolean isAtStart){
+            this.isAtStart = isAtStart;
+        }
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            getLogger().entering(this.getClass().getName(), "doInBackground");
+            setInputEnabled(false);
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(true);
+            setProgressString("Checking For Updates");
+                // Whether this should retry to check for an update
+            boolean retry = false;
+            do{
+                useWaitCursor(true);
+                try{    // Check for an update
+                    updateChecker.check();
+                    success = true;
+                } catch (Exception ex){
+                    SpiralGeneratorUtilities.log(Level.WARNING, this.getClass(),
+                            "doInBackground", 
+                            "An error occurred while checking the latest version",
+                            ex);
+                    useWaitCursor(false);
+                        // Ask the user if they would like to try checking for 
+                        // updates again
+                    retry = JOptionPane.showConfirmDialog(SpiralGenerator.this,
+                        "Failed to check for updates.\nWould you like to try again?",
+                        "Update Checker Failed",JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
+                }
+            }   // While this has not checked for an update and the user wants 
+                // to try again
+            while (!success && retry);
+                // Get whether there is an update available
+            updateAvailable = updateChecker.isUpdateAvailable();
+            getLogger().exiting(this.getClass().getName(), "doInBackground", 
+                    updateAvailable);
+            return updateAvailable;
+        }
+        @Override
+        protected void done(){
+                // If this was successful at checking for an update
+            if (success){
+                    // If there's an update available, then set the text for the 
+                    // latest version label to be the latest version for the 
+                    // program. Otherwise, just state the current version
+                latestVersLabel.setText((updateAvailable) ? 
+                        updateChecker.getLatestVersion() : 
+                        updateChecker.getCurrentVersion());
+            }
+            System.gc();        // Run the garbage collector
+            progressBar.setValue(0);
+            progressBar.setIndeterminate(false);
+            setProgressString(null);
+            setInputEnabled(true);
+            useWaitCursor(false);
+                // If this was successful at checking for an update
+            if (success){
+                    // If there is an update available for the program
+                if (updateAvailable){
+                        // Log the update
+                    updateChecker.logUpdateMessage(getLogger());
+                        // Set the update check dialog's location relative to 
+                        // this if at startup and relative to the about dialog 
+                        // if the check was initialized from there.
+                    updateCheckDialog.setLocationRelativeTo(
+                            (isAtStart)?SpiralGenerator.this:aboutDialog);
+                    updateCheckDialog.setVisible(true);
+                } else if (!isAtStart){
+                    JOptionPane.showMessageDialog(aboutDialog, 
+                            "This program is already up to date,",
+                            updateCheckDialog.getTitle(), 
+                            JOptionPane.INFORMATION_MESSAGE, 
+                            updateIconLabel.getIcon());
+                }
+            }
         }
     }
 }
