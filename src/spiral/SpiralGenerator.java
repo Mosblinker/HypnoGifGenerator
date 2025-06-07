@@ -4960,6 +4960,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 useWaitCursor(true);
                 try{
                     updateChecker.check();
+                    success = true;
                 } catch (Exception ex){
                     SpiralGeneratorUtilities.log(Level.WARNING, this.getClass(),
                             "doInBackground", "An error occurred while checking the latest version", ex);
@@ -4972,9 +4973,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
                 }
             }
-            while (retry);
+            while (!success && retry);
             updateAvailable = updateChecker.isUpdateAvailable();
-            success = true;
             getLogger().exiting(this.getClass().getName(), "doInBackground", 
                     updateAvailable);
             return updateAvailable;
