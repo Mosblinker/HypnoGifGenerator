@@ -1428,7 +1428,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
         aboutDialog.setResizable(false);
 
-        aboutPanel.setLayout(new java.awt.BorderLayout(6, 7));
+        aboutPanel.setLayout(new java.awt.BorderLayout(18, 7));
 
         aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         aboutIconLabel.setAlignmentX(0.5F);

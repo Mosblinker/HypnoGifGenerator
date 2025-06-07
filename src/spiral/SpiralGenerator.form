@@ -989,7 +989,7 @@
         <Container class="javax.swing.JPanel" name="aboutPanel">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout">
-            <Property name="horizontalGap" type="int" value="6"/>
+            <Property name="horizontalGap" type="int" value="18"/>
             <Property name="verticalGap" type="int" value="7"/>
           </Layout>
           <SubComponents>
