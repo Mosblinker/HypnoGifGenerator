@@ -100,7 +100,7 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_TYPE_KEY = "MaskType";
     
-    public static final String MASK_ALPHA_CHANNEL_INDEX = "MaskAlphaChannelIndex";
+    public static final String MASK_ALPHA_CHANNEL_INDEX_KEY = "MaskAlphaChannelIndex";
     
     public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
     
@@ -968,7 +968,7 @@ public class SpiralGeneratorConfig {
     }
     
     public int getMaskAlphaIndex(int defaultValue){
-        return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX, defaultValue);
+        return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX_KEY, defaultValue);
     }
     
     public int getMaskAlphaIndex(){
@@ -985,7 +985,7 @@ public class SpiralGeneratorConfig {
     }
     
     public void setMaskAlphaIndex(int value){
-        getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX, value);
+        getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX_KEY, value);
     }
     
     public void setMaskAlphaIndex(ButtonGroup group){
