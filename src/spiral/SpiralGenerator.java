@@ -2552,10 +2552,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     INTERNAL_PROGRAM_NAME,PROGRAM_VERSION);
             checker.check();
             if (checker.isUpdateAvailable()){
+                String url = checker.getUpdateUrl();
+                String latestVersion = checker.getLatestVersion();
                 JOptionPane.showMessageDialog(this, "Update " + 
-                        checker.getLatestVersion() + "  available at \n" + 
-                        checker.getUpdateUrl(),"Update Available", 
+                        latestVersion + "  available at \n" + 
+                        url,"Update Available", 
                         JOptionPane.INFORMATION_MESSAGE);
+                System.out.println(url);
+                url = url.substring(0, url.lastIndexOf("/")+1)+"tags/"+latestVersion;
+                System.out.println(url);
+                url += "/"+INTERNAL_PROGRAM_NAME;
+                System.out.println("Latest version: " + url+".7z");
+                System.out.println("Latest version Fallback: " + url+"-"+latestVersion+".7z");
+                System.out.println("Latest version JAR: " + url+".jar");
             } else {
                 JOptionPane.showMessageDialog(this, 
                         "This program is already up to date,","No Update Available", 
