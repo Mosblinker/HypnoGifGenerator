@@ -298,6 +298,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int maskType = config.getMaskType();
             // Initialize the components
         initComponents();
+        
+            // Add all the image file filters to the mask image file chooser
+        for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
+            maskFC.addChoosableFileFilter(filter);
+        }   // Set the current file filter to the image filter
+        maskFC.setFileFilter(ImageExtensions.IMAGE_FILTER);
+        
             // Go through the labels for the components used to set the 
             // parameters for the spirals
         for (JLabel label : new JLabel[]{
@@ -893,7 +900,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         saveFCPreview.setFileChooser(saveFC);
 
         maskFC.setAccessory(maskFCPreview);
-        maskFC.setFileFilter(ImageExtensions.PNG_FILTER);
 
         saveFC.setAccessory(saveFCPreview);
         saveFC.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
