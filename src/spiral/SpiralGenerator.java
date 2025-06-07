@@ -2353,6 +2353,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static void main(String args[]) {
         boolean debug = DebugCapable.checkForDebugArgument(args);
+        getLogger().setLevel(Level.FINEST);
         try {
             File file = new File(PROGRAM_LOG_PATTERN.replace("%h", 
                     System.getProperty("user.home"))
