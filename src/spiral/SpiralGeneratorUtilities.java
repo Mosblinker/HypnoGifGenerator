@@ -41,7 +41,8 @@ public final class SpiralGeneratorUtilities {
      * 
      */
     private static final Logger logger = Logger.getLogger(
-            SpiralGenerator.INTERNAL_PROGRAM_NAME);
+            SpiralGenerator.INTERNAL_PROGRAM_NAME+"-"+
+                    SpiralGenerator.PROGRAM_VERSION);
     /**
      * 
      * @return 
