@@ -445,6 +445,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boldToggle.setSelected(font.isBold());
         italicToggle.setSelected(font.isItalic());
         
+        fontDim = config.getMaskFontSelectorSize();
         maskTextPane.setText(config.getMaskText());
         
         for (SpiralPainter painter : spiralPainters)
@@ -2039,7 +2040,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
         FontDialog fontSelector = new FontDialog(this,"Select Font",true);
-        config.loadMaskFontSelectorSize(fontSelector);
+        SwingExtendedUtilities.setComponentSize(fontSelector, fontDim);
         fontSelector.setLocationRelativeTo(this);
         fontSelector.setSelectedFont(maskTextPane.getFont().deriveFont(Font.PLAIN));
         fontSelector.setVisible(true);
