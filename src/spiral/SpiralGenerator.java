@@ -100,12 +100,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //            "Testers",
 //            "*Insert Testers Here*"
 //        },{
-//            "Libraries",
-//            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-//            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-//            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-//            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-//        },{
+            "Libraries",
+            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
+            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
+            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
+            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+            "SwingFilesExtended - Mosblinker",
+            "Measure - Mosblinker",
+            "GUIComponents - Mosblinker",
+            "ConfigUtilities - Mosblinker - https://github.com/Mosblinker/ConfigUtilities",
+            "animated-gif-lib - rtyley and Kevin Weiner - https://github.com/rtyley/animated-gif-lib-for-java",
+            "webp-imageio - https://github.com/darkxanter/webp-imageio",
+            "FontChooser - Daniel Heid - https://gitlab.com/dheid/fontchooser",
+            "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
+        },{
             "Special Thanks",
             "Special thanks to JWolf for the inspiration for this program and for being my friend."
     }};
