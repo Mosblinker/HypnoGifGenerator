@@ -800,6 +800,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         testShowRadiusToggle = new javax.swing.JCheckBox();
         javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaButtons = new javax.swing.ButtonGroup();
+        aboutDialog = new javax.swing.JDialog(this);
+        aboutPanel = new javax.swing.JPanel();
+        aboutIconLabel = new javax.swing.JLabel();
+        aboutMainPanel = new javax.swing.JPanel();
+        aboutNameLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutVersionLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
+        aboutCreditsPanel = new javax.swing.JPanel();
+        aboutCreditsScrollPane = new javax.swing.JScrollPane();
+        aboutCreditsTextPane = new javax.swing.JTextPane();
+        aboutBottomPanel = new javax.swing.JPanel();
+        aboutButtonsPanel = new javax.swing.JPanel();
+        aboutOkButton = new javax.swing.JButton();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -1413,6 +1427,75 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, testDialogLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(testCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        aboutDialog.setTitle("About "+PROGRAM_NAME);
+        aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
+        aboutDialog.setResizable(false);
+
+        aboutPanel.setLayout(new java.awt.BorderLayout(6, 7));
+
+        aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        aboutIconLabel.setAlignmentX(0.5F);
+        aboutPanel.add(aboutIconLabel, java.awt.BorderLayout.LINE_START);
+
+        aboutMainPanel.setLayout(new javax.swing.BoxLayout(aboutMainPanel, javax.swing.BoxLayout.Y_AXIS));
+
+        aboutNameLabel.setFont(aboutNameLabel.getFont().deriveFont(aboutNameLabel.getFont().getStyle() | java.awt.Font.BOLD, aboutNameLabel.getFont().getSize()+9));
+        aboutNameLabel.setText(PROGRAM_NAME);
+        aboutNameLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutNameLabel);
+        aboutMainPanel.add(filler20);
+
+        aboutVersionLabel.setFont(aboutVersionLabel.getFont().deriveFont((aboutVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD, aboutVersionLabel.getFont().getSize()+5));
+        aboutVersionLabel.setText("Version "+PROGRAM_VERSION);
+        aboutVersionLabel.setAlignmentX(0.5F);
+        aboutMainPanel.add(aboutVersionLabel);
+        aboutMainPanel.add(filler21);
+
+        aboutCreditsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Credits"));
+        aboutCreditsPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutCreditsTextPane.setEditable(false);
+        aboutCreditsScrollPane.setViewportView(aboutCreditsTextPane);
+
+        aboutCreditsPanel.add(aboutCreditsScrollPane, java.awt.BorderLayout.CENTER);
+
+        aboutMainPanel.add(aboutCreditsPanel);
+
+        aboutPanel.add(aboutMainPanel, java.awt.BorderLayout.CENTER);
+
+        aboutBottomPanel.setLayout(new java.awt.BorderLayout());
+
+        aboutButtonsPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        aboutOkButton.setText("OK");
+        aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutOkButtonActionPerformed(evt);
+            }
+        });
+        aboutButtonsPanel.add(aboutOkButton);
+
+        aboutBottomPanel.add(aboutButtonsPanel, java.awt.BorderLayout.LINE_END);
+
+        aboutPanel.add(aboutBottomPanel, java.awt.BorderLayout.PAGE_END);
+
+        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
+        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
+        aboutDialogLayout.setHorizontalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        aboutDialogLayout.setVerticalGroup(
+            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(aboutDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2428,6 +2511,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         JOptionPane.showMessageDialog(this, message, "About "+PROGRAM_NAME,
                 JOptionPane.PLAIN_MESSAGE,aboutIcon);
     }//GEN-LAST:event_aboutButtonActionPerformed
+
+    private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
+        aboutDialog.setVisible(false);
+    }//GEN-LAST:event_aboutOkButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2914,7 +3001,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private Icon aboutIcon;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
+    private javax.swing.JPanel aboutButtonsPanel;
+    private javax.swing.JPanel aboutCreditsPanel;
+    private javax.swing.JScrollPane aboutCreditsScrollPane;
+    private javax.swing.JTextPane aboutCreditsTextPane;
+    private javax.swing.JDialog aboutDialog;
+    private javax.swing.JLabel aboutIconLabel;
+    private javax.swing.JPanel aboutMainPanel;
+    private javax.swing.JLabel aboutNameLabel;
+    private javax.swing.JButton aboutOkButton;
+    private javax.swing.JPanel aboutPanel;
+    private javax.swing.JLabel aboutVersionLabel;
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
     private javax.swing.JSpinner angleSpinner;
