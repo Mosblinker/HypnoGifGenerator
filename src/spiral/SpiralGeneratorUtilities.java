@@ -40,7 +40,8 @@ public final class SpiralGeneratorUtilities {
     /**
      * 
      */
-    private static final Logger logger = Logger.getLogger("HypnoGifGenerator");
+    private static final Logger logger = Logger.getLogger(
+            SpiralGenerator.INTERNAL_PROGRAM_NAME);
     /**
      * 
      * @return 

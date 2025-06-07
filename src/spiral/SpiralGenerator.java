@@ -76,6 +76,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static final String PROGRAM_NAME = "Hypno Gif Generator";
     /**
+     * This is the name by which the program internally references itself as.
+     */
+    protected static final String INTERNAL_PROGRAM_NAME = "HypnoGifGenerator";
+    /**
      * This is the credits for the program. This is currently private as I plan 
      * to rework it.
      * @todo Rework this and then make it public. Also add any additional 
@@ -100,7 +104,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * program.
      */
     private static final String PROGRAM_LOG_PATTERN = 
-            "%h/.mosblinker/logs/HypnoGifGenerator-%u.%g.log";
+            "%h/.mosblinker/logs/"+INTERNAL_PROGRAM_NAME+"-%u.%g.log";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
@@ -141,7 +145,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * this program.
      */
     private static final String PREFERENCE_NODE_NAME = 
-            "milo/spiral/jack/HypnoGifGenerator";
+            "milo/spiral/jack/"+INTERNAL_PROGRAM_NAME;
     /**
      * This is an array that contains the default colors used for the spiral.
      */
