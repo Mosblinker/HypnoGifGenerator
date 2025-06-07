@@ -13,12 +13,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
 
@@ -45,6 +48,11 @@ public class SpiralGeneratorConfig {
      */
     public static final String FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX = 
             "SelectedFile";
+    /**
+     * 
+     */
+    public static final String FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX = 
+            "FileFilter";
     /**
      * 
      */
@@ -471,6 +479,49 @@ public class SpiralGeneratorConfig {
     }
     /**
      * 
+     * @param fc
+     * @return 
+     */
+    public FileFilter getFileFilter(JFileChooser fc){
+        String name = getComponentName(fc);
+            // Get the file filter for the file chooser
+        int index = node.getInt(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX, -1);
+            // If there was a file filter set for the file chooser that is 
+            // within range of the choosable file filters
+        if (index >= 0 && index < fc.getChoosableFileFilters().length)
+            return fc.getChoosableFileFilters()[index];
+        return null;
+    }
+    /**
+     * 
+     * @param fc
+     * @param filter 
+     */
+    public void setFileFilter(JFileChooser fc, FileFilter filter){
+        String name = getComponentName(fc);
+            // This will get the index for the selected file filter
+        int index = -1;
+            // Go through the choosable file filters until we've found the one 
+            // that is currently selected
+        for (int i = 0; i < fc.getChoosableFileFilters().length && index < 0; i++){
+                // If the current file filter is selected
+            if (Objects.equals(fc.getFileFilter(), fc.getChoosableFileFilters()[i]))
+                index = i;
+        }   // If the selected filter is not one of the choosable filters
+        if (index < 0)
+            node.remove(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX);
+        else
+            node.putInt(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX, index);
+    }
+    /**
+     * 
+     * @param fc 
+     */
+    public void setFileFilter(JFileChooser fc){
+        setFileFilter(fc,fc.getFileFilter());
+    }
+    /**
+     * 
      * @param fc 
      */
     public void storeFileChooser(JFileChooser fc){
@@ -498,6 +549,11 @@ public class SpiralGeneratorConfig {
             fc.setSelectedFile(file);
         }   // Load the file chooser's size from the preference node
         SwingExtendedUtilities.setComponentSize(fc,getFileChooserSize(fc));
+            // Get the file filter for the file chooser
+        FileFilter filter = getFileFilter(fc);
+            // If there is a file filter selected
+        if (filter != null)
+            fc.setFileFilter(filter);
     }
     /**
      * 
@@ -1185,5 +1241,24 @@ public class SpiralGeneratorConfig {
     
     public void setDebugTestBoolean(int index, boolean value){
         getDebugTestNode().putBoolean("testBoolean"+index, value);
+    }
+    /**
+     * 
+     */
+    public class FileChooserPropertyChangeListener implements PropertyChangeListener{
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+                // If the property name is null or the source is not a file 
+                // chooser
+            if (evt.getPropertyName() == null || !(evt.getSource() instanceof JFileChooser))
+                return;
+                // Determine the property that was just changed
+            switch(evt.getPropertyName()){
+                    // If the file filter has changed
+                case(JFileChooser.FILE_FILTER_CHANGED_PROPERTY):
+                        // Store the file filter in the preference node
+                    setFileFilter((JFileChooser)evt.getSource());
+            }
+        }
     }
 }
