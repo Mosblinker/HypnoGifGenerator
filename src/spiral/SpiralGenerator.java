@@ -3370,6 +3370,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateMaskShapeControlsEnabled();
         resetMaskButton.setEnabled(enabled);
         updateButton.setEnabled(enabled);
+        updateOpenButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
