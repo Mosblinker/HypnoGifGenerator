@@ -3137,6 +3137,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int w = image.getWidth();
             // Get the height of the image
         int h = image.getHeight();
+            // If the mask is currently not null
         if (mask != null)
             return mask;
             // If the alpha channel should be used as-is
