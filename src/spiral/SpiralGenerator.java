@@ -100,7 +100,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * program.
      */
     private static final String PROGRAM_LOG_PATTERN = 
-            "%h/.mosblinker/logs/HypnoGifGenerator-%g.log";
+            "%h/.mosblinker/logs/HypnoGifGenerator-%u.%g.log";
     /**
      * This is an array containing the widths and heights for the icon images 
      * for this program. 
