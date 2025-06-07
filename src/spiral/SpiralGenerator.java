@@ -404,6 +404,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         previewLabel.setIcon(spiralIcon);
         maskPreviewLabel.setIcon(new MaskPreviewIcon());
         
+            // Get a listener for the file choosers
+        PropertyChangeListener fcL = config.new FileChooserPropertyChangeListener();
             // Add the components and their names to the preferences
         config.setComponentName(maskFC, OVERLAY_MASK_FILE_CHOOSER_NAME);
         config.setComponentName(saveFC, SAVE_FILE_CHOOSER_NAME);
@@ -413,10 +415,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
                 // If the component is a file chooser
-            if (c instanceof JFileChooser)
+            if (c instanceof JFileChooser){
                     // Load the file chooser from the preferences
                 config.loadFileChooser((JFileChooser)c);
-            else    // Load the component's size from the preferences
+                ((JFileChooser)c).addPropertyChangeListener(fcL);
+            } else
+                    // Load the component's size from the preferences
                 config.loadComponentSize(c);
         }
             // Ensure the program's size is at least 960x575
