@@ -1518,6 +1518,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateCheckDialog.setTitle(PROGRAM_NAME+" Update Checker");
         updateCheckDialog.setMinimumSize(new java.awt.Dimension(400, 196));
         updateCheckDialog.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        updateCheckDialog.setResizable(false);
 
         updatePanel.setLayout(new java.awt.GridBagLayout());
 
