@@ -128,7 +128,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final Color[] ICON_FADE_COLORS = {Color.WHITE,
         TRANSPARENT_COLOR};
     
-    private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff/images";
+    private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff"+File.separator+"images";
     /**
      * This is the default width for the spiral image.
      */
