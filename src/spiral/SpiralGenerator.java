@@ -3165,12 +3165,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.fillRect(0, 0, width, height);
             // If the image should be treated as greyscale and using luminance 
             // to desaturate the image
-        if (maskAlphaGrayToggle.isSelected() && mode == 0){
+        if (maskAlphaGrayToggle.isSelected() && mode == 0)
                 // Draw a grayscale version of the image
             g.drawImage(image, new ColorConvertOp(
                     ColorSpace.getInstance(ColorSpace.CS_GRAY),null), 0, 0);
-            mode = 3;
-        } else  // Draw the image
+        else  // Draw the image
             g.drawImage(image, 0, 0, null);
         g.dispose();
             // Transfer the temporary image to the image variable
@@ -3194,8 +3193,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 rgb >>= colorShift;
                     // This is the alpha component for the current pixel
                 float alpha;
-                    // If the image should be treated as a grayscale image
-                if (maskAlphaGrayToggle.isSelected())
+                    // If the image should be treated as a grayscale image and 
+                    // this is not using luminance to desaturate the image
+                if (maskAlphaGrayToggle.isSelected() && mode > 0)
                     alpha = toGrayscale(rgb,mode);
                 else 
                     alpha = (rgb & 0x000000FF) / 255.0f;
