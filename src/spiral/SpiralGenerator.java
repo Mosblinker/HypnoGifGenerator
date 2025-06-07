@@ -476,11 +476,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the text for the mask from the preferences
         maskTextPane.setText(config.getMaskText());
         
-            // Go through hte spiral painters
+            // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters)
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         doc.addDocumentListener(handler);
+        
+            // If the mask is an image
+        if (maskTabbedPane.getSelectedIndex() == 1){
+                // Get the overlay mask image file from the preferences
+            File overlayFile = config.getMaskImageFile();
+                // If the overlay mask image file is not null and does exist
+            if (overlayFile != null && overlayFile.exists()){
+                    // Load the image file from the preferences
+                fileWorker = new ImageLoader(overlayFile, true);
+                fileWorker.execute();
+            }
+        }
         
             // If the program is in debug mode
         if (debugMode){
@@ -4503,7 +4515,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param file 
          */
         ImageLoader(File file, boolean initialLoad) {
-            super(file);
+            super(file,!initialLoad);
             this.initLoad = initialLoad;
         }
         /**
@@ -4542,7 +4554,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // the program
                 if (!initLoad)
                     config.setMaskImageFile(file);
-            }
+                // If the program failed to load the image mask at the start of 
+                // the program
+            } else if (initLoad)
+                config.setMaskImageFile(null);
                 // Refresh the image mask and preview
             refreshPreview(1);
             super.done();
