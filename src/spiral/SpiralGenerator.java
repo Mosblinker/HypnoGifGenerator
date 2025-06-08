@@ -2767,7 +2767,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             getLogger().addHandler(new java.util.logging.FileHandler(
                     PROGRAM_LOG_PATTERN,0,8));
         } catch (IOException | SecurityException ex) {
-            getLogger().log(Level.SEVERE, null, ex);
+            getLogger().log(Level.SEVERE, "Failed to get log file", ex);
         }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
