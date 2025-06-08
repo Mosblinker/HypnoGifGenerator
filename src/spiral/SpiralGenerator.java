@@ -116,7 +116,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             "webp-imageio - https://github.com/darkxanter/webp-imageio",
             "FontChooser - Daniel Heid - https://gitlab.com/dheid/fontchooser",
             "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
-        
     }};
     /**
      * This is the pattern for the file handler to use for the log files of this 
