@@ -2769,7 +2769,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         } catch (IOException | SecurityException ex) {
             getLogger().log(Level.SEVERE, "Failed to get log file", ex);
         }   // Log the user's OS name
-        getLogger().log(Level.CONFIG, "OS: {0}", System.getProperty("user.os"));
+        getLogger().log(Level.CONFIG, "OS: {0}, version: {1}, arch: {2}", new Object[]{
+                System.getProperty("os.name"),
+                System.getProperty("os.version"),
+                System.getProperty("os.arch")});
+            // Log the Java vendor name and url
+        getLogger().log(Level.CONFIG, "Java vendor: {0}, URL: {1}", new Object[]{
+                System.getProperty("java.vendor"),
+                System.getProperty("java.vendor.url")});
+            // Log the Java version
+        getLogger().log(Level.CONFIG, "Java version: {0}", 
+                System.getProperty("java.version"));
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
