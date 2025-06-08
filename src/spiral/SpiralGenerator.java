@@ -2254,7 +2254,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_framePlayButtonActionPerformed
 
     private void frameSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_frameSliderStateChanged
-        getLogger().entering(this.getClass().getName(), "frameSliderStateChanged", evt);
+        getLogger().entering(this.getClass().getName(), "frameSliderStateChanged");
         updateFrameNavigation();
         try{
             previewLabel.repaint();
