@@ -4990,7 +4990,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     useWaitCursor(false);
                         // Ask the user if they would like to try checking for 
                         // updates again
-                    retry = JOptionPane.showConfirmDialog(SpiralGenerator.this,
+                    retry = JOptionPane.showConfirmDialog(getParentComponent(),
                         "Failed to check for updates.\nWould you like to try again?",
                         "Update Checker Failed",JOptionPane.YES_NO_OPTION,
                         JOptionPane.ERROR_MESSAGE) == JOptionPane.YES_OPTION;
@@ -5003,6 +5003,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             getLogger().exiting(this.getClass().getName(), "doInBackground", 
                     updateAvailable);
             return updateAvailable;
+        }
+        /**
+         * 
+         * @return 
+         */
+        protected Component getParentComponent(){
+            return (isAtStart)?SpiralGenerator.this:aboutDialog;
         }
         @Override
         protected void done(){
@@ -5030,8 +5037,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // Set the update check dialog's location relative to 
                         // this if at startup and relative to the about dialog 
                         // if the check was initialized from there.
-                    updateCheckDialog.setLocationRelativeTo(
-                            (isAtStart)?SpiralGenerator.this:aboutDialog);
+                    updateCheckDialog.setLocationRelativeTo(getParentComponent());
                     updateCheckDialog.setVisible(true);
                 } else if (!isAtStart){
                     JOptionPane.showMessageDialog(aboutDialog, 
