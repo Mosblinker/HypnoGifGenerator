@@ -2537,7 +2537,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_testScaleSpinnerStateChanged
 
     private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
-        getLogger().fine("Setting spiral type to type "+spiralTypeCombo.getSelectedIndex());
+        getLogger().log(Level.FINE, "Setting spiral type to type {0}", 
+                spiralTypeCombo.getSelectedIndex());
         config.setSpiralType(spiralTypeCombo.getSelectedIndex());
         loadSpiralPainter();
         refreshPreview();
@@ -2767,7 +2768,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     PROGRAM_LOG_PATTERN,0,8));
         } catch (IOException | SecurityException ex) {
             getLogger().log(Level.SEVERE, "Failed to get log file", ex);
-        }
+        }   // Log the user's OS name
+        getLogger().log(Level.CONFIG, "OS: {0}", System.getProperty("user.os"));
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
