@@ -187,9 +187,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * 
      */
-    private static final Logger logger = Logger.getLogger(
-            SpiralGenerator.INTERNAL_PROGRAM_NAME+"-"+
-                    SpiralGenerator.PROGRAM_VERSION);
+    private static final Logger logger = Logger.getLogger(INTERNAL_PROGRAM_NAME+"-"+
+            PROGRAM_VERSION);
     /**
      * 
      * @return 
