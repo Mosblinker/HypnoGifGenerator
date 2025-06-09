@@ -314,8 +314,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             config = new SpiralGeneratorConfig(Preferences.userRoot()
                     .node(PREFERENCE_NODE_NAME));
         } catch (SecurityException | IllegalStateException ex){
-            log(Level.SEVERE, "SpiralGenerator", 
-                    "Unable to load preference node", ex);
+            getLogger().log(Level.SEVERE, "Unable to load preference node", ex);
             // TODO: Error message window
         }
             // This is the handler to listen to the painters and color buttons
@@ -354,7 +353,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new RippleSpiralPainter()
         };
         
-        log(Level.FINE, "SpiralGenerator", "Loading SpiralPainters");
+        getLogger().log(Level.FINE, "Loading SpiralPainters");
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
                 // Get the byte array for the painter from the preferences
@@ -363,12 +362,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 painter.fromByteArray(arr);
             } catch (IllegalArgumentException | BufferOverflowException | 
                     BufferUnderflowException ex) {
-                log(Level.WARNING, "SpiralGenerator", String.format(
+                getLogger().log(Level.WARNING, String.format(
                         "Failed to load %s from preferences using %s", 
                         painter.getClass(),toByteString(arr)), ex);
             }
         }
-        log(Level.FINE, "SpiralGenerator", "Finished loading SpiralPainters");
+        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
         
             // Configure the overlay mask's text painter's settings from the 
             // preferences
@@ -384,8 +383,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             updateChecker = new UpdateChecker(AUTHOR_NAME,INTERNAL_PROGRAM_NAME,
                     PROGRAM_VERSION);
         } catch (RuntimeException ex){
-            log(Level.WARNING, "SpiralGenerator", 
-                    "UpdateChecker could not be constructed", ex);
+            getLogger().log(Level.WARNING, "UpdateChecker could not be constructed", 
+                    ex);
         }
         spiralIcon = new SpiralIcon();
             // Get the spiral type from the configuration
@@ -425,7 +424,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {   // Load the mask for the program icon
             iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
         } catch (IOException ex) {
-            log(Level.WARNING,"SpiralGenerator",
+            getLogger().log(Level.WARNING,
                     "Failed to load icon mask \""+ICON_MASK_FILE_IMAGE+"\"",
                     ex);
         }   // This is the painter to use to paint the icons for the program
@@ -649,7 +648,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     try {   // Try to load the image
                         testSpiralIcon.images.add(ImageIO.read(file));
                     } catch (IOException ex) {
-                        log(Level.INFO, "SpiralGenerator", 
+                        getLogger().log(Level.INFO, 
                                 "Failed to load test image \""+file.getName()+"\"", 
                                 ex);
                     }
@@ -2329,7 +2328,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             previewLabel.repaint();
         } catch (NullPointerException ex){
-            log(Level.WARNING, "frameSliderStateChanged", 
+            getLogger().log(Level.WARNING, 
                     "Null encountered while repainting preview label for frame " 
                             + frameSlider.getValue(), ex);
         }
@@ -2754,8 +2753,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try {   // Try to open the update URL in the user's web browser
             Desktop.getDesktop().browse(new URL(url).toURI());
         } catch (URISyntaxException | IOException ex) {
-            log(Level.WARNING,"updateOpenButtonActionPerformed",
-                    "Could not open update URL "+url,ex);
+            getLogger().log(Level.WARNING,"Could not open update URL "+url,ex);
         }
     }//GEN-LAST:event_updateOpenButtonActionPerformed
 
@@ -2990,7 +2988,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         try{
             frameSlider.setValue(next);
         } catch (NullPointerException ex){
-            log(Level.WARNING, "progressAnimation", 
+            getLogger().log(Level.WARNING, 
                     "Null encountered while incrementing frame ("+frame+" -> "+
                             next + ")", ex);
         }
@@ -4450,7 +4448,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             // Show the failure prompt and get if the user wants 
                         retry = showFailurePrompt(file, null);  // to try again
                 } catch (IOException ex){
-                    log(Level.WARNING, this.getClass(),"doInBackground", 
+                    getLogger().log(Level.WARNING, 
                             "Error processing file \""+file+"\"", ex);
                     success = false;
                     useWaitCursor(false);
@@ -5070,7 +5068,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     updateChecker.check();
                     success = true;
                 } catch (Exception ex){
-                    log(Level.WARNING, this.getClass(),"doInBackground", 
+                    getLogger().log(Level.WARNING, 
                             "An error occurred while checking the latest version",
                             ex);
                     useWaitCursor(false);
