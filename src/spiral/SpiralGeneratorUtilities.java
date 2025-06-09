@@ -55,8 +55,7 @@ public final class SpiralGeneratorUtilities {
             if (url != null)
                 return new File(url.toURI()).getParentFile();
         } catch (URISyntaxException ex) {
-            SpiralGenerator.log(Level.WARNING, SpiralGeneratorUtilities.class, 
-                    "getProgramDirectory", 
+            SpiralGenerator.getLogger().log(Level.WARNING, 
                     "Failed to retrieve program directory", ex);
         }
         return null;
