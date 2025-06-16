@@ -201,7 +201,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param debugMode
      */
     public SpiralGenerator(boolean debugMode) {
-        getLogger().entering(this.getClass().getName(), "SpiralGenerator");
+        getLogger().entering(this.getClass().getName(), "<init>");
         this.debugMode = debugMode;
         try{    // Try to get the preference node used for the program
             config = new SpiralGeneratorConfig(Preferences.userRoot()
@@ -611,7 +611,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             updateWorker = new UpdateCheckWorker(true);
             updateWorker.execute();
         }
-        getLogger().exiting(this.getClass().getName(), "SpiralGenerator");
+        getLogger().exiting(this.getClass().getName(), "<init>");
     }
     
     public SpiralGenerator() {
