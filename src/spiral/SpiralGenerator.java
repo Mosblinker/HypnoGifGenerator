@@ -823,7 +823,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutBottomPanel = new javax.swing.JPanel();
         aboutButtonsPanel = new javax.swing.JPanel();
         updateButton = new javax.swing.JButton();
-        filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         aboutOkButton = new javax.swing.JButton();
         updateCheckDialog = new javax.swing.JDialog(this);
         updatePanel = new javax.swing.JPanel();
@@ -3354,7 +3354,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner delaySpinner;
     private javax.swing.JComboBox<String> dirCombo;
     private javax.swing.JLabel dirLabel;
-    private javax.swing.Box.Filler filler19;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton frameFirstButton;
