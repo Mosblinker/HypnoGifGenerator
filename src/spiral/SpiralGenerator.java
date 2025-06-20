@@ -322,6 +322,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskRotateList.add(i);
         maskRotateSpinner.setModel(new SpinnerListModel(maskRotateList));
         
+        maskFrameCtrlPanel.setVisible(false);
+        
             // Create the icon for the program
         
             // This is the image to use as a mask for the icon
@@ -776,6 +778,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskDesaturateCombo = new javax.swing.JComboBox<>();
         imgAspectRatioButton = new javax.swing.JButton();
         imgMaskPreview = new components.JThumbnailLabel();
+        maskFrameCtrlPanel = new javax.swing.JPanel();
+        maskFramePrevButton = new javax.swing.JButton();
+        maskFrameLabel = new javax.swing.JLabel();
+        maskFrameNextButton = new javax.swing.JButton();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
         maskShapeWidthLabel = new javax.swing.JLabel();
@@ -1064,7 +1070,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -1199,9 +1205,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
 
         imgAspectRatioButton.setText("Apply Aspect Ratio");
@@ -1213,7 +1219,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
@@ -1222,11 +1228,46 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         maskImageCtrlPanel.add(imgMaskPreview, gridBagConstraints);
+
+        maskFrameCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Frame"));
+        maskFrameCtrlPanel.setLayout(new java.awt.BorderLayout(6, 0));
+
+        maskFramePrevButton.setIcon(new FrameNavigationIcon(FrameNavigation.PREVIOUS));
+        maskFramePrevButton.setToolTipText("Previous");
+        maskFramePrevButton.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        maskFramePrevButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFramePrevButtonActionPerformed(evt);
+            }
+        });
+        maskFrameCtrlPanel.add(maskFramePrevButton, java.awt.BorderLayout.LINE_START);
+
+        maskFrameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        maskFrameLabel.setText("1");
+        maskFrameCtrlPanel.add(maskFrameLabel, java.awt.BorderLayout.CENTER);
+
+        maskFrameNextButton.setIcon(new FrameNavigationIcon(FrameNavigation.NEXT));
+        maskFrameNextButton.setToolTipText("Next");
+        maskFrameNextButton.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        maskFrameNextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFrameNextButtonActionPerformed(evt);
+            }
+        });
+        maskFrameCtrlPanel.add(maskFrameNextButton, java.awt.BorderLayout.LINE_END);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(maskFrameCtrlPanel, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -2810,6 +2851,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Set the height of the spiral
         heightSpinner.setValue((int)Math.floor(height));
     }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
+
+    private void maskFramePrevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFramePrevButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maskFramePrevButtonActionPerformed
+
+    private void maskFrameNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFrameNextButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maskFrameNextButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2846,16 +2895,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If there are no overlay images
         if (overlayImages.isEmpty())
             return null;
-        return overlayImages.get(0);
+        return overlayImages.get(overlayImageIndex);
     }
     /**
      * 
      */
-    private void updateOverlayImagePreview(){
+    private void setOverlayImage(int index){
+        overlayImageIndex = index;
             // Get the current overlay image
         BufferedImage img = getOverlayImage();
             // If the image is not null, use it.
         imgMaskPreview.setIcon((img!=null)?new OverlayImagePreviewIcon(img):null);
+        maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
     }
     /**
      * 
@@ -3288,6 +3339,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private ArrayList<BufferedImage> overlayImages = new ArrayList<>();
     /**
+     * This is the index of the overlay image.
+     */
+    private int overlayImageIndex = 0;
+    /**
      * This contains the masks and painter used for the overlay.
      */
     private OverlayMask overlayMask = new OverlayMask();
@@ -3425,6 +3480,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JFileDisplayPanel maskFCPreview;
     private javax.swing.JCheckBox maskFlipHorizToggle;
     private javax.swing.JCheckBox maskFlipVertToggle;
+    private javax.swing.JPanel maskFrameCtrlPanel;
+    private javax.swing.JLabel maskFrameLabel;
+    private javax.swing.JButton maskFrameNextButton;
+    private javax.swing.JButton maskFramePrevButton;
     private javax.swing.JPanel maskImageCtrlPanel;
     private javax.swing.JPopupMenu maskPopup;
     private components.JThumbnailLabel maskPreviewLabel;
@@ -5094,7 +5153,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (success){
                 overlayImages.clear();
                 overlayImages.addAll(imgs);
-                updateOverlayImagePreview();
+                maskFrameCtrlPanel.setVisible(overlayImages.size() > 1);
+                setOverlayImage(0);
                     // If the program is not loading this image at the start of 
                     // the program
                 if (!initLoad)
