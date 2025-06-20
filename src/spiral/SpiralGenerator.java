@@ -629,8 +629,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             }
         }
-            // If the program should check for updates at startup
-        if (checkUpdatesAtStartToggle.isSelected()){
+            // If the program should check for updates at startup and the 
+            // program is not in debug mode
+        if (!debugMode && checkUpdatesAtStartToggle.isSelected()){
             updateWorker = new UpdateCheckWorker(true);
             updateWorker.execute();
         }
