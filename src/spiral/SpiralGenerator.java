@@ -2649,6 +2649,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the mask is an image
             case(1):
                 overlayImage = null;
+                imgMaskPreview.setIcon(null);
                 maskAlphaToggle.setSelected(true);
                 maskAlphaInvertToggle.setSelected(false);
                 maskDesaturateCombo.setSelectedIndex(0);
@@ -2745,6 +2746,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskRotation(getMaskRotation());
             // Refresh the mask and preview
         refreshPreview(-1);
+            // If the overlay image is not null
+        if (overlayImage != null)
+            imgMaskPreview.repaint();
     }//GEN-LAST:event_maskRotateSpinnerStateChanged
 
     private void maskFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipHorizToggleActionPerformed
@@ -2752,6 +2756,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.repaint();
             // Refresh the preview
         refreshPreview();
+            // If the overlay image is not null
+        if (overlayImage != null)
+            imgMaskPreview.repaint();
     }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
 
     private void maskFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipVertToggleActionPerformed
@@ -2759,6 +2766,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.repaint();
             // Refresh the preview
         refreshPreview();
+            // If the overlay image is not null
+        if (overlayImage != null)
+            imgMaskPreview.repaint();
     }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
@@ -5145,6 +5155,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If this was successful in loading the image
             if (success){
                 overlayImage = img;
+                imgMaskPreview.setIcon(new OverlayImagePreviewIcon(overlayImage));
                     // If the program is not loading this image at the start of 
                     // the program
                 if (!initLoad)
