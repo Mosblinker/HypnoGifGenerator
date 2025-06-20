@@ -2780,18 +2780,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the overlay image is somehow null at this point
         if (overlayImage == null)
             return;
+            // Get the aspect ratio of the overlay image
+        double ratio = overlayImage.getWidth() / ((double)overlayImage.getHeight());
+            // If the aspect ratio of the overlay image is 1:1
+        if (ratio == 1){
+                // Get the larger of the spiral imagewidth and height
+            int size = Math.max(getImageWidth(), getImageHeight());
+                // Set the width of the spiral
+            widthSpinner.setValue(size);
+                // Set the height of the spiral
+            heightSpinner.setValue(size);
+            return;
+            // If the width and height of the mask will be swapped
+        } else if (getSwapMaskSize())
+            ratio = 1/ratio;
             // Get the width of the spiral image
         double width = getImageWidth();
             // Get the height of the spiral image
         double height = getImageHeight();
-            // Get the aspect ratio of the overlay image
-        double ratio = overlayImage.getWidth() / ((double)overlayImage.getHeight());
-            // If the width and height of the mask will be swapped
-        if (getSwapMaskSize())
-            ratio = 1/ratio;
-            // If the width of the spiral image is greater than or equal to the 
-            // height
-        if (width >= height)
+            // If the height of the overlay image is greater than the width
+        if (ratio < 1)
             height = width * 1/ratio;
         else
             width = height * ratio;
