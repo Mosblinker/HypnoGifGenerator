@@ -928,6 +928,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
 
         maskTextPanel.setLayout(new java.awt.BorderLayout());
+
+        maskTextPane.setComponentPopupMenu(maskPopup);
         maskTextPanel.add(maskTextPane, java.awt.BorderLayout.CENTER);
 
         maskTextScrollPane.setViewportView(maskTextPanel);
