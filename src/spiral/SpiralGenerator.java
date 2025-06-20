@@ -389,7 +389,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             progressAnimation(e);
         });
         previewLabel.setIcon(spiralIcon);
-        maskPreviewLabel.setIcon(new MaskPreviewIcon());
+        maskPreviewLabel.setIcon(overlayMask);
         
             // Get a listener for the file choosers
         PropertyChangeListener fcL = config.new FileChooserPropertyChangeListener();
@@ -3998,28 +3998,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             return getImageHeight();
         }
     }
-    
-    private class MaskPreviewIcon implements Icon2D{
-        @Override
-        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
-            g.translate(x, y);
-            g.setColor(Color.BLACK);
-                // Get the width of the icon
-            int width = getIconWidth();
-                // Get the height of the icon
-            int height = getIconHeight();
-            g.fillRect(0, 0, width, height);
-            overlayMask.paint(g, Color.WHITE, width, height);
-        }
-        @Override
-        public int getIconWidth() {
-            return getImageWidth();
-        }
-        @Override
-        public int getIconHeight() {
-            return getImageHeight();
-        }
-    }
     /**
      * 
      */
@@ -4225,7 +4203,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
-    private class OverlayMask implements Painter<Color>{
+    private class OverlayMask implements Painter<Color>, Icon2D{
         /**
          * This is the image used as a mask for the overlay when text is being 
          * used as a mask. When this is null, then the mask will be generated 
@@ -4485,7 +4463,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
             g.dispose();
         }
-        
+        @Override
+        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+            g.translate(x, y);
+            g.setColor(Color.BLACK);
+                // Get the width of the icon
+            int width = getIconWidth();
+                // Get the height of the icon
+            int height = getIconHeight();
+            g.fillRect(0, 0, width, height);
+            paint(g, Color.WHITE, width, height);
+        }
+        @Override
+        public int getIconWidth() {
+            return getImageWidth();
+        }
+        @Override
+        public int getIconHeight() {
+            return getImageHeight();
+        }
     }
     /**
      * 
