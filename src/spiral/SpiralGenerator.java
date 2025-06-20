@@ -2854,11 +2854,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
 
     private void maskFramePrevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFramePrevButtonActionPerformed
-        // TODO add your handling code here:
+        setOverlayImage(overlayImageIndex-1);
     }//GEN-LAST:event_maskFramePrevButtonActionPerformed
 
     private void maskFrameNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFrameNextButtonActionPerformed
-        // TODO add your handling code here:
+        setOverlayImage(overlayImageIndex+1);
     }//GEN-LAST:event_maskFrameNextButtonActionPerformed
     /**
      * This returns the width for the image.
