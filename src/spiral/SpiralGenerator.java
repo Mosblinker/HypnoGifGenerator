@@ -2653,7 +2653,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 break;
                 // If the mask is an image
             case(1):
-                overlayImage = null;
+                overlayImages.clear();
                 imgMaskPreview.setIcon(null);
                 maskAlphaToggle.setSelected(true);
                 maskAlphaInvertToggle.setSelected(false);
@@ -2751,8 +2751,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskRotation(getMaskRotation());
             // Refresh the mask and preview
         refreshPreview(-1);
-            // If the overlay image is not null
-        if (overlayImage != null)
+            // If the overlay image list is not empty
+        if (!overlayImages.isEmpty())
             imgMaskPreview.repaint();
     }//GEN-LAST:event_maskRotateSpinnerStateChanged
 
@@ -2761,8 +2761,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.repaint();
             // Refresh the preview
         refreshPreview();
-            // If the overlay image is not null
-        if (overlayImage != null)
+            // If the overlay image list is not empty
+        if (!overlayImages.isEmpty())
             imgMaskPreview.repaint();
     }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
 
@@ -2771,17 +2771,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskPreviewLabel.repaint();
             // Refresh the preview
         refreshPreview();
-            // If the overlay image is not null
-        if (overlayImage != null)
+            // If the overlay image list is not empty
+        if (!overlayImages.isEmpty())
             imgMaskPreview.repaint();
     }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
-            // If the overlay image is somehow null at this point
-        if (overlayImage == null)
+            // Get the overlay image
+        BufferedImage image = getOverlayImage();
+            // If the overlay image is null
+        if (image == null)
             return;
             // Get the aspect ratio of the overlay image
-        double ratio = overlayImage.getWidth() / ((double)overlayImage.getHeight());
+        double ratio = image.getWidth() / ((double)image.getHeight());
             // If the aspect ratio of the overlay image is 1:1
         if (ratio == 1){
                 // Get the larger of the spiral imagewidth and height
@@ -2835,6 +2837,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private double getMaskRotation(){
         return (double)maskRotateSpinner.getValue();
+    }
+    /**
+     * 
+     * @return 
+     */
+    private BufferedImage getOverlayImage(){
+            // If there are no overlay images
+        if (overlayImages.isEmpty())
+            return null;
+        return overlayImages.get(0);
+    }
+    /**
+     * 
+     */
+    private void updateOverlayImagePreview(){
+            // Get the current overlay image
+        BufferedImage img = getOverlayImage();
+            // If the image is not null, use it.
+        imgMaskPreview.setIcon((img!=null)?new OverlayImagePreviewIcon(img):null);
     }
     /**
      * 
@@ -3261,11 +3282,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private Map<Component, JLabel> spiralCompLabels;
     /**
-     * This is the image used to create the mask for the overlay when a loaded 
-     * image is used for the mask. This is the raw image, and is null when no 
-     * image has been loaded for the mask.
+     * This is a list of images used to create the mask for the overlay when a 
+     * loaded image is used for the mask. This contains the raw images, and is 
+     * empty when no image has been loaded for the mask.
      */
-    private BufferedImage overlayImage = null;
+    private ArrayList<BufferedImage> overlayImages = new ArrayList<>();
     /**
      * This contains the masks and painter used for the overlay.
      */
@@ -3542,7 +3563,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskRotateSpinner.setEnabled(enabled);
         maskFlipHorizToggle.setEnabled(enabled);
         maskFlipVertToggle.setEnabled(enabled);
-        imgAspectRatioButton.setEnabled(enabled && overlayImage != null);
+        imgAspectRatioButton.setEnabled(enabled && overlayImages.isEmpty());
         updateFrameControls();
         updateControlsEnabled();
     }
@@ -4228,7 +4249,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // The mask is an image
                 case(1):
                         // Return if there is an overlay image
-                    return overlayImage != null;
+                    return !overlayImages.isEmpty();
                     // The mask is using a shape
                 case(2):
                         // Return if both of the size spinners are set to values 
@@ -4258,7 +4279,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(1):
                         // Get the alpha channel for the overlay image, creating 
                         // it if need be
-                    alphaMask = getImageAlphaMask(overlayImage,alphaMask,
+                    alphaMask = getImageAlphaMask(getOverlayImage(),alphaMask,
                             width,height);
                         // Use the mask version of the alpha image as the mask
                     return imgMask = getImageMaskImage(width,height,alphaMask,
@@ -5025,7 +5046,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         /**
          * 
          */
-        private BufferedImage img = null;
+        private ArrayList<BufferedImage> imgs = new ArrayList<>();
         /**
          * Whether this is being used during the initial loading of the program
          */
@@ -5047,8 +5068,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
-            img = ImageIO.read(file);
-            return img != null;
+            BufferedImage img = ImageIO.read(file);
+            if (img != null)
+                imgs.add(img);
+            return !imgs.isEmpty();
         }
         @Override
         protected String getFailureTitle(File file, IOException ex){
@@ -5069,8 +5092,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         protected void done(){
                 // If this was successful in loading the image
             if (success){
-                overlayImage = img;
-                imgMaskPreview.setIcon(new OverlayImagePreviewIcon(overlayImage));
+                overlayImages.clear();
+                overlayImages.addAll(imgs);
+                updateOverlayImagePreview();
                     // If the program is not loading this image at the start of 
                     // the program
                 if (!initLoad)
