@@ -446,7 +446,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         double imgRotation = config.getMaskRotation();
             // Ensure that the mask's rotation is a multiple of the increment
         imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
-        maskRotateSpinner.setValue(imgRotation);
+        try{
+            maskRotateSpinner.setValue(imgRotation);
+        } catch (IllegalArgumentException ex){
+            getLogger().log(Level.WARNING, "Mask rotation is invalid", ex);
+        }
         maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
         
