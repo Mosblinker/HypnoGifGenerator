@@ -1213,6 +1213,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
 
         imgAspectRatioButton.setText("Apply Aspect Ratio");
+        imgAspectRatioButton.setEnabled(false);
         imgAspectRatioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 imgAspectRatioButtonActionPerformed(evt);
@@ -2659,6 +2660,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
+                imgAspectRatioButton.setEnabled(false);
                 break;
                 // If the mask is a shape
             case(2):
@@ -3507,7 +3509,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskRotateSpinner.setEnabled(enabled);
         maskFlipHorizToggle.setEnabled(enabled);
         maskFlipVertToggle.setEnabled(enabled);
-        imgAspectRatioButton.setEnabled(enabled);
+        imgAspectRatioButton.setEnabled(enabled && overlayImage != null);
         updateFrameControls();
         updateControlsEnabled();
     }

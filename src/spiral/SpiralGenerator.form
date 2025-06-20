@@ -574,6 +574,7 @@
                 <Component class="javax.swing.JButton" name="imgAspectRatioButton">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Apply Aspect Ratio"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="imgAspectRatioButtonActionPerformed"/>
