@@ -456,6 +456,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
+        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageScalingMethod(
+                maskImgScaleMethodCombo.getSelectedIndex()));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -2736,6 +2738,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
+                maskImgScaleMethodCombo.setSelectedIndex(4);
+                config.setMaskImageScalingMethod(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape
             case(2):
@@ -2892,7 +2896,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskFrameNextButtonActionPerformed
 
     private void maskImgScaleMethodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskImgScaleMethodComboActionPerformed
-        // TODO add your handling code here:
+        config.setMaskImageScalingMethod(maskImgScaleMethodCombo.getSelectedIndex());
+            // Refresh the image mask and preview
+        refreshPreview(1);
     }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
     /**
      * This returns the width for the image.
@@ -3674,6 +3680,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskFlipVertToggle.setEnabled(enabled);
         imgAspectRatioButton.setEnabled(enabled && !overlayImages.isEmpty());
         updateMaskFrameControlsEnabled();
+        maskImgScaleMethodCombo.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
