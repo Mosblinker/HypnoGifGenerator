@@ -3637,7 +3637,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskRotateSpinner.setEnabled(enabled);
         maskFlipHorizToggle.setEnabled(enabled);
         maskFlipVertToggle.setEnabled(enabled);
-        imgAspectRatioButton.setEnabled(enabled && overlayImages.isEmpty());
+        imgAspectRatioButton.setEnabled(enabled && !overlayImages.isEmpty());
         updateMaskFrameControlsEnabled();
         updateFrameControls();
         updateControlsEnabled();
