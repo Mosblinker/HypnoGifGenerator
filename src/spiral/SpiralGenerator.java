@@ -2738,7 +2738,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
-                maskImgScaleMethodCombo.setSelectedIndex(4);
+                maskImgScaleMethodCombo.setSelectedIndex(
+                        SpiralGeneratorUtilities.SCALE_IMAGE_SETTING_THUMBNAILATOR);
                 config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape
@@ -3872,7 +3873,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (mask.getWidth() != width || mask.getHeight() != height){
                 // Scale and center the overlay image
             return getCenteredImage(
-                    Thumbnailator.createThumbnail(image,width,height),
+                    SpiralGeneratorUtilities.scaleImage(image, width, height, 
+                            maskImgScaleMethodCombo.getSelectedIndex()),
                     width,height);
         }
         return mask;

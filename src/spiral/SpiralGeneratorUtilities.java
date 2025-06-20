@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import net.coobird.thumbnailator.Thumbnailator;
 
 /**
  *
@@ -25,6 +26,20 @@ import javax.imageio.ImageIO;
 public final class SpiralGeneratorUtilities {
     
     public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
+    
+    public static final int SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR = 0;
+    
+    public static final int SCALE_IMAGE_SETTING_BILINEAR = 1;
+    
+    public static final int SCALE_IMAGE_SETTING_BICUBIC = 2;
+    
+    public static final int SCALE_IMAGE_SETTING_SMOOTH = 3;
+    
+    public static final int SCALE_IMAGE_SETTING_THUMBNAILATOR = 4;
+    
+    public static final int FIRST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR;
+    
+    public static final int LAST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_THUMBNAILATOR;
     /**
      * 
      */
@@ -213,6 +228,11 @@ public final class SpiralGeneratorUtilities {
             // Get the larger of the two sizes
         int size = Math.max(image.getWidth(), image.getHeight());
         return getCenteredImage(image,size,size);
+    }
+    
+    public static BufferedImage scaleImage(BufferedImage image,
+            int width,int height,int interpolation){
+        return Thumbnailator.createThumbnail(image,width,height);
     }
     /**
      * 
