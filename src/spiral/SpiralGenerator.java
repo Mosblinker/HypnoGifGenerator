@@ -442,6 +442,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
+            // Get the mask's rotation
+        double imgRotation = config.getMaskRotation();
+            // Ensure that the mask's rotation is a multiple of the increment
+        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
+        maskRotateSpinner.setValue(imgRotation);
+        maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
+        maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -2662,6 +2669,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
+        maskRotateSpinner.setValue(0.0);
+        maskFlipHorizToggle.setSelected(false);
+        maskFlipVertToggle.setSelected(false);
+        config.setMaskFlag(SpiralGeneratorConfig.MASK_FLIP_HORIZONTAL_FLAG | 
+                SpiralGeneratorConfig.MASK_FLIP_VERTICAL_FLAG, false);
     }//GEN-LAST:event_resetMaskButtonActionPerformed
 
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
@@ -2731,15 +2743,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
 
     private void maskRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskRotateSpinnerStateChanged
-        // TODO add your handling code here:
+        config.setMaskRotation((double)maskRotateSpinner.getValue());
+            // Refresh the mask and preview
+        refreshPreview(-1);
     }//GEN-LAST:event_maskRotateSpinnerStateChanged
 
     private void maskFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipHorizToggleActionPerformed
-        // TODO add your handling code here:
+        config.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
+            // Refresh the mask and preview
+        refreshPreview(-1);
     }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
 
     private void maskFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipVertToggleActionPerformed
-        // TODO add your handling code here:
+        config.setMaskFlippedVertically(maskFlipVertToggle.isSelected());
+            // Refresh the mask and preview
+        refreshPreview(-1);
     }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
@@ -3462,6 +3480,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetMaskButton.setEnabled(enabled);
         updateButton.setEnabled(enabled);
         updateOpenButton.setEnabled(enabled);
+        maskRotateSpinner.setEnabled(enabled);
+        maskFlipHorizToggle.setEnabled(enabled);
+        maskFlipVertToggle.setEnabled(enabled);
+        imgAspectRatioButton.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
