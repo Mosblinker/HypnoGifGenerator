@@ -501,7 +501,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the overlay mask image file is not null and does exist
             if (overlayFile != null && overlayFile.exists()){
                     // Load the image file from the preferences
-                fileWorker = new ImageLoader(overlayFile, true);
+                fileWorker = new ImageLoader(overlayFile, true, 
+                        config.getMaskImageFrameIndex());
                 fileWorker.execute();
             }
         } else {
@@ -2908,6 +2909,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the image is not null, use it.
         imgMaskPreview.setIcon((img!=null)?new OverlayImagePreviewIcon(img):null);
         maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
+        config.setMaskImageFrameIndex(index);
         updateMaskFrameControlsEnabled();
             // Refresh the image mask and preview
         refreshPreview(1);
@@ -5212,8 +5214,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
                 // If the program failed to load the image mask at the start of 
                 // the program
-            } else if (initLoad)
+            } else if (initLoad){
                 config.setMaskImageFile(null);
+                config.setMaskImageFrameIndex(0);
+            }
             super.done();
         }
     }
