@@ -5124,19 +5124,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         private boolean initLoad;
         /**
+         * This is the index of the overlay image to use if loaded successfully.
+         */
+        private int index;
+        /**
+         * 
+         * @param file 
+         */
+        ImageLoader(File file, boolean initialLoad, int index) {
+            super(file,!initialLoad);
+            this.initLoad = initialLoad;
+            this.index = index;
+        }
+        /**
          * 
          * @param file 
          */
         ImageLoader(File file, boolean initialLoad) {
-            super(file,!initialLoad);
-            this.initLoad = initialLoad;
+            this(file,initialLoad,0);
+        }
+        /**
+         * 
+         * @param file 
+         */
+        ImageLoader(File file, int index){
+            this(file,false,index);
         }
         /**
          * 
          * @param file 
          */
         ImageLoader(File file){
-            this(file,false);
+            this(file,0);
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
@@ -5190,7 +5209,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // the program
                 if (!initLoad)
                     config.setMaskImageFile(file);
-                setOverlayImage(0);
+                setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
                 // If the program failed to load the image mask at the start of 
                 // the program
             } else if (initLoad)
