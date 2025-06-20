@@ -362,4 +362,12 @@ public final class SpiralGeneratorUtilities {
         path.closePath();
         return path;
     }
+    
+    public static boolean getFlag(int flags, int flag){
+        return (flags & flag) != 0;
+    }
+    
+    public static int setFlag(int flags, int flag, boolean value){
+        return (value) ? (flags | flag) : (flags & ~flag);
+    }
 }
