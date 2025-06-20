@@ -122,15 +122,26 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
     
+    public static final String MASK_ROTATION_KEY = "MaskImageRotation";
+    
+    public static final String MASK_FLAGS_KEY = "MaskImageFlags";
+    
+    public static final String FRAME_DURATION_KEY = "FrameDuration";
+    
+    public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
+    
+    public static final int MASK_FLIP_HORIZONTAL_FLAG = 0x01;
+    
+    public static final int MASK_FLIP_VERTICAL_FLAG = 0x02;
+    
+    
+    
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
     public static final String TEST_SPIRAL_ROTATION_KEY = "TestRotation";
     
     public static final String TEST_SPIRAL_SCALE_KEY = "TestScale";
     
-    public static final String FRAME_DURATION_KEY = "FrameDuration";
-    
-    public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
     /**
      * This is a preference node to store the settings for this program.
      */
@@ -804,18 +815,12 @@ public class SpiralGeneratorConfig {
         else
             setMaskFontStyle(font.getStyle());
     }
-    
     protected boolean getMaskFontStyleValue(int flag){
-        return (getMaskFontStyle() & flag) != 0;
+        return SpiralGeneratorUtilities.getFlag(getMaskFontStyle(),flag);
     }
     
     protected void setMaskFontStyleValue(int flag, boolean value){
-        int style = getMaskFontStyle();
-        if (value)
-            style |= flag;
-        else
-            style &= ~flag;
-        setMaskFontStyle(style);
+        setMaskFontStyle(SpiralGeneratorUtilities.setFlag(getMaskFontStyle(),flag,value));
     }
     
     public boolean isMaskFontBold(){
@@ -1115,6 +1120,50 @@ public class SpiralGeneratorConfig {
     
     public void setMaskImageFile(File value){
         putFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,value);
+    }
+    
+    public double getMaskRotation(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_ROTATION_KEY, defaultValue);
+    }
+    
+    public double getMaskRotation(){
+        return getMaskRotation(0.0);
+    }
+    
+    public void setMaskRotation(double value){
+        getMaskPreferences().putDouble(MASK_ROTATION_KEY, value);
+    }
+    
+    public int getMaskFlags(){
+        return getMaskPreferences().getInt(MASK_FLAGS_KEY, 0);
+    }
+    
+    public void setMaskFlags(int value){
+        getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
+    }
+    
+    public boolean getMaskFlag(int flag){
+        return SpiralGeneratorUtilities.getFlag(getMaskFlags(),flag);
+    }
+    
+    public void setMaskFlag(int flag, boolean value){
+        setMaskFlags(SpiralGeneratorUtilities.setFlag(getMaskFlags(),flag,value));
+    }
+    
+    public boolean isMaskFlippedHorizontally(){
+        return getMaskFlag(MASK_FLIP_HORIZONTAL_FLAG);
+    }
+    
+    public void setMaskFlippedHorizontally(boolean value){
+        setMaskFlag(MASK_FLIP_HORIZONTAL_FLAG,value);
+    }
+    
+    public boolean isMaskFlippedVertically(){
+        return getMaskFlag(MASK_FLIP_VERTICAL_FLAG);
+    }
+    
+    public void setMaskFlippedVertically(boolean value){
+        setMaskFlag(MASK_FLIP_VERTICAL_FLAG,value);
     }
     
     public double getMaskShapeWidth(double defaultValue){

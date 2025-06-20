@@ -184,6 +184,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
+    
+    private static final double MASK_ROTATION_INCREMENT = 
+            GeometryMath.QUARTER_CIRCLE_DEGREES;
     /**
      * 
      */
@@ -312,6 +315,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             spiralCompLabels.put(label.getLabelFor(), label);
         }
         
+            // A list to get the increments of rotation for the mask
+        ArrayList<Double> maskRotateList = new ArrayList<>();
+            // Go through the possible rotations for the mask
+        for (double i = 0; i <= GeometryMath.FULL_CIRCLE_DEGREES; i+= MASK_ROTATION_INCREMENT)
+            maskRotateList.add(i);
+        maskRotateSpinner.setModel(new SpinnerListModel(maskRotateList));
+        
+            // Create the icon for the program
+        
             // This is the image to use as a mask for the icon
         BufferedImage iconImg = null;
         try {   // Load the mask for the program icon
@@ -430,6 +442,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
+            // Get the mask's rotation
+        double imgRotation = config.getMaskRotation();
+            // Ensure that the mask's rotation is a multiple of the increment
+        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
+        maskRotateSpinner.setValue(imgRotation);
+        maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
+        maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -752,6 +771,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaInvertToggle = new javax.swing.JCheckBox();
         maskDesaturateLabel = new javax.swing.JLabel();
         maskDesaturateCombo = new javax.swing.JComboBox<>();
+        imgAspectRatioButton = new javax.swing.JButton();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
         maskShapeWidthLabel = new javax.swing.JLabel();
@@ -766,6 +786,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
+        maskRotateLabel = new javax.swing.JLabel();
+        maskRotateSpinner = new javax.swing.JSpinner();
+        maskFlipHorizToggle = new javax.swing.JCheckBox();
+        maskFlipVertToggle = new javax.swing.JCheckBox();
         maskPopup = new javax.swing.JPopupMenu();
         testDialog = new javax.swing.JDialog(this);
         javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
@@ -1000,7 +1024,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1031,11 +1055,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -1050,6 +1075,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         maskImageCtrlPanel.add(imgMaskAntialiasingToggle, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1058,7 +1084,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.weightx = 0.5;
         maskImageCtrlPanel.add(filler14, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.5;
@@ -1183,8 +1209,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
+
+        imgAspectRatioButton.setText("Apply Aspect Ratio");
+        imgAspectRatioButton.setEnabled(false);
+        imgAspectRatioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgAspectRatioButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -1262,6 +1302,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        maskRotateLabel.setLabelFor(maskRotateSpinner);
+        maskRotateLabel.setText("Rotation:");
+
+        maskRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                maskRotateSpinnerStateChanged(evt);
+            }
+        });
+
+        maskFlipHorizToggle.setText("Flip Horizontally");
+        maskFlipHorizToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFlipHorizToggleActionPerformed(evt);
+            }
+        });
+
+        maskFlipVertToggle.setText("Flip Vertically");
+        maskFlipVertToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFlipVertToggleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskDialogLayout = new javax.swing.GroupLayout(maskDialog.getContentPane());
         maskDialog.getContentPane().setLayout(maskDialogLayout);
         maskDialogLayout.setHorizontalGroup(
@@ -1270,13 +1333,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap()
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maskTabbedPane)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskDialogLayout.createSequentialGroup()
-                        .addComponent(maskScaleLabel)
+                    .addGroup(maskDialogLayout.createSequentialGroup()
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maskScaleLabel)
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(maskRotateLabel)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(maskScaleSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(maskRotateSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(resetMaskButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addComponent(maskFlipHorizToggle)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addComponent(maskFlipVertToggle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(resetMaskButton)))))
                 .addContainerGap())
         );
         maskDialogLayout.setVerticalGroup(
@@ -1288,6 +1363,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maskScaleLabel)
                     .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maskFlipHorizToggle))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(maskRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(maskRotateLabel)
+                        .addComponent(maskFlipVertToggle))
                     .addComponent(resetMaskButton))
                 .addContainerGap())
         );
@@ -2578,6 +2660,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
+                imgAspectRatioButton.setEnabled(false);
                 break;
                 // If the mask is a shape
             case(2):
@@ -2588,6 +2671,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
+        maskRotateSpinner.setValue(0.0);
+        maskFlipHorizToggle.setSelected(false);
+        maskFlipVertToggle.setSelected(false);
+        config.setMaskFlag(SpiralGeneratorConfig.MASK_FLIP_HORIZONTAL_FLAG | 
+                SpiralGeneratorConfig.MASK_FLIP_VERTICAL_FLAG, false);
     }//GEN-LAST:event_resetMaskButtonActionPerformed
 
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
@@ -2655,6 +2743,51 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
         config.setCheckForUpdateAtStartup(checkUpdatesAtStartToggle.isSelected());
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
+
+    private void maskRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskRotateSpinnerStateChanged
+        config.setMaskRotation(getMaskRotation());
+            // Refresh the mask and preview
+        refreshPreview(-1);
+    }//GEN-LAST:event_maskRotateSpinnerStateChanged
+
+    private void maskFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipHorizToggleActionPerformed
+        config.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
+        maskPreviewLabel.repaint();
+            // Refresh the preview
+        refreshPreview();
+    }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
+
+    private void maskFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipVertToggleActionPerformed
+        config.setMaskFlippedVertically(maskFlipVertToggle.isSelected());
+        maskPreviewLabel.repaint();
+            // Refresh the preview
+        refreshPreview();
+    }//GEN-LAST:event_maskFlipVertToggleActionPerformed
+
+    private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
+            // If the overlay image is somehow null at this point
+        if (overlayImage == null)
+            return;
+            // Get the width of the spiral image
+        double width = getImageWidth();
+            // Get the height of the spiral image
+        double height = getImageHeight();
+            // Get the aspect ratio of the overlay image
+        double ratio = overlayImage.getWidth() / ((double)overlayImage.getHeight());
+            // If the width and height of the mask will be swapped
+        if (getSwapMaskSize())
+            ratio = 1/ratio;
+            // If the width of the spiral image is greater than or equal to the 
+            // height
+        if (width >= height)
+            height = width * 1/ratio;
+        else
+            width = height * ratio;
+            // Set the width of the spiral
+        widthSpinner.setValue((int)Math.floor(width));
+            // Set the height of the spiral
+        heightSpinner.setValue((int)Math.floor(height));
+    }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -2675,6 +2808,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private double getMaskScale(){
         return (double)maskScaleSpinner.getValue();
+    }
+    /**
+     * 
+     * @return 
+     */
+    private double getMaskRotation(){
+        return (double)maskRotateSpinner.getValue();
+    }
+    /**
+     * 
+     * @param rotation
+     * @return 
+     */
+    private boolean getSwapMaskSize(double rotation){
+        return rotation % GeometryMath.HALF_CIRCLE_DEGREES >= GeometryMath.QUARTER_CIRCLE_DEGREES;
+    }
+    /**
+     * 
+     * @return 
+     */
+    private boolean getSwapMaskSize(){
+        return getSwapMaskSize(getMaskRotation());
     }
     /**
      * This returns the style set for the font.
@@ -3211,6 +3366,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageCtrlPanel;
+    private javax.swing.JButton imgAspectRatioButton;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
@@ -3234,9 +3390,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
     private components.JFileDisplayPanel maskFCPreview;
+    private javax.swing.JCheckBox maskFlipHorizToggle;
+    private javax.swing.JCheckBox maskFlipVertToggle;
     private javax.swing.JPanel maskImageCtrlPanel;
     private javax.swing.JPopupMenu maskPopup;
     private components.JThumbnailLabel maskPreviewLabel;
+    private javax.swing.JLabel maskRotateLabel;
+    private javax.swing.JSpinner maskRotateSpinner;
     private javax.swing.JLabel maskScaleLabel;
     private javax.swing.JSpinner maskScaleSpinner;
     private javax.swing.JLabel maskShapeHeightLabel;
@@ -3367,6 +3527,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetMaskButton.setEnabled(enabled);
         updateButton.setEnabled(enabled);
         updateOpenButton.setEnabled(enabled);
+        maskRotateSpinner.setEnabled(enabled);
+        maskFlipHorizToggle.setEnabled(enabled);
+        maskFlipVertToggle.setEnabled(enabled);
+        imgAspectRatioButton.setEnabled(enabled && overlayImage != null);
         updateFrameControls();
         updateControlsEnabled();
     }
@@ -4187,6 +4351,34 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param width
          * @param height 
          */
+        protected void transformGraphics(Graphics2D g, int width, int height){
+                // This is the center x-coordinate of the mask
+            double centerX = width/2.0;
+                // This is the center y-coordinate of the mask
+            double centerY = height/2.0;
+                // Scale the graphics for the mask, maintaining the center
+            scale(g,centerX,centerY,getMaskScale());
+                // If the mask is horizontally or vertically flipped
+            if (maskFlipHorizToggle.isSelected() || maskFlipVertToggle.isSelected())
+                    // Flip the image horizontally and/or vertically, 
+                    // maintaining the center
+                scale(g,centerX,centerY,maskFlipHorizToggle.isSelected()?-1:1,
+                        maskFlipVertToggle.isSelected()?-1:1);
+                // Get the rotation for the scale
+            double rotation = getMaskRotation();
+                // Rotate the graphics context around the center
+            g.rotate(Math.toRadians(rotation), centerX, centerY);
+                // If the width and height should be swapped
+            if (getSwapMaskSize(rotation))
+                    // Translate it so that the center is actually at the center
+                g.translate(centerX - centerY, centerY - centerX);
+        }
+        /**
+         * 
+         * @param g
+         * @param width
+         * @param height 
+         */
         public void paintOverlay(Graphics2D g, int width, int height){
             if (!isOverlayRendered())
                 return;
@@ -4210,8 +4402,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                     (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
-                // Scale the graphics for the mask, maintaining the center
-            scale(imgG,width/2.0,height/2.0,getMaskScale());
+                // Transform the graphics for the mask
+            transformGraphics(imgG,width,height);
+                // If the width and height should be swapped
+            if (getSwapMaskSize()){
+                    // Temporarily store the width
+                int temp = width;
+                width = height;
+                height = temp;
+            }
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
@@ -4247,13 +4446,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         public void maskOverlay(Graphics2D g, int width, int height){
+                // Get whether the width and height should be swapped
+            boolean swapSize = getSwapMaskSize();
                 // Get the mask to use
-            BufferedImage mask = getMask(width, height);
+            BufferedImage mask = getMask((swapSize)?height:width, 
+                    (swapSize)?width:height);
                 // If the mask is null
             if (mask == null)
                 return;
-                // Scale the graphics for the masl, maintaining the center
-            scale(g,width/2.0,height/2.0,getMaskScale());
+                // Transform the graphics for the mask
+            transformGraphics(g,width,height);
                 // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
