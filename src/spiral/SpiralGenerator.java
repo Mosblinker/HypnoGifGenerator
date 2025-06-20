@@ -366,23 +366,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
                 centeredText, false);
         
-            // Create and configure the actions for the mask text pane
-        editCommands = new TextComponentCommands(maskTextPane);
-        undoCommands = new UndoManagerCommands(new CompoundUndoManager());
-            // Add the actions to the popup menu for the mask text pane
-        maskPopup.add(undoCommands.getUndoAction());
-        maskPopup.add(undoCommands.getRedoAction());
-        maskPopup.addSeparator();
-        maskPopup.add(editCommands.getCopyAction());
-        maskPopup.add(editCommands.getCutAction());
-        maskPopup.add(editCommands.getPasteAction());
-        maskPopup.add(editCommands.getDeleteAction());
-        maskPopup.addSeparator();
-        maskPopup.add(editCommands.getSelectAllAction());
-            // Add the listeners to the mask text pane
-        editCommands.addToTextComponent();
-        undoCommands.addToTextComponent(maskTextPane);
-        
             // Set the maximum for the progress bar. The only thing that uses it 
             // in this program is saving the animation
         progressBar.setMaximum(SPIRAL_FRAME_COUNT);
@@ -461,6 +444,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         fontDim = config.getMaskFontSelectorSize();
             // Load the text for the mask from the preferences
         maskTextPane.setText(config.getMaskText());
+        
+            // Create and configure the actions for the mask text pane
+        editCommands = new TextComponentCommands(maskTextPane);
+        undoCommands = new UndoManagerCommands(new CompoundUndoManager());
+            // Add the actions to the popup menu for the mask text pane
+        maskPopup.add(undoCommands.getUndoAction());
+        maskPopup.add(undoCommands.getRedoAction());
+        maskPopup.addSeparator();
+        maskPopup.add(editCommands.getCopyAction());
+        maskPopup.add(editCommands.getCutAction());
+        maskPopup.add(editCommands.getPasteAction());
+        maskPopup.add(editCommands.getDeleteAction());
+        maskPopup.addSeparator();
+        maskPopup.add(editCommands.getSelectAllAction());
+            // Add the listeners to the mask text pane
+        editCommands.addToTextComponent();
+        undoCommands.addToTextComponent(maskTextPane);
         
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters)
