@@ -3781,28 +3781,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * 
      * @param g
-     * @param color
-     * @param width
-     * @param height
-     * @param mask 
-     */
-    private void paintOverlay(Graphics2D g, Color color, int width, 
-            int height, OverlayMask mask){
-            // If the width or height are less than or equal to zero (nothing 
-            // would be drawn)
-        if (width <= 0 || height <= 0)
-            return;
-            // Create a copy of the given graphics context and configure it
-        g = configureGraphics((Graphics2D) g.create());
-            // Set the color to the first color
-        g.setColor(color);
-            // Paint the overlay
-        mask.paintOverlay(g, width, height);
-        g.dispose();
-    }
-    /**
-     * 
-     * @param g
      * @param model
      * @param width
      * @param height
@@ -4031,7 +4009,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the height of the icon
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
-            paintOverlay(g,Color.WHITE, width, height,overlayMask);
+            overlayMask.paint(g, Color.WHITE, width, height);
         }
         @Override
         public int getIconWidth() {
@@ -4247,7 +4225,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
-    private class OverlayMask{
+    private class OverlayMask implements Painter<Color>{
         /**
          * This is the image used as a mask for the overlay when text is being 
          * used as a mask. When this is null, then the mask will be generated 
@@ -4418,39 +4396,67 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param width
          * @param height 
          */
-        public void paintOverlay(Graphics2D g, int width, int height){
-            if (!isOverlayRendered())
+        public void maskOverlay(Graphics2D g, int width, int height){
+                // Get whether the width and height should be swapped
+            boolean swapSize = getSwapMaskSize();
+                // Get the mask to use
+            BufferedImage mask = getMask((swapSize)?height:width, 
+                    (swapSize)?width:height);
+                // If the mask is null
+            if (mask == null)
                 return;
+                // Transform the graphics for the mask
+            transformGraphics(g,width,height);
+                // Enable or disable the antialiasing, depending on whether the 
+                // mask should be antialiased
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                    (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
+                            RenderingHints.VALUE_ANTIALIAS_OFF);
+                // Mask the overlay pixels with the mask image
+            maskImage(g,mask);
+        }
+        @Override
+        public void paint(Graphics2D g, Color color, int width, int height) {
+                // If the width or height are less than or equal to zero 
+                // (nothing would be drawn)
+            if (width <= 0 || height <= 0 || !isOverlayRendered())
+                return;
+                // Create a copy of the given graphics context and configure it
+            g = configureGraphics((Graphics2D) g.create());
                 // This is a buffered image to draw to if the mask needs to be 
                 // drawn to a buffer image
             BufferedImage img = null;
                 // This is the graphics context to draw to
             Graphics2D imgG = g;
+                // Get the antialiasing rendering hint
+            Object antialiasing = (isAntialiased()) ? 
+                    RenderingHints.VALUE_ANTIALIAS_ON : 
+                    RenderingHints.VALUE_ANTIALIAS_OFF;
                 // If the mask is an image
             if (maskTabbedPane.getSelectedIndex() == 1){
                 img = new BufferedImage(width,height,
                         BufferedImage.TYPE_INT_ARGB);
-                imgG = img.createGraphics();
+                imgG = configureGraphics(img.createGraphics());
                     // Enable or disable the antialiasing, depending on 
                     // whether the mask should be antialiased
                 imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                        (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                                RenderingHints.VALUE_ANTIALIAS_OFF);
+                        antialiasing);
             }   // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                            RenderingHints.VALUE_ANTIALIAS_OFF);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
                 // Transform the graphics for the mask
             transformGraphics(imgG,width,height);
+                // If the given color is not null
+            if (color != null)
+                    // Set the color for the overlay
+                imgG.setColor(color);
                 // If the width and height should be swapped
             if (getSwapMaskSize()){
                     // Temporarily store the width
                 int temp = width;
                 width = height;
                 height = temp;
-            }
-                // Determine what to return based off the index
+            }   // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
                 case(0):
@@ -4472,37 +4478,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             (double)maskShapeWidthSpinner.getValue(),
                             (double)maskShapeHeightSpinner.getValue(),path);
             }   // If this rendered to an image as a buffer 
-           if (img != null){
+            if (img != null){
                 imgG.dispose();
                     // Draw the image
                 g.drawImage(img, 0, 0, null);
             }
+            g.dispose();
         }
-        /**
-         * 
-         * @param g
-         * @param width
-         * @param height 
-         */
-        public void maskOverlay(Graphics2D g, int width, int height){
-                // Get whether the width and height should be swapped
-            boolean swapSize = getSwapMaskSize();
-                // Get the mask to use
-            BufferedImage mask = getMask((swapSize)?height:width, 
-                    (swapSize)?width:height);
-                // If the mask is null
-            if (mask == null)
-                return;
-                // Transform the graphics for the mask
-            transformGraphics(g,width,height);
-                // Enable or disable the antialiasing, depending on whether the 
-                // mask should be antialiased
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                            RenderingHints.VALUE_ANTIALIAS_OFF);
-                // Mask the overlay pixels with the mask image
-            maskImage(g,mask);
-        }
+        
     }
     /**
      * 
