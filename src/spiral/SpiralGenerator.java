@@ -184,6 +184,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
+    
+    protected static final double MASK_IMAGE_ROTATION_INCREMENT = 
+            GeometryMath.QUARTER_CIRCLE_DEGREES;
     /**
      * 
      */
@@ -311,6 +314,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }){
             spiralCompLabels.put(label.getLabelFor(), label);
         }
+        
+            // A list to get the increments of rotation for the mask image
+        ArrayList<Double> imgRotateList = new ArrayList<>();
+            // Go through the possible rotations for the mask image
+        for (double i = 0; i <= GeometryMath.FULL_CIRCLE_DEGREES; i+= MASK_IMAGE_ROTATION_INCREMENT)
+            imgRotateList.add(i);
+        imgRotateSpinner.setModel(new SpinnerListModel(imgRotateList));
+        
+            // Create the icon for the program
         
             // This is the image to use as a mask for the icon
         BufferedImage iconImg = null;
@@ -1203,7 +1215,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskImageCtrlPanel.add(imgRotateLabel, gridBagConstraints);
 
-        imgRotateSpinner.setModel(new javax.swing.SpinnerListModel(new String[] {"0", "90", "180", "270", "360"}));
         imgRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 imgRotateSpinnerStateChanged(evt);
@@ -1212,7 +1223,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(imgRotateSpinner, gridBagConstraints);
