@@ -2815,18 +2815,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @param rotation
-     * @return 
-     */
-    private boolean getSwapMaskSize(double rotation){
-        return rotation % GeometryMath.HALF_CIRCLE_DEGREES >= GeometryMath.QUARTER_CIRCLE_DEGREES;
-    }
-    /**
-     * 
      * @return 
      */
     private boolean getSwapMaskSize(){
-        return getSwapMaskSize(getMaskRotation());
+        return getMaskRotation() % GeometryMath.HALF_CIRCLE_DEGREES >= GeometryMath.QUARTER_CIRCLE_DEGREES;
     }
     /**
      * This returns the style set for the font.
@@ -3546,6 +3538,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * 
      * @param g
      * @param width
+     * @param height 
+     */
+    private void transformMaskGraphics(Graphics2D g, int width, int height){
+            // This is the center x-coordinate of the mask
+        double centerX = width/2.0;
+            // This is the center y-coordinate of the mask
+        double centerY = height/2.0;
+            // Scale the graphics for the mask, maintaining the center
+        scale(g,centerX,centerY,getMaskScale());
+            // If the mask is horizontally or vertically flipped
+        if (maskFlipHorizToggle.isSelected() || maskFlipVertToggle.isSelected())
+                // Flip the image horizontally and/or vertically, maintaining 
+                // the center
+            scale(g,centerX,centerY,maskFlipHorizToggle.isSelected()?-1:1,
+                    maskFlipVertToggle.isSelected()?-1:1);
+            // Rotate the graphics context around the center
+        g.rotate(Math.toRadians(getMaskRotation()), centerX, centerY);
+    }
+    /**
+     * 
+     * @param g
+     * @param width
      * @param height
      * @param text
      * @param painter 
@@ -4095,6 +4109,33 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
+    private class OverlayImagePreviewIcon implements Icon2D{
+        /**
+         * The image to be displayed.
+         */
+        private BufferedImage img;
+        
+        OverlayImagePreviewIcon(BufferedImage image){
+                // If the image is null
+            if (image == null)
+                throw new NullPointerException();
+            this.img = image;
+        }
+        @Override
+        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
+            transformMaskGraphics(g,getIconWidth(),getIconHeight());
+            g.drawImage(img, x, y, c);
+        }
+        @Override
+        public int getIconWidth() {
+            return img.getWidth();
+        }
+        @Override
+        public int getIconHeight() {
+            return img.getHeight();
+        }
+    }
+    
     private class SpiralHandler implements PropertyChangeListener, 
             ActionListener, DocumentListener{
         @Override
@@ -4350,24 +4391,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         protected void transformGraphics(Graphics2D g, int width, int height){
+                // Transform the mask graphics
+            transformMaskGraphics(g,width,height);
                 // This is the center x-coordinate of the mask
             double centerX = width/2.0;
                 // This is the center y-coordinate of the mask
             double centerY = height/2.0;
-                // Scale the graphics for the mask, maintaining the center
-            scale(g,centerX,centerY,getMaskScale());
-                // If the mask is horizontally or vertically flipped
-            if (maskFlipHorizToggle.isSelected() || maskFlipVertToggle.isSelected())
-                    // Flip the image horizontally and/or vertically, 
-                    // maintaining the center
-                scale(g,centerX,centerY,maskFlipHorizToggle.isSelected()?-1:1,
-                        maskFlipVertToggle.isSelected()?-1:1);
-                // Get the rotation for the scale
-            double rotation = getMaskRotation();
-                // Rotate the graphics context around the center
-            g.rotate(Math.toRadians(rotation), centerX, centerY);
                 // If the width and height should be swapped
-            if (getSwapMaskSize(rotation))
+            if (getSwapMaskSize())
                     // Translate it so that the center is actually at the center
                 g.translate(centerX - centerY, centerY - centerX);
         }
