@@ -4304,6 +4304,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param width
          * @param height 
          */
+        protected void transformGraphics(Graphics2D g, int width, int height){
+                // This is the center x-coordinate of the mask
+            double centerX = width/2.0;
+                // This is the center y-coordinate of the mask
+            double centerY = height/2.0;
+                // Scale the graphics for the mask, maintaining the center
+            scale(g,centerX,centerY,getMaskScale());
+                // If the mask is horizontally or vertically flipped
+            if (maskFlipHorizToggle.isSelected() || maskFlipVertToggle.isSelected())
+                    // Flip the image horizontally and/or vertically, 
+                    // maintaining the center
+                scale(g,centerX,centerY,maskFlipHorizToggle.isSelected()?-1:1,
+                        maskFlipVertToggle.isSelected()?-1:1);
+        }
+        /**
+         * 
+         * @param g
+         * @param width
+         * @param height 
+         */
         public void paintOverlay(Graphics2D g, int width, int height){
             if (!isOverlayRendered())
                 return;
@@ -4327,8 +4347,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                     (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                             RenderingHints.VALUE_ANTIALIAS_OFF);
-                // Scale the graphics for the mask, maintaining the center
-            scale(imgG,width/2.0,height/2.0,getMaskScale());
+                // Transform the graphics for the mask
+            transformGraphics(imgG,width,height);
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
@@ -4369,8 +4389,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the mask is null
             if (mask == null)
                 return;
-                // Scale the graphics for the masl, maintaining the center
-            scale(g,width/2.0,height/2.0,getMaskScale());
+                // Transform the graphics for the mask
+            transformGraphics(g,width,height);
                 // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
