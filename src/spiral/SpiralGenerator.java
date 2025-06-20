@@ -2765,7 +2765,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
-        // TODO add your handling code here:
+            // If the overlay image is somehow null at this point
+        if (overlayImage == null)
+            return;
+            // Get the width of the spiral image
+        double width = getImageWidth();
+            // Get the height of the spiral image
+        double height = getImageHeight();
+            // Get the aspect ratio of the overlay image
+        double ratio = overlayImage.getWidth() / ((double)overlayImage.getHeight());
+            // If the width of the spiral image is greater than or equal to the 
+            // height
+        if (width >= height)
+            height = width * 1/ratio;
+        else
+            width = height * ratio;
+            // Set the width of the spiral
+        widthSpinner.setValue((int)Math.floor(width));
+            // Set the height of the spiral
+        heightSpinner.setValue((int)Math.floor(height));
     }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
     /**
      * This returns the width for the image.
