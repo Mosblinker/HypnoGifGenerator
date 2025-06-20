@@ -759,8 +759,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         loadMaskButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         imgMaskAntialiasingToggle = new javax.swing.JCheckBox();
-        javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaCtrlPanel = new javax.swing.JPanel();
         maskAlphaToggle = new javax.swing.JRadioButton();
         maskAlphaGrayToggle = new javax.swing.JRadioButton();
@@ -772,6 +770,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskDesaturateLabel = new javax.swing.JLabel();
         maskDesaturateCombo = new javax.swing.JComboBox<>();
         imgAspectRatioButton = new javax.swing.JButton();
+        imgMaskPreview = new components.JThumbnailLabel();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
         maskShapeWidthLabel = new javax.swing.JLabel();
@@ -1016,7 +1015,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(lineSpacingLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 30, Short.MAX_VALUE))
+                        .addGap(0, 112, Short.MAX_VALUE))
                     .addComponent(maskTextScrollPane))
                 .addContainerGap())
         );
@@ -1024,7 +1023,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1077,18 +1076,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         maskImageCtrlPanel.add(imgMaskAntialiasingToggle, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.5;
-        maskImageCtrlPanel.add(filler14, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.5;
-        maskImageCtrlPanel.add(filler15, gridBagConstraints);
 
         maskAlphaCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Mask Alpha Channel"));
         maskAlphaCtrlPanel.setLayout(new java.awt.GridBagLayout());
@@ -1225,6 +1212,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
+
+        imgMaskPreview.setBorder(javax.swing.BorderFactory.createTitledBorder("Mask Image Preview"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        maskImageCtrlPanel.add(imgMaskPreview, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -3368,6 +3365,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel imageCtrlPanel;
     private javax.swing.JButton imgAspectRatioButton;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
+    private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel latestVersLabel;
