@@ -5162,14 +5162,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
+            getLogger().entering(this.getClass().getName(), "loadFile", file.getName());
             imgs.clear();
                 // Get a GIF decoder to decode the image if it's a GIF
             GifDecoder decoder = new GifDecoder();
                 // Try to decode the image and get the status of the decoder
             int status = decoder.read(file.toString());
+            getLogger().log(Level.FINER, "GifDecoder Status: {0}", status);
                 // If the image is a GIF that decoded just fine and there are 
                 // any frames in the image
             if (status == 0 && decoder.getFrameCount() > 0){
+                getLogger().log(Level.FINER, "Decoded {0} frames.", decoder.getFrameCount());
                     // Go through the decoded frames
                 for (int i = 0; i < decoder.getFrameCount(); i++){
                         // Get the current frame
@@ -5178,12 +5181,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (img != null)
                         imgs.add(img);
                 }
-            } else{ // Read the image from the file
+            } else{
+                getLogger().finer("Using ImageIO to read file.");
+                    // Read the image from the file
                 BufferedImage img = ImageIO.read(file);
                     // If the image is not null
                 if (img != null)
                     imgs.add(img);
             }
+            getLogger().log(Level.FINER, "Loaded {0} images from file.", imgs.size());
+            getLogger().exiting(this.getClass().getName(), "loadFile", !imgs.isEmpty());
             return !imgs.isEmpty();
         }
         @Override
