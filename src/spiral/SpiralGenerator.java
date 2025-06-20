@@ -6,6 +6,7 @@ package spiral;
 
 import anim.*;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
+import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
 import components.JColorSelector;
 import components.debug.DebugCapable;
@@ -5127,9 +5128,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected boolean loadFile(File file) throws IOException {
-            BufferedImage img = ImageIO.read(file);
-            if (img != null)
-                imgs.add(img);
+            imgs.clear();
+                // Get a GIF decoder to decode the image if it's a GIF
+            GifDecoder decoder = new GifDecoder();
+                // Try to decode the image and get the status of the decoder
+            int status = decoder.read(file.toString());
+                // If the image is a GIF that decoded just fine and there are 
+                // any frames in the image
+            if (status == 0 && decoder.getFrameCount() > 0){
+                    // Go through the decoded frames
+                for (int i = 0; i < decoder.getFrameCount(); i++){
+                        // Get the current frame
+                    BufferedImage img = decoder.getFrame(i);
+                        // If that frame is not null
+                    if (img != null)
+                        imgs.add(img);
+                }
+            } else{ // Read the image from the file
+                BufferedImage img = ImageIO.read(file);
+                    // If the image is not null
+                if (img != null)
+                    imgs.add(img);
+            }
             return !imgs.isEmpty();
         }
         @Override
