@@ -752,6 +752,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaInvertToggle = new javax.swing.JCheckBox();
         maskDesaturateLabel = new javax.swing.JLabel();
         maskDesaturateCombo = new javax.swing.JComboBox<>();
+        imgRotateLabel = new javax.swing.JLabel();
+        imgRotateSpinner = new javax.swing.JSpinner();
+        imgFlipHorizToggle = new javax.swing.JCheckBox();
+        imgFlipVertToggle = new javax.swing.JCheckBox();
+        imgAspectRatioButton = new javax.swing.JButton();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
         maskShapeWidthLabel = new javax.swing.JLabel();
@@ -1036,7 +1041,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -1051,6 +1056,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         maskImageCtrlPanel.add(imgMaskAntialiasingToggle, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1060,7 +1066,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.weightx = 0.5;
         maskImageCtrlPanel.add(filler14, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 4;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 0.5;
@@ -1184,8 +1190,74 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 4;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
+
+        imgRotateLabel.setLabelFor(imgRotateSpinner);
+        imgRotateLabel.setText("Rotation:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
+        maskImageCtrlPanel.add(imgRotateLabel, gridBagConstraints);
+
+        imgRotateSpinner.setModel(new javax.swing.SpinnerListModel(new String[] {"0", "90", "180", "270", "360"}));
+        imgRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                imgRotateSpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(imgRotateSpinner, gridBagConstraints);
+
+        imgFlipHorizToggle.setText("Flip Horizontally");
+        imgFlipHorizToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgFlipHorizToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(imgFlipHorizToggle, gridBagConstraints);
+
+        imgFlipVertToggle.setText("Flip Vertically");
+        imgFlipVertToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgFlipVertToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(imgFlipVertToggle, gridBagConstraints);
+
+        imgAspectRatioButton.setText("Apply Aspect Ratio");
+        imgAspectRatioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                imgAspectRatioButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -2656,6 +2728,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void checkUpdatesAtStartToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkUpdatesAtStartToggleActionPerformed
         config.setCheckForUpdateAtStartup(checkUpdatesAtStartToggle.isSelected());
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
+
+    private void imgRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_imgRotateSpinnerStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgRotateSpinnerStateChanged
+
+    private void imgFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgFlipHorizToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgFlipHorizToggleActionPerformed
+
+    private void imgFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgFlipVertToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgFlipVertToggleActionPerformed
+
+    private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3212,7 +3300,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel heightLabel;
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageCtrlPanel;
+    private javax.swing.JButton imgAspectRatioButton;
+    private javax.swing.JCheckBox imgFlipHorizToggle;
+    private javax.swing.JCheckBox imgFlipVertToggle;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
+    private javax.swing.JLabel imgRotateLabel;
+    private javax.swing.JSpinner imgRotateSpinner;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel latestVersLabel;
