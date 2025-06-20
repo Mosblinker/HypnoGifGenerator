@@ -118,6 +118,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_IMAGE_FRAME_INDEX_KEY = "MaskImageFrameIndex";
     
+    public static final String MASK_IMAGE_SCALING_METHOD_KEY = "MaskImageScalingMethod";
+    
     public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
     
     public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
@@ -1130,6 +1132,18 @@ public class SpiralGeneratorConfig {
     
     public void setMaskImageFrameIndex(int value){
         getMaskPreferences().putInt(MASK_IMAGE_FRAME_INDEX_KEY, value);
+    }
+    
+    public int getMaskImageScalingMethod(int defaultValue){
+        return getMaskPreferences().getInt(MASK_IMAGE_SCALING_METHOD_KEY, defaultValue);
+    }
+    
+    public int getMaskImageScalingMethod(){
+        return getMaskImageScalingMethod(0);
+    }
+    
+    public void setMaskImageScalingMethod(int value){
+        getMaskPreferences().putInt(MASK_IMAGE_SCALING_METHOD_KEY, value);
     }
     
     public double getMaskRotation(double defaultValue){
