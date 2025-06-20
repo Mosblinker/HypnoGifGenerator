@@ -185,7 +185,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     
-    protected static final double MASK_IMAGE_ROTATION_INCREMENT = 
+    private static final double MASK_ROTATION_INCREMENT = 
             GeometryMath.QUARTER_CIRCLE_DEGREES;
     /**
      * 
@@ -315,12 +315,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             spiralCompLabels.put(label.getLabelFor(), label);
         }
         
-            // A list to get the increments of rotation for the mask image
-        ArrayList<Double> imgRotateList = new ArrayList<>();
-            // Go through the possible rotations for the mask image
-        for (double i = 0; i <= GeometryMath.FULL_CIRCLE_DEGREES; i+= MASK_IMAGE_ROTATION_INCREMENT)
-            imgRotateList.add(i);
-        imgRotateSpinner.setModel(new SpinnerListModel(imgRotateList));
+            // A list to get the increments of rotation for the mask
+        ArrayList<Double> maskRotateList = new ArrayList<>();
+            // Go through the possible rotations for the mask
+        for (double i = 0; i <= GeometryMath.FULL_CIRCLE_DEGREES; i+= MASK_ROTATION_INCREMENT)
+            maskRotateList.add(i);
+        maskRotateSpinner.setModel(new SpinnerListModel(maskRotateList));
         
             // Create the icon for the program
         
@@ -764,10 +764,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskAlphaInvertToggle = new javax.swing.JCheckBox();
         maskDesaturateLabel = new javax.swing.JLabel();
         maskDesaturateCombo = new javax.swing.JComboBox<>();
-        imgRotateLabel = new javax.swing.JLabel();
-        imgRotateSpinner = new javax.swing.JSpinner();
-        imgFlipHorizToggle = new javax.swing.JCheckBox();
-        imgFlipVertToggle = new javax.swing.JCheckBox();
         imgAspectRatioButton = new javax.swing.JButton();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
@@ -783,6 +779,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
+        maskRotateLabel = new javax.swing.JLabel();
+        maskRotateSpinner = new javax.swing.JSpinner();
+        maskFlipHorizToggle = new javax.swing.JCheckBox();
+        maskFlipVertToggle = new javax.swing.JCheckBox();
         maskPopup = new javax.swing.JPopupMenu();
         testDialog = new javax.swing.JDialog(this);
         javax.swing.JPanel testCtrlPanel = new javax.swing.JPanel();
@@ -1017,7 +1017,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1053,7 +1053,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -1068,7 +1068,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         maskImageCtrlPanel.add(imgMaskAntialiasingToggle, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1202,59 +1201,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
         maskImageCtrlPanel.add(maskAlphaCtrlPanel, gridBagConstraints);
-
-        imgRotateLabel.setLabelFor(imgRotateSpinner);
-        imgRotateLabel.setText("Rotation:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 6);
-        maskImageCtrlPanel.add(imgRotateLabel, gridBagConstraints);
-
-        imgRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                imgRotateSpinnerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
-        maskImageCtrlPanel.add(imgRotateSpinner, gridBagConstraints);
-
-        imgFlipHorizToggle.setText("Flip Horizontally");
-        imgFlipHorizToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imgFlipHorizToggleActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
-        maskImageCtrlPanel.add(imgFlipHorizToggle, gridBagConstraints);
-
-        imgFlipVertToggle.setText("Flip Vertically");
-        imgFlipVertToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                imgFlipVertToggleActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
-        maskImageCtrlPanel.add(imgFlipVertToggle, gridBagConstraints);
 
         imgAspectRatioButton.setText("Apply Aspect Ratio");
         imgAspectRatioButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1263,10 +1212,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
 
@@ -1346,6 +1294,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        maskRotateLabel.setLabelFor(maskRotateSpinner);
+        maskRotateLabel.setText("Rotation:");
+
+        maskRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                maskRotateSpinnerStateChanged(evt);
+            }
+        });
+
+        maskFlipHorizToggle.setText("Flip Horizontally");
+        maskFlipHorizToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFlipHorizToggleActionPerformed(evt);
+            }
+        });
+
+        maskFlipVertToggle.setText("Flip Vertically");
+        maskFlipVertToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskFlipVertToggleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskDialogLayout = new javax.swing.GroupLayout(maskDialog.getContentPane());
         maskDialog.getContentPane().setLayout(maskDialogLayout);
         maskDialogLayout.setHorizontalGroup(
@@ -1354,13 +1325,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap()
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maskTabbedPane)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskDialogLayout.createSequentialGroup()
-                        .addComponent(maskScaleLabel)
+                    .addGroup(maskDialogLayout.createSequentialGroup()
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(maskScaleLabel)
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(maskRotateLabel)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(maskScaleSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                            .addComponent(maskRotateSpinner))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(resetMaskButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addComponent(maskFlipHorizToggle)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(maskDialogLayout.createSequentialGroup()
+                                .addComponent(maskFlipVertToggle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(resetMaskButton)))))
                 .addContainerGap())
         );
         maskDialogLayout.setVerticalGroup(
@@ -1372,6 +1355,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maskScaleLabel)
                     .addComponent(maskScaleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maskFlipHorizToggle))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(maskDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(maskRotateSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(maskRotateLabel)
+                        .addComponent(maskFlipVertToggle))
                     .addComponent(resetMaskButton))
                 .addContainerGap())
         );
@@ -2740,17 +2730,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setCheckForUpdateAtStartup(checkUpdatesAtStartToggle.isSelected());
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
 
-    private void imgRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_imgRotateSpinnerStateChanged
+    private void maskRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskRotateSpinnerStateChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_imgRotateSpinnerStateChanged
+    }//GEN-LAST:event_maskRotateSpinnerStateChanged
 
-    private void imgFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgFlipHorizToggleActionPerformed
+    private void maskFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipHorizToggleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_imgFlipHorizToggleActionPerformed
+    }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
 
-    private void imgFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgFlipVertToggleActionPerformed
+    private void maskFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipVertToggleActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_imgFlipVertToggleActionPerformed
+    }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
         // TODO add your handling code here:
@@ -3312,11 +3302,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner heightSpinner;
     private javax.swing.JPanel imageCtrlPanel;
     private javax.swing.JButton imgAspectRatioButton;
-    private javax.swing.JCheckBox imgFlipHorizToggle;
-    private javax.swing.JCheckBox imgFlipVertToggle;
     private javax.swing.JCheckBox imgMaskAntialiasingToggle;
-    private javax.swing.JLabel imgRotateLabel;
-    private javax.swing.JSpinner imgRotateSpinner;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JLabel latestVersLabel;
@@ -3339,9 +3325,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton maskEditButton;
     private javax.swing.JFileChooser maskFC;
     private components.JFileDisplayPanel maskFCPreview;
+    private javax.swing.JCheckBox maskFlipHorizToggle;
+    private javax.swing.JCheckBox maskFlipVertToggle;
     private javax.swing.JPanel maskImageCtrlPanel;
     private javax.swing.JPopupMenu maskPopup;
     private components.JThumbnailLabel maskPreviewLabel;
+    private javax.swing.JLabel maskRotateLabel;
+    private javax.swing.JSpinner maskRotateSpinner;
     private javax.swing.JLabel maskScaleLabel;
     private javax.swing.JSpinner maskScaleSpinner;
     private javax.swing.JLabel maskShapeHeightLabel;
