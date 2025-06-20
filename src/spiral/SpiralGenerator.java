@@ -456,7 +456,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
-        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageScalingMethod(
+        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
                 maskImgScaleMethodCombo.getSelectedIndex()));
         
             // Load the values for the components for controlling the spiral 
@@ -2739,7 +2739,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
                 maskImgScaleMethodCombo.setSelectedIndex(4);
-                config.setMaskImageScalingMethod(maskImgScaleMethodCombo.getSelectedIndex());
+                config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape
             case(2):
@@ -2896,7 +2896,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskFrameNextButtonActionPerformed
 
     private void maskImgScaleMethodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskImgScaleMethodComboActionPerformed
-        config.setMaskImageScalingMethod(maskImgScaleMethodCombo.getSelectedIndex());
+        config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
             // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
