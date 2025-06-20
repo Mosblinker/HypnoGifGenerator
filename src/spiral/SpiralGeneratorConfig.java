@@ -124,9 +124,9 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
     
-    public static final String MASK_ROTATION_KEY = "MaskImageRotation";
+    public static final String MASK_ROTATION_KEY = "MaskRotation";
     
-    public static final String MASK_FLAGS_KEY = "MaskImageFlags";
+    public static final String MASK_FLAGS_KEY = "MaskFlags";
     
     public static final String FRAME_DURATION_KEY = "FrameDuration";
     
