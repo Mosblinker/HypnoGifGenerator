@@ -507,6 +507,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         } else {
             config.setMaskImageFile(null);
+            config.setMaskImageFrameIndex(0);
         }
         
             // If the program is in debug mode
