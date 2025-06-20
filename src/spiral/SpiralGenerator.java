@@ -2743,21 +2743,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_checkUpdatesAtStartToggleActionPerformed
 
     private void maskRotateSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskRotateSpinnerStateChanged
-        config.setMaskRotation((double)maskRotateSpinner.getValue());
+        config.setMaskRotation(getMaskRotation());
             // Refresh the mask and preview
         refreshPreview(-1);
     }//GEN-LAST:event_maskRotateSpinnerStateChanged
 
     private void maskFlipHorizToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipHorizToggleActionPerformed
         config.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
-            // Refresh the mask and preview
-        refreshPreview(-1);
+        maskPreviewLabel.repaint();
+            // Refresh the preview
+        refreshPreview();
     }//GEN-LAST:event_maskFlipHorizToggleActionPerformed
 
     private void maskFlipVertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFlipVertToggleActionPerformed
         config.setMaskFlippedVertically(maskFlipVertToggle.isSelected());
-            // Refresh the mask and preview
-        refreshPreview(-1);
+        maskPreviewLabel.repaint();
+            // Refresh the preview
+        refreshPreview();
     }//GEN-LAST:event_maskFlipVertToggleActionPerformed
 
     private void imgAspectRatioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgAspectRatioButtonActionPerformed
@@ -2783,6 +2785,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private double getMaskScale(){
         return (double)maskScaleSpinner.getValue();
+    }
+    /**
+     * 
+     * @return 
+     */
+    private double getMaskRotation(){
+        return (double)maskRotateSpinner.getValue();
+    }
+    /**
+     * 
+     * @param rotation
+     * @return 
+     */
+    private boolean getSwapMaskSize(double rotation){
+        return rotation % GeometryMath.HALF_CIRCLE_DEGREES >= GeometryMath.QUARTER_CIRCLE_DEGREES;
+    }
+    /**
+     * 
+     * @return 
+     */
+    private boolean getSwapMaskSize(){
+        return getSwapMaskSize(getMaskRotation());
     }
     /**
      * This returns the style set for the font.
@@ -4317,6 +4341,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // maintaining the center
                 scale(g,centerX,centerY,maskFlipHorizToggle.isSelected()?-1:1,
                         maskFlipVertToggle.isSelected()?-1:1);
+                // Get the rotation for the scale
+            double rotation = getMaskRotation();
+                // Rotate the graphics context around the center
+            g.rotate(Math.toRadians(rotation), centerX, centerY);
+                // If the width and height should be swapped
+            if (getSwapMaskSize(rotation))
+                    // Translate it so that the center is actually at the center
+                g.translate(centerX - centerY, centerY - centerX);
         }
         /**
          * 
@@ -4349,6 +4381,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             RenderingHints.VALUE_ANTIALIAS_OFF);
                 // Transform the graphics for the mask
             transformGraphics(imgG,width,height);
+                // If the width and height should be swapped
+            if (getSwapMaskSize()){
+                    // Temporarily store the width
+                int temp = width;
+                width = height;
+                height = temp;
+            }
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
@@ -4384,8 +4423,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         public void maskOverlay(Graphics2D g, int width, int height){
+                // Get whether the width and height should be swapped
+            boolean swapSize = getSwapMaskSize();
                 // Get the mask to use
-            BufferedImage mask = getMask(width, height);
+            BufferedImage mask = getMask((swapSize)?height:width, 
+                    (swapSize)?width:height);
                 // If the mask is null
             if (mask == null)
                 return;
