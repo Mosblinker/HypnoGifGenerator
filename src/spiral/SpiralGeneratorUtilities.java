@@ -6,6 +6,7 @@ package spiral;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.color.ColorSpace;
@@ -389,5 +390,26 @@ public final class SpiralGeneratorUtilities {
     
     public static int setFlag(int flags, int flag, boolean value){
         return (value) ? (flags | flag) : (flags & ~flag);
+    }
+    
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, boolean fit, Dimension dim){
+        if (dim == null)
+            dim = new Dimension();
+        double srcRatio = ((double)srcWidth) / srcHeight;
+        double targetRatio = ((double)width) / height;
+            // If the two ratios are the same
+        if (Double.compare(srcRatio, targetRatio) == 0)
+            dim.setSize(width, height);
+        if ((srcRatio > targetRatio) == fit)
+            dim.setSize(width, (int)Math.round(width/srcRatio));
+        else
+            dim.setSize((int)Math.round(height*srcRatio), height);
+        return dim;
+    }
+    
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, Dimension dim){
+        return getTargetSize(srcWidth,srcHeight,width,height,true,dim);
     }
 }

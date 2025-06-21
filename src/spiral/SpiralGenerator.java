@@ -2859,33 +2859,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the overlay image is null
         if (image == null)
             return;
-            // Get the aspect ratio of the overlay image
-        double ratio = image.getWidth() / ((double)image.getHeight());
-            // If the aspect ratio of the overlay image is 1:1
-        if (ratio == 1){
-                // Get the larger of the spiral imagewidth and height
-            int size = Math.max(getImageWidth(), getImageHeight());
-                // Set the width of the spiral
-            widthSpinner.setValue(size);
-                // Set the height of the spiral
-            heightSpinner.setValue(size);
-            return;
-            // If the width and height of the mask will be swapped
-        } else if (getSwapMaskSize())
-            ratio = 1/ratio;
-            // Get the width of the spiral image
-        double width = getImageWidth();
-            // Get the height of the spiral image
-        double height = getImageHeight();
-            // If the height of the overlay image is greater than the width
-        if (ratio < 1)
-            height = width * 1/ratio;
-        else
-            width = height * ratio;
+            // Get the new target size for the image
+        Dimension dim = SpiralGeneratorUtilities.getTargetSize(
+                image.getWidth(), image.getHeight(), 
+                getImageWidth(), getImageHeight(), false, null);
             // Set the width of the spiral
-        widthSpinner.setValue((int)Math.floor(width));
+        widthSpinner.setValue(dim.width);
             // Set the height of the spiral
-        heightSpinner.setValue((int)Math.floor(height));
+        heightSpinner.setValue(dim.height);
     }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
 
     private void maskFramePrevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFramePrevButtonActionPerformed
