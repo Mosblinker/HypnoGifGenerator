@@ -456,6 +456,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
+        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
+                maskImgScaleMethodCombo.getSelectedIndex()));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -785,6 +787,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskFramePrevButton = new javax.swing.JButton();
         maskFrameLabel = new javax.swing.JLabel();
         maskFrameNextButton = new javax.swing.JButton();
+        maskImgScalePanel = new javax.swing.JPanel();
+        maskImgScaleMethodLabel = new javax.swing.JLabel();
+        javax.swing.Box.Filler filler14 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
+        maskImgScaleMethodCombo = new javax.swing.JComboBox<>();
         shapeMaskCtrlPanel = new javax.swing.JPanel();
         shapeMaskSizePanel = new javax.swing.JPanel();
         maskShapeWidthLabel = new javax.swing.JLabel();
@@ -1037,7 +1043,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1073,7 +1079,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImageCtrlPanel.add(loadMaskButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
         gridBagConstraints.weighty = 0.5;
         maskImageCtrlPanel.add(filler10, gridBagConstraints);
@@ -1222,7 +1228,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(imgAspectRatioButton, gridBagConstraints);
@@ -1231,7 +1237,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 6;
+        gridBagConstraints.gridheight = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
@@ -1271,6 +1277,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         maskImageCtrlPanel.add(maskFrameCtrlPanel, gridBagConstraints);
+
+        maskImgScalePanel.setLayout(new javax.swing.BoxLayout(maskImgScalePanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        maskImgScaleMethodLabel.setLabelFor(maskImgScaleMethodCombo);
+        maskImgScaleMethodLabel.setText("Scale Method:");
+        maskImgScalePanel.add(maskImgScaleMethodLabel);
+        maskImgScalePanel.add(filler14);
+
+        maskImgScaleMethodCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nearest Neighbor", "Bilinear", "Bicubic", "Smooth", "Thumbnailator" }));
+        maskImgScaleMethodCombo.setSelectedIndex(4);
+        maskImgScaleMethodCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskImgScaleMethodComboActionPerformed(evt);
+            }
+        });
+        maskImgScalePanel.add(maskImgScaleMethodCombo);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        maskImageCtrlPanel.add(maskImgScalePanel, gridBagConstraints);
 
         maskTabbedPane.addTab("Image", maskImageCtrlPanel);
 
@@ -2708,6 +2738,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
+                maskImgScaleMethodCombo.setSelectedIndex(
+                        SpiralGeneratorUtilities.SCALE_IMAGE_SETTING_THUMBNAILATOR);
+                config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape
             case(2):
@@ -2826,33 +2859,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the overlay image is null
         if (image == null)
             return;
-            // Get the aspect ratio of the overlay image
-        double ratio = image.getWidth() / ((double)image.getHeight());
-            // If the aspect ratio of the overlay image is 1:1
-        if (ratio == 1){
-                // Get the larger of the spiral imagewidth and height
-            int size = Math.max(getImageWidth(), getImageHeight());
-                // Set the width of the spiral
-            widthSpinner.setValue(size);
-                // Set the height of the spiral
-            heightSpinner.setValue(size);
-            return;
-            // If the width and height of the mask will be swapped
-        } else if (getSwapMaskSize())
-            ratio = 1/ratio;
-            // Get the width of the spiral image
-        double width = getImageWidth();
-            // Get the height of the spiral image
-        double height = getImageHeight();
-            // If the height of the overlay image is greater than the width
-        if (ratio < 1)
-            height = width * 1/ratio;
-        else
-            width = height * ratio;
+            // Get the new target size for the image
+        Dimension dim = SpiralGeneratorUtilities.getTargetSize(image, 
+                getImageWidth(), getImageHeight(), false);
             // Set the width of the spiral
-        widthSpinner.setValue((int)Math.floor(width));
+        widthSpinner.setValue(dim.width);
             // Set the height of the spiral
-        heightSpinner.setValue((int)Math.floor(height));
+        heightSpinner.setValue(dim.height);
     }//GEN-LAST:event_imgAspectRatioButtonActionPerformed
 
     private void maskFramePrevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFramePrevButtonActionPerformed
@@ -2862,6 +2875,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskFrameNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskFrameNextButtonActionPerformed
         setOverlayImage(overlayImageIndex+1);
     }//GEN-LAST:event_maskFrameNextButtonActionPerformed
+
+    private void maskImgScaleMethodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskImgScaleMethodComboActionPerformed
+        config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+            // Refresh the image mask and preview
+        refreshPreview(1);
+    }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3500,6 +3519,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton maskFrameNextButton;
     private javax.swing.JButton maskFramePrevButton;
     private javax.swing.JPanel maskImageCtrlPanel;
+    private javax.swing.JComboBox<String> maskImgScaleMethodCombo;
+    private javax.swing.JLabel maskImgScaleMethodLabel;
+    private javax.swing.JPanel maskImgScalePanel;
     private javax.swing.JPopupMenu maskPopup;
     private components.JThumbnailLabel maskPreviewLabel;
     private javax.swing.JLabel maskRotateLabel;
@@ -3639,6 +3661,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskFlipVertToggle.setEnabled(enabled);
         imgAspectRatioButton.setEnabled(enabled && !overlayImages.isEmpty());
         updateMaskFrameControlsEnabled();
+        maskImgScaleMethodCombo.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
     }
@@ -3830,7 +3853,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (mask.getWidth() != width || mask.getHeight() != height){
                 // Scale and center the overlay image
             return getCenteredImage(
-                    Thumbnailator.createThumbnail(image,width,height),
+                    SpiralGeneratorUtilities.scaleImage(image, width, height, 
+                            maskImgScaleMethodCombo.getSelectedIndex()),
                     width,height);
         }
         return mask;

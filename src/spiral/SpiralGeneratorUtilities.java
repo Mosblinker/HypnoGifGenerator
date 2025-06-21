@@ -6,8 +6,10 @@ package spiral;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
@@ -17,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
+import net.coobird.thumbnailator.Thumbnailator;
 
 /**
  *
@@ -25,6 +28,20 @@ import javax.imageio.ImageIO;
 public final class SpiralGeneratorUtilities {
     
     public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
+    
+    public static final int SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR = 0;
+    
+    public static final int SCALE_IMAGE_SETTING_BILINEAR = 1;
+    
+    public static final int SCALE_IMAGE_SETTING_BICUBIC = 2;
+    
+    public static final int SCALE_IMAGE_SETTING_SMOOTH = 3;
+    
+    public static final int SCALE_IMAGE_SETTING_THUMBNAILATOR = 4;
+    
+    public static final int FIRST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR;
+    
+    public static final int LAST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_THUMBNAILATOR;
     /**
      * 
      */
@@ -214,6 +231,48 @@ public final class SpiralGeneratorUtilities {
         int size = Math.max(image.getWidth(), image.getHeight());
         return getCenteredImage(image,size,size);
     }
+    
+    public static BufferedImage scaleImage(BufferedImage image,
+            int width,int height,int interpolation){
+            // If the interpolation is the thumbnailator
+        if (interpolation == SCALE_IMAGE_SETTING_THUMBNAILATOR)
+            return Thumbnailator.createThumbnail(image,width,height);
+            // Get the target size
+        Dimension target = getTargetSize(image,width,height);
+        BufferedImage img = new BufferedImage(target.width, target.height, BufferedImage.TYPE_INT_ARGB);
+        Image drawn = image;
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
+                RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
+                RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        switch(interpolation){
+            case(SCALE_IMAGE_SETTING_SMOOTH):
+                drawn = image.getScaledInstance(target.width, target.height, Image.SCALE_SMOOTH);
+                break;
+            default:
+                Object interValue;
+                switch(interpolation){
+                    case(SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR):
+                        interValue = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
+                        break;
+                    case(SCALE_IMAGE_SETTING_BILINEAR):
+                        interValue = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
+                        break;
+                    case(SCALE_IMAGE_SETTING_BICUBIC):
+                    default:
+                        interValue = RenderingHints.VALUE_INTERPOLATION_BICUBIC;
+                }
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interValue);
+        }
+        g.drawImage(drawn, 0, 0, target.width, target.height, null);
+        g.dispose();
+        return img;
+    }
     /**
      * 
      * @param r
@@ -362,12 +421,139 @@ public final class SpiralGeneratorUtilities {
         path.closePath();
         return path;
     }
-    
+    /**
+     * 
+     * @param flags
+     * @param flag
+     * @return 
+     */
     public static boolean getFlag(int flags, int flag){
         return (flags & flag) != 0;
     }
-    
+    /**
+     * 
+     * @param flags
+     * @param flag
+     * @param value
+     * @return 
+     */
     public static int setFlag(int flags, int flag, boolean value){
         return (value) ? (flags | flag) : (flags & ~flag);
+    }/**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param fit
+     * @param dim
+     * @return 
+     */
+    
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, boolean fit, Dimension dim){
+            // If the given dimension is null
+        if (dim == null)
+            dim = new Dimension();
+            // Get the aspect ratio of the source size
+        double srcRatio = ((double)srcWidth) / srcHeight;
+            // Get the aspect ratio of the target size
+        double targetRatio = ((double)width) / height;
+            // If the two ratios are the same
+        if (Double.compare(srcRatio, targetRatio) == 0)
+            dim.setSize(width, height);
+        if ((srcRatio > targetRatio) == fit)
+            dim.setSize(width, (int)Math.round(width/srcRatio));
+        else
+            dim.setSize((int)Math.round(height*srcRatio), height);
+        return dim;
+    }
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param fit
+     * @return 
+     */
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, boolean fit){
+        return getTargetSize(srcWidth,srcHeight,width,height,fit,
+                new Dimension());
+    }
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param dim
+     * @return 
+     */
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, Dimension dim){
+        return getTargetSize(srcWidth,srcHeight,width,height,true,dim);
+    }
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height){
+        return getTargetSize(srcWidth,srcHeight,width,height,true);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param fit
+     * @param dim
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, boolean fit, Dimension dim){
+        return getTargetSize(image.getWidth(), image.getHeight(),width,height,
+                fit,dim);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param fit
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, boolean fit){
+        return getTargetSize(image,width,height,fit,new Dimension());
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param dim
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, Dimension dim){
+        return getTargetSize(image,width,height,true,dim);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height){
+        return getTargetSize(image,width,height,true);
     }
 }
