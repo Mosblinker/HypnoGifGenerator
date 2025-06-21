@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
@@ -233,7 +234,44 @@ public final class SpiralGeneratorUtilities {
     
     public static BufferedImage scaleImage(BufferedImage image,
             int width,int height,int interpolation){
-        return Thumbnailator.createThumbnail(image,width,height);
+            // If the interpolation is the thumbnailator
+        if (interpolation == SCALE_IMAGE_SETTING_THUMBNAILATOR)
+            return Thumbnailator.createThumbnail(image,width,height);
+            // Get the target size
+        Dimension target = getTargetSize(image,width,height);
+        BufferedImage img = new BufferedImage(target.width, target.height, BufferedImage.TYPE_INT_ARGB);
+        Image drawn = image;
+        Graphics2D g = img.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, 
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, 
+                RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, 
+                RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        switch(interpolation){
+            case(SCALE_IMAGE_SETTING_SMOOTH):
+                drawn = image.getScaledInstance(target.width, target.height, Image.SCALE_SMOOTH);
+                break;
+            default:
+                Object interValue;
+                switch(interpolation){
+                    case(SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR):
+                        interValue = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
+                        break;
+                    case(SCALE_IMAGE_SETTING_BILINEAR):
+                        interValue = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
+                        break;
+                    case(SCALE_IMAGE_SETTING_BICUBIC):
+                    default:
+                        interValue = RenderingHints.VALUE_INTERPOLATION_BICUBIC;
+                }
+                g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interValue);
+        }
+        g.drawImage(drawn, 0, 0, target.width, target.height, null);
+        g.dispose();
+        return img;
     }
     /**
      * 
