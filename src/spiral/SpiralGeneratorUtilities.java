@@ -383,20 +383,43 @@ public final class SpiralGeneratorUtilities {
         path.closePath();
         return path;
     }
-    
+    /**
+     * 
+     * @param flags
+     * @param flag
+     * @return 
+     */
     public static boolean getFlag(int flags, int flag){
         return (flags & flag) != 0;
     }
-    
+    /**
+     * 
+     * @param flags
+     * @param flag
+     * @param value
+     * @return 
+     */
     public static int setFlag(int flags, int flag, boolean value){
         return (value) ? (flags | flag) : (flags & ~flag);
-    }
+    }/**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param fit
+     * @param dim
+     * @return 
+     */
     
     public static Dimension getTargetSize(int srcWidth, int srcHeight, 
             int width, int height, boolean fit, Dimension dim){
+            // If the given dimension is null
         if (dim == null)
             dim = new Dimension();
+            // Get the aspect ratio of the source size
         double srcRatio = ((double)srcWidth) / srcHeight;
+            // Get the aspect ratio of the target size
         double targetRatio = ((double)width) / height;
             // If the two ratios are the same
         if (Double.compare(srcRatio, targetRatio) == 0)
@@ -407,9 +430,92 @@ public final class SpiralGeneratorUtilities {
             dim.setSize((int)Math.round(height*srcRatio), height);
         return dim;
     }
-    
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param fit
+     * @return 
+     */
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height, boolean fit){
+        return getTargetSize(srcWidth,srcHeight,width,height,fit,
+                new Dimension());
+    }
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @param dim
+     * @return 
+     */
     public static Dimension getTargetSize(int srcWidth, int srcHeight, 
             int width, int height, Dimension dim){
         return getTargetSize(srcWidth,srcHeight,width,height,true,dim);
+    }
+    /**
+     * 
+     * @param srcWidth
+     * @param srcHeight
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static Dimension getTargetSize(int srcWidth, int srcHeight, 
+            int width, int height){
+        return getTargetSize(srcWidth,srcHeight,width,height,true);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param fit
+     * @param dim
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, boolean fit, Dimension dim){
+        return getTargetSize(image.getWidth(), image.getHeight(),width,height,
+                fit,dim);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param fit
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, boolean fit){
+        return getTargetSize(image,width,height,fit,new Dimension());
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param dim
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height, Dimension dim){
+        return getTargetSize(image,width,height,true,dim);
+    }
+    /**
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @return 
+     */
+    public static Dimension getTargetSize(BufferedImage image, 
+            int width, int height){
+        return getTargetSize(image,width,height,true);
     }
 }

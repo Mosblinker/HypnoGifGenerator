@@ -2860,9 +2860,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (image == null)
             return;
             // Get the new target size for the image
-        Dimension dim = SpiralGeneratorUtilities.getTargetSize(
-                image.getWidth(), image.getHeight(), 
-                getImageWidth(), getImageHeight(), false, null);
+        Dimension dim = SpiralGeneratorUtilities.getTargetSize(image, 
+                getImageWidth(), getImageHeight(), false);
             // Set the width of the spiral
         widthSpinner.setValue(dim.width);
             // Set the height of the spiral
