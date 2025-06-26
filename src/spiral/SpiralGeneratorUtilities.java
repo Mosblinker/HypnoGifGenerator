@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -426,6 +427,16 @@ public final class SpiralGeneratorUtilities {
     }
     /**
      * 
+     * @param rect
+     * @param path
+     * @return 
+     */
+    public static Path2D getHeartShape(RectangularShape rect, Path2D path){
+        return getHeartShape(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight(),
+                path);
+    }
+    /**
+     * 
      * @param x
      * @param y
      * @param w
@@ -446,6 +457,18 @@ public final class SpiralGeneratorUtilities {
                 x + (w * ctrlPts[3]), y + (h * ctrlPts[4]), 
                 centerX, y + (h * ctrlPts[0]));
         return curve;
+    }
+    /**
+     * 
+     * @param rect
+     * @param right
+     * @param curve
+     * @return 
+     */
+    public static CubicCurve2D getHeartHalfCurve(RectangularShape rect, 
+            boolean right, CubicCurve2D curve){
+        return getHeartHalfCurve(rect.getX(),rect.getY(),rect.getWidth(),
+                rect.getHeight(),right,curve);
     }
     /**
      * 
