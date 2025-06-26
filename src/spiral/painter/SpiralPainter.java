@@ -84,6 +84,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         this.clockwise = painter.clockwise;
         this.radius = painter.radius;
         this.thickness = painter.thickness;
+        this.rotation = painter.rotation;
     }
     /**
      * 
