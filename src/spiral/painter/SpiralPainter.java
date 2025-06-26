@@ -30,6 +30,9 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
     public static final String CLOCKWISE_PROPERTY_CHANGED = 
             "ClockwisePropertyChanged";
     
+    public static final String SPIN_CLOCKWISE_PROPERTY_CHANGED = 
+            "SpinClockwisePropertyChanged";
+    
     public static final String ROTATION_PROPERTY_CHANGED = 
             "RotationPropertyChanged";
     
@@ -39,6 +42,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
     private static final int BYTE_ARRAY_LENGTH = Double.BYTES*3 + 1;
     
     private static final int CLOCKWISE_BIT_FLAG = 0x01;
+    
+    private static final int SPIN_CLOCKWISE_BIT_FLAG = 0x02;
     /**
      * This is the angle typically used for interpolating the spiral curve. The
      * end of each segment is {@value INTERPOLATION_ANGLE} degrees away from the 
@@ -49,6 +54,10 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * This stores whether this spiral is clockwise or counter-clockwise.
      */
     private boolean clockwise = true;
+    /**
+     * This stores whether this spiral will spin clockwise or counter-clockwise.
+     */
+    private boolean spinClockwise = true;
     /**
      * This is the spiral radius that controls the size of the spirals.
      */
@@ -85,6 +94,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         this.radius = painter.radius;
         this.thickness = painter.thickness;
         this.rotation = painter.rotation;
+        this.spinClockwise = painter.spinClockwise;
     }
     /**
      * 
@@ -184,6 +194,28 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      */
     public boolean isClockwise(){
         return clockwise;
+    }
+    /**
+     * This sets whether this spiral will spin clockwise or counter-clockwise.
+     * @param value {@code true} if this spiral spins clockwise, {@code false} 
+     * if this spiral spins counter-clockwise.
+     * @see #isSpinClockwise() 
+     */
+    public void setSpinClockwise(boolean value){
+            // If the spin clockwise value would change
+        if (this.spinClockwise != value){
+            this.spinClockwise = value;
+            firePropertyChange(SPIN_CLOCKWISE_PROPERTY_CHANGED,!spinClockwise,
+                    spinClockwise);
+        }
+    }
+    /**
+     * This returns whether this spiral spins clockwise or counter-clockwise.
+     * @return {@code true} if this spiral spins clockwise, {@code false} if 
+     * this spiral spins counter-clockwise.
+     */
+    public boolean isSpinClockwise(){
+        return spinClockwise;
     }
     /**
      * 
@@ -512,11 +544,14 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         setSpiralRadius(getDefaultRadius());
         setThickness(getDefaultThickness());
         setRotation(0.0);
+        setSpinClockwise(true);
     }
     @Override
     protected String paramString(){
             // If the spiral is counter-clockwise, say so
         return ((isClockwise())?"":"counter-")+"clockwise"+
+                    // If the spiral spins counter-clockwise, say so
+                ",spin="+(((isSpinClockwise())?"":"counter-")+"clockwise")+
                 ",spiralRadius="+getSpiralRadius()+
                 ",thickness="+getThickness()+
                 ",rotation="+getRotation();
