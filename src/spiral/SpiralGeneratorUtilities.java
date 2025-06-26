@@ -543,7 +543,7 @@ public final class SpiralGeneratorUtilities {
      * @return 
      */
     public static Path2D getStarShape(RectangularShape rect, Path2D path){
-        return getStarShape(rect,path);
+        return getStarShape(rect,path,null);
     }
     /**
      * 
