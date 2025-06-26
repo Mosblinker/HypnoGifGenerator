@@ -306,12 +306,15 @@ public class ArithmeticSpiralPainter extends PolarSpiralPainter {
                     point3,path);
             point1.setLocation(point3);
             prevP = p;
-        }   // If the spiral is reversed and has not reached the center of the 
-            // spiral due to the mismatch
-        if (reverse && prevP != p0){
+        }   // This is the target azimuth of the spiral curve. If the spiral is 
+            // reversed, then this is the center of the spiral. Otherwise, this 
+            // is the outermost point on the curve
+        double targetP = (reverse) ? p0 : p1;
+            // If the target azimuth has not been reached
+        if (prevP != targetP){
                 // Process the part of the spiral between the azimuths
-            processLinearSpiral(b,prevP,p0,angle,clockwise,x,y,point1,point2,
-                    point3,path);
+            processLinearSpiral(b,prevP,targetP,angle,clockwise,x,y,point1,
+                    point2,point3,path);
             point1.setLocation(point3);
         }
         return path;
