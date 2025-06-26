@@ -111,8 +111,8 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
         }   // A for loop to draw the circles that make up this spiral
         for (double r = startR; r <= r1; r+= m){
                 // Set the frame for the shape with the current radius
-            shape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Draw the shape
+            rectShape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
             g.draw(rectShape);
         }
     }
