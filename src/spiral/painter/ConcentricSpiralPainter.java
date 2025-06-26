@@ -85,8 +85,10 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                     // If the scratch rectangle object is null
                 if (rect == null)
                     rect = new Rectangle2D.Double();
-                    // Make the maximum radius the larger of the width and height
-                r1 = Math.max(width, height);
+                    // Make the maximum radius the larger of the width and height,
+                    // adjusted by the center x and y
+                r1 = Math.max(width*(1+Math.abs(model.getCenterX()-0.5)*2), 
+                        height*(1+Math.abs(model.getCenterY()-0.5)*2));
                     // Adjust the maximum radius to account for the start radius
                 r1 -= ((r1 - startR) % m);
                     // Go through the radiuses for the shapes
