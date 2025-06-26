@@ -803,6 +803,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeHeightSpinner = new javax.swing.JSpinner();
         javax.swing.Box.Filler filler18 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         maskShapeLinkSizeToggle = new javax.swing.JCheckBox();
+        maskShapeLabel = new javax.swing.JLabel();
+        maskShapeCombo = new javax.swing.JComboBox<>();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1340,12 +1342,35 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 25;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         shapeMaskCtrlPanel.add(shapeMaskSizePanel, gridBagConstraints);
 
-        maskTabbedPane.addTab("Heart", shapeMaskCtrlPanel);
+        maskShapeLabel.setLabelFor(maskShapeCombo);
+        maskShapeLabel.setText("Shape:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        shapeMaskCtrlPanel.add(maskShapeLabel, gridBagConstraints);
+
+        maskShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Heart" }));
+        maskShapeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskShapeComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        shapeMaskCtrlPanel.add(maskShapeCombo, gridBagConstraints);
+
+        maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -2807,6 +2832,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 updateWorker.execute();
         }
     }//GEN-LAST:event_aboutPanelActionPerformed
+
+    private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maskShapeComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3445,8 +3474,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner maskRotateSpinner;
     private javax.swing.JLabel maskScaleLabel;
     private javax.swing.JSpinner maskScaleSpinner;
+    private javax.swing.JComboBox<String> maskShapeCombo;
     private javax.swing.JLabel maskShapeHeightLabel;
     private javax.swing.JSpinner maskShapeHeightSpinner;
+    private javax.swing.JLabel maskShapeLabel;
     private javax.swing.JCheckBox maskShapeLinkSizeToggle;
     private javax.swing.JLabel maskShapeWidthLabel;
     private javax.swing.JSpinner maskShapeWidthSpinner;
