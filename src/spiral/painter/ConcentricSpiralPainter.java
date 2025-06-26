@@ -103,6 +103,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Get the radius for the first shape
             double r = startR+halfWidth;
                 // Set the frame for the shape with the radius
+            rectShape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Fill this shape
             g.fill(rectShape);
                 // Move on to the next shape
