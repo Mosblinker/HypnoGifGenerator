@@ -37,6 +37,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             new ImmutableSpiralModel(Color.WHITE,Color.BLACK,0.0);
     
     private static final int BYTE_ARRAY_LENGTH = Double.BYTES*3 + 1;
+    
+    private static final int CLOCKWISE_BIT_FLAG = 0x01;
     /**
      * This is the angle typically used for interpolating the spiral curve. The
      * end of each segment is {@value INTERPOLATION_ANGLE} degrees away from the 
@@ -450,7 +452,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             if (temp != null && temp.length > 0)
                 System.arraycopy(temp, 0, arr, 0, Math.min(temp.length,offset));
         }
-        arr[offset] = (byte)((isClockwise()) ? 0x01 : 0x00);
+        arr[offset] = (byte)((isClockwise()) ? CLOCKWISE_BIT_FLAG : 0x00);
         ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
         buffer.putDouble(getSpiralRadius());
         buffer.putDouble(getThickness());
@@ -480,7 +482,7 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
         int length = getByteArrayLength()+BYTE_ARRAY_LENGTH;
         if (arr == null || (arr.length - offset) < length)
             return;
-        setClockwise((arr[offset] & 0x01) != 0);
+        setClockwise((arr[offset] & CLOCKWISE_BIT_FLAG) != 0);
         ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1)
                 .asReadOnlyBuffer();
         setSpiralRadius(buffer.getDouble());
