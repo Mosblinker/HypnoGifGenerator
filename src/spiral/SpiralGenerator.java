@@ -1577,6 +1577,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         aboutPanel.setProgramName(PROGRAM_NAME);
         aboutPanel.setProgramVersion(PROGRAM_VERSION);
+        aboutPanel.setProgramWebsiteText("Visit the Github Repository");
+        aboutPanel.setProgramWebsiteURI(java.net.URI.create("https://github.com/Mosblinker/HypnoGifGenerator"));
         aboutPanel.setUpdateButtonIsShown(true);
         aboutPanel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

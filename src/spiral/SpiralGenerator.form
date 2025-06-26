@@ -1156,6 +1156,10 @@
             <Property name="programVersion" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="PROGRAM_VERSION" type="code"/>
             </Property>
+            <Property name="programWebsiteText" type="java.lang.String" value="Visit the Github Repository"/>
+            <Property name="programWebsiteURI" type="java.net.URI" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="java.net.URI.create(&quot;https://github.com/Mosblinker/HypnoGifGenerator&quot;)" type="code"/>
+            </Property>
             <Property name="updateButtonIsShown" type="boolean" value="true"/>
           </Properties>
           <Events>
