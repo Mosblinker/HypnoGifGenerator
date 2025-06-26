@@ -434,7 +434,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeWidthSpinner.setValue(config.getMaskShapeWidth());
         maskShapeHeightSpinner.setValue(config.getMaskShapeHeight());
         updateMaskShapeControlsEnabled();
-        spinDirCombo.setSelectedIndex((config.isSpinClockwise())?0:1);
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
         imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
         lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
@@ -712,6 +711,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
         angleSpinner.setValue(painter.getRotation());
+        spinDirCombo.setSelectedIndex((painter.isSpinClockwise())?0:1);
             // Get if the painter is logarithmic
         boolean isLog = painter instanceof LogarithmicSpiral;
             // If the painter is logaritmic
@@ -2339,7 +2339,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     i,spiralPainters[i]);
         }
         System.out.println("Bounds: " + getBounds());
-        System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue()));
+        System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue(),getSpiralPainter()));
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
@@ -2396,8 +2396,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_dirComboActionPerformed
 
     private void spinDirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinDirComboActionPerformed
-        config.setSpinClockwise(isSpinClockwise());
-        refreshPreview();
+            // Set the spin direction for the currently selected spiral
+        getSpiralPainter().setSpinClockwise(spinDirCombo.getSelectedIndex() == 0);
     }//GEN-LAST:event_spinDirComboActionPerformed
 
     private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
@@ -2495,7 +2495,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
         heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
-        spinDirCombo.setSelectedIndex(0);
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
             painter.reset();
@@ -2886,13 +2885,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This returns the rotation for the frame with the given index.
      * @param frameIndex The index of the frame.
+     * @param painter The spiral painter being used.
      * @return The rotation to apply to the spiral for the frame.
      */
-    private double getFrameRotation(int frameIndex){
+    private double getFrameRotation(int frameIndex, SpiralPainter painter){
             // Get the angle to use for the rotation
         double angle = SPIRAL_FRAME_ROTATION*frameIndex;
             // If the spin direction is not the same as the spiral's direction
-        if (isSpinClockwise() != getSpiralPainter().isClockwise())
+        if (painter.isSpinClockwise() != painter.isClockwise())
                 // Invert the angle, so as to make it spin in the right direction
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
             // Bound the angle by 360
@@ -3879,7 +3879,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (width <= 0 || height <= 0)
             return;
             // Get the angle of rotation for the spiral
-        double angle = getFrameRotation(frameIndex);
+        double angle = getFrameRotation(frameIndex,spiralPainter);
             // Go through the spiral models
         for (SpiralModel model : models)
             model.setRotation(angle);
@@ -4100,6 +4100,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(SpiralPainter.CLOCKWISE_PROPERTY_CHANGED):
                 case(ShapedSpiral.SHAPE_PROPERTY_CHANGED):
                 case(SpiralPainter.ROTATION_PROPERTY_CHANGED):
+                case(SpiralPainter.SPIN_CLOCKWISE_PROPERTY_CHANGED):
                         // If there is a spiral painter
                     if (painter != null)
                         config.setSpiralData(painter);
