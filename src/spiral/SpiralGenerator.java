@@ -2306,11 +2306,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_loadMaskButtonActionPerformed
 
     private void frameFirstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frameFirstButtonActionPerformed
-        frameSlider.setValue(0);
+        setFrameIndex(0);
     }//GEN-LAST:event_frameFirstButtonActionPerformed
 
     private void framePrevButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_framePrevButtonActionPerformed
-        frameSlider.setValue((SPIRAL_FRAME_COUNT+frameSlider.getValue()-1)%SPIRAL_FRAME_COUNT);
+        setFrameIndex((SPIRAL_FRAME_COUNT+frameIndex-1)%SPIRAL_FRAME_COUNT);
     }//GEN-LAST:event_framePrevButtonActionPerformed
 
     private void framePlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_framePlayButtonActionPerformed
@@ -2329,15 +2329,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void frameSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_frameSliderStateChanged
         getLogger().entering(this.getClass().getName(), "frameSliderStateChanged");
-        updateFrameNavigation();
-        try{
-            previewLabel.repaint();
-        } catch (NullPointerException ex){
-            getLogger().log(Level.WARNING, 
-                    "Null encountered while repainting preview label for frame " 
-                            + frameSlider.getValue(), ex);
-        }
-        updateFrameNumberDisplayed();
+        setFrameIndex(frameSlider.getValue());
         getLogger().exiting(this.getClass().getName(), "frameSliderStateChanged");
     }//GEN-LAST:event_frameSliderStateChanged
 
@@ -2346,15 +2338,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateFrameControls();
         updateControlsEnabled();
         animationTimer.stop();
-        frameSlider.setValue(0);
+        setFrameIndex(0);
     }//GEN-LAST:event_frameStopButtonActionPerformed
 
     private void frameNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frameNextButtonActionPerformed
-        frameSlider.setValue((frameSlider.getValue()+1)%SPIRAL_FRAME_COUNT);
+        setFrameIndex((frameIndex+1)%SPIRAL_FRAME_COUNT);
     }//GEN-LAST:event_frameNextButtonActionPerformed
 
     private void frameLastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_frameLastButtonActionPerformed
-        frameSlider.setValue(SPIRAL_FRAME_COUNT-1);
+        setFrameIndex(SPIRAL_FRAME_COUNT-1);
     }//GEN-LAST:event_frameLastButtonActionPerformed
 
     private void printTestButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printTestButtonActionPerformed
@@ -2366,7 +2358,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     i,spiralPainters[i]);
         }
         System.out.println("Bounds: " + getBounds());
-        System.out.println("Rotation: " + getFrameRotation(frameSlider.getValue(),getSpiralPainter()));
+        System.out.println("Rotation: " + getFrameRotation(frameIndex,getSpiralPainter()));
     }//GEN-LAST:event_printTestButtonActionPerformed
     /**
      * 
@@ -3038,10 +3030,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void updateFrameNavigation(){
         framePrevButton.setEnabled(frameSlider.isEnabled());
         frameFirstButton.setEnabled(framePrevButton.isEnabled() && 
-                frameSlider.getValue() > frameSlider.getMinimum());
+                frameIndex > frameSlider.getMinimum());
         frameNextButton.setEnabled(frameSlider.isEnabled());
         frameLastButton.setEnabled(frameNextButton.isEnabled() && 
-                frameSlider.getValue() < frameSlider.getMaximum());
+                frameIndex < frameSlider.getMaximum());
     }
     /**
      * 
@@ -3085,10 +3077,38 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param index 
+     */
+    private void setFrameIndex(int index){
+        if (index == frameIndex)
+            return;
+        getLogger().entering(this.getClass().getName(), "setFrameIndex", index);
+        int old = frameIndex;
+        frameIndex = index;
+        updateFrameNavigation();
+        try{
+            refreshPreview();
+        } catch (NullPointerException ex){
+            getLogger().log(Level.WARNING, 
+                    "Null encountered while repainting preview label for frame " 
+                            + frameIndex, ex);
+        }
+        updateFrameNumberDisplayed();
+        try{
+            frameSlider.setValue(frameIndex);
+        } catch (NullPointerException ex){
+            getLogger().log(Level.WARNING, 
+                    "Null encountered while incrementing frame ("+old+" -> "+
+                            frameIndex + ")", ex);
+        }
+        getLogger().exiting(this.getClass().getName(), "setFrameIndex");
+    }
+    /**
+     * 
      */
     private void updateFrameNumberDisplayed(){
             // Get the text to display on the frame number label
-        String text = String.format("Frame: %d / %d", frameSlider.getValue()+1,
+        String text = String.format("Frame: %d / %d", frameIndex+1,
                 SPIRAL_FRAME_COUNT);
         frameNumberLabel.setText(text);
     }
@@ -3110,17 +3130,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (printFPSToggle.isSelected()){
             System.out.printf("Last Frame: %5d ms, Avg: %10.5f, Target: %5d%n", 
                     diff, frameTimeTotal/((double)frameTotal), animationTimer.getDelay());
-        }   // Get the current frame index
-        int frame = frameSlider.getValue();
-            // Get the index for the next frame
-        int next = (frame+1)%SPIRAL_FRAME_COUNT;
-        try{
-            frameSlider.setValue(next);
-        } catch (NullPointerException ex){
-            getLogger().log(Level.WARNING, 
-                    "Null encountered while incrementing frame ("+frame+" -> "+
-                            next + ")", ex);
-        }
+        }   // Increment the frame index, wrapping around at the end
+        setFrameIndex((frameIndex+1)%SPIRAL_FRAME_COUNT);
         getLogger().exiting(this.getClass().getName(), "progressAnimation");
     }
     /**
@@ -3306,6 +3317,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * animation started playing.
      */
     private int frameTotal = 0;
+    /**
+     * This is the index of the current frame.
+     */
+    private int frameIndex = 0;
     /**
      * This is a scratch dimension object used to store the dimensions of the 
      * font chooser dialog.
@@ -3992,7 +4007,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
             g.translate(x, y);
-            paintSpiralDesign(g,frameSlider.getValue(), getIconWidth(), 
+            paintSpiralDesign(g,frameIndex, getIconWidth(), 
                     getIconHeight(),getSpiralPainter(),overlayMask);
         }
         @Override
