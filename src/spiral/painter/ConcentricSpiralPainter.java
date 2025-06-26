@@ -55,7 +55,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
             }   // Set the color to use to the foreground color
             g.setColor(model.getColor2());
         }   // This is the shape to use to render the concentric shapes
-        RectangularShape shape;
+        RectangularShape rectShape;
             // Determine the shape to use for the spiral
         switch (getShape()){
                 // If the shape is a diamond
@@ -68,13 +68,13 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                     // If the scratch rectangle object is null
                 if (rect == null)
                     rect = new Rectangle2D.Double();
-                shape = rect;
+                rectShape = rect;
                 break;
             default:
                     // If the scratch ellipse object is null
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
-                shape = ellipse;
+                rectShape = ellipse;
         }   // Bound the angle
         angle = GeometryMath.boundDegrees(angle);
             // Get the amount by which to increase the radiuses of the shapes by
@@ -103,9 +103,8 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Get the radius for the first shape
             double r = startR+halfWidth;
                 // Set the frame for the shape with the radius
-            shape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Fill this shape
-            g.fill(shape);
+            g.fill(rectShape);
                 // Move on to the next shape
             startR += m;
         }   // A for loop to draw the circles that make up this spiral
@@ -113,7 +112,7 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Set the frame for the shape with the current radius
             shape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Draw the shape
-            g.draw(shape);
+            g.draw(rectShape);
         }
     }
     @Override
