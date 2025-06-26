@@ -82,13 +82,13 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
         switch (getShape()){
                 // If the shape is a heart
             case HEART:
+                // If the shape is a star
+            case STAR:
                     // If the scratch rectangle object is null
                 if (rect == null)
                     rect = new Rectangle2D.Double();
-                    // Make the maximum radius the larger of the width and height,
-                    // adjusted by the center x and y
-                r1 = Math.max(width*(1+Math.abs(model.getCenterX()-0.5)*2), 
-                        height*(1+Math.abs(model.getCenterY()-0.5)*2));
+                    // Get the maximum radius for the shapes
+                r1 = getMaximumRadius(width,height,model,getShape());
                     // Adjust the maximum radius to account for the start radius
                 r1 -= ((r1 - startR) % m);
                     // Go through the radiuses for the shapes
@@ -165,6 +165,8 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
      */
     protected Shape createShape(double centerX, double centerY, double r, 
             SpiralShape shape, Rectangle2D rect){
+        if (shape == SpiralShape.STAR)
+            r *= 2;
             // Set the frame for the shape with the given radius
         rect.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
             // Determine what shape to produce
@@ -172,9 +174,38 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // If the shape is a heart
             case HEART:
                     // Create the heart shape
-                return path = SpiralGeneratorUtilities.getHeartShape(rect, path);
+                return path = SpiralGeneratorUtilities.getHeartShape(rect,path);
+                // If the shape is a star
+            case STAR:
+                    // Create the star shape
+                return path = SpiralGeneratorUtilities.getStarShape(rect, path);
             default:
                 return rect;
+        }
+    }
+    /**
+     * 
+     * @param width
+     * @param height
+     * @param model
+     * @param shape
+     * @return 
+     */
+    protected double getMaximumRadius(double width, double height, 
+            SpiralModel model, SpiralShape shape){
+            // Make the maximum radius the larger of the width and height, 
+            // adjusted by the center x and y
+        double r = Math.max(width*(1+Math.abs(model.getCenterX()-0.5)*2), 
+                        height*(1+Math.abs(model.getCenterY()-0.5)*2));
+            // Determine what shape is being used
+        switch(shape){
+                // If the shape is a heart
+            case HEART:
+            default:
+                return r;
+                // If the shape is a star
+            case STAR:
+                return r*2;
         }
     }
     @Override
