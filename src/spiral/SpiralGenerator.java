@@ -458,6 +458,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
         maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
                 maskImgScaleMethodCombo.getSelectedIndex()));
+        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
+                config.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -803,6 +805,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeHeightSpinner = new javax.swing.JSpinner();
         javax.swing.Box.Filler filler18 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
         maskShapeLinkSizeToggle = new javax.swing.JCheckBox();
+        maskShapeLabel = new javax.swing.JLabel();
+        maskShapeCombo = new javax.swing.JComboBox<>();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1340,12 +1344,35 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.ipadx = 25;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
         shapeMaskCtrlPanel.add(shapeMaskSizePanel, gridBagConstraints);
 
-        maskTabbedPane.addTab("Heart", shapeMaskCtrlPanel);
+        maskShapeLabel.setLabelFor(maskShapeCombo);
+        maskShapeLabel.setText("Shape:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        shapeMaskCtrlPanel.add(maskShapeLabel, gridBagConstraints);
+
+        maskShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Heart", "Star" }));
+        maskShapeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskShapeComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        shapeMaskCtrlPanel.add(maskShapeCombo, gridBagConstraints);
+
+        maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -2672,6 +2699,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskShapeWidthSpinner.setValue(0.1);
                 updateMaskShapeControlsEnabled();
                 config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+                maskShapeCombo.setSelectedIndex(0);
+                config.setMaskShapeType(0);
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
@@ -2807,6 +2836,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 updateWorker.execute();
         }
     }//GEN-LAST:event_aboutPanelActionPerformed
+
+    private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
+        config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        refreshPreview(2);
+    }//GEN-LAST:event_maskShapeComboActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3445,8 +3479,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner maskRotateSpinner;
     private javax.swing.JLabel maskScaleLabel;
     private javax.swing.JSpinner maskScaleSpinner;
+    private javax.swing.JComboBox<String> maskShapeCombo;
     private javax.swing.JLabel maskShapeHeightLabel;
     private javax.swing.JSpinner maskShapeHeightSpinner;
+    private javax.swing.JLabel maskShapeLabel;
     private javax.swing.JCheckBox maskShapeLinkSizeToggle;
     private javax.swing.JLabel maskShapeWidthLabel;
     private javax.swing.JSpinner maskShapeWidthSpinner;
@@ -3787,8 +3823,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             double h, Path2D path){
         w *= width;
         h *= height;
-        path = SpiralGeneratorUtilities.getHeartShape((width-w)/2.0, 
-                (height-h)/2.0, w, h, path);
+            // Get the x-coordinate for the shape
+        double x = (width-w)/2.0;
+            // Get the y-coordinate for the shape
+        double y = (height-h)/2.0;
+            // Determine which shape to use for the mask
+        switch(maskShapeCombo.getSelectedIndex()){
+                // If the shape is a heart
+            case(0):
+                    // Get the heart shape
+                path = SpiralGeneratorUtilities.getHeartShape(x, y, w, h, path);
+                break;
+                // If the shape is a star
+            case(1):
+                path = SpiralGeneratorUtilities.getStarShape(x, y, w, h, path);
+        }
         g.fill(path);
         return path;
     }
@@ -4271,7 +4320,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // Return if both of the size spinners are set to values 
                         // greater than zero
                     return (double)maskShapeWidthSpinner.getValue() > 0 && 
-                            (double)maskShapeHeightSpinner.getValue() > 0;
+                            (double)maskShapeHeightSpinner.getValue() > 0 && 
+                            maskShapeCombo.getSelectedIndex() >= 0;
             }
             return false;
         }

@@ -127,6 +127,8 @@ public class SpiralGeneratorConfig {
     
     public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
     
+    public static final String MASK_SHAPE_TYPE_KEY = "MaskShapeType";
+    
     public static final String MASK_ROTATION_KEY = "MaskRotation";
     
     public static final String MASK_FLAGS_KEY = "MaskFlags";
@@ -1231,6 +1233,18 @@ public class SpiralGeneratorConfig {
     
     public void setMaskShapeSizeLinked(boolean value){
         getMaskPreferences().putBoolean(MASK_SHAPE_LINK_SIZE_KEY, value);
+    }
+    
+    public int getMaskShapeType(int defaultValue){
+        return getMaskPreferences().getInt(MASK_SHAPE_TYPE_KEY, defaultValue);
+    }
+    
+    public int getMaskShapeType(){
+        return getMaskShapeType(0);
+    }
+    
+    public void setMaskShapeType(int value){
+        getMaskPreferences().putInt(MASK_SHAPE_TYPE_KEY, value);
     }
     
     public int getImageWidth(int defaultValue){

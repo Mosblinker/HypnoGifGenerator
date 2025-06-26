@@ -4,6 +4,7 @@
  */
 package spiral;
 
+import geom.GeometryMath;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +14,7 @@ import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -469,6 +471,79 @@ public final class SpiralGeneratorUtilities {
             boolean right, CubicCurve2D curve){
         return getHeartHalfCurve(rect.getX(),rect.getY(),rect.getWidth(),
                 rect.getHeight(),right,curve);
+    }
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param path
+     * @param point
+     * @return 
+     */
+    public static Path2D getStarShape(double x, double y, double w, double h, 
+            Path2D path, Point2D point){
+        if (path == null)
+            path = new Path2D.Double();
+        else
+            path.reset();
+        double centerX = x + (w / 2.0);
+        path.moveTo(centerX, y);
+        double t1 = w * 0.19444;
+        double y1 = y+(h*0.38222);
+        point = GeometryMath.getLinePointForY(centerX, y, x+t1, y+h, y1, point);
+        double x1 = point.getX();
+        path.lineTo(x1, y1);
+        path.lineTo(x, y1);
+        point = GeometryMath.getLineIntersection(centerX, y, x+t1, y+h, 
+                x, y1, x+(w-t1), y+h, point);
+        double x2 = point.getX();
+        double y2 = point.getY();
+        path.lineTo(x2, y2);
+        path.lineTo(x+t1, y+h);
+        point = GeometryMath.getLinePointForX(x, y1, x+(w-t1), y+h, centerX, point);
+        path.lineTo(point.getX(), point.getY());
+        path.lineTo(x+(w-t1), y+h);
+        path.lineTo(x+(w-(x2-x)), y2);
+        path.lineTo(x+w, y1);
+        path.lineTo(x+(w-(x1-x)), y1);
+        path.closePath();
+        return path;
+    }
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param path
+     * @return 
+     */
+    public static Path2D getStarShape(double x, double y, double w, double h, 
+            Path2D path){
+        return getStarShape(x,y,w,h,path,null);
+    }
+    /**
+     * 
+     * @param rect
+     * @param path
+     * @param point
+     * @return 
+     */
+    public static Path2D getStarShape(RectangularShape rect, Path2D path, 
+            Point2D point){
+        return getStarShape(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight(),
+                path,point);
+    }
+    /**
+     * 
+     * @param rect
+     * @param path
+     * @return 
+     */
+    public static Path2D getStarShape(RectangularShape rect, Path2D path){
+        return getStarShape(rect,path,null);
     }
     /**
      * 
