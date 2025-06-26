@@ -8,6 +8,7 @@ import anim.*;
 import com.madgag.gif.fmsware.AnimatedGifEncoder;
 import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
+import components.JAboutPanel;
 import components.JColorSelector;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
@@ -359,10 +360,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Create the icon for the about window
         SpiralProgramIcon aboutIcon = new SpiralProgramIcon(128,iconPainter,
                 iconImg,iconModel,iconMsgModel);
-        aboutIconLabel.setIcon(aboutIcon);
+        aboutPanel.setProgramIcon(aboutIcon);
         updateIconLabel.setIcon(new SpiralProgramIcon(64,aboutIcon));
             // Get the document for the credits text pane
-        StyledDocument creditsDoc = aboutCreditsTextPane.getStyledDocument();
+        StyledDocument creditsDoc = aboutPanel.getCreditsDocument();
             // This is a String to get the credits text
         String credits = "";
             // Go through the credits arrays
@@ -377,7 +378,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 credits += System.lineSeparator()+CREDITS[i][j];
             }
         }
-        aboutCreditsTextPane.setText(credits);
+        aboutPanel.setCreditsText(credits);
         creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
                 centeredText, false);
         
@@ -825,21 +826,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         javax.swing.Box.Filler filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskAlphaButtons = new javax.swing.ButtonGroup();
         aboutDialog = new javax.swing.JDialog(this);
-        aboutPanel = new javax.swing.JPanel();
-        aboutIconLabel = new javax.swing.JLabel();
-        aboutMainPanel = new javax.swing.JPanel();
-        aboutNameLabel = new javax.swing.JLabel();
-        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
-        aboutVersionLabel = new javax.swing.JLabel();
-        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 7), new java.awt.Dimension(0, 7), new java.awt.Dimension(32767, 7));
-        aboutCreditsPanel = new javax.swing.JPanel();
-        aboutCreditsScrollPane = new javax.swing.JScrollPane();
-        aboutCreditsTextPane = new javax.swing.JTextPane();
-        aboutBottomPanel = new javax.swing.JPanel();
-        aboutButtonsPanel = new javax.swing.JPanel();
-        updateButton = new javax.swing.JButton();
-        javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 0), new java.awt.Dimension(6, 32767));
-        aboutOkButton = new javax.swing.JButton();
+        aboutPanel = new components.JAboutPanel();
         updateCheckDialog = new javax.swing.JDialog(this);
         updatePanel = new javax.swing.JPanel();
         updateIconLabel = new javax.swing.JLabel();
@@ -1588,79 +1575,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutDialog.setMinimumSize(new java.awt.Dimension(640, 400));
         aboutDialog.setResizable(false);
 
-        aboutPanel.setLayout(new java.awt.BorderLayout(18, 7));
-
-        aboutIconLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        aboutIconLabel.setAlignmentX(0.5F);
-        aboutPanel.add(aboutIconLabel, java.awt.BorderLayout.LINE_START);
-
-        aboutMainPanel.setLayout(new javax.swing.BoxLayout(aboutMainPanel, javax.swing.BoxLayout.Y_AXIS));
-
-        aboutNameLabel.setFont(aboutNameLabel.getFont().deriveFont(aboutNameLabel.getFont().getStyle() | java.awt.Font.BOLD, aboutNameLabel.getFont().getSize()+9));
-        aboutNameLabel.setText(PROGRAM_NAME);
-        aboutNameLabel.setAlignmentX(0.5F);
-        aboutMainPanel.add(aboutNameLabel);
-        aboutMainPanel.add(filler20);
-
-        aboutVersionLabel.setFont(aboutVersionLabel.getFont().deriveFont((aboutVersionLabel.getFont().getStyle() | java.awt.Font.ITALIC) | java.awt.Font.BOLD, aboutVersionLabel.getFont().getSize()+5));
-        aboutVersionLabel.setText("Version "+PROGRAM_VERSION);
-        aboutVersionLabel.setAlignmentX(0.5F);
-        aboutMainPanel.add(aboutVersionLabel);
-        aboutMainPanel.add(filler21);
-
-        aboutCreditsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Credits"));
-        aboutCreditsPanel.setLayout(new java.awt.BorderLayout());
-
-        aboutCreditsTextPane.setEditable(false);
-        aboutCreditsScrollPane.setViewportView(aboutCreditsTextPane);
-
-        aboutCreditsPanel.add(aboutCreditsScrollPane, java.awt.BorderLayout.CENTER);
-
-        aboutMainPanel.add(aboutCreditsPanel);
-
-        aboutPanel.add(aboutMainPanel, java.awt.BorderLayout.CENTER);
-
-        aboutBottomPanel.setLayout(new java.awt.BorderLayout());
-
-        aboutButtonsPanel.setLayout(new javax.swing.BoxLayout(aboutButtonsPanel, javax.swing.BoxLayout.LINE_AXIS));
-
-        updateButton.setText("Check For Updates");
-        updateButton.addActionListener(new java.awt.event.ActionListener() {
+        aboutPanel.setProgramName(PROGRAM_NAME);
+        aboutPanel.setProgramVersion(PROGRAM_VERSION);
+        aboutPanel.setUpdateButtonIsShown(true);
+        aboutPanel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateButtonActionPerformed(evt);
+                aboutPanelActionPerformed(evt);
             }
         });
-        aboutButtonsPanel.add(updateButton);
-        aboutButtonsPanel.add(filler19);
-
-        aboutOkButton.setText("OK");
-        aboutOkButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutOkButtonActionPerformed(evt);
-            }
-        });
-        aboutButtonsPanel.add(aboutOkButton);
-
-        aboutBottomPanel.add(aboutButtonsPanel, java.awt.BorderLayout.LINE_END);
-
-        aboutPanel.add(aboutBottomPanel, java.awt.BorderLayout.PAGE_END);
-
-        javax.swing.GroupLayout aboutDialogLayout = new javax.swing.GroupLayout(aboutDialog.getContentPane());
-        aboutDialog.getContentPane().setLayout(aboutDialogLayout);
-        aboutDialogLayout.setHorizontalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(aboutDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        aboutDialogLayout.setVerticalGroup(
-            aboutDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(aboutDialogLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(aboutPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        aboutDialog.getContentPane().add(aboutPanel, java.awt.BorderLayout.CENTER);
 
         updateCheckDialog.setTitle(PROGRAM_NAME+" Update Checker");
         updateCheckDialog.setMinimumSize(new java.awt.Dimension(400, 196));
@@ -2797,15 +2720,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         aboutDialog.setVisible(true);
     }//GEN-LAST:event_aboutButtonActionPerformed
 
-    private void aboutOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutOkButtonActionPerformed
-        aboutDialog.setVisible(false);
-    }//GEN-LAST:event_aboutOkButtonActionPerformed
-
-    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
-        updateWorker = new UpdateCheckWorker(false);
-        updateWorker.execute();
-    }//GEN-LAST:event_updateButtonActionPerformed
-
     private void updateContinueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateContinueButtonActionPerformed
         updateCheckDialog.setVisible(false);
     }//GEN-LAST:event_updateContinueButtonActionPerformed
@@ -2881,6 +2795,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Refresh the image mask and preview
         refreshPreview(1);
     }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
+
+    private void aboutPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutPanelActionPerformed
+        switch(evt.getActionCommand()){
+            case(JAboutPanel.CLOSE_SELECTED):
+                aboutDialog.setVisible(false);
+                break;
+            case(JAboutPanel.UPDATE_SELECTED):
+                updateWorker = new UpdateCheckWorker(false);
+                updateWorker.execute();
+        }
+    }//GEN-LAST:event_aboutPanelActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3441,19 +3366,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private UpdateCheckWorker updateWorker = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel aboutBottomPanel;
     private javax.swing.JButton aboutButton;
-    private javax.swing.JPanel aboutButtonsPanel;
-    private javax.swing.JPanel aboutCreditsPanel;
-    private javax.swing.JScrollPane aboutCreditsScrollPane;
-    private javax.swing.JTextPane aboutCreditsTextPane;
     private javax.swing.JDialog aboutDialog;
-    private javax.swing.JLabel aboutIconLabel;
-    private javax.swing.JPanel aboutMainPanel;
-    private javax.swing.JLabel aboutNameLabel;
-    private javax.swing.JButton aboutOkButton;
-    private javax.swing.JPanel aboutPanel;
-    private javax.swing.JLabel aboutVersionLabel;
+    private components.JAboutPanel aboutPanel;
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
     private javax.swing.JSpinner angleSpinner;
@@ -3568,7 +3483,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox testShowRadiusToggle;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
-    private javax.swing.JButton updateButton;
     private javax.swing.JDialog updateCheckDialog;
     private javax.swing.JButton updateContinueButton;
     private javax.swing.JLabel updateIconLabel;
@@ -3654,7 +3568,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle.setEnabled(enabled);
         updateMaskShapeControlsEnabled();
         resetMaskButton.setEnabled(enabled);
-        updateButton.setEnabled(enabled);
+        aboutPanel.setEnabled(enabled);
         updateOpenButton.setEnabled(enabled);
         maskRotateSpinner.setEnabled(enabled);
         maskFlipHorizToggle.setEnabled(enabled);
