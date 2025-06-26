@@ -3821,10 +3821,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private Path2D paintShapeMask(Graphics2D g, int width, int height, double w,
             double h, Path2D path){
+            // Get the x-coordinate for the shape
+        double x = (width-w)/2.0;
+            // Get the y-coordinate for the shape
+        double y = (height-h)/2.0;
         w *= width;
         h *= height;
-        path = SpiralGeneratorUtilities.getHeartShape((width-w)/2.0, 
-                (height-h)/2.0, w, h, path);
+            // Determine which shape to use for the mask
+        switch(maskShapeCombo.getSelectedIndex()){
+                // If the shape is a heart
+            case(0):
+                    // Get the heart shape
+                path = SpiralGeneratorUtilities.getHeartShape(x, y, w, h, path);
+            break;
+        }
         g.fill(path);
         return path;
     }
@@ -4307,7 +4317,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // Return if both of the size spinners are set to values 
                         // greater than zero
                     return (double)maskShapeWidthSpinner.getValue() > 0 && 
-                            (double)maskShapeHeightSpinner.getValue() > 0;
+                            (double)maskShapeHeightSpinner.getValue() > 0 && 
+                            maskShapeCombo.getSelectedIndex() >= 0;
             }
             return false;
         }
