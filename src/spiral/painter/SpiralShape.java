@@ -16,7 +16,9 @@ public enum SpiralShape {
     
     DIAMOND,
     
-    HEART;
+    HEART,
+    
+    STAR;
     /**
      * 
      * @param shape
