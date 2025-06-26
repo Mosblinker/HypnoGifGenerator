@@ -72,6 +72,7 @@ public class SpiralGeneratorConfig {
     
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
+    @Deprecated
     public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
     
     public static final String SPIRAL_COLOR_KEY_PREFIX = "SpiralColor";
@@ -652,21 +653,27 @@ public class SpiralGeneratorConfig {
      * 
      * @param defaultValue
      * @return 
+     * @deprecated 
      */
+    @Deprecated
     public boolean isSpinClockwise(boolean defaultValue){
         return getPreferences().getBoolean(SPIN_CLOCKWISE_KEY, defaultValue);
     }
     /**
      * 
      * @return 
+     * @deprecated 
      */
+    @Deprecated
     public boolean isSpinClockwise(){
         return isSpinClockwise(true);
     }
     /**
      * 
      * @param value 
+     * @deprecated 
      */
+    @Deprecated
     public void setSpinClockwise(boolean value){
         getPreferences().putBoolean(SPIN_CLOCKWISE_KEY, value);
     }
