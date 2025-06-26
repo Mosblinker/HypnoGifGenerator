@@ -458,6 +458,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
         maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
                 maskImgScaleMethodCombo.getSelectedIndex()));
+        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
+                config.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -2697,6 +2699,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskShapeWidthSpinner.setValue(0.1);
                 updateMaskShapeControlsEnabled();
                 config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+                maskShapeCombo.setSelectedIndex(0);
+                config.setMaskShapeType(0);
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
@@ -2834,7 +2838,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_aboutPanelActionPerformed
 
     private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
-        // TODO add your handling code here:
+        config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        refreshPreview(2);
     }//GEN-LAST:event_maskShapeComboActionPerformed
     /**
      * This returns the width for the image.
