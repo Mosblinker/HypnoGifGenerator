@@ -472,6 +472,24 @@ public final class SpiralGeneratorUtilities {
     }
     /**
      * 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param path
+     * @return 
+     */
+    public static Path2D getStarShape(double x, double y, double w, double h, 
+            Path2D path){
+        if (path == null)
+            path = new Path2D.Double();
+        else
+            path.reset();
+        double centerX = x + (w / 2.0);
+        return path;
+    }
+    /**
+     * 
      * @param flags
      * @param flag
      * @return 

@@ -1360,7 +1360,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         shapeMaskCtrlPanel.add(maskShapeLabel, gridBagConstraints);
 
-        maskShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Heart" }));
+        maskShapeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Heart", "Star" }));
         maskShapeCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 maskShapeComboActionPerformed(evt);
@@ -3833,7 +3833,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             case(0):
                     // Get the heart shape
                 path = SpiralGeneratorUtilities.getHeartShape(x, y, w, h, path);
-            break;
+                break;
+                // If the shape is a star
+            case(1):
+                path = SpiralGeneratorUtilities.getStarShape(x, y, w, h, path);
         }
         g.fill(path);
         return path;
