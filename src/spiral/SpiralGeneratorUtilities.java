@@ -46,8 +46,8 @@ public final class SpiralGeneratorUtilities {
      * 
      */
     private static final double[][] HEART_CONTROL_POINTS = {
-        {0.15, 1.468, 0.328, 0.781, -0.295},
-        { 1.0, 0.219, -0.295, -0.468, 0.328}
+        {0,5, 0.15, 1.468, 0.328, 0.781, -0.295},
+        {0.5,  1.0, 0.219, -0.295, -0.468, 0.328}
     };
     /**
      * This class cannot be constructed.
@@ -409,14 +409,14 @@ public final class SpiralGeneratorUtilities {
             path = new Path2D.Double();
         else
             path.reset();
-        double centerX = x + (w / 2.0);
-        path.moveTo(centerX, y + (h * HEART_CONTROL_POINTS[0][0]));
+        double centerX = x * HEART_CONTROL_POINTS[0][0];
+        path.moveTo(centerX, y + (h * HEART_CONTROL_POINTS[0][1]));
         for (int i = HEART_CONTROL_POINTS.length-1; i >= 0; i--){
-            path.curveTo(x + (w * HEART_CONTROL_POINTS[i][1]), 
-                    y + (h * HEART_CONTROL_POINTS[i][2]), 
-                    x + (w * HEART_CONTROL_POINTS[i][3]), 
-                    y + (h * HEART_CONTROL_POINTS[i][4]),
-                    centerX, y + (h * HEART_CONTROL_POINTS[i][0]));
+            path.curveTo(x + (w * HEART_CONTROL_POINTS[i][2]), 
+                    y + (h * HEART_CONTROL_POINTS[i][3]), 
+                    x + (w * HEART_CONTROL_POINTS[i][4]), 
+                    y + (h * HEART_CONTROL_POINTS[i][5]),
+                    centerX, y + (h * HEART_CONTROL_POINTS[i][1]));
         }
         path.closePath();
         return path;
