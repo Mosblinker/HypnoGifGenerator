@@ -11,7 +11,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
+import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +48,9 @@ public final class SpiralGeneratorUtilities {
      * 
      */
     private static final double[][] HEART_CONTROL_POINTS = {
+            // Right side of heart
         {0.15, 1.468, 0.328, 0.781, -0.295},
+            // Left side of heart
         { 1.0, 0.219, -0.295, -0.468, 0.328}
     };
     /**
@@ -420,6 +424,51 @@ public final class SpiralGeneratorUtilities {
         }
         path.closePath();
         return path;
+    }
+    /**
+     * 
+     * @param rect
+     * @param path
+     * @return 
+     */
+    public static Path2D getHeartShape(RectangularShape rect, Path2D path){
+        return getHeartShape(rect.getX(),rect.getY(),rect.getWidth(),rect.getHeight(),
+                path);
+    }
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param right
+     * @param curve
+     * @return 
+     */
+    public static CubicCurve2D getHeartHalfCurve(double x, double y, double w, 
+            double h, boolean right, CubicCurve2D curve){
+        if (curve == null)
+            curve = new CubicCurve2D.Double();
+        int index = (right)?0:1;
+        double[] ctrlPts = HEART_CONTROL_POINTS[index];
+        double centerX = x + (w / 2.0);
+        curve.setCurve(centerX, y + (h * HEART_CONTROL_POINTS[(index+1)%2][0]), 
+                x + (w * ctrlPts[1]), y + (h * ctrlPts[2]), 
+                x + (w * ctrlPts[3]), y + (h * ctrlPts[4]), 
+                centerX, y + (h * ctrlPts[0]));
+        return curve;
+    }
+    /**
+     * 
+     * @param rect
+     * @param right
+     * @param curve
+     * @return 
+     */
+    public static CubicCurve2D getHeartHalfCurve(RectangularShape rect, 
+            boolean right, CubicCurve2D curve){
+        return getHeartHalfCurve(rect.getX(),rect.getY(),rect.getWidth(),
+                rect.getHeight(),right,curve);
     }
     /**
      * 

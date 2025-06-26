@@ -7,6 +7,7 @@ package spiral.painter;
 import geom.GeometryMath;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.*;
 import java.nio.ByteBuffer;
 import spiral.SpiralGeneratorUtilities;
@@ -22,6 +23,11 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
      * initially null and is initialized the first time it is used. 
      */
     private Ellipse2D ellipse = null;
+    /**
+     * This is a scratch Path2D object used to draw shapes. This is initially 
+     * null and is initialized the first time it is used. 
+     */
+    private Path2D path = null;
     /**
      * This is the shape for the concentric shapes for this spiral.
      */
@@ -54,10 +60,55 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 fillArea(g,width,height);
             }   // Set the color to use to the foreground color
             g.setColor(model.getColor2());
-        }   // This is the shape to use to render the concentric shapes
-        RectangularShape shape;
+        }   // Bound the angle
+        angle = GeometryMath.boundDegrees(angle);
+            // Get the amount by which to increase the radiuses of the shapes by
+        double m = radius / 2.0;
+            // Get the line width for the shapes
+        double lineWidth = thickness * m;
+            // Get half the line width
+        double halfWidth = lineWidth / 2.0;
+            // Get the maximum radius for any of the shapes
+        double r1 = getMaximumRadius(width,height,model)+lineWidth;
+            // Get the radius for the first shape
+        double startR = m * (angle / FULL_CIRCLE_DEGREES);
+            // If the spiral is going counter-clockwise
+        if (!clockwise)
+                // Shift the spiral by half
+            startR = (startR + (m/2.0)) % m;
+            // This is the shape to use to render the concentric shapes
+        RectangularShape rectShape;
             // Determine the shape to use for the spiral
         switch (getShape()){
+                // If the shape is a heart
+            case HEART:
+                    // If the scratch rectangle object is null
+                if (rect == null)
+                    rect = new Rectangle2D.Double();
+                    // Make the maximum radius the larger of the width and height
+                r1 = Math.max(width, height);
+                    // Adjust the maximum radius to account for the start radius
+                r1 -= ((r1 - startR) % m);
+                    // Go through the radiuses for the shapes
+                for (double r = r1; r+halfWidth > 0; r-=m){
+                        // Get the radius plus half the line width, so that the 
+                        // shape is the correct size
+                    double rTemp = r+halfWidth;
+                        // Create the shape and get the area of it
+                    Area area = new Area(createShape(centerX,centerY,rTemp,
+                            getShape(),rect));
+                        // Subtract the line width to get the area to clear
+                    rTemp -= lineWidth;
+                        // If there is a part of the shape that will be cleared
+                    if (rTemp > 0)
+                            // Create the area that will be empty and remove it 
+                            // from the area
+                        area.subtract(new Area(createShape(centerX,centerY,
+                                rTemp,getShape(),rect)));
+                        // Fill the area for the shape
+                    g.fill(area);
+                }
+                return;
                 // If the shape is a diamond
             case DIAMOND:
                     // Rotate the painted area by 45 degrees to turn the squares 
@@ -68,31 +119,16 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                     // If the scratch rectangle object is null
                 if (rect == null)
                     rect = new Rectangle2D.Double();
-                shape = rect;
+                rectShape = rect;
                 break;
             default:
                     // If the scratch ellipse object is null
                 if (ellipse == null)
                     ellipse = new Ellipse2D.Double();
-                shape = ellipse;
-        }   // Bound the angle
-        angle = GeometryMath.boundDegrees(angle);
-            // Get the amount by which to increase the radiuses of the shapes by
-        double m = radius / 2.0;
-            // Get the line width for the shapes
-        double lineWidth = thickness * m;
-            // Get half the line width
-        double halfWidth = lineWidth / 2.0;
+                rectShape = ellipse;
+        }
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
-            // Get the maximum radius for any of the shapes
-        double r1 = getMaximumRadius(width,height,model)+lineWidth;
-            // Get the radius for the first shape
-        double startR = m * (angle / FULL_CIRCLE_DEGREES);
-            // If the spiral is going counter-clockwise
-        if (!clockwise)
-                // Shift the spiral by half
-            startR = (startR + (m/2.0)) % m;
             // If the starting radius is for a shape that would be less than the 
             // line width in size
         if (startR <= halfWidth || startR > m - halfWidth){
@@ -103,17 +139,40 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Get the radius for the first shape
             double r = startR+halfWidth;
                 // Set the frame for the shape with the radius
-            shape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+            rectShape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Fill this shape
-            g.fill(shape);
+            g.fill(rectShape);
                 // Move on to the next shape
             startR += m;
         }   // A for loop to draw the circles that make up this spiral
         for (double r = startR; r <= r1; r+= m){
                 // Set the frame for the shape with the current radius
-            shape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+            rectShape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Draw the shape
-            g.draw(shape);
+            g.draw(rectShape);
+        }
+    }
+    /**
+     * 
+     * @param centerX
+     * @param centerY
+     * @param r
+     * @param shape
+     * @param rect
+     * @return 
+     */
+    protected Shape createShape(double centerX, double centerY, double r, 
+            SpiralShape shape, Rectangle2D rect){
+            // Set the frame for the shape with the given radius
+        rect.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
+            // Determine what shape to produce
+        switch(shape){
+                // If the shape is a heart
+            case HEART:
+                    // Create the heart shape
+                return path = SpiralGeneratorUtilities.getHeartShape(rect, path);
+            default:
+                return rect;
         }
     }
     @Override

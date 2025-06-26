@@ -514,7 +514,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // If the program is in debug mode
         if (debugMode){
-            testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
+            testSpiralIcon = new TestSpiralIcon(spiralPainters[2]);
             testComponents = new HashMap<>();
                 // Set the popup menu for the preview label to be the debug menu
             previewLabel.setComponentPopupMenu(debugPopup);
