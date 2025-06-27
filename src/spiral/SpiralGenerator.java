@@ -5057,18 +5057,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 bg = new Color(bg.getRGB());
                     // Set the background for the gif
                 encoder.setBackground(bg);
-                    // This is the disposal mode for each frame. 
-                    // 0 - Don't care
-                    // 1 - combine 
-                    // 2 - replace
-                int disposal = 1;
                     // If the background is transparent
                 if (transparency){
                     encoder.setTransparent(bg);
-                        // Replace each frame
-                    disposal = 2;
-                }   // Set the disposal mode for the GIF
-                encoder.setDispose(disposal);
+                }   // Set the disposal mode for the GIF to replace all frames
+                encoder.setDispose(2);
                     // A for loop to go through and add all the frames to the 
                     // gif
                 for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
