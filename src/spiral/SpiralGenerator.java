@@ -2222,7 +2222,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
 
         optimizeDifferenceToggle.setText("Optimize for Difference");
-        optimizeDifferenceToggle.setToolTipText("This indicates whether the GIF will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
+        optimizeDifferenceToggle.setToolTipText("This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
         optimizeDifferenceToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 optimizeDifferenceToggleActionPerformed(evt);

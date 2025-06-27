@@ -2246,7 +2246,7 @@
         <Component class="javax.swing.JCheckBox" name="optimizeDifferenceToggle">
           <Properties>
             <Property name="text" type="java.lang.String" value="Optimize for Difference"/>
-            <Property name="toolTipText" type="java.lang.String" value="This indicates whether the GIF will be optimized for the difference between frames. This may reduce the file size at the cost of quality."/>
+            <Property name="toolTipText" type="java.lang.String" value="This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality."/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="optimizeDifferenceToggleActionPerformed"/>
