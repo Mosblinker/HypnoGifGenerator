@@ -5050,7 +5050,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Set the size for the image
                 encoder.setSize(width, height);
                     // Get the background color for the spiral
-                Color bg = colorIcons[0].getColor();
+                Color bg = models[0].getColor1();
                     // Get if the background has transparency
                 boolean transparency = bg.getAlpha() < 255;
                     // Get the background without an alpha
@@ -5058,8 +5058,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Set the background for the gif
                 encoder.setBackground(bg);
                     // If the background is transparent
-                if (transparency)
+                if (transparency){
                     encoder.setTransparent(bg);
+                }   // Set the disposal mode for the GIF to replace all frames
+                encoder.setDispose(2);
                     // A for loop to go through and add all the frames to the 
                     // gif
                 for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
@@ -5077,11 +5079,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         paintSpiralDesign(g,i,width,height,painter,mask);
                         g.dispose();
                         frames.add(frame);
-                        progressBar.setValue(progressBar.getValue()+1);
                     }   // Set the preview to the current frame
                     previewLabel.setImage(frame);
                         // Add the frame to the gif
                     encoder.addFrame(frame);
+                    progressBar.setValue(progressBar.getValue()+1);
                 }
                 progressBar.setIndeterminate(true);
                     // Finish encoding the gif
