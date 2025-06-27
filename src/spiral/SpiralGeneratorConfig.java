@@ -64,12 +64,16 @@ public class SpiralGeneratorConfig {
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     
+    @Deprecated
     public static final String SPIRAL_RADIUS_KEY = "Radius";
     
+    @Deprecated
     public static final String SPIRAL_BASE_KEY = "Base";
     
+    @Deprecated
     public static final String SPIRAL_THICKNESS_KEY = "Thickness";
     
+    @Deprecated
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
     @Deprecated
