@@ -5182,8 +5182,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                                 }
                             } else 
                                 bg = new Color(possibleColors.first());
-                        }
-                            // Set the background to the transparency color
+                        }   // Set the background to the transparency color
                         encoder.setBackground(bg);
                             // Make the background color transparent.
                         encoder.setTransparent(bg, false);
