@@ -91,7 +91,7 @@ public class SpiralGeneratorConfig {
     
     public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
     
-    public static final String FRAME_COMBINED_KEY = "FramesAreCombined";
+    public static final String OPTIMIZE_FOR_DIFFERENCE_KEY = "OptimizeForDifference";
     
     public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
     
@@ -773,15 +773,15 @@ public class SpiralGeneratorConfig {
      * 
      * @return 
      */
-    public boolean getFramesAreCombined(){
-        return node.getBoolean(FRAME_COMBINED_KEY, false);
+    public boolean isOptimizedForDifference(){
+        return node.getBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, false);
     }
     /**
      * 
      * @param value 
      */
-    public void setFramesAreCombined(boolean value){
-        node.putBoolean(FRAME_COMBINED_KEY, value);
+    public void setOptimizedForDifference(boolean value){
+        node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
     }
     
     public Preferences getMaskPreferences(){
