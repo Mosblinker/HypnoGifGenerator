@@ -54,6 +54,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -175,6 +177,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         Color.BLACK,
         new Color(0x0084D7),
         new Color(0xA184B2)
+    };
+    /**
+     * This is an array of colors to use to try for the background of the GIF 
+     * when combining frames.
+     */
+    private static final Color[] GIF_TRANSPARENCY_COLORS = {
+        Color.BLACK,
+        Color.WHITE,
+        Color.PINK,
+        Color.RED,
+        Color.ORANGE,
+        Color.YELLOW,
+        Color.GREEN,
+        Color.CYAN,
+        Color.BLUE,
+        Color.MAGENTA
     };
     
     private static final String OVERLAY_MASK_FILE_CHOOSER_NAME = "OverlayFC";
@@ -5033,6 +5051,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // If the overlay mask copy is null
                 if (mask == null)
                     mask = new OverlayMask(overlayMask);
+                    // This is a set of RGB values for the colors in a given 
+                    // frame
+                Set<Integer> colors = new TreeSet<>();
+                    // This is a set of possible RGB values to use for the 
+                    // transparent backgrounds when combining frames
+                TreeSet<Integer> possibleColors = new TreeSet<>();
                 progressBar.setValue(0);
                 progressBar.setIndeterminate(false);
                     // Create an encoder to encode the gif
@@ -5095,6 +5119,51 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             // previous frames
                         frame = SpiralGeneratorUtilities.getImageDifference(
                                 frames.get(i-1), frame, colors);
+                            // If there's no a background color or that color is 
+                            // in the frame colors
+                        if (bg == null || colors.contains(bg.getRGB() & 0x00FFFFFF)){
+                                // Clear the set of possible colors
+                            possibleColors.clear();
+                                // Go through the spiral models
+                            for (SpiralModel model : models){
+                                    // Add the inverse of the first color
+                                possibleColors.add((~model.getColor1().getRGB()) & 0x00FFFFFF);
+                                    // Add the inverse of the second color
+                                possibleColors.add((~model.getColor2().getRGB()) & 0x00FFFFFF);
+                            }   // Go through the predefined colors
+                            for (Color temp : GIF_TRANSPARENCY_COLORS){
+                                    // Add the color as a possible color
+                                possibleColors.add(temp.getRGB() & 0x00FFFFFF);
+                            }   // Remove all the colors in the frame
+                            possibleColors.removeAll(colors);
+                                // If all of those colors are in the frame
+                            if (possibleColors.isEmpty()){
+                                    // Go through the colors in the frame
+                                for (Integer temp : colors){
+                                        // Add the inverse of the current color
+                                    possibleColors.add((~temp) & 0x00FFFFFF);
+                                }   // Remove all the colors in the frame
+                                possibleColors.removeAll(colors);
+                            }   // Reset the background color to null
+                            bg = null;
+                                // If there are no possible colors
+                            if (possibleColors.isEmpty()){
+                                getLogger().warning(
+                                        "Failed to find color to use for transparency, bruteforcing color");
+                                    // Go through the possible colors in the RGB 
+                                    // range of colors
+                                for (int c = 0; c <= 0x00FFFFFF && bg == null; c++){
+                                        // If the current color is not used
+                                    if (!colors.contains(c))
+                                        bg = new Color(c);
+                                }
+                            } else 
+                                bg = new Color(possibleColors.first());
+                        }
+                            // Set the background to the transparency color
+                        encoder.setBackground(bg);
+                            // Make the background color transparent.
+                        encoder.setTransparent(bg, false);
                     }   // Add the frame to the gif
                     encoder.addFrame(frame);
                     progressBar.setValue(progressBar.getValue()+1);
