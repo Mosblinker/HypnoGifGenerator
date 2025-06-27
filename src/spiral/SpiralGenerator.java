@@ -5088,9 +5088,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         frames.add(frame);
                     }   // Set the preview to the current frame
                     previewLabel.setImage(frame);
-//                    if (disposal == 1 && i > 0)
-//                        frame = SpiralGeneratorUtilities.getImageDifference(frames.get(i-1), frame, 0);
-                        // Add the frame to the gif
+                        // If frames should be combined and this is not the 
+                        // first frame of the animation
+                    if (disposal == 1 && i > 0){
+                            // Get the difference between the current and 
+                            // previous frames
+                        frame = SpiralGeneratorUtilities.getImageDifference(
+                                frames.get(i-1), frame, colors);
+                    }   // Add the frame to the gif
                     encoder.addFrame(frame);
                     progressBar.setValue(progressBar.getValue()+1);
                 }
