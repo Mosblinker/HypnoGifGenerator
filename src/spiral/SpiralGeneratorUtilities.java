@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnailator;
@@ -686,10 +687,15 @@ public final class SpiralGeneratorUtilities {
      * @param image1
      * @param image2
      * @param transparent
+     * @param colors
      * @return 
      */
     public static BufferedImage getImageDifference(BufferedImage image1, 
-            BufferedImage image2, int transparent){
+            BufferedImage image2, int transparent, Set<Integer> colors){
+        if (colors != null){
+            colors.clear();
+            colors.add(transparent&0x00FFFFFF);
+        }
         BufferedImage img = new BufferedImage(
                 Math.max(image1.getWidth(), image2.getWidth()),
                 Math.max(image1.getHeight(), image2.getHeight()), 
@@ -706,8 +712,11 @@ public final class SpiralGeneratorUtilities {
                 for (int x = 0; x < rgb1.length && x < rgb2.length; x++){
                     if (rgb1[x] == rgb2[x])
                         rgb[x] = transparent;
-                    else
+                    else{
                         rgb[x] = rgb2[x];
+                        if (colors != null)
+                            colors.add(rgb2[x]&0x00FFFFFF);
+                    }
                 }
             }
             if (index < rgb2.length){
@@ -719,6 +728,28 @@ public final class SpiralGeneratorUtilities {
             img.setRGB(0, y, rgb.length, 1, rgb, 0, 1);
         }
         return img;
+    }
+    /**
+     * 
+     * @param image1
+     * @param image2
+     * @param transparent
+     * @return 
+     */
+    public static BufferedImage getImageDifference(BufferedImage image1, 
+            BufferedImage image2, int transparent){
+        return getImageDifference(image1,image2,transparent,null);
+    }
+    /**
+     * 
+     * @param image1
+     * @param image2
+     * @param colors
+     * @return 
+     */
+    public static BufferedImage getImageDifference(BufferedImage image1, 
+            BufferedImage image2, Set<Integer> colors){
+        return getImageDifference(image1,image2,0,colors);
     }
     /**
      * 
