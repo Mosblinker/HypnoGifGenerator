@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
@@ -679,5 +680,54 @@ public final class SpiralGeneratorUtilities {
     public static Dimension getTargetSize(BufferedImage image, 
             int width, int height){
         return getTargetSize(image,width,height,true);
+    }
+    /**
+     * 
+     * @param image1
+     * @param image2
+     * @param transparent
+     * @return 
+     */
+    public static BufferedImage getImageDifference(BufferedImage image1, 
+            BufferedImage image2, int transparent){
+        BufferedImage img = new BufferedImage(
+                Math.max(image1.getWidth(), image2.getWidth()),
+                Math.max(image1.getHeight(), image2.getHeight()), 
+                BufferedImage.TYPE_INT_ARGB);
+        int[] rgb1 = new int[image1.getWidth()];
+        int[] rgb2 = new int[image2.getWidth()];
+        int[] rgb = new int[img.getWidth()];
+        for (int y = 0; y < image2.getHeight(); y++){
+            rgb2 = image2.getRGB(0, y, rgb2.length, 1, rgb2, 0, 1);
+            int index = 0;
+            if (y < image1.getHeight()){
+                rgb1 = image1.getRGB(0, y, rgb1.length, 1, rgb1, 0, 1);
+                index = rgb1.length;
+                for (int x = 0; x < rgb1.length && x < rgb2.length; x++){
+                    if (rgb1[x] == rgb2[x])
+                        rgb[x] = transparent;
+                    else
+                        rgb[x] = rgb2[x];
+                }
+            }
+            if (index < rgb2.length){
+                System.arraycopy(rgb2, index, rgb, index, rgb2.length);
+                index = rgb2.length;
+            }
+            if (index < rgb.length)
+                Arrays.fill(rgb, index, rgb.length, transparent);
+            img.setRGB(0, y, rgb.length, 1, rgb, 0, 1);
+        }
+        return img;
+    }
+    /**
+     * 
+     * @param image1
+     * @param image2
+     * @return 
+     */
+    public static BufferedImage getImageDifference(BufferedImage image1, 
+            BufferedImage image2){
+        return getImageDifference(image1,image2,0);
     }
 }
