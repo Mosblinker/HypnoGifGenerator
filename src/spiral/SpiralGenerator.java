@@ -914,6 +914,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         delayLabel = new javax.swing.JLabel();
         delaySpinner = new javax.swing.JSpinner();
         alwaysScaleToggle = new javax.swing.JCheckBox();
+        optimizeDifferenceToggle = new javax.swing.JCheckBox();
         progressBar = new javax.swing.JProgressBar();
         maskEditButton = new javax.swing.JButton();
         ctrlButtonPanel = new javax.swing.JPanel();
@@ -2219,6 +2220,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
 
+        optimizeDifferenceToggle.setText("Optimize for Difference");
+        optimizeDifferenceToggle.setToolTipText("This indicates whether the GIF will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
+        optimizeDifferenceToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optimizeDifferenceToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        imageCtrlPanel.add(optimizeDifferenceToggle, gridBagConstraints);
+
         progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 progressBarStateChanged(evt);
@@ -2851,6 +2867,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
         refreshPreview(2);
     }//GEN-LAST:event_maskShapeComboActionPerformed
+
+    private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3522,6 +3542,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
+    private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
     private javax.swing.JPanel previewPanel;
