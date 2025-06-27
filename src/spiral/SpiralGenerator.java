@@ -463,6 +463,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
+        optimizeDifferenceToggle.setSelected(config.isOptimizedForDifference());
             // Get the mask's rotation
         double imgRotation = config.getMaskRotation();
             // Ensure that the mask's rotation is a multiple of the increment
@@ -2869,7 +2870,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeComboActionPerformed
 
     private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
-        // TODO add your handling code here:
+        config.setOptimizedForDifference(optimizeDifferenceToggle.isSelected());
     }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -3670,6 +3671,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImgScaleMethodCombo.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
+        optimizeDifferenceToggle.setEnabled(enabled);
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
@@ -5106,7 +5108,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // 0 - Don't care
                     // 1 - combine 
                     // 2 - replace
-                int disposal = 1;
+                int disposal = (optimizeDifferenceToggle.isSelected())?1:2;
                     // If the background is transparent
                 if (transparency){
                     encoder.setTransparent(bg);
