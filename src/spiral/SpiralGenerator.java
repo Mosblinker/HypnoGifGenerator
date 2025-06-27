@@ -54,6 +54,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -175,6 +177,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         Color.BLACK,
         new Color(0x0084D7),
         new Color(0xA184B2)
+    };
+    /**
+     * This is an array of colors to use to try for the background of the GIF 
+     * when combining frames.
+     */
+    private static final Color[] GIF_TRANSPARENCY_COLORS = {
+        Color.BLACK,
+        Color.WHITE,
+        Color.PINK,
+        Color.RED,
+        Color.ORANGE,
+        Color.YELLOW,
+        Color.GREEN,
+        Color.CYAN,
+        Color.BLUE,
+        Color.MAGENTA
     };
     
     private static final String OVERLAY_MASK_FILE_CHOOSER_NAME = "OverlayFC";
@@ -445,6 +463,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(config.getImageWidth());
         heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
+        optimizeDifferenceToggle.setSelected(config.isOptimizedForDifference());
             // Get the mask's rotation
         double imgRotation = config.getMaskRotation();
             // Ensure that the mask's rotation is a multiple of the increment
@@ -896,6 +915,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         delayLabel = new javax.swing.JLabel();
         delaySpinner = new javax.swing.JSpinner();
         alwaysScaleToggle = new javax.swing.JCheckBox();
+        optimizeDifferenceToggle = new javax.swing.JCheckBox();
         progressBar = new javax.swing.JProgressBar();
         maskEditButton = new javax.swing.JButton();
         ctrlButtonPanel = new javax.swing.JPanel();
@@ -2201,6 +2221,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
 
+        optimizeDifferenceToggle.setText("Optimize for Difference");
+        optimizeDifferenceToggle.setToolTipText("This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
+        optimizeDifferenceToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optimizeDifferenceToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        imageCtrlPanel.add(optimizeDifferenceToggle, gridBagConstraints);
+
         progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 progressBarStateChanged(evt);
@@ -2833,6 +2868,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
         refreshPreview(2);
     }//GEN-LAST:event_maskShapeComboActionPerformed
+
+    private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
+        config.setOptimizedForDifference(optimizeDifferenceToggle.isSelected());
+    }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3504,6 +3543,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
+    private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
     private javax.swing.JPanel previewPanel;
@@ -3631,6 +3671,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImgScaleMethodCombo.setEnabled(enabled);
         updateFrameControls();
         updateControlsEnabled();
+        optimizeDifferenceToggle.setEnabled(enabled);
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
@@ -5033,6 +5074,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // If the overlay mask copy is null
                 if (mask == null)
                     mask = new OverlayMask(overlayMask);
+                    // This is a set of RGB values for the colors in a given 
+                    // frame
+                Set<Integer> colors = new TreeSet<>();
+                    // This is a set of possible RGB values to use for the 
+                    // transparent backgrounds when combining frames
+                TreeSet<Integer> possibleColors = new TreeSet<>();
                 progressBar.setValue(0);
                 progressBar.setIndeterminate(false);
                     // Create an encoder to encode the gif
@@ -5057,11 +5104,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 bg = new Color(bg.getRGB());
                     // Set the background for the gif
                 encoder.setBackground(bg);
+                    // This is the disposal mode for each frame. 
+                    // 0 - Don't care
+                    // 1 - combine 
+                    // 2 - replace
+                int disposal = (optimizeDifferenceToggle.isSelected())?1:2;
                     // If the background is transparent
                 if (transparency){
                     encoder.setTransparent(bg);
-                }   // Set the disposal mode for the GIF to replace all frames
-                encoder.setDispose(2);
+                        // Replace each frame
+                    disposal = 2;
+                }   // Set the disposal mode for the GIF
+                encoder.setDispose(disposal);
                     // A for loop to go through and add all the frames to the 
                     // gif
                 for (int i = 0; i < SPIRAL_FRAME_COUNT; i++){
@@ -5081,7 +5135,59 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         frames.add(frame);
                     }   // Set the preview to the current frame
                     previewLabel.setImage(frame);
-                        // Add the frame to the gif
+                        // If frames should be combined and this is not the 
+                        // first frame of the animation
+                    if (disposal == 1 && i > 0){
+                            // Get the difference between the current and 
+                            // previous frames
+                        frame = SpiralGeneratorUtilities.getImageDifference(
+                                frames.get(i-1), frame, colors);
+                            // If there's no a background color or that color is 
+                            // in the frame colors
+                        if (bg == null || colors.contains(bg.getRGB() & 0x00FFFFFF)){
+                                // Clear the set of possible colors
+                            possibleColors.clear();
+                                // Go through the spiral models
+                            for (SpiralModel model : models){
+                                    // Add the inverse of the first color
+                                possibleColors.add((~model.getColor1().getRGB()) & 0x00FFFFFF);
+                                    // Add the inverse of the second color
+                                possibleColors.add((~model.getColor2().getRGB()) & 0x00FFFFFF);
+                            }   // Go through the predefined colors
+                            for (Color temp : GIF_TRANSPARENCY_COLORS){
+                                    // Add the color as a possible color
+                                possibleColors.add(temp.getRGB() & 0x00FFFFFF);
+                            }   // Remove all the colors in the frame
+                            possibleColors.removeAll(colors);
+                                // If all of those colors are in the frame
+                            if (possibleColors.isEmpty()){
+                                    // Go through the colors in the frame
+                                for (Integer temp : colors){
+                                        // Add the inverse of the current color
+                                    possibleColors.add((~temp) & 0x00FFFFFF);
+                                }   // Remove all the colors in the frame
+                                possibleColors.removeAll(colors);
+                            }   // Reset the background color to null
+                            bg = null;
+                                // If there are no possible colors
+                            if (possibleColors.isEmpty()){
+                                getLogger().warning(
+                                        "Failed to find color to use for transparency, bruteforcing color");
+                                    // Go through the possible colors in the RGB 
+                                    // range of colors
+                                for (int c = 0; c <= 0x00FFFFFF && bg == null; c++){
+                                        // If the current color is not used
+                                    if (!colors.contains(c))
+                                        bg = new Color(c);
+                                }
+                            } else 
+                                bg = new Color(possibleColors.first());
+                        }
+                            // Set the background to the transparency color
+                        encoder.setBackground(bg);
+                            // Make the background color transparent.
+                        encoder.setTransparent(bg, false);
+                    }   // Add the frame to the gif
                     encoder.addFrame(frame);
                     progressBar.setValue(progressBar.getValue()+1);
                 }

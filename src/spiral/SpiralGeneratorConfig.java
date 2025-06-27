@@ -64,12 +64,16 @@ public class SpiralGeneratorConfig {
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     
+    @Deprecated
     public static final String SPIRAL_RADIUS_KEY = "Radius";
     
+    @Deprecated
     public static final String SPIRAL_BASE_KEY = "Base";
     
+    @Deprecated
     public static final String SPIRAL_THICKNESS_KEY = "Thickness";
     
+    @Deprecated
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
     @Deprecated
@@ -86,6 +90,8 @@ public class SpiralGeneratorConfig {
     public static final String IMAGE_WIDTH_KEY = "ImageWidth";
     
     public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
+    
+    public static final String OPTIMIZE_FOR_DIFFERENCE_KEY = "OptimizeForDifference";
     
     public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
     
@@ -761,6 +767,21 @@ public class SpiralGeneratorConfig {
      */
     public void setImageAlwaysScaled(boolean value){
         node.putBoolean(ALWAYS_SCALE_KEY, value);
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public boolean isOptimizedForDifference(){
+        return node.getBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setOptimizedForDifference(boolean value){
+        node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
     }
     
     public Preferences getMaskPreferences(){
