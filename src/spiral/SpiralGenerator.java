@@ -43,7 +43,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.BufferOverflowException;
@@ -5587,6 +5589,177 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             updateIconLabel.getIcon());
                 }
             }
+        }
+    }
+    /**
+     * 
+     */
+    private class ConfigDataSaver extends FileSaver{
+        /**
+         * 
+         */
+        private SpiralGeneratorProperties prop = null;
+        /**
+         * 
+         * @param file 
+         */
+        ConfigDataSaver(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean saveFile(File file) throws IOException {
+            if (prop == null)
+                prop = toProperties(file);
+            try (PrintWriter out = new PrintWriter(file)){
+                prop.store(out);
+            }
+            return true;
+        }
+        @Override
+        protected String getSuccessTitle(File file){
+            return "Config Data Saved Successfully";
+        }
+        @Override
+        protected String getSuccessMessage(File file){
+            return "The configuration data was successfully saved.";
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Config Data Failed To Save";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "There was an error saving the configuration frame data to file"+
+                    "\n\""+file+"\"."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving Config Data";
+        }
+    }
+    /**
+     * 
+     */
+    private class ConfigDataLoader extends FileLoader{
+        /**
+         * 
+         */
+        private List<BufferedImage> imgs = null;
+        /**
+         * 
+         */
+        private File imgFile = null;
+        /**
+         * The index of the image
+         */
+        private int imgIndex = 0;
+        /**
+         * 
+         */
+        private SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
+        /**
+         * 
+         */
+        private boolean propLoaded = false;
+        /**
+         * 
+         * @param file
+         * @param showFileNotFound 
+         */
+        ConfigDataLoader(File file, boolean showFileNotFound) {
+            super(file, showFileNotFound);
+        }
+        /**
+         * 
+         * @param file 
+         */
+        ConfigDataLoader(File file){
+            this(file,true);
+        }
+        @Override
+        protected boolean loadFile(File file) throws IOException {
+            getLogger().entering(this.getClass().getName(), "loadFile", file.getName());
+            if (!propLoaded){
+                try (FileReader in = new FileReader(file)){
+                    prop.load(in);
+                    imgFile = prop.getMaskImageFile();
+                    if (imgFile != null)
+                        imgFile = FilesExtended.resolve(file,imgFile);
+                    imgIndex = prop.getMaskImageFrameIndex();
+                    propLoaded = true;
+                    setProgressString(getProgressString());
+                    showFileNotFound = true;
+                }
+            }
+            if (imgFile != null){
+                if (!imgFile.exists())
+                    throw new FileNotFoundException("Image file not found");
+                imgs = loadImage(imgFile,imgs);
+                getLogger().exiting(this.getClass().getName(), "loadFile", !imgs.isEmpty());
+                return !imgs.isEmpty();
+            }
+            getLogger().exiting(this.getClass().getName(), "loadFile", true);
+            return true;
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return String.format("ERROR - %s Failed To Load", (propLoaded)?
+                    "Config Data":"Image");
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            if (propLoaded && imgFile != null)
+                return "The image file specified by the configuration data failed to load."
+                        + "\n\""+imgFile+"\""+msg;
+            return "The configuration frame data failed to load."+msg;
+        }
+        @Override
+        protected String getFileNotFoundMessage(File file, IOException ex){
+            if (propLoaded && imgFile != null)
+                return "The image file specified by the configuration data does not exist."
+                        + "\n\""+imgFile+"\"";
+            return super.getFileNotFoundMessage(file, ex);
+        }
+        @Override
+        public String getProgressString(){
+            if (propLoaded)
+                return "Loading Image";
+            return "Loading Config Data";
+        }
+        @Override
+        protected void done(){
+            if (propLoaded){
+                loadFromSettings(prop);
+                if (imgFile != null && success){
+                    setOverlayImages(imgs,imgIndex,imgFile,false);
+                } else {
+                    overlayFile = null;
+                    config.setMaskImageFile(null);
+                    config.setMaskImageFrameIndex(0);
+                }
+                config.setSpiralType(spiralTypeCombo.getSelectedIndex());
+                for (int i = 0; i < colorIcons.length; i++){
+                    config.setSpiralColor(i, prop.getSpiralColor(i));
+                }
+                config.setMaskType(prop.getMaskType());
+                config.setMaskFlags(prop.getMaskFlags());
+                config.setMaskDesaturateMode(prop.getMaskDesaturateMode());
+                config.setMaskImageInverted(prop.isMaskImageInverted());
+                config.setMaskAlphaIndex(prop.getMaskAlphaIndex());
+                config.setMaskImageInterpolation(prop.getMaskImageInterpolation());
+                config.setMaskImageAntialiased(prop.isMaskImageAntialiased());
+                config.setMaskShapeType(prop.getMaskShapeType());
+                config.setMaskShapeSizeLinked(prop.isMaskShapeSizeLinked());
+                /*
+                */
+            }
+            super.done();
         }
     }
 }
