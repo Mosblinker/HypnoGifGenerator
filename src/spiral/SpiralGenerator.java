@@ -3783,9 +3783,74 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         return prop;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     private SpiralGeneratorProperties toProperties(){
         return toProperties(null);
+    }
+    /**
+     * 
+     * @param file
+     * @param images
+     * @return
+     * @throws IOException 
+     */
+    private List<BufferedImage> loadImage(File file, List<BufferedImage> images) 
+            throws IOException{ 
+        getLogger().entering(this.getClass().getName(), "loadImage", file.getName());
+        if (images == null)
+            images = new ArrayList<>();
+        else
+            images.clear();
+            // Get a GIF decoder to decode the image if it's a GIF
+        GifDecoder decoder = new GifDecoder();
+            // Try to decode the image and get the status of the decoder
+        int status = decoder.read(file.toString());
+        getLogger().log(Level.FINER, "GifDecoder Status: {0}", status);
+            // If the image is a GIF that decoded just fine and there are 
+            // any frames in the image
+        if (status == 0 && decoder.getFrameCount() > 0){
+            getLogger().log(Level.FINER, "Decoded {0} frames.", decoder.getFrameCount());
+                // Go through the decoded frames
+            for (int i = 0; i < decoder.getFrameCount(); i++){
+                    // Get the current frame
+                BufferedImage img = decoder.getFrame(i);
+                    // If that frame is not null
+                if (img != null)
+                    images.add(img);
+            }
+        } else{
+            getLogger().finer("Using ImageIO to read file.");
+                // Read the image from the file
+            BufferedImage img = ImageIO.read(file);
+                // If the image is not null
+            if (img != null)
+                images.add(img);
+        }
+        getLogger().log(Level.FINER, "Loaded {0} images from file.", images.size());
+        getLogger().exiting(this.getClass().getName(), "loadImage");
+        return images;
+    }
+    /**
+     * 
+     * @param images
+     * @param index
+     * @param file
+     * @param initLoad 
+     */
+    private void setOverlayImages(List<BufferedImage> images, int index, 
+            File file, boolean initLoad){
+        overlayFile = file;
+        overlayImages.clear();
+        overlayImages.addAll(images);
+        maskFrameCtrlPanel.setVisible(overlayImages.size() > 1);
+            // If the program is not loading this image at the start of the 
+            // program
+        if (!initLoad)
+            config.setMaskImageFile(file);
+        setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
@@ -5348,7 +5413,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         /**
          * 
          */
-        private ArrayList<BufferedImage> imgs = new ArrayList<>();
+        private List<BufferedImage> imgs = null;
         /**
          * Whether this is being used during the initial loading of the program
          */
@@ -5390,33 +5455,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         protected boolean loadFile(File file) throws IOException {
             getLogger().entering(this.getClass().getName(), "loadFile", file.getName());
-            imgs.clear();
-                // Get a GIF decoder to decode the image if it's a GIF
-            GifDecoder decoder = new GifDecoder();
-                // Try to decode the image and get the status of the decoder
-            int status = decoder.read(file.toString());
-            getLogger().log(Level.FINER, "GifDecoder Status: {0}", status);
-                // If the image is a GIF that decoded just fine and there are 
-                // any frames in the image
-            if (status == 0 && decoder.getFrameCount() > 0){
-                getLogger().log(Level.FINER, "Decoded {0} frames.", decoder.getFrameCount());
-                    // Go through the decoded frames
-                for (int i = 0; i < decoder.getFrameCount(); i++){
-                        // Get the current frame
-                    BufferedImage img = decoder.getFrame(i);
-                        // If that frame is not null
-                    if (img != null)
-                        imgs.add(img);
-                }
-            } else{
-                getLogger().finer("Using ImageIO to read file.");
-                    // Read the image from the file
-                BufferedImage img = ImageIO.read(file);
-                    // If the image is not null
-                if (img != null)
-                    imgs.add(img);
-            }
-            getLogger().log(Level.FINER, "Loaded {0} images from file.", imgs.size());
+            imgs = loadImage(file,imgs);
             getLogger().exiting(this.getClass().getName(), "loadFile", !imgs.isEmpty());
             return !imgs.isEmpty();
         }
@@ -5437,17 +5476,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
-            overlayFile = (success) ? file : null;
+            overlayFile = null;
                 // If this was successful in loading the image
             if (success){
-                overlayImages.clear();
-                overlayImages.addAll(imgs);
-                maskFrameCtrlPanel.setVisible(overlayImages.size() > 1);
-                    // If the program is not loading this image at the start of 
-                    // the program
-                if (!initLoad)
-                    config.setMaskImageFile(file);
-                setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
+                setOverlayImages(imgs,index,file,initLoad);
                 // If the program failed to load the image mask at the start of 
                 // the program
             } else if (initLoad){
