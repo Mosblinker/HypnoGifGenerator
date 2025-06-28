@@ -173,7 +173,7 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         String value = getProperty(key);
         if (value != null){
             try{
-                return Base64.getDecoder().decode(key);
+                return Base64.getDecoder().decode(value);
             } catch (NumberFormatException ex){}
         }
         return defaultValue;
