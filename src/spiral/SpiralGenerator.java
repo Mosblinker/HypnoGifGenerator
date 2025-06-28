@@ -2922,11 +2922,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
 
     private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigButtonActionPerformed
-        // TODO add your handling code here:
+        configFC.setDialogTitle("Save Configuration...");
+            // Get the image file to save the frame data
+        File file = showSaveFileChooser(configFC);
+            // Set the selected file for the file chooser
+        config.setSelectedFile(configFC, file);
+            // If the user selected a file to save to
+        if (file != null){
+            fileWorker = new ConfigDataSaver(file);
+            fileWorker.execute();
+        }
     }//GEN-LAST:event_saveConfigButtonActionPerformed
 
     private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadConfigButtonActionPerformed
-        // TODO add your handling code here:
+        configFC.setDialogTitle("Load Configuration From...");
+            // Get the image file to save the config data
+        File file = showOpenFileChooser(configFC);
+            // Set the selected file for the file chooser
+        config.setSelectedFile(configFC, file);
+            // If the user selected a file to save to
+        if (file != null){
+            fileWorker = new ConfigDataLoader(file);
+            fileWorker.execute();
+        }
     }//GEN-LAST:event_loadConfigButtonActionPerformed
     /**
      * This returns the width for the image.
