@@ -220,6 +220,112 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return logger;
     }
     /**
+     * 
+     */
+    private void loadFromSettings(SpiralGeneratorSettings settings){
+        for (int i = 0; i < colorIcons.length; i++){
+            colorIcons[i].setColor(settings.getSpiralColor(i,DEFAULT_SPIRAL_COLORS[i]));
+        }
+        
+        loadFromSettings(settings,settings.getSpiralType(),settings.getMaskType(),
+                false);
+    }
+    /**
+     * 
+     * @param settings 
+     */
+    private void loadFromSettings(SpiralGeneratorSettings settings, int spiralType, 
+            int maskType, boolean initialLoad){
+        widthSpinner.setValue(settings.getImageWidth());
+        heightSpinner.setValue(settings.getImageHeight());
+        
+        getLogger().log(Level.FINE, "Loading SpiralPainters");
+            // Go through the spiral painters
+        for (SpiralPainter painter : spiralPainters){
+                // Get the byte array for the painter from the preferences
+            byte[] arr = settings.getSpiralData(painter);
+            try{    // Load the current spiral painter from the byte array
+                painter.fromByteArray(arr);
+            } catch (IllegalArgumentException | BufferOverflowException | 
+                    BufferUnderflowException ex) {
+                getLogger().log(Level.WARNING, String.format(
+                        "Failed to load %s from preferences using %s", 
+                        painter.getClass(),toByteString(arr)), ex);
+            }
+        }
+        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
+        
+            // Configure the overlay mask's text painter's settings from the 
+            // preferences
+        overlayMask.textPainter.setAntialiasingEnabled(
+                settings.isMaskTextAntialiased(true));
+        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
+        overlayMask.textPainter.setLineSpacing(settings.getMaskLineSpacing(0));
+        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
+        
+        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
+                spiralPainters.length-1), 0));
+        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
+                maskTabbedPane.getTabCount()-1), 0));
+        maskAlphaToggle.setSelected(true);
+        settings.loadMaskAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setSelected(settings.isMaskImageInverted());
+        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
+                settings.getMaskDesaturateMode(), 
+                maskDesaturateCombo.getItemCount()-1), 0));
+        updateMaskAlphaControlsEnabled();
+        maskShapeLinkSizeToggle.setSelected(settings.isMaskShapeSizeLinked());
+        maskShapeWidthSpinner.setValue(settings.getMaskShapeWidth());
+        maskShapeHeightSpinner.setValue(settings.getMaskShapeHeight());
+        updateMaskShapeControlsEnabled();
+        
+        imgMaskAntialiasingToggle.setSelected(settings.isMaskImageAntialiased());
+        maskScaleSpinner.setValue(settings.getMaskScale());
+        delaySpinner.setValue(settings.getFrameDuration());
+            // Get the mask's rotation
+        double imgRotation = settings.getMaskRotation();
+            // Ensure that the mask's rotation is a multiple of the increment
+        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
+        try{
+            maskRotateSpinner.setValue(imgRotation);
+        } catch (IllegalArgumentException ex){
+            getLogger().log(Level.WARNING, "Mask rotation is invalid", ex);
+        }
+        maskFlipHorizToggle.setSelected(settings.isMaskFlippedHorizontally());
+        maskFlipVertToggle.setSelected(settings.isMaskFlippedVertically());
+        maskImgScaleMethodCombo.setSelectedIndex(settings.getMaskImageInterpolation(4));
+        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
+                settings.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
+        
+            // Load the values for the components for controlling the spiral 
+            // from the current spiral painter
+        loadSpiralPainter();
+        
+            // Get the font for the text mask from the preferences
+        Font font = settings.getMaskFont(maskTextPane.getFont());
+        maskTextPane.setFont(font);
+        boldToggle.setSelected(font.isBold());
+        italicToggle.setSelected(font.isItalic());
+            // Load the text for the mask from the preferences
+        maskTextPane.setText(settings.getMaskText());
+        
+            // If the mask is an image
+        if (maskTabbedPane.getSelectedIndex() == 1 || !initialLoad){
+                // Get the overlay mask image file from the preferences
+            File file = settings.getMaskImageFile();
+                // If the overlay mask image file is not null and does exist
+            if (file != null && file.exists()){
+                    // Load the image file from the preferences
+                fileWorker = new ImageLoader(file, initialLoad, 
+                        settings.getMaskImageFrameIndex());
+                fileWorker.execute();
+            }
+        } else {
+            settings.setMaskImageFile(null);
+            settings.setMaskImageFrameIndex(0);
+        }
+    }
+    /**
      * Creates new form SpiralGenerator
      * @param debugMode
      */
@@ -268,30 +374,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ConcentricSpiralPainter(),
             new RippleSpiralPainter()
         };
-        
-        getLogger().log(Level.FINE, "Loading SpiralPainters");
-            // Go through the spiral painters
-        for (SpiralPainter painter : spiralPainters){
-                // Get the byte array for the painter from the preferences
-            byte[] arr = config.getSpiralData(painter);
-            try{    // Load the current spiral painter from the byte array
-                painter.fromByteArray(arr);
-            } catch (IllegalArgumentException | BufferOverflowException | 
-                    BufferUnderflowException ex) {
-                getLogger().log(Level.WARNING, String.format(
-                        "Failed to load %s from preferences using %s", 
-                        painter.getClass(),toByteString(arr)), ex);
-            }
-        }
-        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
-        
-            // Configure the overlay mask's text painter's settings from the 
-            // preferences
-        overlayMask.textPainter.setAntialiasingEnabled(
-                config.isMaskTextAntialiased(
-                        overlayMask.textPainter.isAntialiasingEnabled()));
-        overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(
-                overlayMask.textPainter.getLineSpacing()));
         
         spiralCompLabels = new HashMap<>();
         
@@ -438,61 +520,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.getProgramBounds(SpiralGenerator.this);
         
             // Load the settings for the program from the preferences
-        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
-                spiralPainters.length-1), 0));
-        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
-                maskTabbedPane.getTabCount()-1), 0));
-        config.loadMaskAlphaIndex(maskAlphaButtons);
-        maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
-        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
-                config.getMaskDesaturateMode(), 
-                maskDesaturateCombo.getItemCount()-1), 0));
-        updateMaskAlphaControlsEnabled();
-        maskShapeLinkSizeToggle.setSelected(config.isMaskShapeSizeLinked());
-        maskShapeWidthSpinner.setValue(config.getMaskShapeWidth());
-        maskShapeHeightSpinner.setValue(config.getMaskShapeHeight());
-        updateMaskShapeControlsEnabled();
-        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
-        imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
-        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
-        maskScaleSpinner.setValue(config.getMaskScale());
-        delaySpinner.setValue(config.getFrameDuration(SPIRAL_FRAME_DURATION));
+        loadFromSettings(config,spiralType,maskType,true);
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
-        widthSpinner.setValue(config.getImageWidth());
-        heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
         optimizeDifferenceToggle.setSelected(config.isOptimizedForDifference());
-            // Get the mask's rotation
-        double imgRotation = config.getMaskRotation();
-            // Ensure that the mask's rotation is a multiple of the increment
-        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
-        try{
-            maskRotateSpinner.setValue(imgRotation);
-        } catch (IllegalArgumentException ex){
-            getLogger().log(Level.WARNING, "Mask rotation is invalid", ex);
-        }
-        maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
-        maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
-        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
-                maskImgScaleMethodCombo.getSelectedIndex()));
-        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
-                config.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
-        
-            // Load the values for the components for controlling the spiral 
-            // from the current spiral painter
-        loadSpiralPainter();
-        
-            // Get the font for the text mask from the preferences
-        Font font = config.getMaskFont(maskTextPane.getFont());
-        maskTextPane.setFont(font);
-        boldToggle.setSelected(font.isBold());
-        italicToggle.setSelected(font.isItalic());
             // Load the size of the font selector from the preferences
         fontDim = config.getMaskFontSelectorSize();
-            // Load the text for the mask from the preferences
-        maskTextPane.setText(config.getMaskText());
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
@@ -516,22 +551,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         doc.addDocumentListener(handler);
-        
-            // If the mask is an image
-        if (maskTabbedPane.getSelectedIndex() == 1){
-                // Get the overlay mask image file from the preferences
-            File overlayFile = config.getMaskImageFile();
-                // If the overlay mask image file is not null and does exist
-            if (overlayFile != null && overlayFile.exists()){
-                    // Load the image file from the preferences
-                fileWorker = new ImageLoader(overlayFile, true, 
-                        config.getMaskImageFrameIndex());
-                fileWorker.execute();
-            }
-        } else {
-            config.setMaskImageFile(null);
-            config.setMaskImageFrameIndex(0);
-        }
         
             // If the program is in debug mode
         if (debugMode){
