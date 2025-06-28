@@ -921,6 +921,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         ctrlButtonPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         aboutButton = new javax.swing.JButton();
+        configButtonPanel = new javax.swing.JPanel();
+        saveConfigButton = new javax.swing.JButton();
+        loadConfigButton = new javax.swing.JButton();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2273,6 +2276,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         ctrlButtonPanel.add(aboutButton);
 
+        configButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        saveConfigButton.setText("Save Config");
+        saveConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(saveConfigButton);
+
+        loadConfigButton.setText("Load Config");
+        loadConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(loadConfigButton);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2283,14 +2304,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(maskEditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(imageCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imageCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(configButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2310,7 +2332,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(maskEditButton)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(configButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -2872,6 +2896,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
         config.setOptimizedForDifference(optimizeDifferenceToggle.isSelected());
     }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
+
+    private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveConfigButtonActionPerformed
+
+    private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadConfigButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loadConfigButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3469,6 +3501,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox boldToggle;
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;
     private components.JColorSelector colorSelector;
+    private javax.swing.JPanel configButtonPanel;
     private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JLabel currentVersLabel;
     private javax.swing.JLabel currentVersTextLabel;
@@ -3501,6 +3534,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
+    private javax.swing.JButton loadConfigButton;
     private javax.swing.JButton loadMaskButton;
     private javax.swing.JRadioButton maskAlphaBlueToggle;
     private javax.swing.ButtonGroup maskAlphaButtons;
@@ -3556,6 +3590,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton resetButton;
     private javax.swing.JButton resetMaskButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton saveConfigButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
     private javax.swing.JPanel shapeMaskCtrlPanel;
