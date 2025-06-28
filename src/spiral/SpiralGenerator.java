@@ -861,6 +861,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         latestVersLabel = new javax.swing.JLabel();
         updateContinueButton = new javax.swing.JButton();
         updateOpenButton = new javax.swing.JButton();
+        configFC = new javax.swing.JFileChooser();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -3502,6 +3503,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel configButtonPanel;
+    private javax.swing.JFileChooser configFC;
     private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JLabel currentVersLabel;
     private javax.swing.JLabel currentVersTextLabel;
@@ -3530,6 +3532,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
