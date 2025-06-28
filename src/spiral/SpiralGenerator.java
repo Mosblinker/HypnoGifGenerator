@@ -3710,6 +3710,40 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateFrameControls();
         updateControlsEnabled();
         optimizeDifferenceToggle.setEnabled(enabled);
+    
+    private SpiralGeneratorProperties toProperties(){
+        SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
+        prop.setImageWidth(getImageWidth());
+        prop.setImageHeight(getImageHeight());
+        prop.setFrameDuration(animationTimer.getDelay());
+        for (int i = 0; i < colorIcons.length; i++){
+            prop.setSpiralColor(i, colorIcons[i].getColor());
+        }
+        prop.setSpiralType(spiralTypeCombo.getSelectedIndex());
+        for (SpiralPainter painter : spiralPainters){
+            prop.setSpiralData(painter);
+        }
+        prop.setMaskType(maskTabbedPane.getSelectedIndex());
+        prop.setMaskScale((double)maskScaleSpinner.getValue());
+        prop.setMaskRotation((double)maskRotateSpinner.getValue());
+        prop.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
+        prop.setMaskFlippedVertically((maskFlipVertToggle.isSelected()));
+        prop.setMaskText(maskTextPane.getText());
+        prop.setMaskFont(maskTextPane.getFont());
+        prop.setMaskTextAntialiased(fontAntialiasingToggle.isSelected());
+        prop.setMaskLineSpacing((double)lineSpacingSpinner.getValue());
+        prop.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
+        prop.setMaskAlphaIndex(maskAlphaButtons);
+        prop.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        prop.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        prop.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+        prop.setMaskImageFrameIndex(overlayImageIndex);
+        prop.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
+        prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
+        prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        
+        return prop;
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
