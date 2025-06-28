@@ -15,7 +15,9 @@ import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
 import files.FilesExtended;
+import files.extensions.ConfigExtensions;
 import files.extensions.ImageExtensions;
+import files.extensions.TextDocumentExtensions;
 import geom.GeometryMath;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
@@ -395,6 +397,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskFC.addChoosableFileFilter(filter);
         }   // Set the current file filter to the image filter
         maskFC.setFileFilter(ImageExtensions.IMAGE_FILTER);
+        
+            // Add file filters to config file choosers
+        configFC.addChoosableFileFilter(TextDocumentExtensions.TEXT_FILTER);
         
             // Go through the labels for the components used to set the 
             // parameters for the spirals
@@ -1776,6 +1781,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     .addComponent(updateOpenButton))
                 .addContainerGap())
         );
+
+        configFC.setFileFilter(ConfigExtensions.CONFIG_FILTER);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME);

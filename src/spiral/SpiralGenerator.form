@@ -1364,6 +1364,11 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JFileChooser" name="configFC">
+      <Properties>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ConfigExtensions.CONFIG_FILTER" type="code"/>
+        </Property>
+      </Properties>
     </Component>
   </NonVisualComponents>
   <Properties>
