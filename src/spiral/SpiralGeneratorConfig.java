@@ -72,71 +72,17 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     @Deprecated
     public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
-    
-    public static final String SPIRAL_COLOR_KEY_PREFIX = "SpiralColor";
-    
-    public static final String SPIRAL_TYPE_KEY = "SpiralType";
     /**
      * 
      */
     public static final String ALWAYS_SCALE_KEY = "AlwaysScale";
     
-    public static final String IMAGE_WIDTH_KEY = "ImageWidth";
-    
-    public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
-    
     public static final String OPTIMIZE_FOR_DIFFERENCE_KEY = "OptimizeForDifference";
-    
-    public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
-    
-    public static final String MASK_IMAGE_ANTIALIASING_KEY = "ImageAntialiasing";
-    
-    public static final String MASK_LINE_SPACING_KEY = "LineSpacing";
-    
-    public static final String MASK_FONT_SIZE_KEY = "FontSize";
-    
-    public static final String MASK_FONT_STYLE_KEY = "FontStyle";
-    
-    public static final String MASK_FONT_FAMILY_KEY = "FontFamily";
-    
-    public static final String MASK_FONT_NAME_KEY = "FontName";
-    
-    public static final String MASK_TEXT_KEY = "MaskText";
     
     public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
     
-    public static final String MASK_SCALE_KEY = "MaskScale";
-    
-    public static final String MASK_TYPE_KEY = "MaskType";
-    
-    public static final String MASK_ALPHA_CHANNEL_INDEX_KEY = "MaskAlphaChannelIndex";
-    
-    public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
-    
-    public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
-    
-    public static final String MASK_IMAGE_FILE_KEY = "MaskImageFile";
-    
-    public static final String MASK_IMAGE_FRAME_INDEX_KEY = "MaskImageFrameIndex";
-    
-    public static final String MASK_IMAGE_INTERPOLATION_KEY = "MaskImageInterpolation";
-    
-    public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
-    
-    public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
-    
-    public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
-    
-    public static final String MASK_SHAPE_TYPE_KEY = "MaskShapeType";
-    
-    public static final String MASK_ROTATION_KEY = "MaskRotation";
-    
-    public static final String MASK_FLAGS_KEY = "MaskFlags";
-    
-    public static final String FRAME_DURATION_KEY = "FrameDuration";
-    
     public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
-    
+
     
     
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
