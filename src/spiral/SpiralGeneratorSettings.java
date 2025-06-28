@@ -59,19 +59,19 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    public static final String MASK_FONT_SIZE_KEY = "FontSize";
+    public static final String MASK_FONT_SIZE_KEY = "MaskFontSize";
     /**
      * 
      */
-    public static final String MASK_FONT_STYLE_KEY = "FontStyle";
+    public static final String MASK_FONT_STYLE_KEY = "MaskFontStyle";
     /**
      * 
      */
-    public static final String MASK_FONT_FAMILY_KEY = "FontFamily";
+    public static final String MASK_FONT_FAMILY_KEY = "MaskFontFamily";
     /**
      * 
      */
-    public static final String MASK_FONT_NAME_KEY = "FontName";
+    public static final String MASK_FONT_NAME_KEY = "MaskFontName";
     /**
      * 
      */
@@ -79,15 +79,15 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    public static final String MASK_LINE_SPACING_KEY = "LineSpacing";
+    public static final String MASK_LINE_SPACING_KEY = "MaskLineSpacing";
     /**
      * 
      */
-    public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
+    public static final String MASK_TEXT_ANTIALIASING_KEY = "MaskTextAntialiasing";
     /**
      * 
      */
-    public static final String MASK_IMAGE_ANTIALIASING_KEY = "ImageAntialiasing";
+    public static final String MASK_IMAGE_ANTIALIASING_KEY = "MaskImageAntialiasing";
     /**
      * 
      */
