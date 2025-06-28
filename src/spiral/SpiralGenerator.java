@@ -229,15 +229,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             colorIcons[i].setColor(settings.getSpiralColor(i,DEFAULT_SPIRAL_COLORS[i]));
         }
         
-        loadFromSettings(settings,settings.getSpiralType(),settings.getMaskType(),
-                false);
+        loadFromSettings(settings,settings.getSpiralType(),settings.getMaskType());
     }
     /**
      * 
      * @param settings 
      */
     private void loadFromSettings(SpiralGeneratorSettings settings, int spiralType, 
-            int maskType, boolean initialLoad){
+            int maskType){
         widthSpinner.setValue(settings.getImageWidth());
         heightSpinner.setValue(settings.getImageHeight());
         
@@ -310,22 +309,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicToggle.setSelected(font.isItalic());
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
-        
-            // If the mask is an image
-        if (maskTabbedPane.getSelectedIndex() == 1 || !initialLoad){
-                // Get the overlay mask image file from the preferences
-            File file = settings.getMaskImageFile();
-                // If the overlay mask image file is not null and does exist
-            if (file != null && file.exists()){
-                    // Load the image file from the preferences
-                fileWorker = new ImageLoader(file, initialLoad, 
-                        settings.getMaskImageFrameIndex());
-                fileWorker.execute();
-            }
-        } else {
-            settings.setMaskImageFile(null);
-            settings.setMaskImageFrameIndex(0);
-        }
     }
     /**
      * Creates new form SpiralGenerator
@@ -523,7 +506,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.getProgramBounds(SpiralGenerator.this);
         
             // Load the settings for the program from the preferences
-        loadFromSettings(config,spiralType,maskType,true);
+        loadFromSettings(config,spiralType,maskType);
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
@@ -554,6 +537,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
         doc.addDocumentListener(handler);
+        
+            // If the mask is an image
+        if (maskTabbedPane.getSelectedIndex() == 1){
+                // Get the overlay mask image file from the preferences
+            File file = config.getMaskImageFile();
+                // If the overlay mask image file is not null and does exist
+            if (file != null && file.exists()){
+                    // Load the image file from the preferences
+                fileWorker = new ImageLoader(file, true, 
+                        config.getMaskImageFrameIndex());
+                fileWorker.execute();
+            }
+        } else {
+            config.setMaskImageFile(null);
+            config.setMaskImageFrameIndex(0);
+        }
         
             // If the program is in debug mode
         if (debugMode){
