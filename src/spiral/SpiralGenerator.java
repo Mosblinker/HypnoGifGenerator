@@ -15,7 +15,9 @@ import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
 import components.text.action.commands.UndoManagerCommands;
 import files.FilesExtended;
+import files.extensions.ConfigExtensions;
 import files.extensions.ImageExtensions;
+import files.extensions.TextDocumentExtensions;
 import geom.GeometryMath;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
@@ -43,7 +45,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.BufferOverflowException;
@@ -162,7 +166,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the duration for each frame of animation.
      */
-    private static final int SPIRAL_FRAME_DURATION = 20;
+    protected static final int SPIRAL_FRAME_DURATION = 20;
     /**
      * This is the name of the preference node used to store the settings for 
      * this program.
@@ -199,6 +203,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String SAVE_FILE_CHOOSER_NAME = "SaveFC";
     
+    private static final String CONFIG_FILE_CHOOSER_NAME = "ConfigFC";
+    
     private static final String COLOR_SELECTOR_NAME = "ColorSelector";
     
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
@@ -218,6 +224,95 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public static Logger getLogger(){
         return logger;
+    }
+    /**
+     * 
+     */
+    private void loadFromSettings(SpiralGeneratorSettings settings){
+        for (int i = 0; i < colorIcons.length; i++){
+            colorIcons[i].setColor(settings.getSpiralColor(i,DEFAULT_SPIRAL_COLORS[i]));
+        }
+        
+        loadFromSettings(settings,settings.getSpiralType(),settings.getMaskType());
+    }
+    /**
+     * 
+     * @param settings 
+     */
+    private void loadFromSettings(SpiralGeneratorSettings settings, int spiralType, 
+            int maskType){
+        widthSpinner.setValue(settings.getImageWidth());
+        heightSpinner.setValue(settings.getImageHeight());
+        
+        getLogger().log(Level.FINE, "Loading SpiralPainters");
+            // Go through the spiral painters
+        for (SpiralPainter painter : spiralPainters){
+                // Get the byte array for the painter from the preferences
+            byte[] arr = settings.getSpiralData(painter);
+            try{    // Load the current spiral painter from the byte array
+                painter.fromByteArray(arr);
+            } catch (IllegalArgumentException | BufferOverflowException | 
+                    BufferUnderflowException ex) {
+                getLogger().log(Level.WARNING, String.format(
+                        "Failed to load %s from preferences using %s", 
+                        painter.getClass(),toByteString(arr)), ex);
+            }
+        }
+        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
+        
+            // Configure the overlay mask's text painter's settings from the 
+            // preferences
+        overlayMask.textPainter.setAntialiasingEnabled(
+                settings.isMaskTextAntialiased(true));
+        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
+        overlayMask.textPainter.setLineSpacing(settings.getMaskLineSpacing(0));
+        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
+        
+        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
+                spiralPainters.length-1), 0));
+        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
+                maskTabbedPane.getTabCount()-1), 0));
+        maskAlphaToggle.setSelected(true);
+        settings.loadMaskAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setSelected(settings.isMaskImageInverted());
+        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
+                settings.getMaskDesaturateMode(), 
+                maskDesaturateCombo.getItemCount()-1), 0));
+        updateMaskAlphaControlsEnabled();
+        maskShapeLinkSizeToggle.setSelected(settings.isMaskShapeSizeLinked());
+        maskShapeWidthSpinner.setValue(settings.getMaskShapeWidth());
+        maskShapeHeightSpinner.setValue(settings.getMaskShapeHeight());
+        updateMaskShapeControlsEnabled();
+        
+        imgMaskAntialiasingToggle.setSelected(settings.isMaskImageAntialiased());
+        maskScaleSpinner.setValue(settings.getMaskScale());
+        delaySpinner.setValue(settings.getFrameDuration());
+            // Get the mask's rotation
+        double imgRotation = settings.getMaskRotation();
+            // Ensure that the mask's rotation is a multiple of the increment
+        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
+        try{
+            maskRotateSpinner.setValue(imgRotation);
+        } catch (IllegalArgumentException ex){
+            getLogger().log(Level.WARNING, "Mask rotation is invalid", ex);
+        }
+        maskFlipHorizToggle.setSelected(settings.isMaskFlippedHorizontally());
+        maskFlipVertToggle.setSelected(settings.isMaskFlippedVertically());
+        maskImgScaleMethodCombo.setSelectedIndex(settings.getMaskImageInterpolation(4));
+        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
+                settings.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
+        
+            // Load the values for the components for controlling the spiral 
+            // from the current spiral painter
+        loadSpiralPainter();
+        
+            // Get the font for the text mask from the preferences
+        Font font = settings.getMaskFont(maskTextPane.getFont());
+        maskTextPane.setFont(font);
+        boldToggle.setSelected(font.isBold());
+        italicToggle.setSelected(font.isItalic());
+            // Load the text for the mask from the preferences
+        maskTextPane.setText(settings.getMaskText());
     }
     /**
      * Creates new form SpiralGenerator
@@ -269,30 +364,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new RippleSpiralPainter()
         };
         
-        getLogger().log(Level.FINE, "Loading SpiralPainters");
-            // Go through the spiral painters
-        for (SpiralPainter painter : spiralPainters){
-                // Get the byte array for the painter from the preferences
-            byte[] arr = config.getSpiralData(painter);
-            try{    // Load the current spiral painter from the byte array
-                painter.fromByteArray(arr);
-            } catch (IllegalArgumentException | BufferOverflowException | 
-                    BufferUnderflowException ex) {
-                getLogger().log(Level.WARNING, String.format(
-                        "Failed to load %s from preferences using %s", 
-                        painter.getClass(),toByteString(arr)), ex);
-            }
-        }
-        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
-        
-            // Configure the overlay mask's text painter's settings from the 
-            // preferences
-        overlayMask.textPainter.setAntialiasingEnabled(
-                config.isMaskTextAntialiased(
-                        overlayMask.textPainter.isAntialiasingEnabled()));
-        overlayMask.textPainter.setLineSpacing(config.getMaskLineSpacing(
-                overlayMask.textPainter.getLineSpacing()));
-        
         spiralCompLabels = new HashMap<>();
         
         try{
@@ -326,6 +397,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskFC.addChoosableFileFilter(filter);
         }   // Set the current file filter to the image filter
         maskFC.setFileFilter(ImageExtensions.IMAGE_FILTER);
+        
+            // Add file filters to config file choosers
+        configFC.addChoosableFileFilter(TextDocumentExtensions.TEXT_FILTER);
         
             // Go through the labels for the components used to set the 
             // parameters for the spirals
@@ -421,6 +495,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
+        config.setComponentName(configFC, CONFIG_FILE_CHOOSER_NAME);
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
                 // If the component is a file chooser
@@ -438,61 +513,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.getProgramBounds(SpiralGenerator.this);
         
             // Load the settings for the program from the preferences
-        spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
-                spiralPainters.length-1), 0));
-        maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
-                maskTabbedPane.getTabCount()-1), 0));
-        config.loadMaskAlphaIndex(maskAlphaButtons);
-        maskAlphaInvertToggle.setSelected(config.isMaskImageInverted());
-        maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
-                config.getMaskDesaturateMode(), 
-                maskDesaturateCombo.getItemCount()-1), 0));
-        updateMaskAlphaControlsEnabled();
-        maskShapeLinkSizeToggle.setSelected(config.isMaskShapeSizeLinked());
-        maskShapeWidthSpinner.setValue(config.getMaskShapeWidth());
-        maskShapeHeightSpinner.setValue(config.getMaskShapeHeight());
-        updateMaskShapeControlsEnabled();
-        fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
-        imgMaskAntialiasingToggle.setSelected(config.isMaskImageAntialiased());
-        lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
-        maskScaleSpinner.setValue(config.getMaskScale());
-        delaySpinner.setValue(config.getFrameDuration(SPIRAL_FRAME_DURATION));
+        loadFromSettings(config,spiralType,maskType);
         alwaysScaleToggle.setSelected(config.isImageAlwaysScaled());
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
-        widthSpinner.setValue(config.getImageWidth());
-        heightSpinner.setValue(config.getImageHeight());
         checkUpdatesAtStartToggle.setSelected(config.getCheckForUpdateAtStartup());
         optimizeDifferenceToggle.setSelected(config.isOptimizedForDifference());
-            // Get the mask's rotation
-        double imgRotation = config.getMaskRotation();
-            // Ensure that the mask's rotation is a multiple of the increment
-        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
-        try{
-            maskRotateSpinner.setValue(imgRotation);
-        } catch (IllegalArgumentException ex){
-            getLogger().log(Level.WARNING, "Mask rotation is invalid", ex);
-        }
-        maskFlipHorizToggle.setSelected(config.isMaskFlippedHorizontally());
-        maskFlipVertToggle.setSelected(config.isMaskFlippedVertically());
-        maskImgScaleMethodCombo.setSelectedIndex(config.getMaskImageInterpolation(
-                maskImgScaleMethodCombo.getSelectedIndex()));
-        maskShapeCombo.setSelectedIndex(Math.max(Math.min(
-                config.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
-        
-            // Load the values for the components for controlling the spiral 
-            // from the current spiral painter
-        loadSpiralPainter();
-        
-            // Get the font for the text mask from the preferences
-        Font font = config.getMaskFont(maskTextPane.getFont());
-        maskTextPane.setFont(font);
-        boldToggle.setSelected(font.isBold());
-        italicToggle.setSelected(font.isItalic());
             // Load the size of the font selector from the preferences
         fontDim = config.getMaskFontSelectorSize();
-            // Load the text for the mask from the preferences
-        maskTextPane.setText(config.getMaskText());
         
             // Create and configure the actions for the mask text pane
         editCommands = new TextComponentCommands(maskTextPane);
@@ -520,11 +548,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the mask is an image
         if (maskTabbedPane.getSelectedIndex() == 1){
                 // Get the overlay mask image file from the preferences
-            File overlayFile = config.getMaskImageFile();
+            File file = config.getMaskImageFile();
                 // If the overlay mask image file is not null and does exist
-            if (overlayFile != null && overlayFile.exists()){
+            if (file != null && file.exists()){
                     // Load the image file from the preferences
-                fileWorker = new ImageLoader(overlayFile, true, 
+                fileWorker = new ImageLoader(file, true, 
                         config.getMaskImageFrameIndex());
                 fileWorker.execute();
             }
@@ -861,6 +889,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         latestVersLabel = new javax.swing.JLabel();
         updateContinueButton = new javax.swing.JButton();
         updateOpenButton = new javax.swing.JButton();
+        configFC = new javax.swing.JFileChooser();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -921,6 +950,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         ctrlButtonPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         aboutButton = new javax.swing.JButton();
+        configButtonPanel = new javax.swing.JPanel();
+        saveConfigButton = new javax.swing.JButton();
+        loadConfigButton = new javax.swing.JButton();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -1750,6 +1782,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap())
         );
 
+        configFC.setFileFilter(ConfigExtensions.CONFIG_FILTER);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME);
         setLocationByPlatform(true);
@@ -2273,6 +2307,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         ctrlButtonPanel.add(aboutButton);
 
+        configButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        saveConfigButton.setText("Save Config");
+        saveConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(saveConfigButton);
+
+        loadConfigButton.setText("Load Config");
+        loadConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(loadConfigButton);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -2283,14 +2335,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     .addComponent(framesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(maskEditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(imageCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(imageCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(configButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2310,7 +2363,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(maskEditButton)
                             .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(configButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -2872,6 +2927,32 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
         config.setOptimizedForDifference(optimizeDifferenceToggle.isSelected());
     }//GEN-LAST:event_optimizeDifferenceToggleActionPerformed
+
+    private void saveConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigButtonActionPerformed
+        configFC.setDialogTitle("Save Configuration...");
+            // Get the image file to save the frame data
+        File file = showSaveFileChooser(configFC);
+            // Set the selected file for the file chooser
+        config.setSelectedFile(configFC, file);
+            // If the user selected a file to save to
+        if (file != null){
+            fileWorker = new ConfigDataSaver(file);
+            fileWorker.execute();
+        }
+    }//GEN-LAST:event_saveConfigButtonActionPerformed
+
+    private void loadConfigButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadConfigButtonActionPerformed
+        configFC.setDialogTitle("Load Configuration From...");
+            // Get the image file to save the config data
+        File file = showOpenFileChooser(configFC);
+            // Set the selected file for the file chooser
+        config.setSelectedFile(configFC, file);
+            // If the user selected a file to save to
+        if (file != null){
+            fileWorker = new ConfigDataLoader(file);
+            fileWorker.execute();
+        }
+    }//GEN-LAST:event_loadConfigButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3392,6 +3473,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private int overlayImageIndex = 0;
     /**
+     * This is the file that was loaded for the overlay image.
+     */
+    private File overlayFile = null;
+    /**
      * This contains the masks and painter used for the overlay.
      */
     private OverlayMask overlayMask = new OverlayMask();
@@ -3469,6 +3554,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox boldToggle;
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;
     private components.JColorSelector colorSelector;
+    private javax.swing.JPanel configButtonPanel;
+    private javax.swing.JFileChooser configFC;
     private javax.swing.JPanel ctrlButtonPanel;
     private javax.swing.JLabel currentVersLabel;
     private javax.swing.JLabel currentVersTextLabel;
@@ -3497,10 +3584,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
+    private javax.swing.JButton loadConfigButton;
     private javax.swing.JButton loadMaskButton;
     private javax.swing.JRadioButton maskAlphaBlueToggle;
     private javax.swing.ButtonGroup maskAlphaButtons;
@@ -3556,6 +3645,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton resetButton;
     private javax.swing.JButton resetMaskButton;
     private javax.swing.JButton saveButton;
+    private javax.swing.JButton saveConfigButton;
     private javax.swing.JFileChooser saveFC;
     private components.JFileDisplayPanel saveFCPreview;
     private javax.swing.JPanel shapeMaskCtrlPanel;
@@ -3672,6 +3762,121 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateFrameControls();
         updateControlsEnabled();
         optimizeDifferenceToggle.setEnabled(enabled);
+        saveConfigButton.setEnabled(enabled);
+        loadConfigButton.setEnabled(enabled);
+    }
+    /**
+     * 
+     * @param file
+     * @return 
+     */
+    private SpiralGeneratorProperties toProperties(File file){
+        SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
+        prop.setImageWidth(getImageWidth());
+        prop.setImageHeight(getImageHeight());
+        prop.setFrameDuration(animationTimer.getDelay());
+        for (int i = 0; i < colorIcons.length; i++){
+            prop.setSpiralColor(i, config.getSpiralColor(i));
+        }
+        prop.setSpiralType(spiralTypeCombo.getSelectedIndex());
+        for (SpiralPainter painter : spiralPainters){
+            prop.setSpiralData(painter);
+        }
+        prop.setMaskType(maskTabbedPane.getSelectedIndex());
+        prop.setMaskScale((double)maskScaleSpinner.getValue());
+        prop.setMaskRotation((double)maskRotateSpinner.getValue());
+        prop.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
+        prop.setMaskFlippedVertically((maskFlipVertToggle.isSelected()));
+        prop.setMaskText(maskTextPane.getText());
+        prop.setMaskFont(maskTextPane.getFont());
+        prop.setMaskTextAntialiased(fontAntialiasingToggle.isSelected());
+        prop.setMaskLineSpacing((double)lineSpacingSpinner.getValue());
+        prop.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
+        prop.setMaskAlphaIndex(maskAlphaButtons);
+        prop.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        prop.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        prop.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+        prop.setMaskImageFrameIndex(overlayImageIndex);
+        File imgFile = overlayFile;
+        if (imgFile != null && file != null){
+            imgFile = FilesExtended.relativize(imgFile, file);
+        }
+        prop.setMaskImageFile(imgFile);
+        prop.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
+        prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
+        prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        
+        return prop;
+    }
+    /**
+     * 
+     * @return 
+     */
+    private SpiralGeneratorProperties toProperties(){
+        return toProperties(null);
+    }
+    /**
+     * 
+     * @param file
+     * @param images
+     * @return
+     * @throws IOException 
+     */
+    private List<BufferedImage> loadImage(File file, List<BufferedImage> images) 
+            throws IOException{ 
+        getLogger().entering(this.getClass().getName(), "loadImage", file.getName());
+        if (images == null)
+            images = new ArrayList<>();
+        else
+            images.clear();
+            // Get a GIF decoder to decode the image if it's a GIF
+        GifDecoder decoder = new GifDecoder();
+            // Try to decode the image and get the status of the decoder
+        int status = decoder.read(file.toString());
+        getLogger().log(Level.FINER, "GifDecoder Status: {0}", status);
+            // If the image is a GIF that decoded just fine and there are 
+            // any frames in the image
+        if (status == 0 && decoder.getFrameCount() > 0){
+            getLogger().log(Level.FINER, "Decoded {0} frames.", decoder.getFrameCount());
+                // Go through the decoded frames
+            for (int i = 0; i < decoder.getFrameCount(); i++){
+                    // Get the current frame
+                BufferedImage img = decoder.getFrame(i);
+                    // If that frame is not null
+                if (img != null)
+                    images.add(img);
+            }
+        } else{
+            getLogger().finer("Using ImageIO to read file.");
+                // Read the image from the file
+            BufferedImage img = ImageIO.read(file);
+                // If the image is not null
+            if (img != null)
+                images.add(img);
+        }
+        getLogger().log(Level.FINER, "Loaded {0} images from file.", images.size());
+        getLogger().exiting(this.getClass().getName(), "loadImage");
+        return images;
+    }
+    /**
+     * 
+     * @param images
+     * @param index
+     * @param file
+     * @param initLoad 
+     */
+    private void setOverlayImages(List<BufferedImage> images, int index, 
+            File file, boolean initLoad){
+        overlayFile = file;
+        overlayImages.clear();
+        overlayImages.addAll(images);
+        maskFrameCtrlPanel.setVisible(overlayImages.size() > 1);
+            // If the program is not loading this image at the start of the 
+            // program
+        if (!initLoad)
+            config.setMaskImageFile(file);
+        setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
@@ -5234,7 +5439,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         /**
          * 
          */
-        private ArrayList<BufferedImage> imgs = new ArrayList<>();
+        private List<BufferedImage> imgs = null;
         /**
          * Whether this is being used during the initial loading of the program
          */
@@ -5276,33 +5481,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         protected boolean loadFile(File file) throws IOException {
             getLogger().entering(this.getClass().getName(), "loadFile", file.getName());
-            imgs.clear();
-                // Get a GIF decoder to decode the image if it's a GIF
-            GifDecoder decoder = new GifDecoder();
-                // Try to decode the image and get the status of the decoder
-            int status = decoder.read(file.toString());
-            getLogger().log(Level.FINER, "GifDecoder Status: {0}", status);
-                // If the image is a GIF that decoded just fine and there are 
-                // any frames in the image
-            if (status == 0 && decoder.getFrameCount() > 0){
-                getLogger().log(Level.FINER, "Decoded {0} frames.", decoder.getFrameCount());
-                    // Go through the decoded frames
-                for (int i = 0; i < decoder.getFrameCount(); i++){
-                        // Get the current frame
-                    BufferedImage img = decoder.getFrame(i);
-                        // If that frame is not null
-                    if (img != null)
-                        imgs.add(img);
-                }
-            } else{
-                getLogger().finer("Using ImageIO to read file.");
-                    // Read the image from the file
-                BufferedImage img = ImageIO.read(file);
-                    // If the image is not null
-                if (img != null)
-                    imgs.add(img);
-            }
-            getLogger().log(Level.FINER, "Loaded {0} images from file.", imgs.size());
+            imgs = loadImage(file,imgs);
             getLogger().exiting(this.getClass().getName(), "loadFile", !imgs.isEmpty());
             return !imgs.isEmpty();
         }
@@ -5323,16 +5502,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
+            overlayFile = null;
                 // If this was successful in loading the image
             if (success){
-                overlayImages.clear();
-                overlayImages.addAll(imgs);
-                maskFrameCtrlPanel.setVisible(overlayImages.size() > 1);
-                    // If the program is not loading this image at the start of 
-                    // the program
-                if (!initLoad)
-                    config.setMaskImageFile(file);
-                setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
+                setOverlayImages(imgs,index,file,initLoad);
                 // If the program failed to load the image mask at the start of 
                 // the program
             } else if (initLoad){
@@ -5441,6 +5614,177 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             updateIconLabel.getIcon());
                 }
             }
+        }
+    }
+    /**
+     * 
+     */
+    private class ConfigDataSaver extends FileSaver{
+        /**
+         * 
+         */
+        private SpiralGeneratorProperties prop = null;
+        /**
+         * 
+         * @param file 
+         */
+        ConfigDataSaver(File file) {
+            super(file);
+        }
+        @Override
+        protected boolean saveFile(File file) throws IOException {
+            if (prop == null)
+                prop = toProperties(file);
+            try (PrintWriter out = new PrintWriter(file)){
+                prop.store(out);
+            }
+            return true;
+        }
+        @Override
+        protected String getSuccessTitle(File file){
+            return "Config Data Saved Successfully";
+        }
+        @Override
+        protected String getSuccessMessage(File file){
+            return "The configuration data was successfully saved.";
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return "ERROR - Config Data Failed To Save";
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            return "There was an error saving the configuration frame data to file"+
+                    "\n\""+file+"\"."+msg;
+        }
+        @Override
+        public String getProgressString(){
+            return "Saving Config Data";
+        }
+    }
+    /**
+     * 
+     */
+    private class ConfigDataLoader extends FileLoader{
+        /**
+         * 
+         */
+        private List<BufferedImage> imgs = null;
+        /**
+         * 
+         */
+        private File imgFile = null;
+        /**
+         * The index of the image
+         */
+        private int imgIndex = 0;
+        /**
+         * 
+         */
+        private SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
+        /**
+         * 
+         */
+        private boolean propLoaded = false;
+        /**
+         * 
+         * @param file
+         * @param showFileNotFound 
+         */
+        ConfigDataLoader(File file, boolean showFileNotFound) {
+            super(file, showFileNotFound);
+        }
+        /**
+         * 
+         * @param file 
+         */
+        ConfigDataLoader(File file){
+            this(file,true);
+        }
+        @Override
+        protected boolean loadFile(File file) throws IOException {
+            getLogger().entering(this.getClass().getName(), "loadFile", file.getName());
+            if (!propLoaded){
+                try (FileReader in = new FileReader(file)){
+                    prop.load(in);
+                    imgFile = prop.getMaskImageFile();
+                    if (imgFile != null)
+                        imgFile = FilesExtended.resolve(file,imgFile);
+                    imgIndex = prop.getMaskImageFrameIndex();
+                    propLoaded = true;
+                    setProgressString(getProgressString());
+                    showFileNotFound = true;
+                }
+            }
+            if (imgFile != null){
+                if (!imgFile.exists())
+                    throw new FileNotFoundException("Image file not found");
+                imgs = loadImage(imgFile,imgs);
+                getLogger().exiting(this.getClass().getName(), "loadFile", !imgs.isEmpty());
+                return !imgs.isEmpty();
+            }
+            getLogger().exiting(this.getClass().getName(), "loadFile", true);
+            return true;
+        }
+        @Override
+        protected String getFailureTitle(File file, IOException ex){
+            return String.format("ERROR - %s Failed To Load", (propLoaded)?
+                    "Config Data":"Image");
+        }
+        @Override
+        protected String getFailureMessage(File file, IOException ex){
+            String msg = "";
+            if (ex != null)
+                msg = "\nError: "+ex;
+            if (propLoaded && imgFile != null)
+                return "The image file specified by the configuration data failed to load."
+                        + "\n\""+imgFile+"\""+msg;
+            return "The configuration frame data failed to load."+msg;
+        }
+        @Override
+        protected String getFileNotFoundMessage(File file, IOException ex){
+            if (propLoaded && imgFile != null)
+                return "The image file specified by the configuration data does not exist."
+                        + "\n\""+imgFile+"\"";
+            return super.getFileNotFoundMessage(file, ex);
+        }
+        @Override
+        public String getProgressString(){
+            if (propLoaded)
+                return "Loading Image";
+            return "Loading Config Data";
+        }
+        @Override
+        protected void done(){
+            if (propLoaded){
+                loadFromSettings(prop);
+                if (imgFile != null && success){
+                    setOverlayImages(imgs,imgIndex,imgFile,false);
+                } else {
+                    overlayFile = null;
+                    config.setMaskImageFile(null);
+                    config.setMaskImageFrameIndex(0);
+                }
+                config.setSpiralType(spiralTypeCombo.getSelectedIndex());
+                for (int i = 0; i < colorIcons.length; i++){
+                    config.setSpiralColor(i, prop.getSpiralColor(i));
+                }
+                config.setMaskType(prop.getMaskType());
+                config.setMaskFlags(prop.getMaskFlags());
+                config.setMaskDesaturateMode(prop.getMaskDesaturateMode());
+                config.setMaskImageInverted(prop.isMaskImageInverted());
+                config.setMaskAlphaIndex(prop.getMaskAlphaIndex());
+                config.setMaskImageInterpolation(prop.getMaskImageInterpolation());
+                config.setMaskImageAntialiased(prop.isMaskImageAntialiased());
+                config.setMaskShapeType(prop.getMaskShapeType());
+                config.setMaskShapeSizeLinked(prop.isMaskShapeSizeLinked());
+                /*
+                */
+            }
+            super.done();
         }
     }
 }

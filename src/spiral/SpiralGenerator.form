@@ -1363,6 +1363,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JFileChooser" name="configFC">
+      <Properties>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ConfigExtensions.CONFIG_FILTER" type="code"/>
+        </Property>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -1401,15 +1408,16 @@
                   <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="spiralCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
-                  <Component id="progressBar" min="-2" pref="247" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="progressBar" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="ctrlButtonPanel" min="-2" pref="145" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="imageCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
+                  <Component id="imageCtrlPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="configButtonPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -1434,7 +1442,9 @@
                           <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                           <Component id="ctrlButtonPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="configButtonPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -2296,6 +2306,32 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutButtonActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="configButtonPanel">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+        <Property name="columns" type="int" value="0"/>
+        <Property name="horizontalGap" type="int" value="6"/>
+        <Property name="rows" type="int" value="1"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="saveConfigButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save Config"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveConfigButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="loadConfigButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Load Config"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadConfigButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
