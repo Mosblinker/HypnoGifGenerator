@@ -3425,6 +3425,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private int overlayImageIndex = 0;
     /**
+     * This is the file that was loaded for the overlay image.
+     */
+    private File overlayFile = null;
+    /**
      * This contains the masks and painter used for the overlay.
      */
     private OverlayMask overlayMask = new OverlayMask();
@@ -3710,8 +3714,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateFrameControls();
         updateControlsEnabled();
         optimizeDifferenceToggle.setEnabled(enabled);
-    
-    private SpiralGeneratorProperties toProperties(){
+        saveConfigButton.setEnabled(enabled);
+        loadConfigButton.setEnabled(enabled);
+    }
+    /**
+     * 
+     * @param file
+     * @return 
+     */
+    private SpiralGeneratorProperties toProperties(File file){
         SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
         prop.setImageWidth(getImageWidth());
         prop.setImageHeight(getImageHeight());
@@ -3738,12 +3749,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
         prop.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
         prop.setMaskImageFrameIndex(overlayImageIndex);
+        File imgFile = overlayFile;
+        if (file != null){
+            imgFile = FilesExtended.relativize(imgFile, file);
+        }
+        prop.setMaskImageFile(imgFile);
         prop.setMaskShapeType(maskShapeCombo.getSelectedIndex());
         prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
         prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
         prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
         
         return prop;
+    }
+    
+    private SpiralGeneratorProperties toProperties(){
+        return toProperties(null);
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
@@ -5395,6 +5415,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         protected void done(){
+            overlayFile = (success) ? file : null;
                 // If this was successful in loading the image
             if (success){
                 overlayImages.clear();
