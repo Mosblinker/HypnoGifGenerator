@@ -162,7 +162,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the duration for each frame of animation.
      */
-    private static final int SPIRAL_FRAME_DURATION = 20;
+    protected static final int SPIRAL_FRAME_DURATION = 20;
     /**
      * This is the name of the preference node used to store the settings for 
      * this program.
