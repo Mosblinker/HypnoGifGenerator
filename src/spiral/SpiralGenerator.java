@@ -199,6 +199,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String SAVE_FILE_CHOOSER_NAME = "SaveFC";
     
+    private static final String CONFIG_FILE_CHOOSER_NAME = "ConfigFC";
+    
     private static final String COLOR_SELECTOR_NAME = "ColorSelector";
     
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
@@ -503,6 +505,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
+        config.setComponentName(CONFIG_FILE_CHOOSER_NAME, configFC);
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
                 // If the component is a file chooser
