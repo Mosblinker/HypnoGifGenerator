@@ -3751,7 +3751,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setImageHeight(getImageHeight());
         prop.setFrameDuration(animationTimer.getDelay());
         for (int i = 0; i < colorIcons.length; i++){
-            prop.setSpiralColor(i, colorIcons[i].getColor());
+            prop.setSpiralColor(i, config.getSpiralColor(i));
         }
         prop.setSpiralType(spiralTypeCombo.getSelectedIndex());
         for (SpiralPainter painter : spiralPainters){
@@ -3773,7 +3773,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
         prop.setMaskImageFrameIndex(overlayImageIndex);
         File imgFile = overlayFile;
-        if (file != null){
+        if (imgFile != null && file != null){
             imgFile = FilesExtended.relativize(imgFile, file);
         }
         prop.setMaskImageFile(imgFile);
