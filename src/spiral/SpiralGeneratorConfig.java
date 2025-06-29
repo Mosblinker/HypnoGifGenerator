@@ -6,30 +6,24 @@ package spiral;
 
 import config.ConfigUtilities;
 import geom.GeometryMath;
-import io.github.dheid.fontchooser.FontFamilies;
-import io.github.dheid.fontchooser.FontFamily;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.*;
 import java.util.prefs.Preferences;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
 
 /**
  *
  * @author Mosblinker
  */
-public class SpiralGeneratorConfig {
+public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     /**
      * 
      */
@@ -64,83 +58,31 @@ public class SpiralGeneratorConfig {
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     
+    @Deprecated
     public static final String SPIRAL_RADIUS_KEY = "Radius";
     
+    @Deprecated
     public static final String SPIRAL_BASE_KEY = "Base";
     
+    @Deprecated
     public static final String SPIRAL_THICKNESS_KEY = "Thickness";
     
+    @Deprecated
     public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
     
     @Deprecated
     public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
-    
-    public static final String SPIRAL_COLOR_KEY_PREFIX = "SpiralColor";
-    
-    public static final String SPIRAL_TYPE_KEY = "SpiralType";
     /**
      * 
      */
     public static final String ALWAYS_SCALE_KEY = "AlwaysScale";
     
-    public static final String IMAGE_WIDTH_KEY = "ImageWidth";
-    
-    public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
-    
-    public static final String MASK_TEXT_ANTIALIASING_KEY = "TextAntialiasing";
-    
-    public static final String MASK_IMAGE_ANTIALIASING_KEY = "ImageAntialiasing";
-    
-    public static final String MASK_LINE_SPACING_KEY = "LineSpacing";
-    
-    public static final String MASK_FONT_SIZE_KEY = "FontSize";
-    
-    public static final String MASK_FONT_STYLE_KEY = "FontStyle";
-    
-    public static final String MASK_FONT_FAMILY_KEY = "FontFamily";
-    
-    public static final String MASK_FONT_NAME_KEY = "FontName";
-    
-    public static final String MASK_TEXT_KEY = "MaskText";
+    public static final String OPTIMIZE_FOR_DIFFERENCE_KEY = "OptimizeForDifference";
     
     public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
     
-    public static final String MASK_SCALE_KEY = "MaskScale";
-    
-    public static final String MASK_TYPE_KEY = "MaskType";
-    
-    public static final String MASK_ALPHA_CHANNEL_INDEX_KEY = "MaskAlphaChannelIndex";
-    
-    public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
-    
-    public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
-    
-    public static final String MASK_IMAGE_FILE_KEY = "MaskImageFile";
-    
-    public static final String MASK_IMAGE_FRAME_INDEX_KEY = "MaskImageFrameIndex";
-    
-    public static final String MASK_IMAGE_INTERPOLATION_KEY = "MaskImageInterpolation";
-    
-    public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
-    
-    public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
-    
-    public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
-    
-    public static final String MASK_SHAPE_TYPE_KEY = "MaskShapeType";
-    
-    public static final String MASK_ROTATION_KEY = "MaskRotation";
-    
-    public static final String MASK_FLAGS_KEY = "MaskFlags";
-    
-    public static final String FRAME_DURATION_KEY = "FrameDuration";
-    
     public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
-    
-    public static final int MASK_FLIP_HORIZONTAL_FLAG = 0x01;
-    
-    public static final int MASK_FLIP_VERTICAL_FLAG = 0x02;
-    
+
     
     
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
@@ -612,44 +554,13 @@ public class SpiralGeneratorConfig {
         putDimension(getComponentName(comp)+COMPONENT_SIZE_KEY,comp);
     }
     
-    /**
-     * 
-     * @param key
-     * @return 
-     */
+    @Override
     public byte[] getSpiralData(String key){
         return getSpiralPreferences().getByteArray(key, null);
     }
-    /**
-     * 
-     * @param painter
-     * @return 
-     */
-    public byte[] getSpiralData(SpiralPainter painter){
-        return getSpiralData(painter.getPreferenceKey());
-    }
-    /**
-     * 
-     * @param key
-     * @param data 
-     */
+    @Override
     public void setSpiralData(String key, byte[] data){
         getSpiralPreferences().putByteArray(key, data);
-    }
-    /**
-     * 
-     * @param painter
-     * @param data 
-     */
-    public void setSpiralData(SpiralPainter painter, byte[] data){
-        setSpiralData(painter.getPreferenceKey(),data);
-    }
-    /**
-     * 
-     * @param painter 
-     */
-    public void setSpiralData(SpiralPainter painter){
-        setSpiralData(painter,painter.toByteArray());
     }
     /**
      * 
@@ -679,72 +590,27 @@ public class SpiralGeneratorConfig {
     public void setSpinClockwise(boolean value){
         getPreferences().putBoolean(SPIN_CLOCKWISE_KEY, value);
     }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
+    @Override
     public int getSpiralType(int defaultValue){
         return getPreferences().getInt(SPIRAL_TYPE_KEY, defaultValue);
     }
-    /**
-     * 
-     * @return 
-     */
-    public int getSpiralType(){
-        return getSpiralType(0);
-    }
-    /**
-     * 
-     * @param value 
-     */
+    @Override
     public void setSpiralType(int value){
         getPreferences().putInt(SPIRAL_TYPE_KEY, value);
     }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
+    @Override
     public int getFrameDuration(int defaultValue){
         return getPreferences().getInt(FRAME_DURATION_KEY, defaultValue);
     }
-    /**
-     * 
-     * @return 
-     */
-    public int getFrameDuration(){
-        return getFrameDuration(20);
-    }
-    /**
-     * 
-     * @param value 
-     */
+    @Override
     public void setFrameDuration(int value){
         getPreferences().putInt(FRAME_DURATION_KEY, value);
     }
-    /**
-     * 
-     * @param index
-     * @param defaultValue
-     * @return 
-     */
+    @Override
     public Color getSpiralColor(int index, Color defaultValue){
         return getColor(SPIRAL_COLOR_KEY_PREFIX+index,defaultValue);
     }
-    /**
-     * 
-     * @param index
-     * @return 
-     */
-    public Color getSpiralColor(int index){
-        return getSpiralColor(index,null);
-    }
-    /**
-     * 
-     * @param index
-     * @param value 
-     */
+    @Override
     public void setSpiralColor(int index, Color value){
         putColor(SPIRAL_COLOR_KEY_PREFIX+index,value);
     }
@@ -762,226 +628,89 @@ public class SpiralGeneratorConfig {
     public void setImageAlwaysScaled(boolean value){
         node.putBoolean(ALWAYS_SCALE_KEY, value);
     }
+    /**
+     * 
+     * @return 
+     */
+    public boolean isOptimizedForDifference(){
+        return node.getBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setOptimizedForDifference(boolean value){
+        node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
+    }
     
     public Preferences getMaskPreferences(){
         return maskNode;
     }
-    
+    @Override
     public boolean isMaskTextAntialiased(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_TEXT_ANTIALIASING_KEY, defaultValue);
     }
-    
-    public boolean isMaskTextAntialiased(){
-        return isMaskTextAntialiased(true);
-    }
-    
+    @Override
     public void setMaskTextAntialiased(boolean value){
         getMaskPreferences().putBoolean(MASK_TEXT_ANTIALIASING_KEY, value);
     }
-    
+    @Override
     public double getMaskLineSpacing(double defaultValue){
         return getMaskPreferences().getDouble(MASK_LINE_SPACING_KEY, defaultValue);
     }
-    
-    public double getMaskLineSpacing(){
-        return getMaskLineSpacing(0.0);
-    }
-    
+    @Override
     public void setMaskLineSpacing(double value){
         getMaskPreferences().putDouble(MASK_LINE_SPACING_KEY, value);
     }
-    
+    @Override
     public float getMaskFontSize(float defaultValue){
         return getMaskPreferences().getFloat(MASK_FONT_SIZE_KEY, defaultValue);
     }
-    
-    public float getMaskFontSize(){
-        return getMaskFontSize(11.0f);
-    }
-    
-    public void setMaskFontSize(float value){
-        getMaskPreferences().putFloat(MASK_FONT_SIZE_KEY, value);
-    }
-    
-    public void setMaskFontSize(Font font){
-        if (font == null)
+    @Override
+    public void setMaskFontSize(Float value){
+        if (value == null)
             getMaskPreferences().remove(MASK_FONT_SIZE_KEY);
         else
-            setMaskFontSize(font.getSize2D());
+            getMaskPreferences().putFloat(MASK_FONT_SIZE_KEY, value);
     }
-    
+    @Override
     public int getMaskFontStyle(int defaultValue){
         return getMaskPreferences().getInt(MASK_FONT_STYLE_KEY, defaultValue);
     }
-    
-    public int getMaskFontStyle(){
-        return getMaskFontStyle(Font.PLAIN);
-    }
-    
-    public void setMaskFontStyle(int value){
-        getMaskPreferences().putInt(MASK_FONT_STYLE_KEY, value);
-    }
-    
-    public void setMaskFontStyle(Font font){
-        if (font == null)
+    @Override
+    public void setMaskFontStyle(Integer value){
+        if (value == null)
             getMaskPreferences().remove(MASK_FONT_STYLE_KEY);
         else
-            setMaskFontStyle(font.getStyle());
+            getMaskPreferences().putInt(MASK_FONT_STYLE_KEY, value);
     }
-    protected boolean getMaskFontStyleValue(int flag){
-        return SpiralGeneratorUtilities.getFlag(getMaskFontStyle(),flag);
-    }
-    
-    protected void setMaskFontStyleValue(int flag, boolean value){
-        setMaskFontStyle(SpiralGeneratorUtilities.setFlag(getMaskFontStyle(),flag,value));
-    }
-    
-    public boolean isMaskFontBold(){
-        return getMaskFontStyleValue(Font.BOLD);
-    }
-    
-    public void setMaskFontBold(boolean value){
-        setMaskFontStyleValue(Font.BOLD,value);
-    }
-    
-    public boolean isMaskFontItalic(){
-        return getMaskFontStyleValue(Font.ITALIC);
-    }
-    
-    public void setMaskFontItalic(boolean value){
-        setMaskFontStyleValue(Font.ITALIC,value);
-    }
-    
-    public void setMaskFontStyle(boolean bold, boolean italic){
-            // Get the style, but without the bold and italic flags
-        int value = getMaskFontStyle() & ~(Font.BOLD | Font.ITALIC);
-            // If the font's style is bold
-        if (bold)
-            value |= Font.BOLD;
-            // If the font's style is italic
-        if (italic)
-            value |= Font.ITALIC;
-        setMaskFontStyle(value);
-    }
-    
+    @Override
     public String getMaskFontFamily(String defaultValue){
         return getMaskPreferences().get(MASK_FONT_FAMILY_KEY, defaultValue);
     }
-    
-    public String getMaskFontFamily(){
-        return getMaskFontFamily(Font.SANS_SERIF);
-    }
-    
+    @Override
     public void setMaskFontFamily(String value){
         if (value == null)
             getMaskPreferences().remove(MASK_FONT_FAMILY_KEY);
         else
             getMaskPreferences().put(MASK_FONT_FAMILY_KEY, value);
     }
-    
-    public void setMaskFontFamily(Font font){
-        setMaskFontFamily((font != null) ? font.getFamily() : null);
-    }
-    
+    @Override
     public String getMaskFontName(String defaultValue){
         return getMaskPreferences().get(MASK_FONT_NAME_KEY, defaultValue);
     }
-    
-    public String getMaskFontName(){
-        return getMaskFontName(null);
-    }
-    
+    @Override
     public void setMaskFontName(String value){
         if (value == null)
             getMaskPreferences().remove(MASK_FONT_NAME_KEY);
         else
             getMaskPreferences().put(MASK_FONT_NAME_KEY, value);
     }
-    
-    public void setMaskFontName(Font font){
-        setMaskFontName((font != null) ? font.getName() : null);
-    }
-    
-    public Font getMaskFont(Font defaultValue){
-            // This gets the font to be returned
-        Font font = null;
-            // Get the name for the font family for the font to return, 
-        String familyName = getMaskFontFamily(null);    // defaulting to null
-            // If a non-null font family name was retrieved
-        if (familyName != null){
-                // Get the font family with the name
-            FontFamily family = FontFamilies.getInstance().get(familyName);
-                // If there is actually a font family with that name
-            if (family != null){
-                    // Get the logical name for the font, defaulting to null
-                String fontName = getMaskFontName(null);
-                    // Get an iterator to go through the fonts in the font 
-                    // family to find a matching font
-                Iterator<Font> fontItr = family.iterator();
-                    // This gets the first font in the iterator, used as a 
-                    // fall-back in case the font name does not match any of the 
-                Font firstFont = null;      // fonts
-                    // While the iterator still has elements and the font with 
-                    // the matching name has not been found
-                while (fontItr.hasNext() && font == null){
-                        // Get the current font
-                    Font temp = fontItr.next();
-                        // If the stored font name is null (use the first font 
-                        // in the iterator) or the current font's name matches 
-                        // the stored font name
-                    if (fontName == null || fontName.equals(temp.getName()))
-                            // Use this font
-                        font = temp;
-                        // If the first font is null (this will be false for all 
-                        // fonts after this)
-                    if (firstFont == null)
-                        firstFont = temp;
-                }   // If the font is still null (no font with a matching name 
-                if (font == null)       // was found)
-                    font = firstFont;
-            }
-        }   // If the font is null (the selected font was not found)
-        if (font == null)
-                // Use the given font
-            font = defaultValue;
-            // This will get the size of the font
-        float size;
-            // This will get the style of the font
-        int style;
-            // If the given default font is null
-        if (defaultValue == null){
-                // Get the size and style, defaulting to their respective values
-            size = getMaskFontSize();
-            style = getMaskFontStyle();
-                // If the font is still null at this point (the selected font 
-                // was not found and the given default font is null)
-            if (font == null)
-                    // Use Sans Serif as the font with the style and size
-                return new Font(Font.SANS_SERIF,style,0).deriveFont(size);
-        } else {
-                // Get the size, defaulting to the size of the given font
-            size = getMaskFontSize(defaultValue.getSize2D());
-                // Get the style, defaulting to the style of the given font
-            style = getMaskFontStyle(defaultValue.getStyle());
-        }
-        return font.deriveFont(style, size);
-    }
-    
-    public void setMaskFont(Font value){
-        setMaskFontSize(value);
-        setMaskFontStyle(value);
-        setMaskFontFamily(value);
-        setMaskFontName(value);
-    }
-    
+    @Override
     public String getMaskText(String defaultValue){
         return getMaskPreferences().get(MASK_TEXT_KEY, defaultValue);
     }
-    
-    public String getMaskText(){
-        return getMaskText("");
-    }
-    
+    @Override
     public void setMaskText(String value){
         if (value == null)
             getMaskPreferences().remove(MASK_TEXT_KEY);
@@ -1027,246 +756,139 @@ public class SpiralGeneratorConfig {
     public void setMaskFontSelectorSize(Component comp){
         putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,comp);
     }
-    
+    @Override
     public double getMaskScale(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
     }
-    
-    public double getMaskScale(){
-        return getMaskScale(1.0);
-    }
-    
+    @Override
     public void setMaskScale(double value){
         getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
     }
-    
+    @Override
     public boolean isMaskImageAntialiased(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
     }
-    
-    public boolean isMaskImageAntialiased(){
-        return isMaskImageAntialiased(true);
-    }
-    
+    @Override
     public void setMaskImageAntialiased(boolean value){
         getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
     }
-    
+    @Override
     public int getMaskType(int defaultValue){
         return getMaskPreferences().getInt(MASK_TYPE_KEY, defaultValue);
     }
-    
-    public int getMaskType(){
-        return getMaskType(0);
-    }
-    
+    @Override
     public void setMaskType(int value){
         getMaskPreferences().putInt(MASK_TYPE_KEY, value);
     }
-    
+    @Override
     public int getMaskAlphaIndex(int defaultValue){
         return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX_KEY, defaultValue);
     }
-    
-    public int getMaskAlphaIndex(){
-        return getMaskAlphaIndex(0);
-    }
-    
-    public void loadMaskAlphaIndex(ButtonGroup group){
-        int index = getMaskAlphaIndex(-1);
-        if (index < 0 || index >= group.getButtonCount())
-            return;
-        AbstractButton button = SwingExtendedUtilities.getButton(group, index);
-        if (button != null)
-            button.setSelected(true);
-    }
-    
+    @Override
     public void setMaskAlphaIndex(int value){
         getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX_KEY, value);
     }
-    
-    public void setMaskAlphaIndex(ButtonGroup group){
-        setMaskAlphaIndex(SwingExtendedUtilities.indexOfSelected(group));
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
+    @Override
     public boolean isMaskImageInverted(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_IMAGE_INVERT_KEY, defaultValue);
     }
-    /**
-     * 
-     * @return 
-     */
-    public boolean isMaskImageInverted(){
-        return isMaskImageInverted(false);
-    }
-    /**
-     * 
-     * @param value 
-     */
+    @Override
     public void setMaskImageInverted(boolean value){
         getMaskPreferences().putBoolean(MASK_IMAGE_INVERT_KEY, value);
     }
-    
+    @Override
     public int getMaskDesaturateMode(int defaultValue){
         return getMaskPreferences().getInt(MASK_DESATURATE_MODE_KEY, defaultValue);
     }
-    
-    public int getMaskDesaturateMode(){
-        return getMaskDesaturateMode(0);
-    }
-    
+    @Override
     public void setMaskDesaturateMode(int value){
         getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
     }
-    
+    @Override
     public File getMaskImageFile(File defaultValue){
         return getFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,defaultValue);
     }
-    
-    public File getMaskImageFile(){
-        return getMaskImageFile(null);
-    }
-    
+    @Override
     public void setMaskImageFile(File value){
         putFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,value);
     }
-    
+    @Override
     public int getMaskImageFrameIndex(){
         return getMaskPreferences().getInt(MASK_IMAGE_FRAME_INDEX_KEY, 0);
     }
-    
+    @Override
     public void setMaskImageFrameIndex(int value){
         getMaskPreferences().putInt(MASK_IMAGE_FRAME_INDEX_KEY, value);
     }
-    
+    @Override
     public int getMaskImageInterpolation(int defaultValue){
         return getMaskPreferences().getInt(MASK_IMAGE_INTERPOLATION_KEY, defaultValue);
     }
-    
-    public int getMaskImageInterpolation(){
-        return getMaskImageInterpolation(0);
-    }
-    
+    @Override
     public void setMaskImageInterpolation(int value){
         getMaskPreferences().putInt(MASK_IMAGE_INTERPOLATION_KEY, value);
     }
-    
+    @Override
     public double getMaskRotation(double defaultValue){
         return getMaskPreferences().getDouble(MASK_ROTATION_KEY, defaultValue);
     }
-    
-    public double getMaskRotation(){
-        return getMaskRotation(0.0);
-    }
-    
+    @Override
     public void setMaskRotation(double value){
         getMaskPreferences().putDouble(MASK_ROTATION_KEY, value);
     }
-    
+    @Override
     public int getMaskFlags(){
         return getMaskPreferences().getInt(MASK_FLAGS_KEY, 0);
     }
-    
+    @Override
     public void setMaskFlags(int value){
         getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
     }
-    
-    public boolean getMaskFlag(int flag){
-        return SpiralGeneratorUtilities.getFlag(getMaskFlags(),flag);
-    }
-    
-    public void setMaskFlag(int flag, boolean value){
-        setMaskFlags(SpiralGeneratorUtilities.setFlag(getMaskFlags(),flag,value));
-    }
-    
-    public boolean isMaskFlippedHorizontally(){
-        return getMaskFlag(MASK_FLIP_HORIZONTAL_FLAG);
-    }
-    
-    public void setMaskFlippedHorizontally(boolean value){
-        setMaskFlag(MASK_FLIP_HORIZONTAL_FLAG,value);
-    }
-    
-    public boolean isMaskFlippedVertically(){
-        return getMaskFlag(MASK_FLIP_VERTICAL_FLAG);
-    }
-    
-    public void setMaskFlippedVertically(boolean value){
-        setMaskFlag(MASK_FLIP_VERTICAL_FLAG,value);
-    }
-    
+    @Override
     public double getMaskShapeWidth(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
     }
-    
-    public double getMaskShapeWidth(){
-        return getMaskShapeWidth(0.1);
-    }
-    
+    @Override
     public void setMaskShapeWidth(double value){
         getMaskPreferences().putDouble(MASK_SHAPE_WIDTH_KEY, value);
     }
-    
+    @Override
     public double getMaskShapeHeight(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SHAPE_HEIGHT_KEY, defaultValue);
     }
-    
-    public double getMaskShapeHeight(){
-        return getMaskShapeHeight(0.1);
-    }
-    
+    @Override
     public void setMaskShapeHeight(double value){
         getMaskPreferences().putDouble(MASK_SHAPE_HEIGHT_KEY, value);
     }
-    
+    @Override
     public boolean isMaskShapeSizeLinked(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_SHAPE_LINK_SIZE_KEY, defaultValue);
     }
-    
-    public boolean isMaskShapeSizeLinked(){
-        return isMaskShapeSizeLinked(true);
-    }
-    
+    @Override
     public void setMaskShapeSizeLinked(boolean value){
         getMaskPreferences().putBoolean(MASK_SHAPE_LINK_SIZE_KEY, value);
     }
-    
+    @Override
     public int getMaskShapeType(int defaultValue){
         return getMaskPreferences().getInt(MASK_SHAPE_TYPE_KEY, defaultValue);
     }
-    
-    public int getMaskShapeType(){
-        return getMaskShapeType(0);
-    }
-    
+    @Override
     public void setMaskShapeType(int value){
         getMaskPreferences().putInt(MASK_SHAPE_TYPE_KEY, value);
     }
-    
+    @Override
     public int getImageWidth(int defaultValue){
         return getPreferences().getInt(IMAGE_WIDTH_KEY, defaultValue);
     }
-    
-    public int getImageWidth(){
-        return getImageWidth(SpiralGenerator.DEFAULT_SPIRAL_WIDTH);
-    }
-    
+    @Override
     public void setImageWidth(int value){
         getPreferences().putInt(IMAGE_WIDTH_KEY, value);
     }
-    
+    @Override
     public int getImageHeight(int defaultValue){
         return getPreferences().getInt(IMAGE_HEIGHT_KEY, defaultValue);
     }
-    
-    public int getImageHeight(){
-        return getImageHeight(SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
-    }
-    
+    @Override
     public void setImageHeight(int value){
         getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
     }

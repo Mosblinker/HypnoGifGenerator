@@ -485,8 +485,8 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
             if (temp != null && temp.length > 0)
                 System.arraycopy(temp, 0, arr, 0, Math.min(temp.length,offset));
         }
-        arr[offset] = (byte)((isClockwise()) ? CLOCKWISE_BIT_FLAG : 0x00);
-        arr[offset] = (byte)((isSpinClockwise()) ? SPIN_CLOCKWISE_BIT_FLAG : 0x00);
+        arr[offset] = (byte)(((isClockwise()) ? CLOCKWISE_BIT_FLAG : 0x00) | 
+                ((isSpinClockwise()) ? SPIN_CLOCKWISE_BIT_FLAG : 0x00));
         ByteBuffer buffer = ByteBuffer.wrap(arr, offset+1, length-1);
         buffer.putDouble(getSpiralRadius());
         buffer.putDouble(getThickness());

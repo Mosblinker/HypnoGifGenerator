@@ -62,20 +62,18 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
             g.setColor(model.getColor2());
         }   // Bound the angle
         angle = GeometryMath.boundDegrees(angle);
-            // Get the amount by which to increase the radiuses of the shapes by
-        double m = radius / 2.0;
             // Get the line width for the shapes
-        double lineWidth = thickness * m;
+        double lineWidth = thickness * radius;
             // Get half the line width
         double halfWidth = lineWidth / 2.0;
             // Get the maximum radius for any of the shapes
         double r1 = getMaximumRadius(width,height,model)+lineWidth;
             // Get the radius for the first shape
-        double startR = m * (angle / FULL_CIRCLE_DEGREES);
+        double startR = radius * (angle / FULL_CIRCLE_DEGREES);
             // If the spiral is going counter-clockwise
         if (!clockwise)
                 // Shift the spiral by half
-            startR = (startR + (m/2.0)) % m;
+            startR = (startR + (radius/2.0)) % radius;
             // This is the shape to use to render the concentric shapes
         RectangularShape rectShape;
             // Determine the shape to use for the spiral
@@ -90,9 +88,9 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                     // Get the maximum radius for the shapes
                 r1 = getMaximumRadius(width,height,model,getShape());
                     // Adjust the maximum radius to account for the start radius
-                r1 -= ((r1 - startR) % m);
+                r1 -= ((r1 - startR) % radius);
                     // Go through the radiuses for the shapes
-                for (double r = r1; r+halfWidth > 0; r-=m){
+                for (double r = r1; r+halfWidth > 0; r-=radius){
                         // Get the radius plus half the line width, so that the 
                         // shape is the correct size
                     double rTemp = r+halfWidth;
@@ -133,11 +131,11 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
         g.setStroke(new BasicStroke((float)lineWidth));
             // If the starting radius is for a shape that would be less than the 
             // line width in size
-        if (startR <= halfWidth || startR > m - halfWidth){
+        if (startR <= halfWidth || startR > radius - halfWidth){
                 // If the starting radius is for a shape that is just starting 
                 // to form
             if (startR > halfWidth)
-                startR -= m;
+                startR -= radius;
                 // Get the radius for the first shape
             double r = startR+halfWidth;
                 // Set the frame for the shape with the radius
@@ -145,9 +143,9 @@ public class ConcentricSpiralPainter extends SpiralPainter implements ShapedSpir
                 // Fill this shape
             g.fill(rectShape);
                 // Move on to the next shape
-            startR += m;
+            startR += radius;
         }   // A for loop to draw the circles that make up this spiral
-        for (double r = startR; r <= r1; r+= m){
+        for (double r = startR; r <= r1; r+= radius){
                 // Set the frame for the shape with the current radius
             rectShape.setFrameFromCenter(centerX, centerY, centerX+r, centerY+r);
                 // Draw the shape

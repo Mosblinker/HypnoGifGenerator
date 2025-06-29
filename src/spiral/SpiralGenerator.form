@@ -1191,8 +1191,8 @@
               <Connection code="PROGRAM_VERSION" type="code"/>
             </Property>
             <Property name="programWebsiteText" type="java.lang.String" value="Visit the Github Repository"/>
-            <Property name="programWebsiteURI" type="java.net.URI" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="java.net.URI.create(&quot;https://github.com/Mosblinker/HypnoGifGenerator&quot;)" type="code"/>
+            <Property name="programWebsiteURI" type="java.net.URI" editor="beans.URIPropertyEditor">
+              <SerializedValue value="-84,-19,0,5,115,114,0,12,106,97,118,97,46,110,101,116,46,85,82,73,-84,1,120,46,67,-98,73,-85,3,0,1,76,0,6,115,116,114,105,110,103,116,0,18,76,106,97,118,97,47,108,97,110,103,47,83,116,114,105,110,103,59,120,112,116,0,47,104,116,116,112,115,58,47,47,103,105,116,104,117,98,46,99,111,109,47,77,111,115,98,108,105,110,107,101,114,47,72,121,112,110,111,71,105,102,71,101,110,101,114,97,116,111,114,120"/>
             </Property>
             <Property name="updateButtonIsShown" type="boolean" value="true"/>
           </Properties>
@@ -1363,6 +1363,13 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JFileChooser" name="configFC">
+      <Properties>
+        <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="ConfigExtensions.CONFIG_FILTER" type="code"/>
+        </Property>
+      </Properties>
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
@@ -1401,15 +1408,16 @@
                   <Component id="previewPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="spiralCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
-                  <Component id="progressBar" min="-2" pref="247" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="spiralCtrlPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="progressBar" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="ctrlButtonPanel" min="-2" pref="145" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="imageCtrlPanel" alignment="0" min="-2" pref="247" max="-2" attributes="0"/>
+                  <Component id="imageCtrlPanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="configButtonPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -1434,7 +1442,9 @@
                           <Component id="maskEditButton" min="-2" max="-2" attributes="0"/>
                           <Component id="ctrlButtonPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="configButtonPanel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" pref="21" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -2243,6 +2253,20 @@
             </Constraint>
           </Constraints>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="optimizeDifferenceToggle">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Optimize for Difference"/>
+            <Property name="toolTipText" type="java.lang.String" value="This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality."/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="optimizeDifferenceToggleActionPerformed"/>
+          </Events>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+              <GridBagConstraints gridX="0" gridY="2" gridWidth="5" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="7" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+            </Constraint>
+          </Constraints>
+        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JProgressBar" name="progressBar">
@@ -2282,6 +2306,32 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aboutButtonActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="configButtonPanel">
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridLayout">
+        <Property name="columns" type="int" value="0"/>
+        <Property name="horizontalGap" type="int" value="6"/>
+        <Property name="rows" type="int" value="1"/>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="saveConfigButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Save Config"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveConfigButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="loadConfigButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Load Config"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loadConfigButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

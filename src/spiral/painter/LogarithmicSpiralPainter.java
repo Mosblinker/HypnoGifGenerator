@@ -330,8 +330,9 @@ public class LogarithmicSpiralPainter extends PolarSpiralPainter implements Loga
         
             // If the spiral is going counter-clockwise
         if (!clockwise){
-            p1 = -p1;
-                // Not only swap the signs but offset this by 360
+                // Not only swap the signs but offset this by 90 degrees
+            p1 = -p1-QUARTER_CIRCLE_DEGREES;
+                // Not only swap the signs but offset this by 360 degrees
             p0 = -p0+FULL_CIRCLE_DEGREES;
                 // Invert the values m0, m1, and m2
             m0 = 1/m0;
