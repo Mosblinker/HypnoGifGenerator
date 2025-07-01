@@ -4634,6 +4634,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         /**
          * 
+         * @return 
+         */
+        protected Object getAntialiasingHint(){
+            return (isAntialiased()) ? RenderingHints.VALUE_ANTIALIAS_ON : 
+                    RenderingHints.VALUE_ANTIALIAS_OFF;
+        }
+        /**
+         * 
          * @param g
          * @param width
          * @param height 
@@ -4643,8 +4651,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 Rectangle2D bounds){
                 // Transform the mask graphics
             transformMaskGraphics(g,width,height);
-                // Translate to get x and y back at (0, 0)
-            g.translate(bounds.getMinX(), bounds.getMinY());
+                // If the bounds have been provided
+            if (bounds != null)
+                    // Translate to get x and y back at (0, 0)
+                g.translate(bounds.getMinX(), bounds.getMinY());
         }
         /**
          * 
@@ -4653,12 +4663,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @return 
          */
         private Rectangle2D getRotatedBounds(double width, double height){
+                // Set the frame of the rectangle
             rect.setFrame(0, 0, width, height);
+                // Get the rotation of the mask
             double r = Math.toRadians(getMaskRotation());
+                // If the scratch transform is null
             if (tx == null)
                 tx = AffineTransform.getRotateInstance(r, rect.getCenterX(), rect.getCenterY());
             else
                 tx.setToRotation(r, rect.getCenterX(), rect.getCenterY());
+                // Get the bounds of the transformed area
             return tx.createTransformedShape(rect).getBounds2D();
         }
         /**
@@ -4668,21 +4682,40 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         public void maskOverlay(Graphics2D g, int width, int height){
-                // Get the bounds for the area to be drawn
-            Rectangle2D bounds = getRotatedBounds(width,height);
-                // Get the mask to use
-            BufferedImage mask = getMask((int)Math.ceil(bounds.getWidth()),
-                    (int)Math.ceil(bounds.getHeight()));
-                // If the mask is null
-            if (mask == null)
-                return;
-                // Transform the graphics for the mask
-            transformGraphics(g,width,height,bounds);
-                // Enable or disable the antialiasing, depending on whether the 
+                // This will get the mask for the overlay
+            BufferedImage mask;
+                // Get the antialiasing rendering hint
+            Object antialiasing = getAntialiasingHint();
+                // If the mask is an image
+            if (maskTabbedPane.getSelectedIndex() == 1){
+                    // This is the bounds of the area to be drawn
+                Rectangle2D bounds = getRotatedBounds(width,height);
+                    // Get the mask to use
+                mask = getMask((int)Math.ceil(bounds.getWidth()),
+                        (int)Math.ceil(bounds.getHeight()));
+                    // If the mask is null
+                if (mask == null)
+                    return;
+                    // Transform the graphics for the mask
+                transformGraphics(g,width,height,bounds);
+            } else {    // Get the mask to use
+                BufferedImage img = getMask(width,height);
+                    // If the mask is null
+                if (img == null)
+                    return;
+                    // This will be the mask to draw
+                mask = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
+                Graphics2D maskG = configureGraphics(mask.createGraphics());
+                   // Enable or disable the antialiasing, depending on whether 
+                    // the mask should be antialiased
+                maskG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
+                        antialiasing);
+                transformGraphics(maskG,width,height,null);
+                maskG.drawImage(img, 0, 0, null);
+                maskG.dispose();
+            }   // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
-                    (isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
-                            RenderingHints.VALUE_ANTIALIAS_OFF);
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
                 // Mask the overlay pixels with the mask image
             maskImage(g,mask);
         }
@@ -4700,9 +4733,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // This is the graphics context to draw to
             Graphics2D imgG = g;
                 // Get the antialiasing rendering hint
-            Object antialiasing = (isAntialiased()) ? 
-                    RenderingHints.VALUE_ANTIALIAS_ON : 
-                    RenderingHints.VALUE_ANTIALIAS_OFF;
+            Object antialiasing = getAntialiasingHint();
+                // This is the bounds of the area to be drawn
+            Rectangle2D bounds = null;
                 // If the mask is an image
             if (maskTabbedPane.getSelectedIndex() == 1){
                 img = new BufferedImage(width,height,
@@ -4712,17 +4745,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // whether the mask should be antialiased
                 imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                         antialiasing);
+                    // Get the bounds for the area to be drawn
+                bounds = getRotatedBounds(width,height);
             }   // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
-                // Get the bounds for the area to be drawn
-            Rectangle2D bounds = getRotatedBounds(width,height);
                 // Transform the graphics for the mask
             transformGraphics(imgG,width,height,bounds);
-                // Transfer the width and height over from the bounds
-            width = (int)Math.ceil(bounds.getWidth());
-            height = (int)Math.ceil(bounds.getHeight());
-                // If the given color is not null
+                // If the bounds should be used for this mask
+            if (bounds != null){
+                    // Transfer the width and height over from the bounds
+                width = (int)Math.ceil(bounds.getWidth());
+                height = (int)Math.ceil(bounds.getHeight());
+            }   // If the given color is not null
             if (color != null)
                     // Set the color for the overlay
                 imgG.setColor(color);
