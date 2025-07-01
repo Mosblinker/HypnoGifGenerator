@@ -3003,13 +3003,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview(1);
     }
     /**
-     * 
-     * @return 
-     */
-    private boolean getSwapMaskSize(){
-        return getMaskRotation() % GeometryMath.HALF_CIRCLE_DEGREES >= GeometryMath.QUARTER_CIRCLE_DEGREES;
-    }
-    /**
      * This returns the style set for the font.
      * @return The style for the font.
      */
@@ -4518,6 +4511,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * This is initially null and is initialized the first time it's used.
          */
         public Path2D path = null;
+        /**
+         * This is a rectangle shape to use to get the actual size of the area
+         * to be drawn with the overlay mask.
+         */
+        private Rectangle2D rect = new Rectangle2D.Double();
+        /**
+         * An AffineTransform object to use to transform the rectangle to get 
+         * the actual size of the area to be drawn.
+         */
+        private AffineTransform tx = null;
         
         protected OverlayMask(){
             textPainter = new CenteredTextPainter();
@@ -4634,18 +4637,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param g
          * @param width
          * @param height 
+         * @param bounds
          */
-        protected void transformGraphics(Graphics2D g, int width, int height){
+        protected void transformGraphics(Graphics2D g, int width, int height, 
+                Rectangle2D bounds){
                 // Transform the mask graphics
             transformMaskGraphics(g,width,height);
-                // This is the center x-coordinate of the mask
-            double centerX = width/2.0;
-                // This is the center y-coordinate of the mask
-            double centerY = height/2.0;
-                // If the width and height should be swapped
-            if (getSwapMaskSize())
-                    // Translate it so that the center is actually at the center
-                g.translate(centerX - centerY, centerY - centerX);
+                // Translate to get x and y back at (0, 0)
+            g.translate(bounds.getMinX(), bounds.getMinY());
+        }
+        /**
+         * 
+         * @param width
+         * @param height
+         * @return 
+         */
+        private Rectangle2D getRotatedBounds(double width, double height){
+            rect.setFrame(0, 0, width, height);
+            double r = Math.toRadians(getMaskRotation());
+            if (tx == null)
+                tx = AffineTransform.getRotateInstance(r, rect.getCenterX(), rect.getCenterY());
+            else
+                tx.setToRotation(r, rect.getCenterX(), rect.getCenterY());
+            return tx.createTransformedShape(rect).getBounds2D();
         }
         /**
          * 
@@ -4654,16 +4668,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height 
          */
         public void maskOverlay(Graphics2D g, int width, int height){
-                // Get whether the width and height should be swapped
-            boolean swapSize = getSwapMaskSize();
+                // Get the bounds for the area to be drawn
+            Rectangle2D bounds = getRotatedBounds(width,height);
                 // Get the mask to use
-            BufferedImage mask = getMask((swapSize)?height:width, 
-                    (swapSize)?width:height);
+            BufferedImage mask = getMask((int)Math.ceil(bounds.getWidth()),
+                    (int)Math.ceil(bounds.getHeight()));
                 // If the mask is null
             if (mask == null)
                 return;
                 // Transform the graphics for the mask
-            transformGraphics(g,width,height);
+            transformGraphics(g,width,height,bounds);
                 // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
@@ -4701,19 +4715,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }   // Enable or disable the antialiasing, depending on whether the 
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
+                // Get the bounds for the area to be drawn
+            Rectangle2D bounds = getRotatedBounds(width,height);
                 // Transform the graphics for the mask
-            transformGraphics(imgG,width,height);
+            transformGraphics(imgG,width,height,bounds);
+                // Transfer the width and height over from the bounds
+            width = (int)Math.ceil(bounds.getWidth());
+            height = (int)Math.ceil(bounds.getHeight());
                 // If the given color is not null
             if (color != null)
                     // Set the color for the overlay
                 imgG.setColor(color);
-                // If the width and height should be swapped
-            if (getSwapMaskSize()){
-                    // Temporarily store the width
-                int temp = width;
-                width = height;
-                height = temp;
-            }   // Determine what to return based off the index
+                // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
                 case(0):
