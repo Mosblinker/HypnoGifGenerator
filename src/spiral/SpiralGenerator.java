@@ -289,8 +289,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         delaySpinner.setValue(settings.getFrameDuration());
             // Get the mask's rotation
         double imgRotation = settings.getMaskRotation();
-            // Ensure that the mask's rotation is a multiple of the increment
-        imgRotation -= (imgRotation % MASK_ROTATION_INCREMENT);
+            // If the mask rotation is greater than 360
+        if (imgRotation > GeometryMath.FULL_CIRCLE_DEGREES)
+            imgRotation = GeometryMath.boundDegrees(imgRotation);
         try{
             maskRotateSpinner.setValue(imgRotation);
         } catch (IllegalArgumentException ex){
@@ -408,13 +409,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }){
             spiralCompLabels.put(label.getLabelFor(), label);
         }
-        
-            // A list to get the increments of rotation for the mask
-        ArrayList<Double> maskRotateList = new ArrayList<>();
-            // Go through the possible rotations for the mask
-        for (double i = 0; i <= GeometryMath.FULL_CIRCLE_DEGREES; i+= MASK_ROTATION_INCREMENT)
-            maskRotateList.add(i);
-        maskRotateSpinner.setModel(new SpinnerListModel(maskRotateList));
         
         maskFrameCtrlPanel.setVisible(false);
         
@@ -1447,6 +1441,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskRotateLabel.setLabelFor(maskRotateSpinner);
         maskRotateLabel.setText("Rotation:");
 
+        maskRotateSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, 0.0d, 360.0d, 1.0d));
+        maskRotateSpinner.setEditor(new javax.swing.JSpinner.NumberEditor(maskRotateSpinner, "0.00###"));
         maskRotateSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 maskRotateSpinnerStateChanged(evt);
