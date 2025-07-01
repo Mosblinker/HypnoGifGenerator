@@ -3881,8 +3881,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param g
      * @param width
      * @param height 
+     * @param bounds
      */
-    private void transformMaskGraphics(Graphics2D g, int width, int height){
+    private void transformMaskGraphics(Graphics2D g, int width, int height, 
+            Rectangle2D bounds){
             // This is the center x-coordinate of the mask
         double centerX = width/2.0;
             // This is the center y-coordinate of the mask
@@ -3897,6 +3899,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     maskFlipVertToggle.isSelected()?-1:1);
             // Rotate the graphics context around the center
         g.rotate(Math.toRadians(getMaskRotation()), centerX, centerY);
+            // If the bounds have been provided
+        if (bounds != null)
+                // Translate to get x and y back at (0, 0)
+            g.translate(bounds.getMinX(), bounds.getMinY());
     }
     /**
      * 
@@ -4357,9 +4363,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 throw new NullPointerException();
             this.img = image;
         }
+        /**
+         * 
+         * @param width
+         * @param height
+         * @return 
+         */
+        private Rectangle2D getRotatedBounds(double width, double height){
+                // Set the frame of the rectangle
+            rect.setFrame(0, 0, width, height);
+                // Get the rotation of the mask
+            double r = Math.toRadians(getMaskRotation());
+                // If the scratch transform is null
+            if (tx == null)
+                tx = AffineTransform.getRotateInstance(r, rect.getCenterX(), rect.getCenterY());
+            else
+                tx.setToRotation(r, rect.getCenterX(), rect.getCenterY());
+                // Get the bounds of the transformed area
+            return tx.createTransformedShape(rect).getBounds2D();
+        }
         @Override
         public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
-            transformMaskGraphics(g,getIconWidth(),getIconHeight());
+            transformMaskGraphics(g,getIconWidth(),getIconHeight(),null);
             g.drawImage(img, x, y, c);
         }
         @Override
@@ -4642,22 +4667,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         /**
          * 
-         * @param g
-         * @param width
-         * @param height 
-         * @param bounds
-         */
-        protected void transformGraphics(Graphics2D g, int width, int height, 
-                Rectangle2D bounds){
-                // Transform the mask graphics
-            transformMaskGraphics(g,width,height);
-                // If the bounds have been provided
-            if (bounds != null)
-                    // Translate to get x and y back at (0, 0)
-                g.translate(bounds.getMinX(), bounds.getMinY());
-        }
-        /**
-         * 
          * @param width
          * @param height
          * @return 
@@ -4697,7 +4706,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (mask == null)
                     return;
                     // Transform the graphics for the mask
-                transformGraphics(g,width,height,bounds);
+                transformMaskGraphics(g,width,height,bounds);
             } else {    // Get the mask to use
                 BufferedImage img = getMask(width,height);
                     // If the mask is null
@@ -4710,7 +4719,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // the mask should be antialiased
                 maskG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                         antialiasing);
-                transformGraphics(maskG,width,height,null);
+                transformMaskGraphics(maskG,width,height,null);
                 maskG.drawImage(img, 0, 0, null);
                 maskG.dispose();
             }   // Enable or disable the antialiasing, depending on whether the 
