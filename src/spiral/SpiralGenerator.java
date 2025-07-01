@@ -3580,7 +3580,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
-    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
