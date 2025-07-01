@@ -3900,9 +3900,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Rotate the graphics context around the center
         g.rotate(Math.toRadians(getMaskRotation()), centerX, centerY);
             // If the bounds have been provided
-        if (bounds != null)
+        if (bounds != null){
                 // Translate to get x and y back at (0, 0)
             g.translate(bounds.getMinX(), bounds.getMinY());
+        }
     }
     /**
      * 
