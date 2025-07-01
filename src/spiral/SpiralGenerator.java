@@ -4760,7 +4760,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // mask should be antialiased
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
                 // Transform the graphics for the mask
-            transformGraphics(imgG,width,height,bounds);
+            transformMaskGraphics(imgG,width,height,bounds);
                 // If the bounds should be used for this mask
             if (bounds != null){
                     // Transfer the width and height over from the bounds
