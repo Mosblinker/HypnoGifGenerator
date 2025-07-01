@@ -2995,7 +2995,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Get the current overlay image
         BufferedImage img = getOverlayImage();
             // If the image is not null, use it.
-        imgMaskPreview.setIcon((img!=null)?new OverlayImagePreviewIcon(img):null);
+        imgMaskPreview.setIcon((img!=null)?new ImageIcon(img):null);
         maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
         config.setMaskImageFrameIndex(index);
         updateMaskFrameControlsEnabled();
@@ -4348,52 +4348,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public int getIconHeight() {
             return getImageHeight();
-        }
-    }
-    
-    private class OverlayImagePreviewIcon implements Icon2D{
-        /**
-         * The image to be displayed.
-         */
-        private BufferedImage img;
-        
-        OverlayImagePreviewIcon(BufferedImage image){
-                // If the image is null
-            if (image == null)
-                throw new NullPointerException();
-            this.img = image;
-        }
-        /**
-         * 
-         * @param width
-         * @param height
-         * @return 
-         */
-        private Rectangle2D getRotatedBounds(double width, double height){
-                // Set the frame of the rectangle
-            rect.setFrame(0, 0, width, height);
-                // Get the rotation of the mask
-            double r = Math.toRadians(getMaskRotation());
-                // If the scratch transform is null
-            if (tx == null)
-                tx = AffineTransform.getRotateInstance(r, rect.getCenterX(), rect.getCenterY());
-            else
-                tx.setToRotation(r, rect.getCenterX(), rect.getCenterY());
-                // Get the bounds of the transformed area
-            return tx.createTransformedShape(rect).getBounds2D();
-        }
-        @Override
-        public void paintIcon2D(Component c, Graphics2D g, int x, int y) {
-            transformMaskGraphics(g,getIconWidth(),getIconHeight(),null);
-            g.drawImage(img, x, y, c);
-        }
-        @Override
-        public int getIconWidth() {
-            return img.getWidth();
-        }
-        @Override
-        public int getIconHeight() {
-            return img.getHeight();
         }
     }
     
