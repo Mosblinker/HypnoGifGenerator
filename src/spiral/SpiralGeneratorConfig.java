@@ -464,14 +464,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public FileFilter getFileFilter(JFileChooser fc){
-            // Get the file filter for the file chooser
-        int index = getFileChooserPreferences(fc).
-                getInt(FILE_CHOOSER_FILE_FILTER_KEY, -1);
-            // If there was a file filter set for the file chooser that is 
-            // within range of the choosable file filters
-        if (index >= 0 && index < fc.getChoosableFileFilters().length)
-            return fc.getChoosableFileFilters()[index];
-        return null;
+        return ConfigUtilities.getFileFilter(getFileChooserPreferences(fc), fc, 
+                FILE_CHOOSER_FILE_FILTER_KEY, null);
     }
     /**
      * 
@@ -479,19 +473,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param filter 
      */
     public void setFileFilter(JFileChooser fc, FileFilter filter){
-            // This will get the index for the selected file filter
-        int index = -1;
-            // Go through the choosable file filters until we've found the one 
-            // that is currently selected
-        for (int i = 0; i < fc.getChoosableFileFilters().length && index < 0; i++){
-                // If the current file filter is selected
-            if (Objects.equals(fc.getFileFilter(), fc.getChoosableFileFilters()[i]))
-                index = i;
-        }   // If the selected filter is not one of the choosable filters
-        if (index < 0)
-            getFileChooserPreferences(fc).remove(FILE_CHOOSER_FILE_FILTER_KEY);
-        else
-            getFileChooserPreferences(fc).putInt(FILE_CHOOSER_FILE_FILTER_KEY, index);
+        ConfigUtilities.putFileFilter(getFileChooserPreferences(fc), fc, 
+                FILE_CHOOSER_FILE_FILTER_KEY, filter);
     }
     /**
      * 
