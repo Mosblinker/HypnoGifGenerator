@@ -481,8 +481,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         previewLabel.setIcon(spiralIcon);
         maskPreviewLabel.setIcon(overlayMask);
         
-            // Get a listener for the file choosers
-        PropertyChangeListener fcL = config.new FileChooserPropertyChangeListener();
             // Add the components and their names to the preferences
         config.setComponentName(maskFC, OVERLAY_MASK_FILE_CHOOSER_NAME);
         config.setComponentName(saveFC, SAVE_FILE_CHOOSER_NAME);
@@ -492,15 +490,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(configFC, CONFIG_FILE_CHOOSER_NAME);
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
-                // If the component is a file chooser
-            if (c instanceof JFileChooser){
-                    // Load the file chooser from the preferences
-                config.loadFileChooser((JFileChooser)c);
-                ((JFileChooser)c).addPropertyChangeListener(fcL);
-            } else
-                    // Load the component's size from the preferences
-                config.loadComponentSize(c);
+                 // Load the component's size from the preferences
+            config.loadComponentSize(c);
         }
+            // Get a listener for the file choosers
+        PropertyChangeListener fcL = config.new FileChooserPropertyChangeListener();
+            // Add the file choosers and their names to the preferences
+        config.addFileChooser(maskFC, OVERLAY_MASK_FILE_CHOOSER_NAME);
+        config.addFileChooser(saveFC, SAVE_FILE_CHOOSER_NAME);
+        config.addFileChooser(configFC, CONFIG_FILE_CHOOSER_NAME);
+        for (JFileChooser fc : config.getFileChooserPreferenceMap().keySet()){
+                // Load the file chooser from the preferences
+            config.loadFileChooser(fc);
+            fc.addPropertyChangeListener(fcL);
+        }
+        
             // Ensure the program's size is at least 960x575
         SwingExtendedUtilities.setComponentSize(SpiralGenerator.this, 960, 575);
             // Load the program's bounds from the preferences
