@@ -160,8 +160,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public Dimension getDimension(String key, Dimension defaultValue){
-        return ConfigUtilities.dimensionFromByteArray(node.getByteArray(key, 
-                null), defaultValue);
+        return ConfigUtilities.getDimension(node, key, defaultValue);
     }
     /**
      * 
@@ -178,7 +177,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param height 
      */
     public void putDimension(String key, int width, int height){
-        node.putByteArray(key, ConfigUtilities.dimensionToByteArray(width, height));
+        ConfigUtilities.putDimension(node, key, width, height);
     }
     /**
      * 
@@ -186,12 +185,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param dim 
      */
     public void putDimension(String key, Dimension dim){
-            // If the dimension object is null
-        if (dim == null)
-                // Remove the key
-            node.remove(key);
-        else 
-            putDimension(key,dim.width,dim.height);
+        ConfigUtilities.putDimension(node, key, dim);
     }
     /**
      * 
@@ -199,7 +193,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param comp 
      */
     public void putDimension(String key, Component comp){
-        putDimension(key,comp.getWidth(),comp.getHeight());
+        ConfigUtilities.putDimension(node, key, comp);
     }
     /**
      * 
@@ -208,8 +202,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public Rectangle getRectangle(String key, Rectangle defaultValue){
-        return ConfigUtilities.rectangleFromByteArray(node.getByteArray(key, 
-                null), defaultValue);
+        return ConfigUtilities.getRectangle(node, key, defaultValue);
     }
     /**
      * 
@@ -228,8 +221,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param height 
      */
     public void putRectangle(String key, int x, int y, int width, int height){
-        node.putByteArray(key, ConfigUtilities.rectangleToByteArray(x, y, 
-                width, height));
+        ConfigUtilities.putRectangle(node, key, x, y, width, height);
     }
     /**
      * 
@@ -246,12 +238,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param value 
      */
     public void putRectangle(String key, Rectangle value){
-            // If the rectangle object is null
-        if (value == null)
-                // Remove the key
-            node.remove(key);
-        else 
-            putRectangle(key,value.x,value.y,value.width,value.height);
+        ConfigUtilities.putRectangle(node, key, value);
     }
     /**
      * 
@@ -259,7 +246,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param comp 
      */
     public void putRectangle(String key, Component comp){
-        putRectangle(key,comp.getX(),comp.getY(),comp.getWidth(),comp.getHeight());
+        ConfigUtilities.putRectangle(node, key, comp);
     }
     /**
      * 
