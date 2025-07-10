@@ -107,6 +107,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     private final Map<Component, String> compNames;
     /**
      * 
+     */
+    private final Map<JFileChooser, Preferences> fcNodes;
+    /**
+     * 
      * @param node 
      */
     public SpiralGeneratorConfig(Preferences node) {
@@ -114,6 +118,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
         compNames = new HashMap<>();
+        fcNodes = new HashMap<>();
     }
     /**
      * 
@@ -152,6 +157,30 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      */
     public String getComponentName(Component comp){
         return compNames.getOrDefault(comp, comp.getName());
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Map<JFileChooser, Preferences> getFileChooserPreferenceMap(){
+        return fcNodes;
+    }
+    /**
+     * 
+     * @param fc
+     * @param name
+     */
+    public void addFileChooser(JFileChooser fc, String name){
+        if (!fcNodes.containsKey(fc))
+            fcNodes.put(fc, getPreferences().node(name));
+    }
+    /**
+     * 
+     * @param fc
+     * @return 
+     */
+    public Preferences getFileChooserPreferences(JFileChooser fc){
+        return fcNodes.get(fc);
     }
     /**
      * 
