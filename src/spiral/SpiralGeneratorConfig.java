@@ -31,21 +31,21 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     /**
      * 
      */
-    public static final String FILE_CHOOSER_SIZE_KEY_SUFFIX = "FileChooserSize";
+    public static final String FILE_CHOOSER_SIZE_KEY = "FileChooserSize";
     /**
      * 
      */
-    public static final String FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX = 
+    public static final String FILE_CHOOSER_CURRENT_DIRECTORY_KEY = 
             "CurrentDirectory";
     /**
      * 
      */
-    public static final String FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX = 
+    public static final String FILE_CHOOSER_SELECTED_FILE_KEY = 
             "SelectedFile";
     /**
      * 
      */
-    public static final String FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX = 
+    public static final String FILE_CHOOSER_FILE_FILTER_KEY = 
             "FileFilter";
     /**
      * 
@@ -398,8 +398,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public File getSelectedFile(JFileChooser fc, File defaultValue){
-        return getFile(getComponentName(fc)+FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX,
-                defaultValue);
+        return getFile(getFileChooserPreferences(fc),
+                FILE_CHOOSER_SELECTED_FILE_KEY,defaultValue);
     }
     /**
      * 
@@ -415,7 +415,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param file 
      */
     public void setSelectedFile(JFileChooser fc, File file){
-        putFile(getComponentName(fc)+FILE_CHOOSER_SELECTED_FILE_KEY_SUFFIX,file);
+        putFile(getFileChooserPreferences(fc),FILE_CHOOSER_SELECTED_FILE_KEY,file);
     }
     /**
      * 
@@ -430,14 +430,16 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public Dimension getFileChooserSize(JFileChooser fc){
-        return getDimension(getComponentName(fc)+FILE_CHOOSER_SIZE_KEY_SUFFIX);
+        return ConfigUtilities.getDimension(getFileChooserPreferences(fc),
+                FILE_CHOOSER_SIZE_KEY,null);
     }
     /**
      * 
      * @param fc
      */
     public void setFileChooserSize(JFileChooser fc){
-        putDimension(getComponentName(fc)+FILE_CHOOSER_SIZE_KEY_SUFFIX,fc);
+        ConfigUtilities.putDimension(getFileChooserPreferences(fc),
+                FILE_CHOOSER_SIZE_KEY,fc);
     }
     /**
      * 
@@ -445,14 +447,15 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public File getCurrentDirectory(JFileChooser fc){
-        return getFile(getComponentName(fc)+FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX);
+        return getFile(getFileChooserPreferences(fc),
+                FILE_CHOOSER_CURRENT_DIRECTORY_KEY,null);
     }
     /**
      * 
      * @param fc 
      */
     public void setCurrentDirectory(JFileChooser fc){
-        putFile(getComponentName(fc)+FILE_CHOOSER_CURRENT_DIRECTORY_KEY_SUFFIX,
+        putFile(getFileChooserPreferences(fc),FILE_CHOOSER_CURRENT_DIRECTORY_KEY,
                 fc.getCurrentDirectory());
     }
     /**
@@ -461,9 +464,9 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @return 
      */
     public FileFilter getFileFilter(JFileChooser fc){
-        String name = getComponentName(fc);
             // Get the file filter for the file chooser
-        int index = node.getInt(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX, -1);
+        int index = getFileChooserPreferences(fc).
+                getInt(FILE_CHOOSER_FILE_FILTER_KEY, -1);
             // If there was a file filter set for the file chooser that is 
             // within range of the choosable file filters
         if (index >= 0 && index < fc.getChoosableFileFilters().length)
@@ -476,7 +479,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
      * @param filter 
      */
     public void setFileFilter(JFileChooser fc, FileFilter filter){
-        String name = getComponentName(fc);
             // This will get the index for the selected file filter
         int index = -1;
             // Go through the choosable file filters until we've found the one 
@@ -487,9 +489,9 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                 index = i;
         }   // If the selected filter is not one of the choosable filters
         if (index < 0)
-            node.remove(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX);
+            getFileChooserPreferences(fc).remove(FILE_CHOOSER_FILE_FILTER_KEY);
         else
-            node.putInt(name+FILE_CHOOSER_FILE_FILTER_KEY_SUFFIX, index);
+            getFileChooserPreferences(fc).putInt(FILE_CHOOSER_FILE_FILTER_KEY, index);
     }
     /**
      * 
