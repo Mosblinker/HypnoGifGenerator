@@ -3881,7 +3881,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // program
         if (!initLoad)
             config.setMaskImageFile(file);
-        setOverlayImage(Math.max(Math.min(index, overlayImages.size()), 0));
+        setOverlayImage(Math.max(Math.min(index, overlayImages.size()-1), 0));
     }
     
     private Graphics2D configureGraphics(Graphics2D g){
