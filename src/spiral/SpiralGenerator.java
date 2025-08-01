@@ -2980,28 +2980,44 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
+     * @param index
      * @return 
      */
-    private BufferedImage getOverlayImage(){
+    private BufferedImage getOverlayImage(int index){
             // If there are no overlay images
         if (overlayImages.isEmpty())
             return null;
-        return overlayImages.get(overlayImageIndex);
+        return overlayImages.get(index);
+    }
+    /**
+     * 
+     * @return 
+     */
+    private BufferedImage getOverlayImage(){
+        try{
+            return getOverlayImage(overlayImageIndex);
+        } catch (IndexOutOfBoundsException ex){
+            getLogger().log(Level.WARNING, "Index out of bounds for overlay image", ex);
+            throw ex;
+        }
     }
     /**
      * 
      */
     private void setOverlayImage(int index){
-        overlayImageIndex = index;
-            // Get the current overlay image
-        BufferedImage img = getOverlayImage();
-            // If the image is not null, use it.
-        imgMaskPreview.setIcon((img!=null)?new ImageIcon(img):null);
-        maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
-        config.setMaskImageFrameIndex(index);
-        updateMaskFrameControlsEnabled();
-            // Refresh the image mask and preview
-        refreshPreview(1);
+        try{    // Get the current overlay image
+            BufferedImage img = getOverlayImage(index);
+            overlayImageIndex = index;
+                // If the image is not null, use it.
+            imgMaskPreview.setIcon((img!=null)?new ImageIcon(img):null);
+            maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
+            config.setMaskImageFrameIndex(index);
+            updateMaskFrameControlsEnabled();
+                // Refresh the image mask and preview
+            refreshPreview(1);
+        } catch (IndexOutOfBoundsException ex){
+            getLogger().log(Level.WARNING, "Index out of bounds for overlay image", ex);
+        }
     }
     /**
      * This returns the style set for the font.
