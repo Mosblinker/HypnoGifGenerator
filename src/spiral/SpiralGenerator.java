@@ -3199,7 +3199,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void updateMaskFrameControlsEnabled(){
         boolean enabled = loadMaskButton.isEnabled() && !overlayImages.isEmpty();
         maskFramePrevButton.setEnabled(enabled && overlayImageIndex > 0);
-        maskFrameNextButton.setEnabled(enabled && overlayImageIndex <= overlayImages.size());
+        maskFrameNextButton.setEnabled(enabled && overlayImageIndex < overlayImages.size()-1);
     }
     /**
      * 
