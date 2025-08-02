@@ -877,22 +877,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setMaskShapeType(int value){
         getMaskPreferences().putInt(MASK_SHAPE_TYPE_KEY, value);
     }
-    @Override
-    public int getImageWidth(int defaultValue){
-        return getPreferences().getInt(IMAGE_WIDTH_KEY, defaultValue);
-    }
-    @Override
-    public void setImageWidth(int value){
-        getPreferences().putInt(IMAGE_WIDTH_KEY, value);
-    }
-    @Override
-    public int getImageHeight(int defaultValue){
-        return getPreferences().getInt(IMAGE_HEIGHT_KEY, defaultValue);
-    }
-    @Override
-    public void setImageHeight(int value){
-        getPreferences().putInt(IMAGE_HEIGHT_KEY, value);
-    }
     
     public boolean getCheckForUpdateAtStartup(boolean defaultValue){
         return getPreferences().getBoolean(CHECK_FOR_UPDATES_AT_START_KEY, defaultValue);

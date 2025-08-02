@@ -36,11 +36,6 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    public static final String IMAGE_WIDTH_KEY = "ImageWidth";
-    /**
-     * 
-     */
-    public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
     public static final String IMAGE_SIZE_KEY = "ImageSize";
     /**
      * 
@@ -878,7 +873,12 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public int getImageWidth(int defaultValue);
+    public default int getImageWidth(int defaultValue){
+        Dimension value = getImageSize(null);
+        if (value == null)
+            return defaultValue;
+        return value.width;
+    }
     /**
      * 
      * @return 
@@ -890,13 +890,22 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setImageWidth(int value);
+    public default void setImageWidth(int value){
+        Dimension size = getImageSize();
+        size.width = value;
+        setImageSize(size);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public int getImageHeight(int defaultValue);
+    public default int getImageHeight(int defaultValue){
+        Dimension value = getImageSize(null);
+        if (value == null)
+            return defaultValue;
+        return value.height;
+    }
     /**
      * 
      * @return 
@@ -908,5 +917,9 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setImageHeight(int value);
+    public default void setImageHeight(int value){
+        Dimension size = getImageSize();
+        size.height = value;
+        setImageSize(size);
+    }
 }

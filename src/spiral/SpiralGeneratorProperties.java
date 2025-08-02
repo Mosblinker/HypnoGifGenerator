@@ -509,22 +509,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setMaskShapeType(int value) {
         setIntProperty(MASK_SHAPE_TYPE_KEY,value);
     }
-    @Override
-    public int getImageWidth(int defaultValue) {
-        return getIntProperty(IMAGE_WIDTH_KEY,defaultValue);
-    }
-    @Override
-    public void setImageWidth(int value) {
-        setIntProperty(IMAGE_WIDTH_KEY,value);
-    }
-    @Override
-    public int getImageHeight(int defaultValue) {
-        return getIntProperty(IMAGE_HEIGHT_KEY,defaultValue);
-    }
-    @Override
-    public void setImageHeight(int value) {
-        setIntProperty(IMAGE_HEIGHT_KEY,value);
-    }
     /**
      * 
      * @param writer 
