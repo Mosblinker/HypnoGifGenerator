@@ -7,6 +7,7 @@ package spiral;
 import io.github.dheid.fontchooser.FontFamilies;
 import io.github.dheid.fontchooser.FontFamily;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.util.Iterator;
@@ -35,11 +36,7 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    public static final String IMAGE_WIDTH_KEY = "ImageWidth";
-    /**
-     * 
-     */
-    public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
+    public static final String IMAGE_SIZE_KEY = "ImageSize";
     /**
      * 
      */
@@ -842,7 +839,46 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public int getImageWidth(int defaultValue);
+    public Dimension getImageSize(Dimension defaultValue);
+    /**
+     * 
+     * @param defaultWidth
+     * @param defaultHeight
+     * @return 
+     */
+    public default Dimension getImageSize(int defaultWidth, int defaultHeight){
+        return getImageSize(new Dimension(defaultWidth,defaultHeight));
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default Dimension getImageSize(){
+        return getImageSize(SpiralGenerator.DEFAULT_SPIRAL_WIDTH,
+                SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
+    }
+    /**
+     * 
+     * @param width
+     * @param height 
+     */
+    public void setImageSize(int width, int height);
+    /**
+     * 
+     * @param value 
+     */
+    public void setImageSize(Dimension value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public default int getImageWidth(int defaultValue){
+        Dimension value = getImageSize(null);
+        if (value == null)
+            return defaultValue;
+        return value.width;
+    }
     /**
      * 
      * @return 
@@ -854,13 +890,23 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setImageWidth(int value);
+    @Deprecated
+    public default void setImageWidth(int value){
+        Dimension size = getImageSize();
+        size.width = value;
+        setImageSize(size);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public int getImageHeight(int defaultValue);
+    public default int getImageHeight(int defaultValue){
+        Dimension value = getImageSize(null);
+        if (value == null)
+            return defaultValue;
+        return value.height;
+    }
     /**
      * 
      * @return 
@@ -872,5 +918,10 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setImageHeight(int value);
+    @Deprecated
+    public default void setImageHeight(int value){
+        Dimension size = getImageSize();
+        size.height = value;
+        setImageSize(size);
+    }
 }

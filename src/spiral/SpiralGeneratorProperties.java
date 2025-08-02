@@ -6,6 +6,7 @@ package spiral;
 
 import config.ConfigUtilities;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -262,6 +263,44 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public Object setFloatProperty(String key, Float value){
         return setProperty(key,(value!=null)?value.toString():null);
     }
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return 
+     */
+    public Dimension getDimensionProperty(String key, Dimension defaultValue){
+        return ConfigUtilities.dimensionFromByteArray(getByteArrayProperty(key),
+                defaultValue);
+    }
+    /**
+     * 
+     * @param key
+     * @return 
+     */
+    public Dimension getDimensionProperty(String key){
+        return getDimensionProperty(key,null);
+    }
+    /**
+     * 
+     * @param key
+     * @param value
+     * @return 
+     */
+    public Object setDimensionProperty(String key, Dimension value){
+        return setByteArrayProperty(key,ConfigUtilities.dimensionToByteArray(value));
+    }
+    /**
+     * 
+     * @param key
+     * @param width
+     * @param height
+     * @return 
+     */
+    public Object setDimensionProperty(String key, int width, int height){
+        return setByteArrayProperty(key,
+                ConfigUtilities.dimensionToByteArray(width,height));
+    }
     @Override
     public byte[] getSpiralData(String key) {
         return getByteArrayProperty(key);
@@ -470,22 +509,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setMaskShapeType(int value) {
         setIntProperty(MASK_SHAPE_TYPE_KEY,value);
     }
-    @Override
-    public int getImageWidth(int defaultValue) {
-        return getIntProperty(IMAGE_WIDTH_KEY,defaultValue);
-    }
-    @Override
-    public void setImageWidth(int value) {
-        setIntProperty(IMAGE_WIDTH_KEY,value);
-    }
-    @Override
-    public int getImageHeight(int defaultValue) {
-        return getIntProperty(IMAGE_HEIGHT_KEY,defaultValue);
-    }
-    @Override
-    public void setImageHeight(int value) {
-        setIntProperty(IMAGE_HEIGHT_KEY,value);
-    }
     /**
      * 
      * @param writer 
@@ -509,5 +532,17 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
      */
     public void storeToXML(OutputStream out) throws IOException{
         storeToXML(out, FRAME_DATA_FILE_HEADER);
+    }
+    @Override
+    public Dimension getImageSize(Dimension defaultValue) {
+        return getDimensionProperty(IMAGE_SIZE_KEY,defaultValue);
+    }
+    @Override
+    public void setImageSize(int width, int height) {
+        setDimensionProperty(IMAGE_SIZE_KEY,width,height);
+    }
+    @Override
+    public void setImageSize(Dimension value) {
+        setDimensionProperty(IMAGE_SIZE_KEY,value);
     }
 }
