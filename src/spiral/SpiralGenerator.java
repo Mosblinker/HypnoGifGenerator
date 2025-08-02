@@ -241,8 +241,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void loadFromSettings(SpiralGeneratorSettings settings, int spiralType, 
             int maskType){
-        widthSpinner.setValue(settings.getImageWidth());
-        heightSpinner.setValue(settings.getImageHeight());
+        Dimension imgSize = settings.getImageSize();
+        widthSpinner.setValue(imgSize.width);
+        heightSpinner.setValue(imgSize.height);
         
         getLogger().log(Level.FINE, "Loading SpiralPainters");
             // Go through the spiral painters
