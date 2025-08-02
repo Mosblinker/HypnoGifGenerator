@@ -890,6 +890,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
+    @Deprecated
     public default void setImageWidth(int value){
         Dimension size = getImageSize();
         size.width = value;
@@ -917,6 +918,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
+    @Deprecated
     public default void setImageHeight(int value){
         Dimension size = getImageSize();
         size.height = value;
