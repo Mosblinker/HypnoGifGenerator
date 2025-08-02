@@ -2181,7 +2181,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
         widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                widthSpinnerStateChanged(evt);
+                imageSizeSpinnerStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2206,7 +2206,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
         heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                heightSpinnerStateChanged(evt);
+                imageSizeSpinnerStateChanged(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -2581,17 +2581,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview();
     }//GEN-LAST:event_maskScaleSpinnerStateChanged
 
-    private void widthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_widthSpinnerStateChanged
-        config.setImageWidth(getImageWidth());
+    private void imageSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_imageSizeSpinnerStateChanged
+        config.setImageSize(getImageWidth(), getImageHeight());
             // Refresh the mask and preview
         refreshPreview(-1);
-    }//GEN-LAST:event_widthSpinnerStateChanged
-
-    private void heightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_heightSpinnerStateChanged
-        config.setImageHeight(getImageHeight());
-            // Refresh the mask and preview
-        refreshPreview(-1);
-    }//GEN-LAST:event_heightSpinnerStateChanged
+    }//GEN-LAST:event_imageSizeSpinnerStateChanged
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
             // Go through the color icons
@@ -3778,8 +3772,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private SpiralGeneratorProperties toProperties(File file){
         SpiralGeneratorProperties prop = new SpiralGeneratorProperties();
-        prop.setImageWidth(getImageWidth());
-        prop.setImageHeight(getImageHeight());
+        prop.setImageSize(getImageWidth(),getImageHeight());
         prop.setFrameDuration(animationTimer.getDelay());
         for (int i = 0; i < colorIcons.length; i++){
             prop.setSpiralColor(i, config.getSpiralColor(i));
