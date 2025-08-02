@@ -973,6 +973,18 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setDebugTestBoolean(int index, boolean value){
         getDebugTestNode().putBoolean("testBoolean"+index, value);
     }
+    @Override
+    public Dimension getImageSize(Dimension defaultValue) {
+        return getDimension(IMAGE_SIZE_KEY,defaultValue);
+    }
+    @Override
+    public void setImageSize(int width, int height) {
+        putDimension(IMAGE_SIZE_KEY,width,height);
+    }
+    @Override
+    public void setImageSize(Dimension value) {
+        putDimension(IMAGE_SIZE_KEY,value);
+    }
     /**
      * 
      */

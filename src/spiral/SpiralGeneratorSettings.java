@@ -7,6 +7,7 @@ package spiral;
 import io.github.dheid.fontchooser.FontFamilies;
 import io.github.dheid.fontchooser.FontFamily;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ public interface SpiralGeneratorSettings {
      * 
      */
     public static final String IMAGE_HEIGHT_KEY = "ImageHeight";
+    public static final String IMAGE_SIZE_KEY = "ImageSize";
     /**
      * 
      */
@@ -837,6 +839,40 @@ public interface SpiralGeneratorSettings {
      * @param value 
      */
     public void setMaskShapeType(int value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public Dimension getImageSize(Dimension defaultValue);
+    /**
+     * 
+     * @param defaultWidth
+     * @param defaultHeight
+     * @return 
+     */
+    public default Dimension getImageSize(int defaultWidth, int defaultHeight){
+        return getImageSize(new Dimension(defaultWidth,defaultHeight));
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default Dimension getImageSize(){
+        return getImageSize(SpiralGenerator.DEFAULT_SPIRAL_WIDTH,
+                SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
+    }
+    /**
+     * 
+     * @param width
+     * @param height 
+     */
+    public void setImageSize(int width, int height);
+    /**
+     * 
+     * @param value 
+     */
+    public void setImageSize(Dimension value);
     /**
      * 
      * @param defaultValue

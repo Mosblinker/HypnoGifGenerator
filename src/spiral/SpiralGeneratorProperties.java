@@ -549,4 +549,16 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void storeToXML(OutputStream out) throws IOException{
         storeToXML(out, FRAME_DATA_FILE_HEADER);
     }
+    @Override
+    public Dimension getImageSize(Dimension defaultValue) {
+        return getDimensionProperty(IMAGE_SIZE_KEY,defaultValue);
+    }
+    @Override
+    public void setImageSize(int width, int height) {
+        setDimensionProperty(IMAGE_SIZE_KEY,width,height);
+    }
+    @Override
+    public void setImageSize(Dimension value) {
+        setDimensionProperty(IMAGE_SIZE_KEY,value);
+    }
 }
