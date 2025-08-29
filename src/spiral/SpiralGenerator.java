@@ -932,6 +932,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
         resetButton = new javax.swing.JButton();
+        spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
         widthSpinner = new javax.swing.JSpinner();
@@ -2102,7 +2103,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralColorPanel, gridBagConstraints);
@@ -2163,10 +2164,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 10;
         spiralCtrlPanel.add(resetButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
 
         imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -3656,6 +3663,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JComboBox<String> spinDirCombo;
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
+    private javax.swing.Box.Filler spiralCtrlFiller;
     private javax.swing.JPanel spiralCtrlPanel;
     private javax.swing.JComboBox<SpiralShape> spiralShapeCombo;
     private javax.swing.JLabel spiralShapeLabel;
