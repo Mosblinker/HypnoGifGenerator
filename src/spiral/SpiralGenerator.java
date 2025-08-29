@@ -210,9 +210,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
-    
-    private static final double MASK_ROTATION_INCREMENT = 
-            GeometryMath.QUARTER_CIRCLE_DEGREES;
     /**
      * 
      */
