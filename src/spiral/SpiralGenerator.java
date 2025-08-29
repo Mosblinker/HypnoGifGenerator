@@ -757,18 +757,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         balanceSpinner.setValue(painter.getBalance());
         angleSpinner.setValue(painter.getRotation());
         spinDirCombo.setSelectedIndex((painter.isSpinClockwise())?0:1);
-            // Get if the painter is logarithmic
+            // Get if the spiral is logarithmic
         boolean isLog = painter instanceof LogarithmicSpiral;
-            // If the painter is logaritmic
+            // If the spiral is logaritmic
         if (isLog)
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
         baseSpinner.setVisible(isLog);
-            // Get if the painter has a shape
+            // Get if the spiral has a shape
         boolean hasShape = painter instanceof ShapedSpiral;
-            // If the painter has a shape
+            // If the spiral has a shape
         if (hasShape)
             spiralShapeCombo.setSelectedItem(((ShapedSpiral)painter).getShape());
         spiralShapeCombo.setVisible(hasShape);
+            // If the spiral is not logarithmic and doesn't have a shape
+        spiralCtrlFiller.setVisible(!isLog && !hasShape);
             // Go through the components for the spirals and their labels
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
