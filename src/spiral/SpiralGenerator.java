@@ -240,11 +240,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * 
      */
     private void loadFromSettings(SpiralGeneratorSettings settings){
+        getLogger().entering(this.getClass().getName(), "loadFromSettings",
+                settings);
         for (int i = 0; i < colorIcons.length; i++){
             colorIcons[i].setColor(settings.getSpiralColor(i,DEFAULT_SPIRAL_COLORS[i]));
         }
         
         loadFromSettings(settings,settings.getSpiralType(),settings.getMaskType());
+        getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
     /**
      * 
@@ -252,6 +255,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private void loadFromSettings(SpiralGeneratorSettings settings, int spiralType, 
             int maskType){
+        getLogger().entering(this.getClass().getName(), "loadFromSettings",
+                new Object[]{settings,spiralType,maskType});
         Dimension imgSize = settings.getImageSize();
         widthSpinner.setValue(imgSize.width);
         heightSpinner.setValue(imgSize.height);
@@ -326,6 +331,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicToggle.setSelected(font.isItalic());
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
+        getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
     /**
      * Creates new form SpiralGenerator
@@ -760,9 +766,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private void loadSpiralPainter(SpiralPainter painter){
+        getLogger().entering(this.getClass().getName(), "loadSpiralPainter",
+                painter);
             // If the painter is null
-        if (painter == null)
+        if (painter == null){
+            getLogger().exiting(this.getClass().getName(), "loadSpiralPainter");
             return;
+        }
         dirCombo.setSelectedIndex((painter.isClockwise())?0:1);
         radiusSpinner.setValue(painter.getSpiralRadius());
         balanceSpinner.setValue(painter.getBalance());
@@ -784,6 +794,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
         }
+        getLogger().exiting(this.getClass().getName(), "loadSpiralPainter");
     }
     /**
      * 
