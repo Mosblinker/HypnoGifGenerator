@@ -757,18 +757,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         balanceSpinner.setValue(painter.getBalance());
         angleSpinner.setValue(painter.getRotation());
         spinDirCombo.setSelectedIndex((painter.isSpinClockwise())?0:1);
-            // Get if the painter is logarithmic
-        boolean isLog = painter instanceof LogarithmicSpiral;
-            // If the painter is logaritmic
-        if (isLog)
+            // Show the base spinner if the spiral is logarithmic
+        baseSpinner.setVisible(painter instanceof LogarithmicSpiral);
+            // If the spiral is logaritmic
+        if (baseSpinner.isVisible())
             baseSpinner.setValue(((LogarithmicSpiral)painter).getBase());
-        baseSpinner.setVisible(isLog);
-            // Get if the painter has a shape
-        boolean hasShape = painter instanceof ShapedSpiral;
-            // If the painter has a shape
-        if (hasShape)
+            // Show the shape combo box if the spiral has a shape
+        spiralShapeCombo.setVisible(painter instanceof ShapedSpiral);
+            // If the spiral has a shape
+        if (spiralShapeCombo.isVisible())
             spiralShapeCombo.setSelectedItem(((ShapedSpiral)painter).getShape());
-        spiralShapeCombo.setVisible(hasShape);
+            // If the spiral is not logarithmic and doesn't have a shape
+        spiralCtrlFiller.setVisible(!baseSpinner.isVisible() && !spiralShapeCombo.isVisible());
             // Go through the components for the spirals and their labels
         for (Map.Entry<Component, JLabel> entry : spiralCompLabels.entrySet()){
             entry.getValue().setVisible(entry.getKey().isVisible());
@@ -932,6 +932,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
         resetButton = new javax.swing.JButton();
+        spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
         widthSpinner = new javax.swing.JSpinner();
@@ -2102,7 +2103,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralColorPanel, gridBagConstraints);
@@ -2151,6 +2152,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipady = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralShapeCombo, gridBagConstraints);
 
@@ -2162,10 +2164,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.ipadx = 10;
         spiralCtrlPanel.add(resetButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
 
         imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -3655,6 +3663,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JComboBox<String> spinDirCombo;
     private javax.swing.JLabel spinLabel;
     private javax.swing.JPanel spiralColorPanel;
+    private javax.swing.Box.Filler spiralCtrlFiller;
     private javax.swing.JPanel spiralCtrlPanel;
     private javax.swing.JComboBox<SpiralShape> spiralShapeCombo;
     private javax.swing.JLabel spiralShapeLabel;
