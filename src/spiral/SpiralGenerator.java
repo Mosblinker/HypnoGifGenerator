@@ -4149,8 +4149,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private BufferedImage getShapeMaskImage(int width, int height, 
             BufferedImage mask, Path2D path){
+            // Get the width for the shape, as a percentage of the image width
         double w = (double) maskShapeWidthSpinner.getValue();
+            // Get the height for the shape, as a percentage of the image height
         double h = (double) maskShapeHeightSpinner.getValue();
+            // If the width or height of the shape are 0% or less
         if (w <= 0 || h <= 0)
             return null;
             // If the overlay mask is not null and is the same width and height 
@@ -4236,11 +4239,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private class ColorIconSpiralModel extends AbstractSpiralModel{
-        
+        /**
+         * The index of the color icon for the first color in the model.
+         */
         private int index1;
-        
+        /**
+         * The index of the color icon for the second color in the model.
+         */
         private int index2;
-        
+        /**
+         * The rotation of the spiral.
+         */
         private double rotation = 0.0;
         
         public ColorIconSpiralModel(int index1, int index2){
@@ -4258,6 +4267,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         private void setColor(int index, Color color){
             config.setSpiralColor(index, color);
+                // If the color is null and the index is within range of the 
+                // default colors
             if (color == null && index >= 0 && index < DEFAULT_SPIRAL_COLORS.length)
                 color = DEFAULT_SPIRAL_COLORS[index];
             colorIcons[index].setColor(color);
