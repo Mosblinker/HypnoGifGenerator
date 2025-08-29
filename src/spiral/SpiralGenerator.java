@@ -137,14 +137,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * for this program. 
      */
     private static final int[] ICON_SIZES = {16, 24, 32, 48, 64, 96, 128, 256, 512};
-    
+    /**
+     * This is the path to the image used as the mask for the text on the icon 
+     * for the program.
+     */
     private static final String ICON_MASK_FILE_IMAGE = "/images/icon_mask.png";
-    
+    /**
+     * These are the fractions to use to control the fade out of the icon at the 
+     * edges of the icon.
+     */
     private static final float[] ICON_FADE_FRACTIONS = {0.85f, 1.0f};
-    
+    /**
+     * These are the colors to use for the gradient used to create the fade out 
+     * of the icon.
+     */
     private static final Color[] ICON_FADE_COLORS = {Color.WHITE,
         TRANSPARENT_COLOR};
-    
+    /**
+     * This is the path to a local folder containing test images to use to 
+     * compare the output of the program to an existing image.
+     */
     private static final String TEST_IMAGE_FILE_FOLDER = "DevStuff"+File.separator+"images";
     /**
      * This is the default width for the spiral image.
@@ -184,7 +196,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     };
     /**
      * This is an array of colors to use to try for the background of the GIF 
-     * when combining frames.
+     * when combining frames. If none of these work, then the program will 
+     * derive the background color from the frame instead.
      */
     private static final Color[] GIF_TRANSPARENCY_COLORS = {
         Color.BLACK,
@@ -216,8 +229,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final Logger LOGGER = Logger.getLogger(INTERNAL_PROGRAM_NAME+
             "-"+PROGRAM_VERSION);
     /**
-     * 
-     * @return 
+     * This returns the logger used by this program to log issues and debugging 
+     * statements.
+     * @return The logger used by the program to log stuff.
      */
     public static Logger getLogger(){
         return LOGGER;
@@ -242,7 +256,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         widthSpinner.setValue(imgSize.width);
         heightSpinner.setValue(imgSize.height);
         
-        getLogger().log(Level.FINE, "Loading SpiralPainters");
+        getLogger().log(Level.FINER, "Loading SpiralPainters");
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters){
                 // Get the byte array for the painter from the preferences
@@ -256,7 +270,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         painter.getClass(),toByteString(arr)), ex);
             }
         }
-        getLogger().log(Level.FINE, "Finished loading SpiralPainters");
+        getLogger().log(Level.FINER, "Finished loading SpiralPainters");
         
             // Configure the overlay mask's text painter's settings from the 
             // preferences
