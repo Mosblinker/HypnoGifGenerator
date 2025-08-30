@@ -5,7 +5,9 @@
 package spiral.painter;
 
 import geom.GeometryMath;
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import spiral.SpiralGeneratorUtilities;
 import spiral.SpiralModel;
 
@@ -14,6 +16,11 @@ import spiral.SpiralModel;
  * @author Mosblinker
  */
 public class OscillatingCirclesSpiralPainter extends SpiralPainter{
+    /**
+     * This is a scratch Ellipse2D object used to draw the circles. This is 
+     * initially null and is initialized the first time it is used. 
+     */
+    private Ellipse2D ellipse = null;
     /**
      * 
      */
@@ -53,6 +60,16 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             g.setColor(model.getColor2());
         }   // Bound the angle
         angle = GeometryMath.boundDegrees(angle);
+            // Get the line width for the shapes
+        double lineWidth = thickness * radius;
+            // Get half the line width
+        double halfWidth = lineWidth / 2.0;
+        
+            // If the scratch ellipse object is null
+        if (ellipse == null)
+            ellipse = new Ellipse2D.Double();
+            // Set the stroke to use the line width
+        g.setStroke(new BasicStroke((float)lineWidth));
     }
     @Override
     public String getName() {
