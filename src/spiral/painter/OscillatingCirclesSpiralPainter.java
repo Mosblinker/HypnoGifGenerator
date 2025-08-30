@@ -8,6 +8,7 @@ import geom.GeometryMath;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
 import spiral.SpiralGeneratorUtilities;
 import spiral.SpiralModel;
 
@@ -21,6 +22,18 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
      * initially null and is initialized the first time it is used. 
      */
     private Ellipse2D ellipse = null;
+    /**
+     * This is a scratch Point2D object used to calculate the centers of the 
+     * circles. This is initially null and is initialized the first time it is 
+     * used. 
+     */
+    private Point2D point1 = null;
+    /**
+     * This is a scratch Point2D object used to calculate the centers of the 
+     * circles. This is initially null and is initialized the first time it is 
+     * used. 
+     */
+    private Point2D point2 = null;
     /**
      * 
      */
@@ -71,37 +84,35 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
         
-        double cx1 = model.getCenterX()-0.3;
-        double cy1 = model.getCenterY()-0.3;
-        double cx2 = model.getCenterX()+0.3;
-        double cy2 = model.getCenterY()+0.3;
+        double c1 = 0.3;
+        double c2 = -0.3;
         
-        double x1 = cx1*width;
-        double y1 = cy1*height;
-        double x2 = cx2*width;
-        double y2 = cy2*height;
+        double t = GeometryMath.getPolarRadius(height, width);
         
-        double r1 = getMaximumRadius(width,height,cx1,cy1);
-        double r2 = getMaximumRadius(width,height,cx2,cy2);
+        point1 = GeometryMath.polarToCartesianDegrees(c1*t, angle, centerX, centerY, point1);
+        point2 = GeometryMath.polarToCartesianDegrees(c2*t, angle, centerX, centerY, point2);
+        
+        double r1 = getMaximumRadius(width,height,point1.getX()/width,point1.getY()/height);
+        double r2 = getMaximumRadius(width,height,point2.getX()/width,point2.getY()/height);
         
         double startR;
         
         if (clockwise != noFG){
-            ellipse.setFrameFromCenter(x1, y1, x1-halfWidth, y1-halfWidth);
+            ellipse.setFrameFromCenter(point1.getX(), point1.getY(), point1.getX()-halfWidth, point1.getY()-halfWidth);
             g.fill(ellipse);
-            ellipse.setFrameFromCenter(x2, y2, x2-halfWidth, y2-halfWidth);
+            ellipse.setFrameFromCenter(point2.getX(), point2.getY(), point2.getX()-halfWidth, point2.getY()-halfWidth);
             g.fill(ellipse);
             startR = radius;
         } else
             startR = radius / 2.0;
         
         for (double r = startR; r <= r1 || r <= r2; r+=radius){
-            if (r < r1){
-                ellipse.setFrameFromCenter(x1, y1, x1-r, y1-r);
+            if (r <= r1){
+                ellipse.setFrameFromCenter(point1.getX(), point1.getY(), point1.getX()-r, point1.getY()-r);
                 g.draw(ellipse);
             }
-            if (r < r2){
-                ellipse.setFrameFromCenter(x2, y2, x2-r, y2-r);
+            if (r <= r2){
+                ellipse.setFrameFromCenter(point2.getX(), point2.getY(), point2.getX()-r, point2.getY()-r);
                 g.draw(ellipse);
             }
         }
