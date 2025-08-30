@@ -406,14 +406,26 @@ public abstract class SpiralPainter extends ListenedPainter<SpiralModel> impleme
      * 
      * @param width
      * @param height
+     * @param centerX
+     * @param centerY
+     * @return 
+     */
+    protected double getMaximumRadius(double width, double height, 
+            double centerX, double centerY){
+        width *= 0.5 + Math.abs(centerX-0.5);
+        height *= 0.5 + Math.abs(centerY-0.5);
+        return GeometryMath.getPolarRadius(height,width);
+    }
+    /**
+     * 
+     * @param width
+     * @param height
      * @param model
      * @return 
      */
     protected double getMaximumRadius(double width, double height, 
             SpiralModel model){
-        width *= 0.5 + Math.abs(model.getCenterX()-0.5);
-        height *= 0.5 + Math.abs(model.getCenterY()-0.5);
-        return GeometryMath.getPolarRadius(height,width);
+        return getMaximumRadius(width,height,model.getCenterX(),model.getCenterY());
     }
     /**
      * This is used to configure the graphics context used to render the spiral. 
