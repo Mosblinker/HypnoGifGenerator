@@ -380,7 +380,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new LogarithmicSpiralPainter(),
             new ArithmeticSpiralPainter(),
             new ConcentricSpiralPainter(),
-            new RippleSpiralPainter()
+            new RippleSpiralPainter(),
+            new OscillatingCirclesSpiralPainter()
         };
         
         spiralCompLabels = new HashMap<>();
@@ -576,7 +577,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // If the program is in debug mode
         if (debugMode){
-            testSpiralIcon = new TestSpiralIcon(spiralPainters[2]);
+            testSpiralIcon = new TestSpiralIcon(spiralPainters[spiralPainters.length-1]);
             testComponents = new HashMap<>();
                 // Set the popup menu for the preview label to be the debug menu
             previewLabel.setComponentPopupMenu(debugPopup);
