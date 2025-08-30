@@ -71,10 +71,15 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
         
-        double x1 = 0.20*width;
-        double y1 = 0.20*height;
-        double x2 = 0.80*width;
-        double y2 = 0.80*height;
+        double cx1 = 0.2;
+        double cy1 = 0.2;
+        double cx2 = 0.8;
+        double cy2 = 0.8;
+        
+        double x1 = cx1*width;
+        double y1 = cy1*height;
+        double x2 = cx2*width;
+        double y2 = cy2*height;
         
         double startR;
         
