@@ -81,6 +81,9 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         double x2 = cx2*width;
         double y2 = cy2*height;
         
+        double r1 = getMaximumRadius(width,height,cx1,cy1);
+        double r2 = getMaximumRadius(width,height,cx2,cy2);
+        
         double startR;
         
         if (clockwise != noFG){
@@ -92,15 +95,15 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         } else
             startR = radius / 2.0;
         
-        
-        
-        for (double r = startR; r < radius*5; r+=radius){
-            ellipse.setFrameFromCenter(x1, y1, x1-r, y1-r);
-            GeometryMath.printShape("Circle 1: ", ellipse);
-            g.draw(ellipse);
-            ellipse.setFrameFromCenter(x2, y2, x2-r, y2-r);
-            GeometryMath.printShape("Circle 2: ", ellipse);
-            g.draw(ellipse);
+        for (double r = startR; r <= r1 || r <= r2; r+=radius){
+            if (r < r1){
+                ellipse.setFrameFromCenter(x1, y1, x1-r, y1-r);
+                g.draw(ellipse);
+            }
+            if (r < r2){
+                ellipse.setFrameFromCenter(x2, y2, x2-r, y2-r);
+                g.draw(ellipse);
+            }
         }
     }
     @Override
