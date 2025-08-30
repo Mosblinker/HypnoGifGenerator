@@ -82,7 +82,7 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         g.setStroke(new BasicStroke((float)lineWidth));
             // Get the angle in radians
         double rad = Math.toRadians(angle);
-            // Get the smaller of the width and height
+            // Get the radius of the circle that the circles will orbit
         double t = getMaximumRadius(width,height,model);
             // Get the center point of the first set of circles. These will be 
             // oscillating in a sine wave as it orbits around the center
