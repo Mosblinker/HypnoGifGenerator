@@ -76,7 +76,18 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         double x2 = 0.80*width;
         double y2 = 0.80*height;
         
-        double startR = (clockwise != noFG) ? 0 : (radius / 2.0);
+        double startR;
+        
+        if (clockwise != noFG){
+            ellipse.setFrameFromCenter(x1, y1, x1-halfWidth, y1-halfWidth);
+            g.fill(ellipse);
+            ellipse.setFrameFromCenter(x2, y2, x2-halfWidth, y2-halfWidth);
+            g.fill(ellipse);
+            startR = radius;
+        } else
+            startR = radius / 2.0;
+        
+        
         
         for (double r = startR; r < radius*5; r+=radius){
             ellipse.setFrameFromCenter(x1, y1, x1-r, y1-r);
