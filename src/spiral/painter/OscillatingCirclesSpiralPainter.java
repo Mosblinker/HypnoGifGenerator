@@ -75,8 +75,6 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         angle = GeometryMath.boundDegrees(angle);
             // Get the line width for the shapes
         double lineWidth = thickness * radius;
-            // Get half the line width
-        double halfWidth = lineWidth / 2.0;
             // If the scratch ellipse object is null
         if (ellipse == null)
             ellipse = new Ellipse2D.Double();
@@ -91,31 +89,49 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         point1 = GeometryMath.polarToCartesianDegrees(
                 getCircleCenterRadius(Math.sin(rad),t), 
                 angle, centerX, centerY, point1);
+            // Get the center point of the second set of circles. These will be 
+            // oscillating in a cosine wave as it orbits around the center on 
+            // the other side of the center
         point2 = GeometryMath.polarToCartesianDegrees(-
                 getCircleCenterRadius(Math.cos(rad),t), 
                 angle, centerX, centerY, point2);
-        
+            // Get the maximum radius for the first set of circles
         double r1 = getMaximumRadius(width,height,point1.getX()/width,point1.getY()/height);
+            // Get the maximum radius for the second set of circles
         double r2 = getMaximumRadius(width,height,point2.getX()/width,point2.getY()/height);
-        
+            // This will be the starting radius
         double startR;
-        
+            // If this is going clockwise or there's no foreground color but not 
+            // both (the center of the circles will be filled in)
         if (clockwise != noFG){
-            ellipse.setFrameFromCenter(point1.getX(), point1.getY(), point1.getX()-halfWidth, point1.getY()-halfWidth);
+                // Get half the line width
+            double halfWidth = lineWidth / 2.0;
+                // Draw the first circle set's center
+            ellipse.setFrameFromCenter(point1.getX(), point1.getY(), 
+                    point1.getX()-halfWidth, point1.getY()-halfWidth);
             g.fill(ellipse);
-            ellipse.setFrameFromCenter(point2.getX(), point2.getY(), point2.getX()-halfWidth, point2.getY()-halfWidth);
+                // Draw the second circle set's center
+            ellipse.setFrameFromCenter(point2.getX(), point2.getY(), 
+                    point2.getX()-halfWidth, point2.getY()-halfWidth);
             g.fill(ellipse);
+                // First circle's radius will be equal to the spiral radius
             startR = radius;
         } else
+                // First circle's radius will be equal to half the spiral radius
             startR = radius / 2.0;
-        
+            // Go through the radiuses to draw the circles
         for (double r = startR; r <= r1 || r <= r2; r+=radius){
+                // If the current radius is within the range of the first set of 
+                // circles
             if (r <= r1){
-                ellipse.setFrameFromCenter(point1.getX(), point1.getY(), point1.getX()-r, point1.getY()-r);
+                ellipse.setFrameFromCenter(point1.getX(), point1.getY(), 
+                        point1.getX()-r, point1.getY()-r);
                 g.draw(ellipse);
-            }
+            }   // If the current radius is within the range of the second set 
+                // of circles
             if (r <= r2){
-                ellipse.setFrameFromCenter(point2.getX(), point2.getY(), point2.getX()-r, point2.getY()-r);
+                ellipse.setFrameFromCenter(point2.getX(), point2.getY(), 
+                        point2.getX()-r, point2.getY()-r);
                 g.draw(ellipse);
             }
         }
