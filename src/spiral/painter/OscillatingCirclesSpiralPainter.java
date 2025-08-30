@@ -28,6 +28,9 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
         super(painter);
     }
     @Override
+    protected double getDefaultRadius(){
+        return 50.0;
+    }
     @Override
     protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, 
             int width, int height, double centerX, double centerY, 
