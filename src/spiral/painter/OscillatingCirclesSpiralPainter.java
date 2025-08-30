@@ -70,6 +70,22 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             ellipse = new Ellipse2D.Double();
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
+        
+        double x1 = 0.20*width;
+        double y1 = 0.20*height;
+        double x2 = 0.80*width;
+        double y2 = 0.80*height;
+        
+        double startR = (clockwise != noFG) ? 0 : (radius / 2.0);
+        
+        for (double r = startR; r < radius*5; r+=radius){
+            ellipse.setFrameFromCenter(x1, y1, x1-r, y1-r);
+            GeometryMath.printShape("Circle 1: ", ellipse);
+            g.draw(ellipse);
+            ellipse.setFrameFromCenter(x2, y2, x2-r, y2-r);
+            GeometryMath.printShape("Circle 2: ", ellipse);
+            g.draw(ellipse);
+        }
     }
     @Override
     public String getName() {
