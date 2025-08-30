@@ -12,15 +12,29 @@ import spiral.SpiralModel;
  * @author Mosblinker
  */
 public class OscillatingCirclesSpiralPainter extends SpiralPainter{
-
+    /**
+     * 
+     */
+    public OscillatingCirclesSpiralPainter(){
+        super();
+    }
+    /**
+     * 
+     * @param painter 
+     */
+    public OscillatingCirclesSpiralPainter(OscillatingCirclesSpiralPainter painter){
+        super(painter);
+    }
     @Override
     protected void paintSpiral(Graphics2D g, SpiralModel model, double angle, int width, int height, double centerX, double centerY, boolean clockwise, double radius, double thickness) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    @Override
+    public String getName() {
+        return "Oscillating Circles";
+    }
     @Override
     public OscillatingCirclesSpiralPainter clone() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return new OscillatingCirclesSpiralPainter();
     }
-    
 }
