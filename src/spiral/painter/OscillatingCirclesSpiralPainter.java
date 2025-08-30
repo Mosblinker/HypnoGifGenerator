@@ -151,6 +151,6 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
     }
     @Override
     public OscillatingCirclesSpiralPainter clone() {
-        return new OscillatingCirclesSpiralPainter();
+        return new OscillatingCirclesSpiralPainter(this);
     }
 }
