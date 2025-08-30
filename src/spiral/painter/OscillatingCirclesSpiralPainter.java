@@ -72,7 +72,7 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             }   // Set the color to use to the foreground color
             g.setColor(model.getColor2());
         }   // Bound the angle
-        angle = GeometryMath.boundDegrees(angle);
+        angle = GeometryMath.boundDegrees(angle+45);
             // Get the line width for the shapes
         double lineWidth = thickness * radius;
             // Get half the line width
