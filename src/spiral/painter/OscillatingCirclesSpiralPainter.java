@@ -72,25 +72,28 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
             }   // Set the color to use to the foreground color
             g.setColor(model.getColor2());
         }   // Bound the angle
-        angle = GeometryMath.boundDegrees(angle+45);
+        angle = GeometryMath.boundDegrees(angle);
             // Get the line width for the shapes
         double lineWidth = thickness * radius;
             // Get half the line width
         double halfWidth = lineWidth / 2.0;
-        
             // If the scratch ellipse object is null
         if (ellipse == null)
             ellipse = new Ellipse2D.Double();
             // Set the stroke to use the line width
         g.setStroke(new BasicStroke((float)lineWidth));
-        
-        double c1 = 0.3;
-        double c2 = -0.3;
-        
-        double t = GeometryMath.getPolarRadius(height, width);
-        
-        point1 = GeometryMath.polarToCartesianDegrees(c1*t, angle, centerX, centerY, point1);
-        point2 = GeometryMath.polarToCartesianDegrees(c2*t, angle, centerX, centerY, point2);
+            // Get the angle in radians
+        double rad = Math.toRadians(angle);
+            // Get the smaller of the width and height
+        double t = Math.min(width, height);
+            // Get the center point of the first set of circles. These will be 
+            // oscillating in a sine wave as it orbits around the center
+        point1 = GeometryMath.polarToCartesianDegrees(
+                getCircleCenterRadius(Math.sin(rad),t), 
+                angle, centerX, centerY, point1);
+        point2 = GeometryMath.polarToCartesianDegrees(-
+                getCircleCenterRadius(Math.cos(rad),t), 
+                angle, centerX, centerY, point2);
         
         double r1 = getMaximumRadius(width,height,point1.getX()/width,point1.getY()/height);
         double r2 = getMaximumRadius(width,height,point2.getX()/width,point2.getY()/height);
@@ -116,6 +119,15 @@ public class OscillatingCirclesSpiralPainter extends SpiralPainter{
                 g.draw(ellipse);
             }
         }
+    }
+    /**
+     * 
+     * @param r
+     * @param maxR
+     * @return 
+     */
+    private double getCircleCenterRadius(double r, double maxR){
+        return (0.05 + (0.2 * (1 + r))) * maxR;
     }
     @Override
     public String getName() {
