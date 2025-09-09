@@ -25,7 +25,7 @@ import utils.SwingExtendedUtilities;
  */
 public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     /**
-     * 
+     * This is the configuration key for the bounds of the program.
      */
     public static final String PROGRAM_BOUNDS_KEY = "ProgramBounds";
     /**
