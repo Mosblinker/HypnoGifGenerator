@@ -2794,8 +2794,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
                 config.setMaskImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
-                maskImgScaleMethodCombo.setSelectedIndex(
-                        SpiralGeneratorUtilities.SCALE_IMAGE_SETTING_THUMBNAILATOR);
+                maskImgScaleMethodCombo.setSelectedIndex(SpiralGeneratorUtilities.IMAGE_SCALING_METHOD_THUMBNAILATOR);
                 config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape

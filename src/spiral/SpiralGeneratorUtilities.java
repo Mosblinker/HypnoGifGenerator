@@ -35,19 +35,19 @@ public final class SpiralGeneratorUtilities {
     
     public static final Color TRANSPARENT_COLOR = new Color(0x00000000, true);
     
-    public static final int SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR = 0;
+    public static final int IMAGE_SCALING_METHOD_NEAREST_NEIGHBOR = 0;
     
-    public static final int SCALE_IMAGE_SETTING_BILINEAR = 1;
+    public static final int IMAGE_SCALING_METHOD_BILINEAR = 1;
     
-    public static final int SCALE_IMAGE_SETTING_BICUBIC = 2;
+    public static final int IMAGE_SCALING_METHOD_BICUBIC = 2;
     
-    public static final int SCALE_IMAGE_SETTING_SMOOTH = 3;
+    public static final int IMAGE_SCALING_METHOD_SMOOTH = 3;
     
-    public static final int SCALE_IMAGE_SETTING_THUMBNAILATOR = 4;
+    public static final int IMAGE_SCALING_METHOD_THUMBNAILATOR = 4;
     
-    public static final int FIRST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR;
+    public static final int FIRST_IMAGE_SCALING_METHOD = IMAGE_SCALING_METHOD_NEAREST_NEIGHBOR;
     
-    public static final int LAST_SCALE_IMAGE_SETTING = SCALE_IMAGE_SETTING_THUMBNAILATOR;
+    public static final int LAST_IMAGE_SCALING_METHOD = IMAGE_SCALING_METHOD_THUMBNAILATOR;
     /**
      * 
      */
@@ -243,7 +243,7 @@ public final class SpiralGeneratorUtilities {
     public static BufferedImage scaleImage(BufferedImage image,
             int width,int height,int interpolation){
             // If the interpolation is the thumbnailator
-        if (interpolation == SCALE_IMAGE_SETTING_THUMBNAILATOR)
+        if (interpolation == IMAGE_SCALING_METHOD_THUMBNAILATOR)
             return Thumbnailator.createThumbnail(image,width,height);
             // Get the target size
         Dimension target = getTargetSize(image,width,height);
@@ -259,19 +259,19 @@ public final class SpiralGeneratorUtilities {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                 RenderingHints.VALUE_ANTIALIAS_ON);
         switch(interpolation){
-            case(SCALE_IMAGE_SETTING_SMOOTH):
+            case(IMAGE_SCALING_METHOD_SMOOTH):
                 drawn = image.getScaledInstance(target.width, target.height, Image.SCALE_SMOOTH);
                 break;
             default:
                 Object interValue;
                 switch(interpolation){
-                    case(SCALE_IMAGE_SETTING_NEAREST_NEIGHBOR):
+                    case(IMAGE_SCALING_METHOD_NEAREST_NEIGHBOR):
                         interValue = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
                         break;
-                    case(SCALE_IMAGE_SETTING_BILINEAR):
+                    case(IMAGE_SCALING_METHOD_BILINEAR):
                         interValue = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
                         break;
-                    case(SCALE_IMAGE_SETTING_BICUBIC):
+                    case(IMAGE_SCALING_METHOD_BICUBIC):
                     default:
                         interValue = RenderingHints.VALUE_INTERPOLATION_BICUBIC;
                 }
