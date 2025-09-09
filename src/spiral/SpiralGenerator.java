@@ -184,7 +184,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * this program.
      */
     private static final String PREFERENCE_NODE_NAME = 
-            "milo/spiral/jack/"+INTERNAL_PROGRAM_NAME;
+            "mosblinker/spiral/jwolf/"+INTERNAL_PROGRAM_NAME;
     /**
      * This is an array that contains the default colors used for the spiral.
      */
