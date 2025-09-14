@@ -1014,10 +1014,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         saveFCPreview.setFileChooser(saveFC);
 
         maskFC.setAccessory(maskFCPreview);
+        maskFC.setFileHidingEnabled(false);
 
         saveFC.setAccessory(saveFCPreview);
         saveFC.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
         saveFC.setFileFilter(ImageExtensions.GIF_FILTER);
+        saveFC.setFileHidingEnabled(false);
 
         maskDialog.setTitle("Edit Overlay");
         maskDialog.setMinimumSize(new java.awt.Dimension(640, 480));
@@ -1805,6 +1807,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         );
 
         configFC.setFileFilter(ConfigExtensions.CONFIG_FILTER);
+        configFC.setFileHidingEnabled(false);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle(PROGRAM_NAME);

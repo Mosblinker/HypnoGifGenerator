@@ -67,6 +67,9 @@
         <Property name="accessory" type="javax.swing.JComponent" editor="org.netbeans.modules.form.ComponentChooserEditor">
           <ComponentRef name="maskFCPreview"/>
         </Property>
+        <Property name="fileHidingEnabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="false" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JFileChooser" name="saveFC">
@@ -77,6 +80,9 @@
         <Property name="dialogType" type="int" value="1"/>
         <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="ImageExtensions.GIF_FILTER" type="code"/>
+        </Property>
+        <Property name="fileHidingEnabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="false" type="code"/>
         </Property>
       </Properties>
     </Component>
@@ -1375,6 +1381,9 @@
       <Properties>
         <Property name="fileFilter" type="javax.swing.filechooser.FileFilter" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="ConfigExtensions.CONFIG_FILTER" type="code"/>
+        </Property>
+        <Property name="fileHidingEnabled" type="boolean" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="false" type="code"/>
         </Property>
       </Properties>
     </Component>
