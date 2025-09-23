@@ -4212,8 +4212,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                 (mask.isAntialiased())? RenderingHints.VALUE_ANTIALIAS_ON : 
                         RenderingHints.VALUE_ANTIALIAS_OFF);
+        // TODO: Speed up the drawing of the overlay image somehow
+//        long time = System.currentTimeMillis();
             // Draw the overlay image
-        g.drawImage(overlay, 0, 0, null);
+        g.drawImage(overlay, 0, 0, width, height, null);
+//        time = System.currentTimeMillis() - time;
+//        System.out.println("Time to draw overlay: " + time + " ms");
             // Dispose of the copy of the graphics context
         g.dispose();
     }
