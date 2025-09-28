@@ -224,7 +224,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     /**
-     * 
+     * This is a logger to log events in the program.
      */
     private static final Logger LOGGER = Logger.getLogger(INTERNAL_PROGRAM_NAME+
             "-"+PROGRAM_VERSION);
