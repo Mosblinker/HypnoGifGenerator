@@ -3423,7 +3423,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }
     
-    private void refreshPreview(int index){
+    private void resetMask(int index){
             // If the index for the mask that changed is -1 (reset all masks and 
             // refresh the mask preview)
         if (index < 0){
@@ -3433,7 +3433,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the mask at the given index is the one being reset
             if (overlayMask.reset(index))
                 maskPreviewLabel.repaint();
-        }   // Refresh the preview
+        }
+    }
+    
+    private void refreshPreview(int index){
+        resetMask(index);
+            // Refresh the preview
         refreshPreview();
     }
     
