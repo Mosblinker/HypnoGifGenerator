@@ -937,7 +937,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         jPanel4 = new javax.swing.JPanel();
         javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 32767));
         javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        jButton1 = new javax.swing.JButton();
+        addMaskWordButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskScaleLabel = new javax.swing.JLabel();
@@ -1546,17 +1546,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         jPanel3.add(jScrollPane1, gridBagConstraints);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addMaskWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addMaskWordButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel3.add(jButton1, gridBagConstraints);
+        jPanel3.add(addMaskWordButton, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -3122,9 +3121,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }//GEN-LAST:event_loadConfigButtonActionPerformed
     
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addMaskWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMaskWordButtonActionPerformed
         addMaskWordField("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addMaskWordButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3242,7 +3241,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             jPanel4.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
         if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
-            jButton1.setEnabled(false);
+            addMaskWordButton.setEnabled(false);
     }
     
     private void addMaskWordField(String text){
@@ -3257,7 +3256,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordFields[i].setText(maskWordFields[i+1].getText());
         }
         maskWordFields[maskWordCount].setVisible(false);
-        jButton1.setEnabled(true);
+        addMaskWordButton.setEnabled(true);
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
             for (int i = 0; i < maskWordCount; i++)
                 maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
@@ -3781,6 +3780,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JButton aboutButton;
     private javax.swing.JDialog aboutDialog;
     private components.JAboutPanel aboutPanel;
+    private javax.swing.JButton addMaskWordButton;
     private javax.swing.JCheckBox alwaysScaleToggle;
     private javax.swing.JLabel angleLabel;
     private javax.swing.JSpinner angleSpinner;
@@ -3821,7 +3821,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
