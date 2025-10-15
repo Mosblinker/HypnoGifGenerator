@@ -351,6 +351,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicToggle.setSelected(font.isItalic());
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
+        
+        arrangeMaskWordFrames();
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
     
@@ -3213,7 +3215,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_italicToggleActionPerformed
 
     private void blankWordFramesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blankWordFramesToggleActionPerformed
-        // TODO add your handling code here:
+        arrangeMaskWordFrames();
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -3324,6 +3326,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordScrollPane.validate();
             maskWordFieldPanel.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
+        arrangeMaskWordFrames();
         updateMaskWordControlsEnabled();
     }
     
@@ -3343,6 +3346,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             for (int i = 0; i < maskWordCount; i++)
                 maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
         }
+        arrangeMaskWordFrames();
         updateMaskWordControlsEnabled();
     }
     
@@ -3352,6 +3356,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 return i;
         }
         return -1;
+    }
+    
+    private void arrangeMaskWordFrames(){
+        overlayMask.wordFrames.clear();
+        for (int i = 0; i < MAXIMUM_MESSAGE_COUNT; i++){
+            int j = i*2;
+            overlayMask.wordFrames.put(j, i);
+            if (!blankWordFramesToggle.isSelected())
+                overlayMask.wordFrames.put(j+1, i);
+        }
     }
     /**
      * @param args the command line arguments
