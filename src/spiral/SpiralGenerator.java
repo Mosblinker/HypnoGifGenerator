@@ -237,6 +237,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final int SHAPE_OVERLAY_MASK_INDEX = 2;
     
+    private static final int WORD_OVERLAY_MASK_INDEX = 3;
+    
     private static final int MINIMUM_MESSAGE_COUNT = 2;
     
     private static final int MAXIMUM_MESSAGE_COUNT = 32;
