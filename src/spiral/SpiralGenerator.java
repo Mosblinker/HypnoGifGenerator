@@ -4501,7 +4501,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             int height,SpiralPainter spiralPainter, OverlayMask mask){
             // If the width or height are less than or equal to zero or there is 
             // nothing visible for the overlay (nothing  would be drawn)
-        if (width <= 0 || height <= 0 || !mask.isOverlayRendered())
+        if (width <= 0 || height <= 0 || !mask.isOverlayRendered(index))
             return;
             // Create an image to render the overlay to
         BufferedImage overlay = new BufferedImage(width, height, 
@@ -4997,7 +4997,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * 
          * @return 
          */
-        public boolean isOverlayRendered(){
+        public boolean isOverlayRendered(int index){
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
@@ -5029,8 +5029,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param height
          * @return 
          */
-        public BufferedImage getMask(int width, int height){
-            if (!isOverlayRendered())
+        public BufferedImage getMask(int width, int height, int index){
+            if (!isOverlayRendered(index))
                 return null;
                 // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
@@ -5119,14 +5119,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 Rectangle2D bounds = getRotatedBounds(width,height);
                     // Get the mask to use
                 mask = getMask((int)Math.ceil(bounds.getWidth()),
-                        (int)Math.ceil(bounds.getHeight()));
+                        (int)Math.ceil(bounds.getHeight()),index);
                     // If the mask is null
                 if (mask == null)
                     return;
                     // Transform the graphics for the mask
                 transformMaskGraphics(g,width,height,bounds);
             } else {    // Get the mask to use
-                BufferedImage img = getMask(width,height);
+                BufferedImage img = getMask(width,height,index);
                     // If the mask is null
                 if (img == null)
                     return;
@@ -5148,9 +5148,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         public void paint(Graphics2D g, Integer index, int width, int height) {
+            if (index == null)
+                index = 0;
                 // If the width or height are less than or equal to zero 
                 // (nothing would be drawn)
-            if (width <= 0 || height <= 0 || !isOverlayRendered())
+            if (width <= 0 || height <= 0 || !isOverlayRendered(index))
                 return;
                 // Create a copy of the given graphics context and configure it
             g = configureGraphics((Graphics2D) g.create());
@@ -5199,7 +5201,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // Fill the area
                     imgG.fillRect(0, 0, width, height);
                         // Mask the area to be filled with the image
-                    maskImage(imgG,getMask(width,height));
+                    maskImage(imgG,getMask(width,height,index));
                     break;
                     // The mask is using a shape
                 case(SHAPE_OVERLAY_MASK_INDEX):
