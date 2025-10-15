@@ -75,6 +75,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
+import spiral.icons.RemoveIcon;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
 import utils.SwingExtendedUtilities;
@@ -440,7 +441,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
             label.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-            JButton removeButton = new JButton("-");
+            JButton removeButton = new JButton(new RemoveIcon());
+            removeButton.setMargin(new Insets(0, -4, 0, -4));
             removeButton.addActionListener(maskWordHandler);
             removeButton.setVisible(false);
             maskWordRemoveButtons.put(maskWordFields[i], removeButton);
