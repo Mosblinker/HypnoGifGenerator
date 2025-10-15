@@ -4946,6 +4946,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public CenteredTextPainter textPainter;
         /**
+         * This is the painter used to paint the text in the message masks when 
+         * multiple messages are being used for the mask.
+         */
+        public CenteredTextPainter wordPainter;
+        /**
          * This is a scratch Path2D object used to draw the shapes if need be. 
          * This is initially null and is initialized the first time it's used.
          */
@@ -4967,14 +4972,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         protected OverlayMask(){
             textPainter = new CenteredTextPainter();
-        }
-        
-        protected OverlayMask(CenteredTextPainter painter){
-            textPainter = new CenteredTextPainter(painter);
+            wordPainter = new CenteredTextPainter();
         }
         
         protected OverlayMask(OverlayMask mask){
-            this(mask.textPainter);
+            this.textPainter = new CenteredTextPainter(mask.textPainter);
+            this.wordPainter = new CenteredTextPainter(mask.wordPainter);
             this.alphaMask = mask.alphaMask;
             this.maskType = mask.maskType;
         }
@@ -5090,7 +5093,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(IMAGE_OVERLAY_MASK_INDEX):
                     return imgMaskAntialiasingToggle.isSelected();
                 case(WORD_OVERLAY_MASK_INDEX):
-                    // TODO: Return if the overlay is antialiased
+                    return wordPainter.isAntialiasingEnabled();
             }
             return true;
         }
