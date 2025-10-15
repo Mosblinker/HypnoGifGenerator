@@ -975,6 +975,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boldWordToggle = new javax.swing.JCheckBox();
         italicWordToggle = new javax.swing.JCheckBox();
         wordAntialiasingToggle = new javax.swing.JCheckBox();
+        blankWordFramesToggle = new javax.swing.JCheckBox();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1596,6 +1597,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        blankWordFramesToggle.setSelected(true);
+        blankWordFramesToggle.setText("Blank Frames");
+        blankWordFramesToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                blankWordFramesToggleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskWordCtrlPanelLayout = new javax.swing.GroupLayout(maskWordCtrlPanel);
         maskWordCtrlPanel.setLayout(maskWordCtrlPanelLayout);
         maskWordCtrlPanelLayout.setHorizontalGroup(
@@ -1611,7 +1620,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(italicWordToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(wordAntialiasingToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(blankWordFramesToggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
                         .addComponent(addMaskWordButton))
                     .addComponent(maskWordScrollPane))
                 .addContainerGap())
@@ -1627,7 +1638,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     .addComponent(boldWordToggle)
                     .addComponent(italicWordToggle)
                     .addComponent(wordAntialiasingToggle)
-                    .addComponent(addMaskWordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(addMaskWordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(blankWordFramesToggle))
                 .addContainerGap())
         );
 
@@ -3191,6 +3203,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void italicToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italicToggleActionPerformed
         italicWordToggle.setSelected(italicToggle.isSelected());
     }//GEN-LAST:event_italicToggleActionPerformed
+
+    private void blankWordFramesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blankWordFramesToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_blankWordFramesToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3862,6 +3878,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner balanceSpinner;
     private javax.swing.JLabel baseLabel;
     private javax.swing.JSpinner baseSpinner;
+    private javax.swing.JCheckBox blankWordFramesToggle;
     private javax.swing.JCheckBox boldToggle;
     private javax.swing.JCheckBox boldWordToggle;
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;

@@ -913,7 +913,9 @@
                                   <Component id="italicWordToggle" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="wordAntialiasingToggle" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="235" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="blankWordFramesToggle" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="136" max="32767" attributes="0"/>
                                   <Component id="addMaskWordButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="maskWordScrollPane" max="32767" attributes="0"/>
@@ -934,6 +936,7 @@
                               <Component id="italicWordToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="wordAntialiasingToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="addMaskWordButton" alignment="1" max="32767" attributes="0"/>
+                              <Component id="blankWordFramesToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1000,6 +1003,15 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wordAntialiasingToggleActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="blankWordFramesToggle">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Blank Frames"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="blankWordFramesToggleActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
