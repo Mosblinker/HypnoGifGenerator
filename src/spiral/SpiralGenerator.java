@@ -338,6 +338,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
+        maskWordPane.setFont(font);
     }
     /**
      * Creates new form SpiralGenerator
@@ -417,6 +418,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
             // Apply the centered text style to the entire pane
         doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
+        
+        LineNumbersView maskWordLineNumView = new LineNumbersView(maskWordPane);
+        maskWordScrollPane.setRowHeaderView(maskWordLineNumView);
         
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
@@ -879,6 +883,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle = new javax.swing.JCheckBox();
         maskShapeLabel = new javax.swing.JLabel();
         maskShapeCombo = new javax.swing.JComboBox<>();
+        jPanel1 = new javax.swing.JPanel();
+        maskWordScrollPane = new javax.swing.JScrollPane();
+        maskWordPanel = new javax.swing.JPanel();
+        maskWordPane = new javax.swing.JTextPane();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1114,7 +1122,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1453,6 +1461,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         shapeMaskCtrlPanel.add(maskShapeCombo, gridBagConstraints);
 
         maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
+
+        maskWordPanel.setLayout(new java.awt.BorderLayout());
+        maskWordPanel.add(maskWordPane, java.awt.BorderLayout.CENTER);
+
+        maskWordScrollPane.setViewportView(maskWordPanel);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        maskTabbedPane.addTab("tab4", jPanel1);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -2575,6 +2607,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the selected font and set its style
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextPane.setFont(font);
+            maskWordPane.setFont(font);
             config.setMaskFont(font);
                 // Refresh the text mask and preview
             refreshPreview(0);
@@ -3624,6 +3657,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
@@ -3671,6 +3705,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
+    private javax.swing.JTextPane maskWordPane;
+    private javax.swing.JPanel maskWordPanel;
+    private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
