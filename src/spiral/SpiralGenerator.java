@@ -75,6 +75,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
+import spiral.icons.AddIcon;
 import spiral.icons.RemoveIcon;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
