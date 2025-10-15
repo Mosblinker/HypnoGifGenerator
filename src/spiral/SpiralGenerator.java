@@ -19,6 +19,7 @@ import files.extensions.ConfigExtensions;
 import files.extensions.ImageExtensions;
 import files.extensions.TextDocumentExtensions;
 import geom.GeometryMath;
+import icons.DisabledIcon;
 import icons.Icon2D;
 import icons.box.ColorBoxIcon;
 import icons.box.DisabledBoxIcon;
@@ -444,6 +445,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             label.setLabelFor(maskWordFields[i]);
             label.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
             JButton removeButton = new JButton(new RemoveIcon());
+            removeButton.setDisabledIcon(new DisabledIcon(removeButton.getIcon()));
             removeButton.setMargin(new Insets(0, -4, 0, -4));
             removeButton.addActionListener(maskWordHandler);
             removeButton.setVisible(false);
@@ -1548,6 +1550,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         jPanel3.add(maskWordScrollPane, gridBagConstraints);
 
         addMaskWordButton.setIcon(new spiral.icons.AddIcon());
+        addMaskWordButton.setDisabledIcon(new DisabledIcon(addMaskWordButton.getIcon()));
         addMaskWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMaskWordButtonActionPerformed(evt);
