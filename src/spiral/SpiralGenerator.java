@@ -2792,7 +2792,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
         overlayMask.textPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
-        wordAntialiasingToggle.setSelected(fontAntialiasingToggle.isSelected());
     }//GEN-LAST:event_fontAntialiasingToggleActionPerformed
 
     private void lineSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lineSpacingSpinnerStateChanged
@@ -3199,8 +3198,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_italicWordTogglestyleToggleActionPerformed
 
     private void wordAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordAntialiasingToggleActionPerformed
-//        overlayMask.textPainter.setAntialiasingEnabled(wordAntialiasingToggle.isSelected());
-//        fontAntialiasingToggle.setSelected(wordAntialiasingToggle.isSelected());
+        overlayMask.wordPainter.setAntialiasingEnabled(wordAntialiasingToggle.isSelected());
     }//GEN-LAST:event_wordAntialiasingToggleActionPerformed
 
     private void boldToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boldToggleActionPerformed
