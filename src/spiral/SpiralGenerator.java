@@ -5133,7 +5133,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     return shapeMask = getShapeMaskImage(width,height,shapeMask,path);
                 case (WORD_OVERLAY_MASK_INDEX):
                     Integer i = wordFrames.get(index);
-                    // TODO: Add code to get the mask image for multiple messaages
+                    BufferedImage wordMask = wordMasks.get(i);
+                    if (wordMask == null){
+                        wordMask = getTextMaskImage(width,height,
+                                maskWordFields[i].getText(),null,wordPainter);
+                        wordMasks.put(i, wordMask);
+                    }
+                    return wordMask;
             }
             return null;
         }
@@ -5292,7 +5298,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     break;
                 case(WORD_OVERLAY_MASK_INDEX):
                     Integer i = wordFrames.get(index);
-                    // TODO: Draw the multiple message mask
+                    paintTextMask(imgG,width,height,maskWordFields[i].getText(),
+                            wordPainter);
             }   // If this rendered to an image as a buffer 
             if (img != null){
                 imgG.dispose();
