@@ -443,6 +443,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Initialize the components
         initComponents();
         
+        textPopupMenus.put(maskTextPane, maskPopup);
+        
             // Configure the mask text pane to have centered text
             
             // Get the document for the mask text pane
@@ -473,6 +475,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     KeyEvent.VK_UP, 0,maskWordUpAction);
             addActionToComponent(maskWordFields[i],JComponent.WHEN_FOCUSED,
                     KeyEvent.VK_DOWN, 0, maskWordDownAction);
+            textPopupMenus.put(maskWordFields[i], new JPopupMenu());
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
@@ -648,22 +651,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the size of the font selector from the preferences
         fontDim = config.getMaskFontSelectorSize();
         
-            // Create and configure the actions for the mask text pane
-        editCommands = new TextComponentCommands(maskTextPane);
-        undoCommands = new UndoManagerCommands(new CompoundUndoManager());
-            // Add the actions to the popup menu for the mask text pane
-        maskPopup.add(undoCommands.getUndoAction());
-        maskPopup.add(undoCommands.getRedoAction());
-        maskPopup.addSeparator();
-        maskPopup.add(editCommands.getCopyAction());
-        maskPopup.add(editCommands.getCutAction());
-        maskPopup.add(editCommands.getPasteAction());
-        maskPopup.add(editCommands.getDeleteAction());
-        maskPopup.addSeparator();
-        maskPopup.add(editCommands.getSelectAllAction());
-            // Add the listeners to the mask text pane
-        editCommands.addToTextComponent();
-        undoCommands.addToTextComponent(maskTextPane);
+            // Create and configure the actions for the text components
+        for (Map.Entry<JTextComponent, JPopupMenu> entry : textPopupMenus.entrySet()){
+            TextComponentCommands editCommands = new TextComponentCommands(entry.getKey());
+            editCommandMap.put(entry.getKey(), editCommands);
+            UndoManagerCommands undoCommands = new UndoManagerCommands(new CompoundUndoManager());
+            undoCommandMap.put(entry.getKey(), undoCommands);
+                // Add the actions to the popup menu for the text component
+            entry.getValue().add(undoCommands.getUndoAction());
+            entry.getValue().add(undoCommands.getRedoAction());
+            entry.getValue().addSeparator();
+            entry.getValue().add(editCommands.getCopyAction());
+            entry.getValue().add(editCommands.getCutAction());
+            entry.getValue().add(editCommands.getPasteAction());
+            entry.getValue().add(editCommands.getDeleteAction());
+            entry.getValue().addSeparator();
+            entry.getValue().add(editCommands.getSelectAllAction());
+                // Add the listeners to the text component
+            editCommands.addToTextComponent();
+            undoCommands.addToTextComponent(entry.getKey());
+        }
         
             // Go through the spiral painters
         for (SpiralPainter painter : spiralPainters)
@@ -3911,13 +3918,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     private SpiralGeneratorConfig config;
     /**
-     * The text edit commands for the message mask field.
+     * 
      */
-    private TextComponentCommands editCommands;
+    private Map<JTextComponent, JPopupMenu> textPopupMenus = new HashMap<>();
     /**
-     * The undo commands for the message mask field.
+     * 
      */
-    private UndoManagerCommands undoCommands;
+    private Map<JTextComponent,TextComponentCommands> editCommandMap = new HashMap<>();
+    /**
+     * 
+     */
+    private Map<JTextComponent, UndoManagerCommands> undoCommandMap = new HashMap<>();
     /**
      * This is the String to display on the progress bar before the progress 
      * amount.
