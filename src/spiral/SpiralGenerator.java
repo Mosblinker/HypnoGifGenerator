@@ -436,6 +436,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         for (int i = 0; i < maskWordFields.length; i++){
             maskWordFields[i] = new JTextField();
+            maskWordFields[i].addActionListener(maskWordHandler);
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
@@ -456,13 +457,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             constraints.gridy = i+1;
             constraints.weightx = 0.9;
             constraints.fill = GridBagConstraints.BOTH;
-            constraints.insets = new Insets((i==0)?0:6,0,0,0);
+            constraints.insets = new Insets((i==0)?0:6,0,0,6);
             jPanel4.add(maskWordFields[i],constraints);
             constraints = new GridBagConstraints();
             constraints.gridx = 2;
             constraints.gridy = i+1;
             constraints.fill = GridBagConstraints.BOTH;
-            constraints.insets = new Insets((i==0)?0:6,6,0,0);
+            constraints.insets = new Insets((i==0)?0:6,0,0,6);
             jPanel4.add(removeButton,constraints);
             maskWordFields[i].addComponentListener(maskWordHandler);
             maskWordFields[i].setVisible(i < maskWordCount);
@@ -4736,6 +4737,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (index != null){
                     removeMaskWordField(index);
                 }
+            } else if (evt.getSource() instanceof JTextField){
+                int index = -1;
+                for (int i = 0; i < maskWordCount && i < maskWordFields.length && index < 0; i++){
+                    if (maskWordFields[i].equals(evt.getSource()))
+                        index = i;
+                }
+                if (index < 0)
+                    return;
+                if (index == maskWordCount-1){
+                    addMaskWordField("");
+                }
+                maskWordFields[(index+1)%maskWordFields.length].grabFocus();
             }
         }
     }
