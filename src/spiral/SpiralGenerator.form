@@ -948,6 +948,7 @@
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new spiral.icons.AddIcon()" type="code"/>
                         </Property>
+                        <Property name="toolTipText" type="java.lang.String" value="Add another message (maximum of %d)."/>
                         <Property name="disabledIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                           <Connection code="new DisabledIcon(addMaskWordButton.getIcon())" type="code"/>
                         </Property>

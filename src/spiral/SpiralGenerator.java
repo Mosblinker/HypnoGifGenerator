@@ -503,6 +503,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(0, 0), 
                 new Dimension(0, 0), new Dimension(0, 32767)),gridBagConstraints);
         
+        addMaskWordButton.setToolTipText(String.format(
+                addMaskWordButton.getToolTipText(), MAXIMUM_MESSAGE_COUNT));
+        
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
             maskFC.addChoosableFileFilter(filter);
@@ -1565,6 +1568,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         jPanel3.add(maskWordScrollPane, gridBagConstraints);
 
         addMaskWordButton.setIcon(new spiral.icons.AddIcon());
+        addMaskWordButton.setToolTipText("Add another message (maximum of %d).");
         addMaskWordButton.setDisabledIcon(new DisabledIcon(addMaskWordButton.getIcon()));
         addMaskWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
