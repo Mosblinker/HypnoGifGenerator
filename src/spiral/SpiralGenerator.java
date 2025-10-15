@@ -656,7 +656,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         doc.addDocumentListener(handler);
         
             // If the mask is an image
-        if (maskTabbedPane.getSelectedIndex() == IMAGE_OVERLAY_MASK_INDEX){
+        if (overlayMask.getMaskType() == IMAGE_OVERLAY_MASK_INDEX){
                 // Get the overlay mask image file from the preferences
             File file = config.getMaskImageFile();
                 // If the overlay mask image file is not null and does exist
@@ -2804,6 +2804,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskEditButtonActionPerformed
 
     private void maskTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskTabbedPaneStateChanged
+        overlayMask.setMaskType(maskTabbedPane.getSelectedIndex());
         config.setMaskType(maskTabbedPane.getSelectedIndex());
         maskPreviewLabel.repaint();
         refreshPreview();
@@ -2979,7 +2980,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void resetMaskButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMaskButtonActionPerformed
             // Determine which mask to reset based off the current mask
-        switch (maskTabbedPane.getSelectedIndex()){
+        switch (overlayMask.getMaskType()){
                 // If the mask is text
             case(TEXT_OVERLAY_MASK_INDEX):
                 maskTextPane.setText("");
@@ -3012,7 +3013,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             case(WORD_OVERLAY_MASK_INDEX):
                 // TODO: Implement reset code
         }
-        overlayMask.reset(maskTabbedPane.getSelectedIndex());
+        overlayMask.reset(overlayMask.getMaskType());
         maskScaleSpinner.setValue(1.0);
         maskRotateSpinner.setValue(0.0);
         maskFlipHorizToggle.setSelected(false);
@@ -4129,7 +4130,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (SpiralPainter painter : spiralPainters){
             prop.setSpiralData(painter);
         }
-        prop.setMaskType(maskTabbedPane.getSelectedIndex());
+        prop.setMaskType(overlayMask.getMaskType());
         prop.setMaskScale((double)maskScaleSpinner.getValue());
         prop.setMaskRotation((double)maskRotateSpinner.getValue());
         prop.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
@@ -4950,6 +4951,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public Path2D path = null;
         /**
+         * This controls which mask is to be displayed.
+         */
+        private int maskType = 0;
+        /**
          * This is a rectangle shape to use to get the actual size of the area
          * to be drawn with the overlay mask.
          */
@@ -4971,6 +4976,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         protected OverlayMask(OverlayMask mask){
             this(mask.textPainter);
             this.alphaMask = mask.alphaMask;
+            this.maskType = mask.maskType;
+        }
+        
+        public int getMaskType(){
+            return maskType;
+        }
+        
+        public void setMaskType(int index){
+            maskType = index;
         }
         /**
          * 
@@ -4996,7 +5010,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(WORD_OVERLAY_MASK_INDEX):
                     // TODO: Add reset code for word overlay
             }
-            return index == maskTabbedPane.getSelectedIndex();
+            return index == maskType;
         }
         /**
          * 
@@ -5004,7 +5018,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public boolean isOverlayRendered(int index){
                 // Determine what to return based off the index
-            switch (maskTabbedPane.getSelectedIndex()){
+            switch (maskType){
                     // The mask is using text
                 case (TEXT_OVERLAY_MASK_INDEX):
                         // Get the text for the mask 
@@ -5038,7 +5052,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (!isOverlayRendered(index))
                 return null;
                 // Determine what to return based off the index
-            switch (maskTabbedPane.getSelectedIndex()){
+            switch (maskType){
                     // The mask is using text
                 case (TEXT_OVERLAY_MASK_INDEX):
                         // Use the text mask, creating it if need be
@@ -5068,7 +5082,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public boolean isAntialiased(){
                 // Determine what to return based off the index
-            switch (maskTabbedPane.getSelectedIndex()){
+            switch (maskType){
                     // The mask is using text
                 case (TEXT_OVERLAY_MASK_INDEX):
                     return textPainter.isAntialiasingEnabled();
@@ -5119,7 +5133,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the antialiasing rendering hint
             Object antialiasing = getAntialiasingHint();
                 // If the mask is an image
-            if (maskTabbedPane.getSelectedIndex() == IMAGE_OVERLAY_MASK_INDEX){
+            if (maskType == IMAGE_OVERLAY_MASK_INDEX){
                     // This is the bounds of the area to be drawn
                 Rectangle2D bounds = getRotatedBounds(width,height);
                     // Get the mask to use
@@ -5171,7 +5185,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // This is the bounds of the area to be drawn
             Rectangle2D bounds = null;
                 // If the mask is an image
-            if (maskTabbedPane.getSelectedIndex() == IMAGE_OVERLAY_MASK_INDEX){
+            if (maskType == IMAGE_OVERLAY_MASK_INDEX){
                 img = new BufferedImage(width,height,
                         BufferedImage.TYPE_INT_ARGB);
                 imgG = configureGraphics(img.createGraphics());
@@ -5194,7 +5208,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 width = (int)Math.ceil(bounds.getWidth());
                 height = (int)Math.ceil(bounds.getHeight());
             }   // Determine what to return based off the index
-            switch (maskTabbedPane.getSelectedIndex()){
+            switch (maskType){
                     // The mask is using text
                 case(TEXT_OVERLAY_MASK_INDEX):
                         // Paint the text mask
