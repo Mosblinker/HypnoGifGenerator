@@ -14,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -35,13 +37,12 @@ import javax.swing.text.Utilities;
  * @author hblok
  * @author Mosblinker
  */
-public class LineNumbersView extends JComponent implements DocumentListener, CaretListener, ComponentListener {
+public class LineNumbersView extends JComponent implements DocumentListener, 
+        CaretListener, ComponentListener, PropertyChangeListener {
     
-    private final int MARGIN_INSET_WIDTH = 10;
-    
-    private final int MINIMUM_MARGIN_WIDTH = 28;
     
     public final int MARGIN_WIDTH_PX = 28;
+    private final int MARGIN_INSET = 6;
     
     private static final long serialVersionUID = 1L;
 
@@ -52,9 +53,14 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
     public LineNumbersView(JTextComponent editor) {
         this.editor = editor;
 
-        editor.getDocument().addDocumentListener(this);
-        editor.addComponentListener(this);
-        editor.addCaretListener(this);
+        editor.getDocument().addDocumentListener(LineNumbersView.this);
+        editor.addComponentListener(LineNumbersView.this);
+        editor.addCaretListener(LineNumbersView.this);
+        editor.addPropertyChangeListener(LineNumbersView.this);
+    }
+    
+    private Font getNumberFont(Font font){
+        return font != null ? font : new Font(Font.MONOSPACED, Font.BOLD, editor.getFont().getSize());
     }
 
     @Override
@@ -72,7 +78,7 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
                     int x = getInsets().left + 2;
                     int y = getOffsetY(startOffset);
 
-                    font = font != null ? font : new Font(Font.MONOSPACED, Font.BOLD, editor.getFont().getSize());
+                    font = getNumberFont(font);
                     g.setFont(font);
 
                     g.setColor(isCurrentLine(startOffset) ? Color.RED : Color.BLACK);
@@ -139,7 +145,6 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
      * Updates the size of the line number margin based on the editor height.
      */
     private void updateSize() {
-        
         Dimension size = new Dimension(MARGIN_WIDTH_PX, editor.getHeight());
         setPreferredSize(size);
         setSize(size);
@@ -184,5 +189,12 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
     @Override
     public void componentHidden(ComponentEvent e) {
     }
-            System.out.println("Font changed");
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("font".equals(evt.getPropertyName())){
+            font = getNumberFont(null);
+            documentChanged();
+        }
+    }
 }
