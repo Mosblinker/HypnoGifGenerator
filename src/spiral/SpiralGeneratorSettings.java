@@ -888,7 +888,6 @@ public interface SpiralGeneratorSettings {
     public void setMaskWordAddBlankFrames(boolean value);
     /**
      * 
-     * @param defaultValue
      * @return 
      */
     public int getMaskWordMessageCount();
