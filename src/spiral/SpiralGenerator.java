@@ -34,7 +34,6 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.RadialGradientPaint;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
@@ -3276,13 +3275,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (scroll){
             jPanel4.validate();
             jScrollPane1.validate();
-            Rectangle bounds = jScrollPane1.getViewportBorderBounds();
-            Dimension size = jPanel4.getSize();
-            if (size.height > bounds.height){
-                bounds.x = 0;
-                bounds.y = size.height-bounds.height;
-                jPanel4.scrollRectToVisible(bounds);
-            }
+            jPanel4.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
         if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
             jButton1.setEnabled(false);
@@ -4764,7 +4757,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 if (index == maskWordCount-1){
                     addMaskWordField("");
                 }
-                maskWordFields[(index+1)%maskWordFields.length].grabFocus();
+                index = (index+1)%maskWordFields.length;
+                maskWordFields[index].grabFocus();
+                jPanel4.scrollRectToVisible(maskWordFields[index].getBounds());
             }
         }
     }
