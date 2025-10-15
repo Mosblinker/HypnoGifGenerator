@@ -3038,7 +3038,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskShapeType(0);
                 break;
             case(WORD_OVERLAY_MASK_INDEX):
-                // TODO: Implement reset code
+                maskWordCount = MINIMUM_MESSAGE_COUNT;
+                for (int i = 0; i < MINIMUM_MESSAGE_COUNT; i++)
+                    maskWordFields[i].setText("");
+                for (int i = MINIMUM_MESSAGE_COUNT; i < maskWordFields.length; i++)
+                    maskWordFields[i].setVisible(false);
+                setMaskWordRemoveButtonsVisible(false);
+                config.setMaskWordMessageCount(maskWordCount);
+                blankWordFramesToggle.setSelected(true);
+                config.setMaskWordAddBlankFrames(true);
+                arrangeMaskWordFrames();
         }
         overlayMask.reset(overlayMask.getMaskType());
         maskScaleSpinner.setValue(1.0);
