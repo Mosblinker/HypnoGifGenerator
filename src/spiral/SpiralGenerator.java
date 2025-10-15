@@ -3008,6 +3008,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
                 maskShapeCombo.setSelectedIndex(0);
                 config.setMaskShapeType(0);
+                break;
+            case(WORD_OVERLAY_MASK_INDEX):
+                // TODO: Implement reset code
         }
         overlayMask.reset(maskTabbedPane.getSelectedIndex());
         maskScaleSpinner.setValue(1.0);
@@ -4984,6 +4987,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     break;
                 case(SHAPE_OVERLAY_MASK_INDEX):
                     shapeMask = null;
+                    break;
+                case(WORD_OVERLAY_MASK_INDEX):
+                    // TODO: Add reset code for word overlay
             }
             return index == maskTabbedPane.getSelectedIndex();
         }
@@ -5011,6 +5017,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     return (double)maskShapeWidthSpinner.getValue() > 0 && 
                             (double)maskShapeHeightSpinner.getValue() > 0 && 
                             maskShapeCombo.getSelectedIndex() >= 0;
+                    // The mask is using multiple messages
+                case(WORD_OVERLAY_MASK_INDEX):
+                    // TODO: Add code to get if the overlay is to be rendered
             }
             return false;
         }
@@ -5043,6 +5052,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     if (path == null)
                         path = new Path2D.Double();
                     return shapeMask = getShapeMaskImage(width,height,shapeMask,path);
+                case (WORD_OVERLAY_MASK_INDEX):
+                    // TODO: Add code to get the mask image for multiple messaages
             }
             return null;
         }
@@ -5059,6 +5070,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // The mask is an image
                 case(IMAGE_OVERLAY_MASK_INDEX):
                     return imgMaskAntialiasingToggle.isSelected();
+                case(WORD_OVERLAY_MASK_INDEX):
+                    // TODO: Return if the overlay is antialiased
             }
             return true;
         }
@@ -5194,6 +5207,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     path = paintShapeMask(imgG,width,height,
                             (double)maskShapeWidthSpinner.getValue(),
                             (double)maskShapeHeightSpinner.getValue(),path);
+                    break;
+                case(WORD_OVERLAY_MASK_INDEX):
+                    // TODO: Draw the multiple message mask
             }   // If this rendered to an image as a buffer 
             if (img != null){
                 imgG.dispose();
