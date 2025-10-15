@@ -229,6 +229,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final int IMAGE_OVERLAY_MASK_INDEX = 1;
     
     private static final int SHAPE_OVERLAY_MASK_INDEX = 2;
+    
+    private static final int MAXIMUM_MESSAGE_COUNT = 32;
     /**
      * This is a logger to log events in the program.
      */
@@ -421,6 +423,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         LineNumbersView maskWordLineNumView = new LineNumbersView(maskWordPane);
         maskWordScrollPane.setRowHeaderView(maskWordLineNumView);
+        if (maskWordPane.getStyledDocument() instanceof AbstractDocument){
+            ((AbstractDocument)maskWordPane.getStyledDocument()).setDocumentFilter(
+                    new DocumentLineFilter(MAXIMUM_MESSAGE_COUNT));
+        } else
+            getLogger().warning("maskWordPane document does not implement AbstractDocument");
         
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
