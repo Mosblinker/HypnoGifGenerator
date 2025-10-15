@@ -3204,13 +3204,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 ((italicToggle.isSelected())?Font.ITALIC:0);
     }
     /**
-     * This returns whether the spiral will spin clockwise.
-     * @return Whether the spiral will spin clockwise.
-     */
-    private boolean isSpinClockwise(){
-        return spinDirCombo.getSelectedIndex() == 0;
-    }
-    /**
      * This returns the rotation for the frame with the given index.
      * @param frameIndex The index of the frame.
      * @param painter The spiral painter being used.
