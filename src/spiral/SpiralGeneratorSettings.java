@@ -891,14 +891,7 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public int getMaskWordMessageCount(int defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default int getMaskWordMessageCount(){
-        return getMaskWordMessageCount(SpiralGenerator.MINIMUM_MESSAGE_COUNT);
-    }
+    public int getMaskWordMessageCount();
     /**
      * 
      * @param value 
