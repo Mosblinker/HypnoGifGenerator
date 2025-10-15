@@ -13,6 +13,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
@@ -76,7 +78,8 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
 
               startOffset = Utilities.getRowEnd(editor, startOffset) + 1;
             } catch (BadLocationException e) {
-                e.printStackTrace();
+                SpiralGenerator.getLogger().log(Level.INFO, 
+                        "Bad location found while painting line numbers", e);
                 // ignore and continue
             }
         }
@@ -103,10 +106,10 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
         FontMetrics fontMetrics = editor.getFontMetrics(editor.getFont());
         int descent = fontMetrics.getDescent();
 
-        Rectangle r = editor.modelToView(offset);
-        int y = r.y + r.height - descent;
+        Rectangle2D r = editor.modelToView2D(offset);
+        double y = r.getY() + r.getHeight() - descent;
 
-        return y;
+        return (int)Math.floor(y);
     }
 
     /**
@@ -132,6 +135,7 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
      * Updates the size of the line number margin based on the editor height.
      */
     private void updateSize() {
+        
         Dimension size = new Dimension(MARGIN_WIDTH_PX, editor.getHeight());
         setPreferredSize(size);
         setSize(size);
