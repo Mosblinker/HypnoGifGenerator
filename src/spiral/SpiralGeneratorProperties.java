@@ -545,4 +545,40 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setImageSize(Dimension value) {
         setDimensionProperty(IMAGE_SIZE_KEY,value);
     }
+    @Override
+    public boolean isMaskWordAntialiased(boolean defaultValue) {
+        return getBooleanProperty(MASK_WORD_ANTIALIASING_KEY,defaultValue);
+    }
+    @Override
+    public void setMaskWordAntialiased(boolean value) {
+        setBooleanProperty(MASK_WORD_ANTIALIASING_KEY,value);
+    }
+    @Override
+    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
+        return getBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,defaultValue);
+    }
+    @Override
+    public void setMaskWordAddBlankFrames(boolean value) {
+        setBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,value);
+    }
+    @Override
+    public int getMaskWordMessageCount() {
+        return getIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,0);
+    }
+    @Override
+    public void setMaskWordMessageCount(int value) {
+        setIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,value);
+    }
+    @Override
+    public String getMaskWordMessage(int index) {
+        return getProperty(MASK_WORD_MESSAGE_KEY_PREFIX+index);
+    }
+    @Override
+    public void setMaskWordMessage(int index, String value) {
+        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
+        if (value == null)
+            remove(key);
+        else
+            setProperty(key,value);
+    }
 }

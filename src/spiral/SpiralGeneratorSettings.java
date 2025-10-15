@@ -128,6 +128,22 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
+    public static final String MASK_WORD_ANTIALIASING_KEY = "MaskWordAntialiasing";
+    /**
+     * 
+     */
+    public static final String MASK_WORD_BLANK_FRAMES_KEY = "MaskWordBlankFrames";
+    /**
+     * 
+     */
+    public static final String MASK_WORD_MESSAGE_COUNT_KEY = "MaskWordMessageCount";
+    /**
+     * 
+     */
+    public static final String MASK_WORD_MESSAGE_KEY_PREFIX = "MaskWordMessage";
+    /**
+     * 
+     */
     public static final int MASK_FLIP_HORIZONTAL_FLAG = 0x01;
     /**
      * 
@@ -839,6 +855,64 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
+    public boolean isMaskWordAntialiased(boolean defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default boolean isMaskWordAntialiased(){
+        return isMaskWordAntialiased(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskWordAntialiased(boolean value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean getMaskWordAddBlankFrames(boolean defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default boolean getMaskWordAddBlankFrames(){
+        return getMaskWordAddBlankFrames(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskWordAddBlankFrames(boolean value);
+    /**
+     * 
+     * @return 
+     */
+    public int getMaskWordMessageCount();
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskWordMessageCount(int value);
+    /**
+     * 
+     * @param index
+     * @return 
+     */
+    public String getMaskWordMessage(int index);
+    /**
+     * 
+     * @param index
+     * @param value 
+     */
+    public void setMaskWordMessage(int index, String value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
     public Dimension getImageSize(Dimension defaultValue);
     /**
      * 
@@ -924,4 +998,5 @@ public interface SpiralGeneratorSettings {
         size.height = value;
         setImageSize(size);
     }
+    
 }
