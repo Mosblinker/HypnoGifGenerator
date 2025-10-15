@@ -232,17 +232,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     
-    private static final int TEXT_OVERLAY_MASK_INDEX = 0;
+    protected static final int TEXT_OVERLAY_MASK_INDEX = 0;
     
-    private static final int IMAGE_OVERLAY_MASK_INDEX = 1;
+    protected static final int IMAGE_OVERLAY_MASK_INDEX = 1;
     
-    private static final int SHAPE_OVERLAY_MASK_INDEX = 2;
+    protected static final int SHAPE_OVERLAY_MASK_INDEX = 2;
     
-    private static final int WORD_OVERLAY_MASK_INDEX = 3;
+    protected static final int WORD_OVERLAY_MASK_INDEX = 3;
     
-    private static final int MINIMUM_MESSAGE_COUNT = 2;
+    protected static final int MINIMUM_MESSAGE_COUNT = 2;
     
-    private static final int MAXIMUM_MESSAGE_COUNT = 32;
+    protected static final int MAXIMUM_MESSAGE_COUNT = 32;
     
     private static final int MAXIMUM_MESSAGE_BLANK_FRAMES = 4;
     /**
