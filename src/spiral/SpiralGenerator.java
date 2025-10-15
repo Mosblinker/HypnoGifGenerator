@@ -41,6 +41,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -435,11 +436,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         MaskWordHandler maskWordHandler = new MaskWordHandler();
         
+        Action maskWordUpAction = new MaskWordShiftAction("MaskWordUpAction",-1);
+        Action maskWordDownAction = new MaskWordShiftAction("MaskWordDownAction",1);
+        
         for (int i = 0; i < maskWordFields.length; i++){
             maskWordFields[i] = new JTextField();
             maskWordFields[i].addActionListener(maskWordHandler);
             maskWordFields[i].getDocument().addDocumentListener(maskWordHandler);
             maskWordFields[i].addPropertyChangeListener(maskWordHandler);
+            maskWordFields[i].getInputMap(JComponent.WHEN_FOCUSED)
+                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), 
+                            maskWordUpAction.getValue(Action.NAME));
+            maskWordFields[i].getActionMap().put(maskWordUpAction.getValue(Action.NAME),
+                    maskWordUpAction);
+            maskWordFields[i].getInputMap(JComponent.WHEN_FOCUSED)
+                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), 
+                            maskWordDownAction.getValue(Action.NAME));
+            maskWordFields[i].getActionMap().put(maskWordDownAction.getValue(Action.NAME),
+                    maskWordDownAction);
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
@@ -3259,6 +3273,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         updateMaskWordControlsEnabled();
     }
+    
+    private int getIndexOfMaskWordField(JTextField field){
+        for (int i = 0; i < maskWordCount && i < maskWordFields.length; i++){
+            if (maskWordFields[i].equals(field))
+                return i;
+        }
+        return -1;
+    }
     /**
      * @param args the command line arguments
      */
@@ -4714,14 +4736,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     removeMaskWordField(index);
                 }
             } else if (evt.getSource() instanceof JTextField){
-                int index = -1;
-                for (int i = 0; i < maskWordCount && i < maskWordFields.length && index < 0; i++){
-                    if (maskWordFields[i].equals(evt.getSource()))
-                        index = i;
-                }
+                int index = getIndexOfMaskWordField((JTextField)evt.getSource());
                 if (index < 0)
                     return;
-                if (index == maskWordCount-1){
+                if (index == maskWordCount-1 && maskWordCount < MAXIMUM_MESSAGE_COUNT){
                     addMaskWordField("");
                 }
                 index = (index+1)%maskWordFields.length;
@@ -4751,6 +4769,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void changedUpdate(DocumentEvent evt) {
             
+        }
+    }
+    
+    private class MaskWordShiftAction extends AbstractAction{
+        
+        private int inc;
+        
+        MaskWordShiftAction(String name, int inc){
+            super(name);
+            this.inc = inc;
+        }
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            int index = getIndexOfMaskWordField((JTextField)evt.getSource());
+            if (index < 0)
+                return;
+            index = (maskWordCount+index+inc) % maskWordCount;
+            maskWordFields[index].grabFocus();
+            maskWordFieldPanel.scrollRectToVisible(maskWordFields[index].getBounds());
         }
     }
     
