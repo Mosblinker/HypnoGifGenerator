@@ -3368,11 +3368,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void arrangeMaskWordFrames(){
         overlayMask.wordFrames.clear();
-        for (int i = 0; i < MAXIMUM_MESSAGE_COUNT; i++){
-            int j = i*2;
-            overlayMask.wordFrames.put(j, i);
-            if (!blankWordFramesToggle.isSelected())
-                overlayMask.wordFrames.put(j+1, i);
+        int framePerMsg = Math.floorDiv(SPIRAL_FRAME_COUNT, maskWordCount);
+        int extra = SPIRAL_FRAME_COUNT % maskWordCount;
+        int index = 0;
+        for (int i = 0; i < maskWordCount; i++, extra--){
+            int count = framePerMsg;
+            if (extra > 0)
+                count++;
+            int blkFrames = 0;
+            if (blankWordFramesToggle.isSelected()){
+                blkFrames = (int)Math.round(count/4.0);
+                count -= blkFrames;
+            }
+            for (int j = 0; j < count; j++, index++){
+                overlayMask.wordFrames.put(index, i);
+            }
+            index += blkFrames;
         }
         maskPreviewLabel.repaint();
         refreshPreview();
