@@ -243,6 +243,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private static final int MINIMUM_MESSAGE_COUNT = 2;
     
     private static final int MAXIMUM_MESSAGE_COUNT = 32;
+    
+    private static final int MAXIMUM_MESSAGE_BLANK_FRAMES = 4;
     /**
      * This is a logger to log events in the program.
      */
@@ -3377,7 +3379,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 count++;
             int blkFrames = 0;
             if (blankWordFramesToggle.isSelected()){
-                blkFrames = (int)Math.round(count/4.0);
+                blkFrames = Math.min(MAXIMUM_MESSAGE_BLANK_FRAMES,(int)Math.round(count/4.0));
                 count -= blkFrames;
             }
             for (int j = 0; j < count; j++, index++){
