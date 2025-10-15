@@ -2768,7 +2768,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskTextPane.setFont(font);
             config.setMaskFont(font);
                 // Refresh the text mask and preview
-            refreshPreview(0);
+            refreshPreview(TEXT_OVERLAY_MASK_INDEX);
         }
         fontDim = fontSelector.getSize(fontDim);
         config.setMaskFontSelectorSize(fontDim);
@@ -2784,7 +2784,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
             // Refresh the text mask and preview
-        refreshPreview(0);
+        refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_styleToggleActionPerformed
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
@@ -2838,7 +2838,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
         config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
             // Refresh the image mask and preview
-        refreshPreview(1);
+        refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
     /**
      * 
@@ -2954,19 +2954,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskAlphaIndex(maskAlphaButtons);
         updateMaskAlphaControlsEnabled();
             // Refresh the image mask and preview
-        refreshPreview(1);
+        refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
     private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
         config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
             // Refresh the image mask and preview
-        refreshPreview(1);
+        refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
 
     private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
         config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
             // Refresh the image mask and preview
-        refreshPreview(1);
+        refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
 
     private void testShowRadiusToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testShowRadiusToggleActionPerformed
@@ -3025,7 +3025,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Set the height of the mask shape to the width
             maskShapeHeightSpinner.setValue(value);
             // Refresh the shape mask and preview
-        refreshPreview(2);
+        refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskShapeWidthSpinnerStateChanged
 
     private void maskShapeHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeHeightSpinnerStateChanged
@@ -3034,7 +3034,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (maskShapeLinkSizeToggle.isSelected())
             return;
             // Refresh the shape mask and preview
-        refreshPreview(2);
+        refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskShapeHeightSpinnerStateChanged
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
@@ -3044,7 +3044,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
                 // Refresh the shape mask and preview
-            refreshPreview(2);
+            refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
         }
     }//GEN-LAST:event_maskShapeLinkSizeToggleActionPerformed
 
@@ -3128,7 +3128,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskImgScaleMethodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskImgScaleMethodComboActionPerformed
         config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
             // Refresh the image mask and preview
-        refreshPreview(1);
+        refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
 
     private void aboutPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutPanelActionPerformed
@@ -3144,7 +3144,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
         config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
-        refreshPreview(2);
+        refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskShapeComboActionPerformed
 
     private void optimizeDifferenceToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeDifferenceToggleActionPerformed
@@ -3271,7 +3271,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             config.setMaskImageFrameIndex(index);
             updateMaskFrameControlsEnabled();
                 // Refresh the image mask and preview
-            refreshPreview(1);
+            refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
         } catch (IndexOutOfBoundsException ex){
             getLogger().log(Level.WARNING, "Index out of bounds for overlay image", ex);
         }
@@ -3415,7 +3415,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void refreshMaskText(){
         config.setMaskText(maskTextPane.getText());
             // Refresh the text mask and preview
-        refreshPreview(0);
+        refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }
     
     private void refreshPreview(int index){
@@ -4749,7 +4749,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }   // If the text mask has changed in any way
             if (maskChanged)
                     // Refresh the text mask and preview
-                refreshPreview(0);
+                refreshPreview(TEXT_OVERLAY_MASK_INDEX);
             else    // Refresh the preview
                 refreshPreview();
         }
