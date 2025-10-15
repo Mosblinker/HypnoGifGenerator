@@ -4514,7 +4514,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
-    private class OverlayMask implements Painter<Color>, Icon2D{
+    private class OverlayMask implements Painter<Integer>, Icon2D{
         /**
          * This is the image used as a mask for the overlay when text is being 
          * used as a mask. When this is null, then the mask will be generated 
@@ -4744,7 +4744,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskImage(g,mask);
         }
         @Override
-        public void paint(Graphics2D g, Color color, int width, int height) {
+        public void paint(Graphics2D g, Integer index, int width, int height) {
                 // If the width or height are less than or equal to zero 
                 // (nothing would be drawn)
             if (width <= 0 || height <= 0 || !isOverlayRendered())
@@ -4769,6 +4769,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // whether the mask should be antialiased
                 imgG.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                         antialiasing);
+                    // Set the color for the overlay
+                imgG.setColor(g.getColor());
                     // Get the bounds for the area to be drawn
                 bounds = getRotatedBounds(width,height);
             }   // Enable or disable the antialiasing, depending on whether the 
@@ -4781,11 +4783,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // Transfer the width and height over from the bounds
                 width = (int)Math.ceil(bounds.getWidth());
                 height = (int)Math.ceil(bounds.getHeight());
-            }   // If the given color is not null
-            if (color != null)
-                    // Set the color for the overlay
-                imgG.setColor(color);
-                // Determine what to return based off the index
+            }   // Determine what to return based off the index
             switch (maskTabbedPane.getSelectedIndex()){
                     // The mask is using text
                 case(0):
@@ -4823,7 +4821,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the height of the icon
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
-            paint(g, Color.WHITE, width, height);
+            g.setColor(Color.WHITE);
+            paint(g, 0, width, height);
         }
         @Override
         public int getIconWidth() {
