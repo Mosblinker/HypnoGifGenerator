@@ -1641,13 +1641,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap()
                 .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(fontWordButton)
-                    .addComponent(boldWordToggle)
-                    .addComponent(italicWordToggle)
-                    .addComponent(wordAntialiasingToggle)
-                    .addComponent(addMaskWordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(blankWordFramesToggle))
+                .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addMaskWordButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(fontWordButton)
+                        .addComponent(boldWordToggle)
+                        .addComponent(italicWordToggle)
+                        .addComponent(wordAntialiasingToggle)
+                        .addComponent(blankWordFramesToggle)))
                 .addContainerGap())
         );
 
@@ -3217,6 +3218,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_italicToggleActionPerformed
 
     private void blankWordFramesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blankWordFramesToggleActionPerformed
+        config.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
         arrangeMaskWordFrames();
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
     /**
@@ -3328,6 +3330,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordScrollPane.validate();
             maskWordFieldPanel.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
+        config.setMaskWordMessageCount(maskWordCount);
         arrangeMaskWordFrames();
         updateMaskWordControlsEnabled();
     }
@@ -3348,6 +3351,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             for (int i = 0; i < maskWordCount; i++)
                 maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
         }
+        config.setMaskWordMessageCount(maskWordCount);
         arrangeMaskWordFrames();
         updateMaskWordControlsEnabled();
     }
@@ -3464,6 +3468,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private void refreshMaskWordField(int index){
+        config.setMaskWordMessage(index, maskWordFields[index].getText());
         overlayMask.wordMasks.remove(index);
         try{
             Integer temp = overlayMask.wordFrames.get(frameIndex);
@@ -4813,7 +4818,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
                             break;
                         case(WORD_OVERLAY_MASK_INDEX):
-                            // TODO: Add code to store changed value in config
+                            config.setMaskWordAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
                     }
                     break;
                 case(CenteredTextPainter.LINE_SPACING_PROPERTY_CHANGED):
