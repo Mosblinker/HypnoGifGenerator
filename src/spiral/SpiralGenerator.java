@@ -2770,6 +2770,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextPane.setFont(font);
             config.setMaskFont(font);
+            resetMask(WORD_OVERLAY_MASK_INDEX);
                 // Refresh the text mask and preview
             refreshPreview(TEXT_OVERLAY_MASK_INDEX);
         }
@@ -2786,6 +2787,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int style = getFontStyle();
         config.setMaskFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
+        resetMask(WORD_OVERLAY_MASK_INDEX);
             // Refresh the text mask and preview
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_styleToggleActionPerformed
