@@ -75,7 +75,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
-import spiral.icons.AddIcon;
 import spiral.icons.RemoveIcon;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
@@ -450,26 +449,40 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordRemoveButtonIndexes.put(removeButton, i);
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.gridx = 0;
-            constraints.gridy = i+1;
+            constraints.gridy = i;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
-            jPanel4.add(label,constraints);
+            maskWordFieldPanel.add(label,constraints);
             constraints = new GridBagConstraints();
             constraints.gridx = 1;
-            constraints.gridy = i+1;
+            constraints.gridy = i;
             constraints.weightx = 0.9;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
-            jPanel4.add(maskWordFields[i],constraints);
+            maskWordFieldPanel.add(maskWordFields[i],constraints);
             constraints = new GridBagConstraints();
             constraints.gridx = 2;
-            constraints.gridy = i+1;
+            constraints.gridy = i;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
-            jPanel4.add(removeButton,constraints);
+            maskWordFieldPanel.add(removeButton,constraints);
             maskWordFields[i].addComponentListener(maskWordHandler);
             maskWordFields[i].setVisible(i < maskWordCount);
         }
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(24, 0), 
+                new Dimension(24, 0), new Dimension(24, 32767)),gridBagConstraints);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 0.9;
+        maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(0, 0), 
+                new Dimension(0, 0), new Dimension(0, 32767)),gridBagConstraints);
         
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
@@ -934,10 +947,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeCombo = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel4 = new javax.swing.JPanel();
-        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 32767));
-        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        maskWordScrollPane = new javax.swing.JScrollPane();
+        maskWordFieldPanel = new javax.swing.JPanel();
         addMaskWordButton = new javax.swing.JButton();
         javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -1518,24 +1529,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane1.setToolTipText("");
+        maskWordScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        maskWordScrollPane.setToolTipText("");
 
-        jPanel4.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
-        jPanel4.add(filler20, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 0.9;
-        jPanel4.add(filler21, gridBagConstraints);
-
-        jScrollPane1.setViewportView(jPanel4);
+        maskWordFieldPanel.setLayout(new java.awt.GridBagLayout());
+        maskWordScrollPane.setViewportView(maskWordFieldPanel);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1545,9 +1543,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.weightx = 0.9;
         gridBagConstraints.weighty = 0.9;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel3.add(jScrollPane1, gridBagConstraints);
+        jPanel3.add(maskWordScrollPane, gridBagConstraints);
 
-        addMaskWordButton.setIcon(new AddIcon());
+        addMaskWordButton.setIcon(new spiral.icons.AddIcon());
         addMaskWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMaskWordButtonActionPerformed(evt);
@@ -1590,7 +1588,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addContainerGap())
         );
 
-        maskTabbedPane.addTab("tab5", jPanel2);
+        maskTabbedPane.addTab("Multiple Messages", jPanel2);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -3238,9 +3236,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordFields[maskWordCount-1].setText(text);
         maskWordFields[maskWordCount-1].setVisible(true);
         if (scroll){
-            jPanel4.validate();
-            jScrollPane1.validate();
-            jPanel4.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
+            maskWordFieldPanel.validate();
+            maskWordScrollPane.validate();
+            maskWordFieldPanel.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
         if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
             addMaskWordButton.setEnabled(false);
@@ -3825,8 +3823,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
@@ -3874,6 +3870,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
+    private javax.swing.JPanel maskWordFieldPanel;
+    private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
@@ -4720,7 +4718,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
                 index = (index+1)%maskWordFields.length;
                 maskWordFields[index].grabFocus();
-                jPanel4.scrollRectToVisible(maskWordFields[index].getBounds());
+                maskWordFieldPanel.scrollRectToVisible(maskWordFields[index].getBounds());
             }
         }
     }
