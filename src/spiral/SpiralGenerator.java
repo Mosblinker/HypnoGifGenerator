@@ -3235,8 +3235,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordScrollPane.validate();
             maskWordFieldPanel.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
-        if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
-            addMaskWordButton.setEnabled(false);
+        updateMaskWordControlsEnabled();
     }
     
     private void addMaskWordField(String text){
@@ -3251,11 +3250,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordFields[i].setText(maskWordFields[i+1].getText());
         }
         maskWordFields[maskWordCount].setVisible(false);
-        addMaskWordButton.setEnabled(true);
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
             for (int i = 0; i < maskWordCount; i++)
                 maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
         }
+        updateMaskWordControlsEnabled();
     }
     /**
      * @param args the command line arguments
@@ -3407,6 +3406,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boolean enabled = loadMaskButton.isEnabled() && !overlayImages.isEmpty();
         maskFramePrevButton.setEnabled(enabled && overlayImageIndex > 0);
         maskFrameNextButton.setEnabled(enabled && overlayImageIndex < overlayImages.size()-1);
+    }
+    /**
+     * 
+     */
+    private void updateMaskWordControlsEnabled(){
+        addMaskWordButton.setEnabled(inputEnableToggle.isSelected() && 
+                maskWordCount < maskWordFields.length);
     }
     /**
      * 
@@ -3995,6 +4001,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         imgAspectRatioButton.setEnabled(enabled && !overlayImages.isEmpty());
         updateMaskFrameControlsEnabled();
         maskImgScaleMethodCombo.setEnabled(enabled);
+        for (JTextField field : maskWordFields)
+            field.setEnabled(enabled);
+        updateMaskWordControlsEnabled();
         updateFrameControls();
         updateControlsEnabled();
         optimizeDifferenceToggle.setEnabled(enabled);
