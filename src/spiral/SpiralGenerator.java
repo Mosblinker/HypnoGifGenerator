@@ -653,6 +653,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (SpiralPainter painter : spiralPainters)
             painter.addPropertyChangeListener(handler);
         overlayMask.textPainter.addPropertyChangeListener(handler);
+        overlayMask.wordPainter.addPropertyChangeListener(handler);
         doc.addDocumentListener(handler);
         
             // If the mask is an image
@@ -4736,16 +4737,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the source of the change is a SpiralPainter
             if (evt.getSource() instanceof SpiralPainter)
                 painter = (SpiralPainter) evt.getSource();
-                // This gets if the text mask should also be repainted
-            boolean maskChanged = false;
+            int maskTypeChanged = -1;
+            if (overlayMask.textPainter.equals(evt.getSource()))
+                maskTypeChanged = TEXT_OVERLAY_MASK_INDEX;
+            else if (overlayMask.wordPainter.equals(evt.getSource()))
+                maskTypeChanged = WORD_OVERLAY_MASK_INDEX;
             switch(evt.getPropertyName()){
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
-                    config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
-                    maskChanged = true;
+                    switch(maskTypeChanged){
+                        case(TEXT_OVERLAY_MASK_INDEX):
+                            config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
+                            break;
+                        case(WORD_OVERLAY_MASK_INDEX):
+                            // TODO: Add code to store changed value in config
+                    }
                     break;
                 case(CenteredTextPainter.LINE_SPACING_PROPERTY_CHANGED):
-                    config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
-                    maskChanged = true;
+                    switch(maskTypeChanged){
+                        case(TEXT_OVERLAY_MASK_INDEX):
+                            config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
+                            break;
+                        case(WORD_OVERLAY_MASK_INDEX):
+                            // TODO: Add code to store changed value in config if this value is stored
+                    }
                     break;
                 case(SpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
                 case(LogarithmicSpiral.BASE_PROPERTY_CHANGED):
@@ -4757,10 +4771,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         // If there is a spiral painter
                     if (painter != null)
                         config.setSpiralData(painter);
-            }   // If the text mask has changed in any way
-            if (maskChanged)
-                    // Refresh the text mask and preview
-                refreshPreview(TEXT_OVERLAY_MASK_INDEX);
+            }   // If the masks have changed in any way
+            if (maskTypeChanged >= 0)
+                    // Refresh the masks and preview
+                refreshPreview(maskTypeChanged);
             else    // Refresh the preview
                 refreshPreview();
         }
