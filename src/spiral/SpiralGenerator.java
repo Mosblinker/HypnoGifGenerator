@@ -3548,6 +3548,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     "Null encountered while repainting preview label for frame " 
                             + frameIndex, ex);
         }
+        if (overlayMask.getMaskType() == WORD_OVERLAY_MASK_INDEX){
+            try{
+                maskPreviewLabel.repaint();
+            } catch (NullPointerException ex){
+                getLogger().log(Level.WARNING, 
+                        "Null encountered while repainting mask preview label for frame " 
+                                + frameIndex, ex);
+            }
+        }
         updateFrameNumberDisplayed();
         try{
             frameSlider.setValue(frameIndex);
