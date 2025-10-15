@@ -350,6 +350,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTextPane.setText(settings.getMaskText());
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
+    
+    private void addActionToComponent(JComponent comp, int condition, 
+            int keyCode, int modifier, Action action){
+        comp.getInputMap(condition).put(KeyStroke.getKeyStroke(keyCode, modifier), 
+                action.getValue(Action.NAME));
+        comp.getActionMap().put(action.getValue(Action.NAME),action);
+    }
     /**
      * Creates new form SpiralGenerator
      * @param debugMode
@@ -444,16 +451,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordFields[i].addActionListener(maskWordHandler);
             maskWordFields[i].getDocument().addDocumentListener(maskWordHandler);
             maskWordFields[i].addPropertyChangeListener(maskWordHandler);
-            maskWordFields[i].getInputMap(JComponent.WHEN_FOCUSED)
-                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), 
-                            maskWordUpAction.getValue(Action.NAME));
-            maskWordFields[i].getActionMap().put(maskWordUpAction.getValue(Action.NAME),
-                    maskWordUpAction);
-            maskWordFields[i].getInputMap(JComponent.WHEN_FOCUSED)
-                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), 
-                            maskWordDownAction.getValue(Action.NAME));
-            maskWordFields[i].getActionMap().put(maskWordDownAction.getValue(Action.NAME),
-                    maskWordDownAction);
+            addActionToComponent(maskWordFields[i],JComponent.WHEN_FOCUSED,
+                    KeyEvent.VK_UP, 0,maskWordUpAction);
+            addActionToComponent(maskWordFields[i],JComponent.WHEN_FOCUSED,
+                    KeyEvent.VK_DOWN, 0, maskWordDownAction);
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
