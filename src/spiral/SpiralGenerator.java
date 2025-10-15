@@ -4238,6 +4238,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
         prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
         prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        prop.setMaskWordAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
+        prop.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
+        prop.setMaskWordMessageCount(maskWordCount);
+        for (int i = 0; i < maskWordCount; i++){
+            prop.setMaskWordMessage(i, maskWordFields[i].getText());
+        }
         
         return prop;
     }
