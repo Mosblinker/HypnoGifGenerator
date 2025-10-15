@@ -1546,6 +1546,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         jPanel3.add(jScrollPane1, gridBagConstraints);
 
+        addMaskWordButton.setIcon(new AddIcon());
         addMaskWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMaskWordButtonActionPerformed(evt);
