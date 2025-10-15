@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -4955,6 +4956,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public BufferedImage shapeMask = null;
         /**
+         * This is the map used to store the images used as masks for the 
+         * overlay when using multiple messages. When there is no image for a 
+         * given index, then that mask will be generated the next it is used.
+         */
+        public TreeMap<Integer,BufferedImage> wordMasks = new TreeMap<>();
+        /**
+         * This maps the index of the frames to the index for its mask. When a 
+         * frame index is mapped to nothing or null, then that frame will be 
+         * blank.
+         */
+        public TreeMap<Integer,Integer> wordFrames;
+        /**
          * This is the painter used to paint the text used as the mask for the 
          * message when text is being used for the mask.
          */
@@ -4987,11 +5000,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         protected OverlayMask(){
             textPainter = new CenteredTextPainter();
             wordPainter = new CenteredTextPainter();
+            wordFrames = new TreeMap<>();
         }
         
         protected OverlayMask(OverlayMask mask){
             this.textPainter = new CenteredTextPainter(mask.textPainter);
             this.wordPainter = new CenteredTextPainter(mask.wordPainter);
+            this.wordFrames = new TreeMap<>(mask.wordFrames);
             this.alphaMask = mask.alphaMask;
             this.maskType = mask.maskType;
         }
@@ -5008,6 +5023,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          */
         public void reset(){
             textMask = alphaMask = imgMask = shapeMask = null;
+            wordMasks.clear();
         }
         /**
          * 
@@ -5025,7 +5041,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     shapeMask = null;
                     break;
                 case(WORD_OVERLAY_MASK_INDEX):
-                    // TODO: Add reset code for word overlay
+                    wordMasks.clear();
             }
             return index == maskType;
         }
@@ -5055,7 +5071,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             maskShapeCombo.getSelectedIndex() >= 0;
                     // The mask is using multiple messages
                 case(WORD_OVERLAY_MASK_INDEX):
-                    // TODO: Add code to get if the overlay is to be rendered
+                    Integer i = wordFrames.get(index);
+                    if (i == null || i < 0 || i >= maskWordCount)
+                        return false;
+                    String msg = maskWordFields[i].getText();
+                    return msg != null && !msg.isBlank();
             }
             return false;
         }
@@ -5089,6 +5109,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         path = new Path2D.Double();
                     return shapeMask = getShapeMaskImage(width,height,shapeMask,path);
                 case (WORD_OVERLAY_MASK_INDEX):
+                    Integer i = wordFrames.get(index);
                     // TODO: Add code to get the mask image for multiple messaages
             }
             return null;
@@ -5247,6 +5268,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             (double)maskShapeHeightSpinner.getValue(),path);
                     break;
                 case(WORD_OVERLAY_MASK_INDEX):
+                    Integer i = wordFrames.get(index);
                     // TODO: Draw the multiple message mask
             }   // If this rendered to an image as a buffer 
             if (img != null){
