@@ -34,6 +34,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.RadialGradientPaint;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
@@ -3262,7 +3263,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return angle  % SpiralPainter.FULL_CIRCLE_DEGREES;
     }
     
-    private void addMaskWordField(String text){
+    private void addMaskWordField(String text, boolean scroll){
         if (maskWordCount >= MAXIMUM_MESSAGE_COUNT)
             return;
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
@@ -3272,8 +3273,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordCount++;
         maskWordFields[maskWordCount-1].setText(text);
         maskWordFields[maskWordCount-1].setVisible(true);
+        if (scroll){
+            jPanel4.validate();
+            jScrollPane1.validate();
+            Rectangle bounds = jScrollPane1.getViewportBorderBounds();
+            Dimension size = jPanel4.getSize();
+            if (size.height > bounds.height){
+                bounds.x = 0;
+                bounds.y = size.height-bounds.height;
+                jPanel4.scrollRectToVisible(bounds);
+            }
+        }
         if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
             jButton1.setEnabled(false);
+    }
+    
+    private void addMaskWordField(String text){
+        addMaskWordField(text,true);
     }
     
     private void removeMaskWordField(int index){
