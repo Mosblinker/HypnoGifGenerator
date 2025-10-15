@@ -4726,6 +4726,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            if ("enabled".equals(evt.getPropertyName())){
+                if (evt.getSource() instanceof JTextField){
+                    JTextField field = (JTextField)evt.getSource();
+                    JButton button = maskWordRemoveButtons.get(field);
+                    if (button != null)
+                        button.setEnabled(field.isEnabled());
+                }
+            }
         }
         @Override
         public void insertUpdate(DocumentEvent evt) {
