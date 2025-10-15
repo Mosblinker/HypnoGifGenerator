@@ -437,6 +437,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (int i = 0; i < maskWordFields.length; i++){
             maskWordFields[i] = new JTextField();
             maskWordFields[i].addActionListener(maskWordHandler);
+            maskWordFields[i].getDocument().addDocumentListener(maskWordHandler);
+            maskWordFields[i].addPropertyChangeListener(maskWordHandler);
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
@@ -4678,7 +4680,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
     }
     
-    private class MaskWordHandler extends ComponentAdapter implements ActionListener{
+    private class MaskWordHandler extends ComponentAdapter implements ActionListener, 
+            PropertyChangeListener, DocumentListener{
         private void updateLabelVisiblity(ComponentEvent evt){
             if (evt.getComponent() instanceof JTextField){
                 JTextField field = (JTextField)evt.getComponent();
@@ -4720,6 +4723,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskWordFields[index].grabFocus();
                 maskWordFieldPanel.scrollRectToVisible(maskWordFields[index].getBounds());
             }
+        }
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+        }
+        @Override
+        public void insertUpdate(DocumentEvent evt) {
+            
+        }
+        @Override
+        public void removeUpdate(DocumentEvent evt) {
+            
+        }
+        @Override
+        public void changedUpdate(DocumentEvent evt) {
+            
         }
     }
     
