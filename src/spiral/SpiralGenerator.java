@@ -3461,9 +3461,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }
     
-    private void refreshMaskField(int index){
+    private void refreshMaskWordField(int index){
         overlayMask.wordMasks.remove(index);
-        if (overlayMask.wordFrames.get(frameIndex) == index){
+        try{
+            Integer temp = overlayMask.wordFrames.get(frameIndex);
+            if (temp != null && temp == index){
+                maskPreviewLabel.repaint();
+                refreshPreview();
+            }
+        } catch (NullPointerException ex){
+            getLogger().log(Level.WARNING, 
+                    "Null encountered refreshing for message " + index + 
+                    " on frame " + frameIndex, ex);
             maskPreviewLabel.repaint();
             refreshPreview();
         }
@@ -4906,15 +4915,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         public void insertUpdate(DocumentEvent evt) {
-            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
+            refreshMaskWordField(getIndexOfMaskWordField(evt.getDocument()));
         }
         @Override
         public void removeUpdate(DocumentEvent evt) {
-            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
+            refreshMaskWordField(getIndexOfMaskWordField(evt.getDocument()));
         }
         @Override
         public void changedUpdate(DocumentEvent evt) {
-            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
+            refreshMaskWordField(getIndexOfMaskWordField(evt.getDocument()));
         }
     }
     
