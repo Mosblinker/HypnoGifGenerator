@@ -476,6 +476,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             addActionToComponent(maskWordFields[i],JComponent.WHEN_FOCUSED,
                     KeyEvent.VK_DOWN, 0, maskWordDownAction);
             textPopupMenus.put(maskWordFields[i], new JPopupMenu());
+            maskWordFields[i].setComponentPopupMenu(textPopupMenus.get(maskWordFields[i]));
             JLabel label = new JLabel((i+1)+":");
             maskWordLabels.put(maskWordFields[i], label);
             label.setLabelFor(maskWordFields[i]);
