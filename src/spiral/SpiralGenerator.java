@@ -967,13 +967,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle = new javax.swing.JCheckBox();
         maskShapeLabel = new javax.swing.JLabel();
         maskShapeCombo = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        maskWordCtrlPanel = new javax.swing.JPanel();
         maskWordScrollPane = new javax.swing.JScrollPane();
         maskWordFieldPanel = new javax.swing.JPanel();
         addMaskWordButton = new javax.swing.JButton();
-        javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
-        javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        fontWordButton = new javax.swing.JButton();
+        boldWordToggle = new javax.swing.JCheckBox();
+        italicWordToggle = new javax.swing.JCheckBox();
+        wordAntialiasingToggle = new javax.swing.JCheckBox();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1154,6 +1155,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boldToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 styleToggleActionPerformed(evt);
+                boldToggleActionPerformed(evt);
             }
         });
 
@@ -1161,6 +1163,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 styleToggleActionPerformed(evt);
+                italicToggleActionPerformed(evt);
             }
         });
 
@@ -1549,23 +1552,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
 
-        jPanel3.setLayout(new java.awt.GridBagLayout());
-
         maskWordScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         maskWordScrollPane.setToolTipText("");
 
         maskWordFieldPanel.setLayout(new java.awt.GridBagLayout());
         maskWordScrollPane.setViewportView(maskWordFieldPanel);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.9;
-        gridBagConstraints.weighty = 0.9;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel3.add(maskWordScrollPane, gridBagConstraints);
 
         addMaskWordButton.setIcon(new spiral.icons.AddIcon());
         addMaskWordButton.setToolTipText("Add another message (maximum of %d).");
@@ -1575,44 +1566,72 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 addMaskWordButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        jPanel3.add(addMaskWordButton, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.45;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel3.add(filler15, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.45;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        jPanel3.add(filler19, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        fontWordButton.setText("Select Font");
+        fontWordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fontButtonActionPerformed(evt);
+            }
+        });
+
+        boldWordToggle.setText("Bold");
+        boldWordToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boldWordToggleActionPerformed(evt);
+            }
+        });
+
+        italicWordToggle.setText("Italic");
+        italicWordToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                italicWordTogglestyleToggleActionPerformed(evt);
+            }
+        });
+
+        wordAntialiasingToggle.setSelected(true);
+        wordAntialiasingToggle.setText("Antialiasing");
+        wordAntialiasingToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wordAntialiasingToggleActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout maskWordCtrlPanelLayout = new javax.swing.GroupLayout(maskWordCtrlPanel);
+        maskWordCtrlPanel.setLayout(maskWordCtrlPanelLayout);
+        maskWordCtrlPanelLayout.setHorizontalGroup(
+            maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
+                .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(maskWordCtrlPanelLayout.createSequentialGroup()
+                        .addComponent(fontWordButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(boldWordToggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(italicWordToggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(wordAntialiasingToggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
+                        .addComponent(addMaskWordButton))
+                    .addComponent(maskWordScrollPane))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        maskWordCtrlPanelLayout.setVerticalGroup(
+            maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fontWordButton)
+                    .addComponent(boldWordToggle)
+                    .addComponent(italicWordToggle)
+                    .addComponent(wordAntialiasingToggle)
+                    .addComponent(addMaskWordButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        maskTabbedPane.addTab("Multiple Messages", jPanel2);
+        maskTabbedPane.addTab("Multiple Messages", maskWordCtrlPanel);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -2758,6 +2777,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void fontAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontAntialiasingToggleActionPerformed
         overlayMask.textPainter.setAntialiasingEnabled(fontAntialiasingToggle.isSelected());
+        wordAntialiasingToggle.setSelected(fontAntialiasingToggle.isSelected());
     }//GEN-LAST:event_fontAntialiasingToggleActionPerformed
 
     private void lineSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_lineSpacingSpinnerStateChanged
@@ -3148,6 +3168,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void addMaskWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMaskWordButtonActionPerformed
         addMaskWordField("");
     }//GEN-LAST:event_addMaskWordButtonActionPerformed
+
+    private void boldWordToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boldWordToggleActionPerformed
+        boldToggle.setSelected(boldWordToggle.isSelected());
+        styleToggleActionPerformed(evt);
+    }//GEN-LAST:event_boldWordToggleActionPerformed
+
+    private void italicWordTogglestyleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italicWordTogglestyleToggleActionPerformed
+        italicToggle.setSelected(italicWordToggle.isSelected());
+        styleToggleActionPerformed(evt);
+    }//GEN-LAST:event_italicWordTogglestyleToggleActionPerformed
+
+    private void wordAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordAntialiasingToggleActionPerformed
+//        overlayMask.textPainter.setAntialiasingEnabled(wordAntialiasingToggle.isSelected());
+//        fontAntialiasingToggle.setSelected(wordAntialiasingToggle.isSelected());
+    }//GEN-LAST:event_wordAntialiasingToggleActionPerformed
+
+    private void boldToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boldToggleActionPerformed
+        boldWordToggle.setSelected(boldToggle.isSelected());
+    }//GEN-LAST:event_boldToggleActionPerformed
+
+    private void italicToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italicToggleActionPerformed
+        italicWordToggle.setSelected(italicToggle.isSelected());
+    }//GEN-LAST:event_italicToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3820,6 +3863,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel baseLabel;
     private javax.swing.JSpinner baseSpinner;
     private javax.swing.JCheckBox boldToggle;
+    private javax.swing.JCheckBox boldWordToggle;
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel configButtonPanel;
@@ -3834,6 +3878,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel dirLabel;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
+    private javax.swing.JButton fontWordButton;
     private javax.swing.JButton frameFirstButton;
     private javax.swing.JButton frameLastButton;
     private javax.swing.JPanel frameNavPanel;
@@ -3852,8 +3897,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JCheckBox italicWordToggle;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
@@ -3901,6 +3945,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
+    private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
@@ -3946,6 +3991,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel updateTextLabel;
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
+    private javax.swing.JCheckBox wordAntialiasingToggle;
     // End of variables declaration//GEN-END:variables
     /**
      * 
