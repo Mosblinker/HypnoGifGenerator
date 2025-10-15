@@ -969,6 +969,42 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setImageSize(Dimension value) {
         putDimension(IMAGE_SIZE_KEY,value);
     }
+    @Override
+    public boolean isMaskWordAntialiased(boolean defaultValue) {
+        return getMaskPreferences().getBoolean(MASK_WORD_ANTIALIASING_KEY, defaultValue);
+    }
+    @Override
+    public void setMaskWordAntialiased(boolean value) {
+        getMaskPreferences().putBoolean(MASK_WORD_ANTIALIASING_KEY, value);
+    }
+    @Override
+    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
+        return getMaskPreferences().getBoolean(MASK_WORD_BLANK_FRAMES_KEY, defaultValue);
+    }
+    @Override
+    public void setMaskWordAddBlankFrames(boolean value) {
+        getMaskPreferences().putBoolean(MASK_WORD_BLANK_FRAMES_KEY, value);
+    }
+    @Override
+    public int getMaskWordMessageCount() {
+        return getMaskPreferences().getInt(MASK_WORD_MESSAGE_COUNT_KEY, 0);
+    }
+    @Override
+    public void setMaskWordMessageCount(int value) {
+        getMaskPreferences().putInt(MASK_WORD_MESSAGE_COUNT_KEY, value);
+    }
+    @Override
+    public String getMaskWordMessage(int index) {
+        return getMaskPreferences().get(MASK_WORD_MESSAGE_KEY_PREFIX+index, null);
+    }
+    @Override
+    public void setMaskWordMessage(int index, String value) {
+        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
+        if (value == null)
+            getMaskPreferences().remove(key);
+        else
+            getMaskPreferences().put(key, value);
+    }
     /**
      * 
      */
