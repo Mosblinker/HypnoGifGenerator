@@ -31,11 +31,15 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 import java.awt.RadialGradientPaint;
 import java.awt.RenderingHints;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -230,6 +234,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final int SHAPE_OVERLAY_MASK_INDEX = 2;
     
+    private static final int MINIMUM_MESSAGE_COUNT = 2;
+    
     private static final int MAXIMUM_MESSAGE_COUNT = 32;
     /**
      * This is a logger to log events in the program.
@@ -420,6 +426,47 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         StyleConstants.setAlignment(centeredText, StyleConstants.ALIGN_CENTER);
             // Apply the centered text style to the entire pane
         doc.setParagraphAttributes(0, doc.getLength(), centeredText, false);
+        
+        maskWordFields = new JTextField[MAXIMUM_MESSAGE_COUNT];
+        maskWordLabels = new HashMap<>();
+        maskWordRemoveButtons = new HashMap<>();
+        maskWordRemoveButtonIndexes = new HashMap<>();
+        
+        MaskWordHandler maskWordHandler = new MaskWordHandler();
+        
+        for (int i = 0; i < maskWordFields.length; i++){
+            maskWordFields[i] = new JTextField();
+            JLabel label = new JLabel((i+1)+":");
+            maskWordLabels.put(maskWordFields[i], label);
+            label.setLabelFor(maskWordFields[i]);
+            label.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+            JButton removeButton = new JButton("-");
+            removeButton.addActionListener(maskWordHandler);
+            removeButton.setVisible(false);
+            maskWordRemoveButtons.put(maskWordFields[i], removeButton);
+            maskWordRemoveButtonIndexes.put(removeButton, i);
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridx = 0;
+            constraints.gridy = i+1;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.insets = new Insets((i==0)?0:6,0,0,6);
+            jPanel4.add(label,constraints);
+            constraints = new GridBagConstraints();
+            constraints.gridx = 1;
+            constraints.gridy = i+1;
+            constraints.weightx = 0.9;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.insets = new Insets((i==0)?0:6,0,0,0);
+            jPanel4.add(maskWordFields[i],constraints);
+            constraints = new GridBagConstraints();
+            constraints.gridx = 2;
+            constraints.gridy = i+1;
+            constraints.fill = GridBagConstraints.BOTH;
+            constraints.insets = new Insets((i==0)?0:6,6,0,0);
+            jPanel4.add(removeButton,constraints);
+            maskWordFields[i].addComponentListener(maskWordHandler);
+            maskWordFields[i].setVisible(i < maskWordCount);
+        }
         
         LineNumbersView maskWordLineNumView = new LineNumbersView(maskWordPane);
         maskWordScrollPane.setRowHeaderView(maskWordLineNumView);
@@ -894,6 +941,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordScrollPane = new javax.swing.JScrollPane();
         maskWordPanel = new javax.swing.JPanel();
         maskWordPane = new javax.swing.JTextPane();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPanel4 = new javax.swing.JPanel();
+        javax.swing.Box.Filler filler20 = new javax.swing.Box.Filler(new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 0), new java.awt.Dimension(24, 32767));
+        javax.swing.Box.Filler filler21 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        jButton1 = new javax.swing.JButton();
+        javax.swing.Box.Filler filler15 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        javax.swing.Box.Filler filler19 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1129,7 +1185,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(textMaskCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                .addComponent(maskTextScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(textMaskCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fontButton)
@@ -1487,11 +1543,87 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         maskTabbedPane.addTab("tab4", jPanel1);
+
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setToolTipText("");
+
+        jPanel4.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
+        jPanel4.add(filler20, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.9;
+        jPanel4.add(filler21, gridBagConstraints);
+
+        jScrollPane1.setViewportView(jPanel4);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.9;
+        gridBagConstraints.weighty = 0.9;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        jPanel3.add(jScrollPane1, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        jPanel3.add(jButton1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.45;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        jPanel3.add(filler15, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.45;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        jPanel3.add(filler19, gridBagConstraints);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        maskTabbedPane.addTab("tab5", jPanel2);
 
         maskScaleLabel.setLabelFor(maskScaleSpinner);
         maskScaleLabel.setText("Overlay Scale:");
@@ -3024,6 +3156,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             fileWorker.execute();
         }
     }//GEN-LAST:event_loadConfigButtonActionPerformed
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        addMaskWordField("");
+    }//GEN-LAST:event_jButton1ActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3123,6 +3259,35 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             angle = SpiralPainter.FULL_CIRCLE_DEGREES - angle;
             // Bound the angle by 360
         return angle  % SpiralPainter.FULL_CIRCLE_DEGREES;
+    }
+    
+    private void addMaskWordField(String text){
+        if (maskWordCount >= MAXIMUM_MESSAGE_COUNT)
+            return;
+        if (maskWordCount == MINIMUM_MESSAGE_COUNT){
+            for (int i = 0; i < maskWordCount; i++)
+                maskWordRemoveButtons.get(maskWordFields[i]).setVisible(maskWordFields[i].isVisible());
+        }
+        maskWordCount++;
+        maskWordFields[maskWordCount-1].setText(text);
+        maskWordFields[maskWordCount-1].setVisible(true);
+        if (maskWordCount == MAXIMUM_MESSAGE_COUNT)
+            jButton1.setEnabled(false);
+    }
+    
+    private void removeMaskWordField(int index){
+        if (index >= maskWordCount)
+            return;
+        maskWordCount--;
+        for (int i = index; i < maskWordCount; i++){
+            maskWordFields[i].setText(maskWordFields[i+1].getText());
+        }
+        maskWordFields[maskWordCount].setVisible(false);
+        jButton1.setEnabled(true);
+        if (maskWordCount == MINIMUM_MESSAGE_COUNT){
+            for (int i = 0; i < maskWordCount; i++)
+                maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
+        }
     }
     /**
      * @param args the command line arguments
@@ -3620,6 +3785,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the swing worker used to check for updates.
      */
     private UpdateCheckWorker updateWorker = null;
+    /**
+     * These are the JTextFields used to enter multiple messages to be displayed 
+     * one after the other.
+     */
+    private JTextField[] maskWordFields;
+    /**
+     * This is a map containing the JLabels for the JTextFields for entering 
+     * multiple messages to be displayed.
+     */
+    private Map<JTextField, JLabel> maskWordLabels;
+    
+    private Map<JTextField, JButton> maskWordRemoveButtons;
+    
+    private Map<JButton, Integer> maskWordRemoveButtonIndexes;
+    /**
+     * This is the number of messages that will be displayed one after another.
+     */
+    private int maskWordCount = MINIMUM_MESSAGE_COUNT;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutButton;
     private javax.swing.JDialog aboutDialog;
@@ -3664,7 +3847,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private components.JThumbnailLabel imgMaskPreview;
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel latestVersLabel;
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel lineSpacingLabel;
@@ -4518,6 +4706,37 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void changedUpdate(DocumentEvent evt) {
             refreshMaskText();
+        }
+    }
+    
+    private class MaskWordHandler extends ComponentAdapter implements ActionListener{
+        private void updateLabelVisiblity(ComponentEvent evt){
+            if (evt.getComponent() instanceof JTextField){
+                JTextField field = (JTextField)evt.getComponent();
+                JLabel label = maskWordLabels.get(field);
+                if (label != null)
+                    label.setVisible(field.isVisible());
+                JButton button = maskWordRemoveButtons.get(field);
+                if (button != null)
+                    button.setVisible(field.isVisible() && maskWordCount > 2);
+            }
+        }
+        @Override
+        public void componentShown(ComponentEvent evt) {
+            updateLabelVisiblity(evt);
+        }
+        @Override
+        public void componentHidden(ComponentEvent evt) {
+            updateLabelVisiblity(evt);
+        }
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            if (evt.getSource() instanceof JButton){
+                Integer index = maskWordRemoveButtonIndexes.get((JButton)evt.getSource());
+                if (index != null){
+                    removeMaskWordField(index);
+                }
+            }
         }
     }
     
