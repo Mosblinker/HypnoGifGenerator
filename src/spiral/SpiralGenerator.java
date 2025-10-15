@@ -3358,6 +3358,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return -1;
     }
     
+    private int getIndexOfMaskWordField(Document document){
+        for (int i = 0; i < maskWordCount && i < maskWordFields.length; i++){
+            if (maskWordFields[i].getDocument().equals(document))
+                return i;
+        }
+        return -1;
+    }
+    
     private void arrangeMaskWordFrames(){
         overlayMask.wordFrames.clear();
         for (int i = 0; i < MAXIMUM_MESSAGE_COUNT; i++){
@@ -3366,6 +3374,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (!blankWordFramesToggle.isSelected())
                 overlayMask.wordFrames.put(j+1, i);
         }
+        maskPreviewLabel.repaint();
+        refreshPreview();
     }
     /**
      * @param args the command line arguments
@@ -3438,6 +3448,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskText(maskTextPane.getText());
             // Refresh the text mask and preview
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
+    }
+    
+    private void refreshMaskField(int index){
+        overlayMask.wordMasks.remove(index);
+        if (overlayMask.wordFrames.get(frameIndex) == index){
+            maskPreviewLabel.repaint();
+            refreshPreview();
+        }
     }
     
     private void resetMask(int index){
@@ -4877,15 +4895,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         @Override
         public void insertUpdate(DocumentEvent evt) {
-            
+            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
         }
         @Override
         public void removeUpdate(DocumentEvent evt) {
-            
+            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
         }
         @Override
         public void changedUpdate(DocumentEvent evt) {
-            
+            refreshMaskField(getIndexOfMaskWordField(evt.getDocument()));
         }
     }
     
