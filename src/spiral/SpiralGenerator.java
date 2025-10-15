@@ -4188,7 +4188,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param spiralPainter
      * @param mask 
      */
-    private void paintOverlay(Graphics2D g, SpiralModel model, int width, 
+    private void paintOverlay(Graphics2D g, SpiralModel model, int index, int width, 
             int height,SpiralPainter spiralPainter, OverlayMask mask){
             // If the width or height are less than or equal to zero or there is 
             // nothing visible for the overlay (nothing  would be drawn)
@@ -4202,7 +4202,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Paint a spiral
         spiralPainter.paint(imgG, model, width, height);
             // Apply the mask for the overlay
-        mask.maskOverlay(imgG, width, height);
+        mask.maskOverlay(imgG, index, width, height);
             // Dispose of the image graphics
         imgG.dispose();
             // Create a copy of the given graphics context and configure it
@@ -4242,7 +4242,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             model.setRotation(angle);
             // Paint the spiral
         spiralPainter.paint(g, models[0], width, height);
-        paintOverlay(g,models[1],width,height,spiralPainter,mask);
+        paintOverlay(g,models[1],frameIndex,width,height,spiralPainter,mask);
     }
     
     private class ColorIconSpiralModel extends AbstractSpiralModel{
@@ -4705,7 +4705,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
          * @param width
          * @param height 
          */
-        public void maskOverlay(Graphics2D g, int width, int height){
+        public void maskOverlay(Graphics2D g, int index, int width, int height){
                 // This will get the mask for the overlay
             BufferedImage mask;
                 // Get the antialiasing rendering hint
@@ -4822,7 +4822,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             int height = getIconHeight();
             g.fillRect(0, 0, width, height);
             g.setColor(Color.WHITE);
-            paint(g, 0, width, height);
+            paint(g, frameIndex, width, height);
         }
         @Override
         public int getIconWidth() {
