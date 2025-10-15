@@ -37,6 +37,10 @@ import javax.swing.text.Utilities;
  */
 public class LineNumbersView extends JComponent implements DocumentListener, CaretListener, ComponentListener {
     
+    private final int MARGIN_INSET_WIDTH = 10;
+    
+    private final int MINIMUM_MARGIN_WIDTH = 28;
+    
     public final int MARGIN_WIDTH_PX = 28;
     
     private static final long serialVersionUID = 1L;
@@ -180,4 +184,5 @@ public class LineNumbersView extends JComponent implements DocumentListener, Car
     @Override
     public void componentHidden(ComponentEvent e) {
     }
+            System.out.println("Font changed");
 }
