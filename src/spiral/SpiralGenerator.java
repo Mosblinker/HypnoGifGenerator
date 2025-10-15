@@ -346,7 +346,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
-        maskWordPane.setFont(font);
     }
     /**
      * Creates new form SpiralGenerator
@@ -468,14 +467,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordFields[i].addComponentListener(maskWordHandler);
             maskWordFields[i].setVisible(i < maskWordCount);
         }
-        
-        LineNumbersView maskWordLineNumView = new LineNumbersView(maskWordPane);
-        maskWordScrollPane.setRowHeaderView(maskWordLineNumView);
-        if (maskWordPane.getStyledDocument() instanceof AbstractDocument){
-            ((AbstractDocument)maskWordPane.getStyledDocument()).setDocumentFilter(
-                    new DocumentLineFilter(MAXIMUM_MESSAGE_COUNT));
-        } else
-            getLogger().warning("maskWordPane document does not implement AbstractDocument");
         
             // Add all the image file filters to the mask image file chooser
         for (FileFilter filter : ImageExtensions.IMAGE_FILTERS){
@@ -938,10 +929,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskShapeLinkSizeToggle = new javax.swing.JCheckBox();
         maskShapeLabel = new javax.swing.JLabel();
         maskShapeCombo = new javax.swing.JComboBox<>();
-        jPanel1 = new javax.swing.JPanel();
-        maskWordScrollPane = new javax.swing.JScrollPane();
-        maskWordPanel = new javax.swing.JPanel();
-        maskWordPane = new javax.swing.JTextPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -1525,30 +1512,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         shapeMaskCtrlPanel.add(maskShapeCombo, gridBagConstraints);
 
         maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
-
-        maskWordPanel.setLayout(new java.awt.BorderLayout());
-        maskWordPanel.add(maskWordPane, java.awt.BorderLayout.CENTER);
-
-        maskWordScrollPane.setViewportView(maskWordPanel);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        maskTabbedPane.addTab("tab4", jPanel1);
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
@@ -2747,7 +2710,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the selected font and set its style
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextPane.setFont(font);
-            maskWordPane.setFont(font);
             config.setMaskFont(font);
                 // Refresh the text mask and preview
             refreshPreview(0);
@@ -3858,7 +3820,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBoxMenuItem inputEnableToggle;
     private javax.swing.JCheckBox italicToggle;
     private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -3910,9 +3871,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JTabbedPane maskTabbedPane;
     private javax.swing.JTextPane maskTextPane;
     private javax.swing.JScrollPane maskTextScrollPane;
-    private javax.swing.JTextPane maskWordPane;
-    private javax.swing.JPanel maskWordPanel;
-    private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
     private javax.swing.JPanel previewMaskPanel;
