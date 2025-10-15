@@ -3379,7 +3379,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private int getIndexOfMaskWordField(JTextField field){
-        for (int i = 0; i < maskWordCount && i < maskWordFields.length; i++){
+        for (int i = 0; i < maskWordFields.length; i++){
             if (maskWordFields[i].equals(field))
                 return i;
         }
@@ -3387,7 +3387,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private int getIndexOfMaskWordField(Document document){
-        for (int i = 0; i < maskWordCount && i < maskWordFields.length; i++){
+        for (int i = 0; i < maskWordFields.length; i++){
             if (maskWordFields[i].getDocument().equals(document))
                 return i;
         }
@@ -4931,7 +4931,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
             } else if (evt.getSource() instanceof JTextField){
                 int index = getIndexOfMaskWordField((JTextField)evt.getSource());
-                if (index < 0)
+                if (index < 0 || index >= maskWordCount)
                     return;
                 if (index == maskWordCount-1 && maskWordCount < MAXIMUM_MESSAGE_COUNT){
                     addMaskWordField("");
@@ -4977,7 +4977,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         @Override
         public void actionPerformed(ActionEvent evt) {
             int index = getIndexOfMaskWordField((JTextField)evt.getSource());
-            if (index < 0)
+            if (index < 0 || index >= maskWordCount)
                 return;
             index = (maskWordCount+index+inc) % maskWordCount;
             maskWordFields[index].grabFocus();
