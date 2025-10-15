@@ -40,8 +40,8 @@ import javax.swing.text.Utilities;
 public class LineNumbersView extends JComponent implements DocumentListener, 
         CaretListener, ComponentListener, PropertyChangeListener {
     
+    private final int DEFAULT_MARGIN_WIDTH = 28;
     
-    public final int MARGIN_WIDTH_PX = 28;
     private final int MARGIN_INSET = 6;
     
     private static final long serialVersionUID = 1L;
@@ -49,6 +49,8 @@ public class LineNumbersView extends JComponent implements DocumentListener,
     private JTextComponent editor;
 
     private Font font;
+    
+    private int width = -1;
 
     public LineNumbersView(JTextComponent editor) {
         this.editor = editor;
@@ -145,7 +147,15 @@ public class LineNumbersView extends JComponent implements DocumentListener,
      * Updates the size of the line number margin based on the editor height.
      */
     private void updateSize() {
-        Dimension size = new Dimension(MARGIN_WIDTH_PX, editor.getHeight());
+        if (width < 0){
+            if (font == null)
+                width = DEFAULT_MARGIN_WIDTH;
+            else{
+                FontMetrics metrics = getFontMetrics(font);
+                width = metrics.stringWidth("000") + MARGIN_INSET;
+            }
+        }
+        Dimension size = new Dimension(width, editor.getHeight());
         setPreferredSize(size);
         setSize(size);
     }
@@ -194,6 +204,8 @@ public class LineNumbersView extends JComponent implements DocumentListener,
     public void propertyChange(PropertyChangeEvent evt) {
         if ("font".equals(evt.getPropertyName())){
             font = getNumberFont(null);
+            width = -1;
+            updateSize();
             documentChanged();
         }
     }
