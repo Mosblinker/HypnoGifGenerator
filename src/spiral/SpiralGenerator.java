@@ -354,7 +354,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskText());
         
+        boldWordToggle.setSelected(boldToggle.isSelected());
+        italicWordToggle.setSelected(italicToggle.isSelected());
+        wordAntialiasingToggle.setSelected(settings.isMaskWordAntialiased());
+        blankWordFramesToggle.setSelected(settings.getMaskWordAddBlankFrames());
+        maskWordCount = settings.getMaskWordMessageCount();
+        for (int i = 0; i < maskWordFields.length; i++){
+            maskWordFields[i].setText(settings.getMaskWordMessage(i));
+            maskWordFields[i].setVisible(i < maskWordCount);
+        }
+        setFirstMaskWordRemoveButtonsVisible(maskWordCount > MINIMUM_MESSAGE_COUNT);
         arrangeMaskWordFrames();
+        
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
     
@@ -3315,12 +3326,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         return angle  % SpiralPainter.FULL_CIRCLE_DEGREES;
     }
     
+    private void setFirstMaskWordRemoveButtonsVisible(boolean value){
+        for (int i = 0; i < maskWordCount; i++)
+            maskWordRemoveButtons.get(maskWordFields[i]).setVisible(value && maskWordFields[i].isVisible());
+    }
+    
     private void addMaskWordField(String text, boolean scroll){
         if (maskWordCount >= MAXIMUM_MESSAGE_COUNT)
             return;
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
-            for (int i = 0; i < maskWordCount; i++)
-                maskWordRemoveButtons.get(maskWordFields[i]).setVisible(maskWordFields[i].isVisible());
+            setFirstMaskWordRemoveButtonsVisible(true);
         }
         maskWordCount++;
         maskWordFields[maskWordCount-1].setText(text);
@@ -3348,8 +3363,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         maskWordFields[maskWordCount].setVisible(false);
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
-            for (int i = 0; i < maskWordCount; i++)
-                maskWordRemoveButtons.get(maskWordFields[i]).setVisible(false);
+            setFirstMaskWordRemoveButtonsVisible(false);
         }
         config.setMaskWordMessageCount(maskWordCount);
         arrangeMaskWordFrames();
