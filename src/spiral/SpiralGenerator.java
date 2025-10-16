@@ -1003,6 +1003,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicWordToggle = new javax.swing.JCheckBox();
         wordAntialiasingToggle = new javax.swing.JCheckBox();
         blankWordFramesToggle = new javax.swing.JCheckBox();
+        maskWordReorderButton = new javax.swing.JButton();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1632,6 +1633,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        maskWordReorderButton.setText("Reorder");
+        maskWordReorderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskWordReorderButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskWordCtrlPanelLayout = new javax.swing.GroupLayout(maskWordCtrlPanel);
         maskWordCtrlPanel.setLayout(maskWordCtrlPanelLayout);
         maskWordCtrlPanelLayout.setHorizontalGroup(
@@ -1649,7 +1657,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(wordAntialiasingToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(blankWordFramesToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(maskWordReorderButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                         .addComponent(addMaskWordButton))
                     .addComponent(maskWordScrollPane))
                 .addContainerGap())
@@ -1658,7 +1668,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addMaskWordButton, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1667,7 +1677,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(boldWordToggle)
                         .addComponent(italicWordToggle)
                         .addComponent(wordAntialiasingToggle)
-                        .addComponent(blankWordFramesToggle)))
+                        .addComponent(blankWordFramesToggle)
+                        .addComponent(maskWordReorderButton)))
                 .addContainerGap())
         );
 
@@ -3249,6 +3260,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
         arrangeMaskWordFrames();
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
+
+    private void maskWordReorderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskWordReorderButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_maskWordReorderButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4079,6 +4094,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JScrollPane maskTextScrollPane;
     private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
+    private javax.swing.JButton maskWordReorderButton;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
@@ -4216,6 +4232,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicWordToggle.setEnabled(enabled);
         wordAntialiasingToggle.setEnabled(enabled);
         blankWordFramesToggle.setEnabled(enabled);
+        maskWordReorderButton.setEnabled(enabled);
         updateMaskWordControlsEnabled();
         updateFrameControls();
         updateControlsEnabled();
