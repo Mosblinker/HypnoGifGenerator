@@ -136,6 +136,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
     }};
     /**
+     * 
+     */
+    private static final String[] LIBRARY_CREDITS_LINKS = {
+        "https://github.com/coobird/thumbnailator",
+        "https://github.com/Mosblinker/SwingExtended",
+        "https://github.com/Mosblinker/FilesExtended",
+        "https://github.com/Mosblinker/GeomArt4J",
+        null,
+        null,
+        null,
+        "https://github.com/Mosblinker/ConfigUtilities",
+        "https://github.com/rtyley/animated-gif-lib-for-java",
+        "https://github.com/darkxanter/webp-imageio",
+        "https://gitlab.com/dheid/fontchooser",
+        "https://github.com/TechnicJelle/UpdateCheckerJava"
+    };
+    /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
      */
