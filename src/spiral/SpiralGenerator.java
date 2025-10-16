@@ -120,37 +120,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //        },{
             "Special Thanks",
             "Special thanks to JWolf for the inspiration for this program and for being my friend."
-        },{
-            "Libraries",
-            "Thumbnailator - coobird",
-            "SwingExtended - Mosblinker",
-            "FilesExtended - Mosblinker",
-            "GeomArt4J - Mosblinker",
-            "SwingFilesExtended - Mosblinker",
-            "Measure - Mosblinker",
-            "GUIComponents - Mosblinker",
-            "ConfigUtilities - Mosblinker",
-            "animated-gif-lib - rtyley and Kevin Weiner",
-            "webp-imageio",
-            "FontChooser - Daniel Heid",
-            "UpdateChecker - TechnicJelle"
     }};
     /**
      * 
      */
-    private static final String[] LIBRARY_CREDITS_LINKS = {
-        "https://github.com/coobird/thumbnailator",
-        "https://github.com/Mosblinker/SwingExtended",
-        "https://github.com/Mosblinker/FilesExtended",
-        "https://github.com/Mosblinker/GeomArt4J",
-        null,
-        null,
-        null,
-        "https://github.com/Mosblinker/ConfigUtilities",
-        "https://github.com/rtyley/animated-gif-lib-for-java",
-        "https://github.com/darkxanter/webp-imageio",
-        "https://gitlab.com/dheid/fontchooser",
-        "https://github.com/TechnicJelle/UpdateCheckerJava"
+    private static final String[][] LIBRARY_CREDITS = {
+        {"Thumbnailator","coobird","https://github.com/coobird/thumbnailator"},
+        {"SwingExtended","Mosblinker","https://github.com/Mosblinker/SwingExtended"},
+        {"FilesExtended","Mosblinker","https://github.com/Mosblinker/FilesExtended"},
+        {"GeomArt4J","Mosblinker","https://github.com/Mosblinker/GeomArt4J"},
+        {"SwingFilesExtended","Mosblinker",null},
+        {"Measure","Mosblinker",null},
+        {"GUIComponents","Mosblinker",null},
+        {"ConfigUtilities","Mosblinker","https://github.com/Mosblinker/ConfigUtilities"},
+        {"animated-gif-lib","rtyley and Kevin Weiner","https://github.com/rtyley/animated-gif-lib-for-java"},
+        {"webp-imageio",null,"https://github.com/darkxanter/webp-imageio"},
+        {"FontChooser","Daniel Heid","https://gitlab.com/dheid/fontchooser"},
+        {"UpdateChecker","TechnicJelle","https://github.com/TechnicJelle/UpdateCheckerJava"}
     };
     /**
      * This is the pattern for the file handler to use for the log files of this 
@@ -617,12 +603,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Go through the credits in this section
             for (int j = 1; j < CREDITS[i].length; j++){
                 credits += System.lineSeparator()+CREDITS[i][j];
-                if (i == CREDITS.length-1 && j-1 < LIBRARY_CREDITS_LINKS.length){
-                    String link = LIBRARY_CREDITS_LINKS[j-1];
-                    if (link != null)
-                        credits += " - "+link;
-                }
             }
+        }
+        credits += System.lineSeparator()+System.lineSeparator();
+        credits += "---- Libraries ----";
+        for (String[] line : LIBRARY_CREDITS) {
+            credits += System.lineSeparator() + line[0];
+            if (line.length > 1 && line[1] != null) 
+                credits += " - " + line[1];
+            if (line.length > 2 && line[2] != null)
+                credits += " - " + line[2];
         }
         aboutPanel.setCreditsText(credits);
         creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
