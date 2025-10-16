@@ -426,7 +426,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             new ArithmeticSpiralPainter(),
             new ConcentricSpiralPainter(),
             new RippleSpiralPainter(),
-            new OscillatingCirclesSpiralPainter()
+            new OscillatingCirclesSpiralPainter(),
+            new DistortedSpiralPainter()
         };
         
         spiralCompLabels = new HashMap<>();
