@@ -1527,6 +1527,9 @@
       </Properties>
     </Component>
     <Component class="components.JListManipulator" name="maskWordManipulator">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </NonVisualComponents>
   <Properties>

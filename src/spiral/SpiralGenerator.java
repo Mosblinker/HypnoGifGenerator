@@ -1043,7 +1043,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateContinueButton = new javax.swing.JButton();
         updateOpenButton = new javax.swing.JButton();
         configFC = new javax.swing.JFileChooser();
-        maskWordManipulator = new components.JListManipulator();
+        maskWordManipulator = new components.JListManipulator<>();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -4098,7 +4098,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JScrollPane maskTextScrollPane;
     private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
-    private components.JListManipulator maskWordManipulator;
+    private components.JListManipulator<String> maskWordManipulator;
     private javax.swing.JButton maskWordReorderButton;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
