@@ -591,32 +591,55 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateIconLabel.setIcon(new SpiralProgramIcon(64,aboutIcon));
             // Get the document for the credits text pane
         StyledDocument creditsDoc = aboutPanel.getCreditsDocument();
-            // This is a String to get the credits text
-        String credits = "";
-            // Go through the credits arrays
-        for (int i = 0; i < CREDITS.length; i++){
-                // If this is not the first array
-            if (i > 0)
-                credits += System.lineSeparator()+System.lineSeparator();
-                // Add the header for this section
-            credits += "---- "+CREDITS[i][0]+" ----";
-                // Go through the credits in this section
-            for (int j = 1; j < CREDITS[i].length; j++){
-                credits += System.lineSeparator()+CREDITS[i][j];
+        SimpleAttributeSet leftText = new SimpleAttributeSet();
+        StyleConstants.setAlignment(leftText, StyleConstants.ALIGN_LEFT);
+        try{
+                // Go through the credits arrays
+            for (String[] creditSection : CREDITS) {
+                int start = creditsDoc.getLength();
+                    // Add the header for this section
+                creditsDoc.insertString(start, 
+                        "---- "+creditSection[0]+" ----"+System.lineSeparator(), 
+                        null);
+                    // Center the header
+                creditsDoc.setParagraphAttributes(start, creditsDoc.getLength(),
+                        centeredText, false);
+                    // Rest of the text is left aligned
+                creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                        leftText, false);
+                    // Go through the credits in this section
+                for (int j = 1; j < creditSection.length; j++) {
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            creditSection[j] + System.lineSeparator(), null);
+                }
+                creditsDoc.insertString(creditsDoc.getLength(), 
+                        System.lineSeparator(),null);
             }
+                // Center the header
+            creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                    centeredText, false);
+            creditsDoc.insertString(creditsDoc.getLength(), 
+                    "---- Libraries ----"+System.lineSeparator(),null);
+                // Rest of the text is left aligned
+            creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                    leftText, false);
+            for (int i = 0; i < LIBRARY_CREDITS.length; i++){
+                if (i > 0)
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            System.lineSeparator(),null);
+                creditsDoc.insertString(creditsDoc.getLength(), 
+                        LIBRARY_CREDITS[i][0],null);
+                if (LIBRARY_CREDITS[i].length > 1 && LIBRARY_CREDITS[i][1] != null) 
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            " - " + LIBRARY_CREDITS[i][1],null);
+                if (LIBRARY_CREDITS[i].length > 2 && LIBRARY_CREDITS[i][2] != null)
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            " - " + LIBRARY_CREDITS[i][2],null);
+            }
+        } catch (BadLocationException ex){
+            getLogger().log(Level.WARNING, "Bad location found while populating credits", 
+                    ex);
         }
-        credits += System.lineSeparator()+System.lineSeparator();
-        credits += "---- Libraries ----";
-        for (String[] line : LIBRARY_CREDITS) {
-            credits += System.lineSeparator() + line[0];
-            if (line.length > 1 && line[1] != null) 
-                credits += " - " + line[1];
-            if (line.length > 2 && line[2] != null)
-                credits += " - " + line[2];
-        }
-        aboutPanel.setCreditsText(credits);
-        creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
-                centeredText, false);
         
             // Set the maximum for the progress bar. The only thing that uses it 
             // in this program is saving the animation
