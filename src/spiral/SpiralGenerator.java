@@ -4211,6 +4211,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImgScaleMethodCombo.setEnabled(enabled);
         for (JTextField field : maskWordFields)
             field.setEnabled(enabled);
+        fontWordButton.setEnabled(enabled);
+        boldWordToggle.setEnabled(enabled);
+        italicWordToggle.setEnabled(enabled);
+        wordAntialiasingToggle.setEnabled(enabled);
+        blankWordFramesToggle.setEnabled(enabled);
         updateMaskWordControlsEnabled();
         updateFrameControls();
         updateControlsEnabled();
