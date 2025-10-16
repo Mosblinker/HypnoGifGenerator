@@ -10,6 +10,7 @@ import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
 import components.JAboutPanel;
 import components.JColorSelector;
+import components.JHyperlinkLabel;
 import components.JListManipulator;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
@@ -55,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.BufferOverflowException;
@@ -120,21 +122,24 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //        },{
             "Special Thanks",
             "Special thanks to JWolf for the inspiration for this program and for being my friend."
-        },{
-            "Libraries",
-            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
-            "SwingFilesExtended - Mosblinker",
-            "Measure - Mosblinker",
-            "GUIComponents - Mosblinker",
-            "ConfigUtilities - Mosblinker - https://github.com/Mosblinker/ConfigUtilities",
-            "animated-gif-lib - rtyley and Kevin Weiner - https://github.com/rtyley/animated-gif-lib-for-java",
-            "webp-imageio - https://github.com/darkxanter/webp-imageio",
-            "FontChooser - Daniel Heid - https://gitlab.com/dheid/fontchooser",
-            "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
     }};
+    /**
+     * 
+     */
+    private static final String[][] LIBRARY_CREDITS = {
+        {"Thumbnailator","coobird","https://github.com/coobird/thumbnailator"},
+        {"SwingExtended","Mosblinker","https://github.com/Mosblinker/SwingExtended"},
+        {"FilesExtended","Mosblinker","https://github.com/Mosblinker/FilesExtended"},
+        {"GeomArt4J","Mosblinker","https://github.com/Mosblinker/GeomArt4J"},
+        {"SwingFilesExtended","Mosblinker",null},
+        {"Measure","Mosblinker",null},
+        {"GUIComponents","Mosblinker",null},
+        {"ConfigUtilities","Mosblinker","https://github.com/Mosblinker/ConfigUtilities"},
+        {"animated-gif-lib","rtyley and Kevin Weiner","https://github.com/rtyley/animated-gif-lib-for-java"},
+        {"webp-imageio",null,"https://github.com/darkxanter/webp-imageio"},
+        {"FontChooser","Daniel Heid","https://gitlab.com/dheid/fontchooser"},
+        {"UpdateChecker","TechnicJelle","https://github.com/TechnicJelle/UpdateCheckerJava"}
+    };
     /**
      * This is the pattern for the file handler to use for the log files of this 
      * program.
@@ -588,23 +593,62 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateIconLabel.setIcon(new SpiralProgramIcon(64,aboutIcon));
             // Get the document for the credits text pane
         StyledDocument creditsDoc = aboutPanel.getCreditsDocument();
-            // This is a String to get the credits text
-        String credits = "";
-            // Go through the credits arrays
-        for (int i = 0; i < CREDITS.length; i++){
-                // If this is not the first array
-            if (i > 0)
-                credits += System.lineSeparator()+System.lineSeparator();
-                // Add the header for this section
-            credits += "---- "+CREDITS[i][0]+" ----";
-                // Go through the credits in this section
-            for (int j = 1; j < CREDITS[i].length; j++){
-                credits += System.lineSeparator()+CREDITS[i][j];
+        SimpleAttributeSet leftText = new SimpleAttributeSet();
+        StyleConstants.setAlignment(leftText, StyleConstants.ALIGN_LEFT);
+        try{
+                // Go through the credits arrays
+            for (String[] creditSection : CREDITS) {
+                int start = creditsDoc.getLength();
+                    // Add the header for this section
+                creditsDoc.insertString(start, 
+                        "---- "+creditSection[0]+" ----"+System.lineSeparator(), 
+                        null);
+                    // Center the header
+                creditsDoc.setParagraphAttributes(start, creditsDoc.getLength(),
+                        centeredText, false);
+                    // Rest of the text is left aligned
+                creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                        leftText, false);
+                    // Go through the credits in this section
+                for (int j = 1; j < creditSection.length; j++) {
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            creditSection[j] + System.lineSeparator(), null);
+                }
+                creditsDoc.insertString(creditsDoc.getLength(), 
+                        System.lineSeparator(),null);
             }
+                // Center the header
+            creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                    centeredText, false);
+            creditsDoc.insertString(creditsDoc.getLength(), 
+                    "---- Libraries ----"+System.lineSeparator(),null);
+                // Rest of the text is left aligned
+            creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
+                    leftText, false);
+            Style defStyle = StyleContext.getDefaultStyleContext().
+                    getStyle(StyleContext.DEFAULT_STYLE);
+            for (int i = 0; i < LIBRARY_CREDITS.length; i++){
+                if (i > 0)
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            System.lineSeparator(),null);
+                Style linkStyle = null;
+                if (LIBRARY_CREDITS[i].length > 2 && LIBRARY_CREDITS[i][2] != null){
+                    linkStyle = creditsDoc.addStyle("hyperlink"+i, defStyle);
+                    JHyperlinkLabel hyperlink = new JHyperlinkLabel(LIBRARY_CREDITS[i][0],
+                            URI.create(LIBRARY_CREDITS[i][2]));
+                    hyperlink.setAlignmentY((float) 0.85);
+                    StyleConstants.setComponent(linkStyle, hyperlink);
+                }
+                creditsDoc.insertString(creditsDoc.getLength(), 
+                        LIBRARY_CREDITS[i][0],linkStyle);
+                if (LIBRARY_CREDITS[i].length > 1 && LIBRARY_CREDITS[i][1] != null) 
+                    creditsDoc.insertString(creditsDoc.getLength(), 
+                            " - " + LIBRARY_CREDITS[i][1],null);
+            }
+        } catch (BadLocationException ex){
+            getLogger().log(Level.WARNING, "Bad location found while populating credits", 
+                    ex);
         }
-        aboutPanel.setCreditsText(credits);
-        creditsDoc.setParagraphAttributes(0, creditsDoc.getLength(), 
-                centeredText, false);
         
             // Set the maximum for the progress bar. The only thing that uses it 
             // in this program is saving the animation
