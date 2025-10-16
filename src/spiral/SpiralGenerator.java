@@ -122,18 +122,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             "Special thanks to JWolf for the inspiration for this program and for being my friend."
         },{
             "Libraries",
-            "Thumbnailator - coobird - https://github.com/coobird/thumbnailator",
-            "SwingExtended - Mosblinker - https://github.com/Mosblinker/SwingExtended",
-            "FilesExtended - Mosblinker - https://github.com/Mosblinker/FilesExtended",
-            "GeomArt4J - Mosblinker - https://github.com/Mosblinker/GeomArt4J",
+            "Thumbnailator - coobird",
+            "SwingExtended - Mosblinker",
+            "FilesExtended - Mosblinker",
+            "GeomArt4J - Mosblinker",
             "SwingFilesExtended - Mosblinker",
             "Measure - Mosblinker",
             "GUIComponents - Mosblinker",
-            "ConfigUtilities - Mosblinker - https://github.com/Mosblinker/ConfigUtilities",
-            "animated-gif-lib - rtyley and Kevin Weiner - https://github.com/rtyley/animated-gif-lib-for-java",
-            "webp-imageio - https://github.com/darkxanter/webp-imageio",
-            "FontChooser - Daniel Heid - https://gitlab.com/dheid/fontchooser",
-            "UpdateChecker - TechnicJelle - https://github.com/TechnicJelle/UpdateCheckerJava"
+            "ConfigUtilities - Mosblinker",
+            "animated-gif-lib - rtyley and Kevin Weiner",
+            "webp-imageio",
+            "FontChooser - Daniel Heid",
+            "UpdateChecker - TechnicJelle"
     }};
     /**
      * 
@@ -617,6 +617,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Go through the credits in this section
             for (int j = 1; j < CREDITS[i].length; j++){
                 credits += System.lineSeparator()+CREDITS[i][j];
+                if (i == CREDITS.length-1 && j-1 < LIBRARY_CREDITS_LINKS.length){
+                    String link = LIBRARY_CREDITS_LINKS[j-1];
+                    if (link != null)
+                        credits += " - "+link;
+                }
             }
         }
         aboutPanel.setCreditsText(credits);
