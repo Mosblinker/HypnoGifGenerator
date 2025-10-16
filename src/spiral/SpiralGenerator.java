@@ -10,6 +10,7 @@ import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
 import components.JAboutPanel;
 import components.JColorSelector;
+import components.JHyperlinkLabel;
 import components.JListManipulator;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
@@ -55,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.BufferOverflowException;
@@ -623,18 +625,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Rest of the text is left aligned
             creditsDoc.setParagraphAttributes(creditsDoc.getLength(), 1,
                     leftText, false);
+            Style defStyle = StyleContext.getDefaultStyleContext().
+                    getStyle(StyleContext.DEFAULT_STYLE);
             for (int i = 0; i < LIBRARY_CREDITS.length; i++){
                 if (i > 0)
                     creditsDoc.insertString(creditsDoc.getLength(), 
                             System.lineSeparator(),null);
+                Style linkStyle = null;
+                if (LIBRARY_CREDITS[i].length > 2 && LIBRARY_CREDITS[i][2] != null){
+                    linkStyle = creditsDoc.addStyle("hyperlink"+i, defStyle);
+                    JHyperlinkLabel hyperlink = new JHyperlinkLabel(LIBRARY_CREDITS[i][0],
+                            URI.create(LIBRARY_CREDITS[i][2]));
+                    hyperlink.setAlignmentY((float) 0.85);
+                    StyleConstants.setComponent(linkStyle, hyperlink);
+                }
                 creditsDoc.insertString(creditsDoc.getLength(), 
-                        LIBRARY_CREDITS[i][0],null);
+                        LIBRARY_CREDITS[i][0],linkStyle);
                 if (LIBRARY_CREDITS[i].length > 1 && LIBRARY_CREDITS[i][1] != null) 
                     creditsDoc.insertString(creditsDoc.getLength(), 
                             " - " + LIBRARY_CREDITS[i][1],null);
-                if (LIBRARY_CREDITS[i].length > 2 && LIBRARY_CREDITS[i][2] != null)
-                    creditsDoc.insertString(creditsDoc.getLength(), 
-                            " - " + LIBRARY_CREDITS[i][2],null);
             }
         } catch (BadLocationException ex){
             getLogger().log(Level.WARNING, "Bad location found while populating credits", 
