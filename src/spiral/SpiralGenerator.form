@@ -915,7 +915,9 @@
                                   <Component id="wordAntialiasingToggle" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="blankWordFramesToggle" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="136" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="maskWordReorderButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="53" max="32767" attributes="0"/>
                                   <Component id="addMaskWordButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="maskWordScrollPane" max="32767" attributes="0"/>
@@ -938,6 +940,7 @@
                                   <Component id="italicWordToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="wordAntialiasingToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="blankWordFramesToggle" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="maskWordReorderButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -1014,6 +1017,14 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="blankWordFramesToggleActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="maskWordReorderButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Reorder"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskWordReorderButtonActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -1514,6 +1525,11 @@
           <Connection code="false" type="code"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="components.JListManipulator" name="maskWordManipulator">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </NonVisualComponents>
   <Properties>

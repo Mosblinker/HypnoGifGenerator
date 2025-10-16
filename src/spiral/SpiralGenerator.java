@@ -10,6 +10,7 @@ import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
 import components.JAboutPanel;
 import components.JColorSelector;
+import components.JListManipulator;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
@@ -231,6 +232,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 //    private static final String FONT_SELECTOR_NAME = "FontSelector";
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
+    
+    private static final String MASK_WORD_MANIPULATOR_NAME = "MaskWordManipulator";
     
     protected static final int TEXT_OVERLAY_MASK_INDEX = 0;
     
@@ -620,6 +623,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
+        config.setComponentName(maskWordManipulator, MASK_WORD_MANIPULATOR_NAME);
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
                  // Load the component's size from the preferences
@@ -1003,6 +1007,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicWordToggle = new javax.swing.JCheckBox();
         wordAntialiasingToggle = new javax.swing.JCheckBox();
         blankWordFramesToggle = new javax.swing.JCheckBox();
+        maskWordReorderButton = new javax.swing.JButton();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1039,6 +1044,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateContinueButton = new javax.swing.JButton();
         updateOpenButton = new javax.swing.JButton();
         configFC = new javax.swing.JFileChooser();
+        maskWordManipulator = new components.JListManipulator<>();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -1632,6 +1638,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        maskWordReorderButton.setText("Reorder");
+        maskWordReorderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskWordReorderButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskWordCtrlPanelLayout = new javax.swing.GroupLayout(maskWordCtrlPanel);
         maskWordCtrlPanel.setLayout(maskWordCtrlPanelLayout);
         maskWordCtrlPanelLayout.setHorizontalGroup(
@@ -1649,7 +1662,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(wordAntialiasingToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(blankWordFramesToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(maskWordReorderButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                         .addComponent(addMaskWordButton))
                     .addComponent(maskWordScrollPane))
                 .addContainerGap())
@@ -1658,7 +1673,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addMaskWordButton, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1667,7 +1682,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(boldWordToggle)
                         .addComponent(italicWordToggle)
                         .addComponent(wordAntialiasingToggle)
-                        .addComponent(blankWordFramesToggle)))
+                        .addComponent(blankWordFramesToggle)
+                        .addComponent(maskWordReorderButton)))
                 .addContainerGap())
         );
 
@@ -3249,6 +3265,29 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
         arrangeMaskWordFrames();
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
+
+    private void maskWordReorderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskWordReorderButtonActionPerformed
+        maskWordManipulator.getModelList().clear();
+        for (int i = 0; i < maskWordCount; i++)
+            maskWordManipulator.getModelList().add(maskWordFields[i].getText());
+        if (maskWordManipulator.showDialog(maskDialog) == JListManipulator.ACCEPT_OPTION){
+                // Remove any blank ones at the end
+            while (maskWordManipulator.getModelList().get(maskWordManipulator.getModelList().size()-1).isBlank())
+                maskWordManipulator.getModelList().remove(maskWordManipulator.getModelList().size()-1);
+            for (int i = 0; i < maskWordManipulator.getModelList().size() && 
+                    i < maskWordCount; i++){
+                maskWordFields[i].setText(maskWordManipulator.getModelList().get(i));
+            }
+                // Run this if we ran out of text fields that are being shown
+            while (maskWordCount < maskWordManipulator.getModelList().size())
+                addMaskWordField(maskWordManipulator.getModelList().get(maskWordCount));
+                // Run this if more text fields are being shown than necessary
+            while (maskWordCount > maskWordManipulator.getModelList().size())
+                removeMaskWordField(maskWordManipulator.getModelList().size());
+        }
+        maskWordManipulator.setPreferredSize(maskWordManipulator.getSize());
+        config.setComponentSize(maskWordManipulator);
+    }//GEN-LAST:event_maskWordReorderButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4079,6 +4118,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JScrollPane maskTextScrollPane;
     private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
+    private components.JListManipulator<String> maskWordManipulator;
+    private javax.swing.JButton maskWordReorderButton;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
     private components.JThumbnailLabel previewLabel;
@@ -4216,6 +4257,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicWordToggle.setEnabled(enabled);
         wordAntialiasingToggle.setEnabled(enabled);
         blankWordFramesToggle.setEnabled(enabled);
+        maskWordReorderButton.setEnabled(enabled);
         updateMaskWordControlsEnabled();
         updateFrameControls();
         updateControlsEnabled();
