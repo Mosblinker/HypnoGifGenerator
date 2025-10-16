@@ -1012,7 +1012,6 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="blankWordFramesToggle">
                   <Properties>
-                    <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Blank Frames"/>
                   </Properties>
                   <Events>

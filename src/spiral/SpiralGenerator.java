@@ -1630,7 +1630,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
-        blankWordFramesToggle.setSelected(true);
         blankWordFramesToggle.setText("Blank Frames");
         blankWordFramesToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3061,8 +3060,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     maskWordFields[i].setVisible(false);
                 setMaskWordRemoveButtonsVisible(false);
                 config.setMaskWordMessageCount(maskWordCount);
-                blankWordFramesToggle.setSelected(true);
-                config.setMaskWordAddBlankFrames(true);
+                blankWordFramesToggle.setSelected(false);
+                config.setMaskWordAddBlankFrames(false);
                 arrangeMaskWordFrames();
         }
         overlayMask.reset(overlayMask.getMaskType());

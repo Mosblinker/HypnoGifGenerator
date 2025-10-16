@@ -879,7 +879,7 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public default boolean getMaskWordAddBlankFrames(){
-        return getMaskWordAddBlankFrames(true);
+        return getMaskWordAddBlankFrames(false);
     }
     /**
      * 
