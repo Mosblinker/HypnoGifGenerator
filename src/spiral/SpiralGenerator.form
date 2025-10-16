@@ -1526,6 +1526,8 @@
         </Property>
       </Properties>
     </Component>
+    <Component class="components.JListManipulator" name="maskWordManipulator">
+    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>

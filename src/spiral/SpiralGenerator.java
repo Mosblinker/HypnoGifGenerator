@@ -232,6 +232,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private static final String MASK_DIALOG_NAME = "MaskDialog";
     
+    private static final String MASK_WORD_MANIPULATOR_NAME = "MaskWordManipulator";
+    
     protected static final int TEXT_OVERLAY_MASK_INDEX = 0;
     
     protected static final int IMAGE_OVERLAY_MASK_INDEX = 1;
@@ -620,6 +622,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setComponentName(colorSelector, COLOR_SELECTOR_NAME);
 //        config.setComponentName(fontSelector, FONT_SELECTOR_NAME);
         config.setComponentName(maskDialog, MASK_DIALOG_NAME);
+        config.setComponentName(maskWordManipulator, MASK_WORD_MANIPULATOR_NAME);
             // Go through and load the components from the preferences
         for (Component c : config.getComponentNames().keySet()){
                  // Load the component's size from the preferences
@@ -1040,6 +1043,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateContinueButton = new javax.swing.JButton();
         updateOpenButton = new javax.swing.JButton();
         configFC = new javax.swing.JFileChooser();
+        maskWordManipulator = new components.JListManipulator();
         framesPanel = new javax.swing.JPanel();
         frameNumberLabel = new javax.swing.JLabel();
         frameNavPanel = new javax.swing.JPanel();
@@ -4094,6 +4098,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JScrollPane maskTextScrollPane;
     private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
+    private components.JListManipulator maskWordManipulator;
     private javax.swing.JButton maskWordReorderButton;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
