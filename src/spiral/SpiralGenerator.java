@@ -10,6 +10,7 @@ import com.madgag.gif.fmsware.GifDecoder;
 import com.technicjelle.UpdateChecker;
 import components.JAboutPanel;
 import components.JColorSelector;
+import components.JListManipulator;
 import components.debug.DebugCapable;
 import components.text.CompoundUndoManager;
 import components.text.action.commands.TextComponentCommands;
@@ -3266,7 +3267,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
 
     private void maskWordReorderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskWordReorderButtonActionPerformed
-        // TODO add your handling code here:
+        maskWordManipulator.getModelList().clear();
+        for (int i = 0; i < maskWordCount; i++)
+            maskWordManipulator.getModelList().add(maskWordFields[i].getText());
+        if (maskWordManipulator.showDialog(maskDialog) == JListManipulator.ACCEPT_OPTION){
+                // Remove any blank ones at the end
+            while (maskWordManipulator.getModelList().get(maskWordManipulator.getModelList().size()-1).isBlank())
+                maskWordManipulator.getModelList().remove(maskWordManipulator.getModelList().size()-1);
+            for (int i = 0; i < maskWordManipulator.getModelList().size() && 
+                    i < maskWordCount; i++){
+                maskWordFields[i].setText(maskWordManipulator.getModelList().get(i));
+            }
+                // Run this if we ran out of text fields that are being shown
+            while (maskWordCount < maskWordManipulator.getModelList().size())
+                addMaskWordField(maskWordManipulator.getModelList().get(maskWordCount));
+                // Run this if more text fields are being shown than necessary
+            while (maskWordCount > maskWordManipulator.getModelList().size())
+                removeMaskWordField(maskWordManipulator.getModelList().size());
+        }
+        maskWordManipulator.setPreferredSize(maskWordManipulator.getSize());
+        config.setComponentSize(maskWordManipulator);
     }//GEN-LAST:event_maskWordReorderButtonActionPerformed
     /**
      * This returns the width for the image.
