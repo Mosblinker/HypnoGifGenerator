@@ -4359,13 +4359,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     /**
      * 
-     * @return 
-     */
-    private SpiralGeneratorProperties toProperties(){
-        return toProperties(null);
-    }
-    /**
-     * 
      * @param file
      * @param images
      * @return
