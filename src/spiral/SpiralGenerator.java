@@ -64,6 +64,8 @@ import java.nio.BufferUnderflowException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,6 +158,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * for the program.
      */
     private static final String ICON_MASK_FILE_IMAGE = "/images/icon_mask.png";
+    /**
+     * This is the path to the image used as the mask for the text on the icon 
+     * for the program when the easter egg triggers.
+     */
+    private static final String EASTER_EGG_ICON_MASK_FILE_NAME = "/images/icon_mask_2.png";
+    /**
+     * This is the date upon which the easter egg will trigger. The year is the 
+     * epoch year since it doesn't matter and is unused.
+     */
+    private static final GregorianCalendar EASTER_EGG_TRIGGER_DATE = 
+            new GregorianCalendar(1970,Calendar.APRIL,17);
+    /**
+     * This is the frequency at which the easter egg will trigger.
+     */
+    private static final double EASTER_EGG_TRIGGER_FREQUENCY = 0.0625;
     /**
      * These are the fractions to use to control the fade out of the icon at the 
      * edges of the icon.
@@ -383,6 +400,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 action.getValue(Action.NAME));
         comp.getActionMap().put(action.getValue(Action.NAME),action);
     }
+    
+    private boolean checkIfDate(GregorianCalendar date){
+            // Get the current date
+        GregorianCalendar currDate = new GregorianCalendar();
+            // Return if the month and day match
+        return currDate.get(Calendar.MONTH) == date.get(Calendar.MONTH) &&
+                currDate.get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH);
+    }
     /**
      * Creates new form SpiralGenerator
      * @param debugMode
@@ -559,12 +584,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
             // This is the image to use as a mask for the icon
         BufferedImage iconImg = null;
+        String iconMaskName = ICON_MASK_FILE_IMAGE;
+        if (checkIfDate(EASTER_EGG_TRIGGER_DATE) && Math.random() <= EASTER_EGG_TRIGGER_FREQUENCY)
+            iconMaskName = EASTER_EGG_ICON_MASK_FILE_NAME;
         try {   // Load the mask for the program icon
-            iconImg = readImageResource(ICON_MASK_FILE_IMAGE);
+            iconImg = readImageResource(iconMaskName);
         } catch (IOException ex) {
             getLogger().log(Level.WARNING,
-                    "Failed to load icon mask \""+ICON_MASK_FILE_IMAGE+"\"",
-                    ex);
+                    "Failed to load icon mask \""+iconMaskName+"\"",ex);
         }   // This is the painter to use to paint the icons for the program
         LogarithmicSpiralPainter iconPainter = new LogarithmicSpiralPainter();
             // This is an array to get the images to use for the icon of the 
