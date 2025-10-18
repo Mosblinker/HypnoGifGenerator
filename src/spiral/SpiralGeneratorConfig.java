@@ -643,6 +643,45 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     }
     /**
      * 
+     * @return 
+     */
+    public Dimension getMaskFontSelectorSize(){
+        return getDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY);
+    }
+    /**
+     * 
+     * @param comp
+     * @return 
+     */
+    public Dimension loadMaskFontSelectorSize(Component comp){
+        Dimension dim = getMaskFontSelectorSize();
+        SwingExtendedUtilities.setComponentSize(comp,dim);
+        return dim;
+    }
+    /**
+     * 
+     * @param width
+     * @param height
+     */
+    public void setMaskFontSelectorSize(int width, int height){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,width,height);
+    }
+    /**
+     * 
+     * @param dim 
+     */
+    public void setMaskFontSelectorSize(Dimension dim){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,dim);
+    }
+    /**
+     * 
+     * @param comp 
+     */
+    public void setMaskFontSelectorSize(Component comp){
+        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,comp);
+    }
+    /**
+     * 
      * @param value 
      */
     public void setOptimizedForDifference(boolean value){
@@ -651,6 +690,38 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public Preferences getMaskPreferences(){
         return maskNode;
+    }
+    @Override
+    public double getMaskScale(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
+    }
+    @Override
+    public void setMaskScale(double value){
+        getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
+    }
+    @Override
+    public int getMaskType(int defaultValue){
+        return getMaskPreferences().getInt(MASK_TYPE_KEY, defaultValue);
+    }
+    @Override
+    public void setMaskType(int value){
+        getMaskPreferences().putInt(MASK_TYPE_KEY, value);
+    }
+    @Override
+    public double getMaskRotation(double defaultValue){
+        return getMaskPreferences().getDouble(MASK_ROTATION_KEY, defaultValue);
+    }
+    @Override
+    public void setMaskRotation(double value){
+        getMaskPreferences().putDouble(MASK_ROTATION_KEY, value);
+    }
+    @Override
+    public int getMaskFlags(){
+        return getMaskPreferences().getInt(MASK_FLAGS_KEY, 0);
+    }
+    @Override
+    public void setMaskFlags(int value){
+        getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
     }
     @Override
     public boolean isMaskTextAntialiased(boolean defaultValue){
@@ -723,53 +794,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         else
             getMaskPreferences().put(MASK_TEXT_KEY, value);
     }
-    /**
-     * 
-     * @return 
-     */
-    public Dimension getMaskFontSelectorSize(){
-        return getDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY);
-    }
-    /**
-     * 
-     * @param comp
-     * @return 
-     */
-    public Dimension loadMaskFontSelectorSize(Component comp){
-        Dimension dim = getMaskFontSelectorSize();
-        SwingExtendedUtilities.setComponentSize(comp,dim);
-        return dim;
-    }
-    /**
-     * 
-     * @param width
-     * @param height
-     */
-    public void setMaskFontSelectorSize(int width, int height){
-        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,width,height);
-    }
-    /**
-     * 
-     * @param dim 
-     */
-    public void setMaskFontSelectorSize(Dimension dim){
-        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,dim);
-    }
-    /**
-     * 
-     * @param comp 
-     */
-    public void setMaskFontSelectorSize(Component comp){
-        putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,comp);
-    }
-    @Override
-    public double getMaskScale(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskScale(double value){
-        getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
-    }
     @Override
     public boolean isMaskImageAntialiased(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
@@ -777,14 +801,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public void setMaskImageAntialiased(boolean value){
         getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
-    }
-    @Override
-    public int getMaskType(int defaultValue){
-        return getMaskPreferences().getInt(MASK_TYPE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskType(int value){
-        getMaskPreferences().putInt(MASK_TYPE_KEY, value);
     }
     @Override
     public int getMaskAlphaIndex(int defaultValue){
@@ -833,22 +849,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public void setMaskImageInterpolation(int value){
         getMaskPreferences().putInt(MASK_IMAGE_INTERPOLATION_KEY, value);
-    }
-    @Override
-    public double getMaskRotation(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_ROTATION_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskRotation(double value){
-        getMaskPreferences().putDouble(MASK_ROTATION_KEY, value);
-    }
-    @Override
-    public int getMaskFlags(){
-        return getMaskPreferences().getInt(MASK_FLAGS_KEY, 0);
-    }
-    @Override
-    public void setMaskFlags(int value){
-        getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
     }
     @Override
     public double getMaskShapeWidth(double defaultValue){
