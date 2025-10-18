@@ -96,7 +96,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the current version of the program.
      */
-    public static final String PROGRAM_VERSION = "0.31.1";
+    public static final String PROGRAM_VERSION = "0.31.2";
     /**
      * This is the name of the program.
      */
