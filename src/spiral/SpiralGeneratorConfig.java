@@ -60,20 +60,9 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     
-    @Deprecated
-    public static final String SPIRAL_RADIUS_KEY = "Radius";
     
-    @Deprecated
-    public static final String SPIRAL_BASE_KEY = "Base";
     
-    @Deprecated
-    public static final String SPIRAL_THICKNESS_KEY = "Thickness";
     
-    @Deprecated
-    public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
-    
-    @Deprecated
-    public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
     /**
      * 
      */
@@ -567,34 +556,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public void setSpiralData(String key, byte[] data){
         getSpiralPreferences().putByteArray(key, data);
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     * @deprecated 
-     */
-    @Deprecated
-    public boolean isSpinClockwise(boolean defaultValue){
-        return getPreferences().getBoolean(SPIN_CLOCKWISE_KEY, defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     * @deprecated 
-     */
-    @Deprecated
-    public boolean isSpinClockwise(){
-        return isSpinClockwise(true);
-    }
-    /**
-     * 
-     * @param value 
-     * @deprecated 
-     */
-    @Deprecated
-    public void setSpinClockwise(boolean value){
-        getPreferences().putBoolean(SPIN_CLOCKWISE_KEY, value);
     }
     @Override
     public int getSpiralType(int defaultValue){
