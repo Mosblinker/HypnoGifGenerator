@@ -61,7 +61,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_IMAGE_NODE_NAME = "Image";
     
-    public static final String MASK_WORD_MESSAGE_NODE_NAME = "Messages";
+    public static final String MASK_MESSAGE_NODE_NAME = "Messages";
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     /**
@@ -74,8 +74,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
     
     public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
-
-    
     
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
@@ -102,6 +100,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final Preferences maskMessagesNode;
     
+    private final OverlayMaskMessagesSettings maskMessagesConfig;
+    
     private Preferences testDebugNode = null;
     /**
      * 
@@ -121,11 +121,12 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         maskNode = node.node(MASK_NODE_NAME);
         maskTextNode = maskNode.node(MASK_TEXT_NODE_NAME);
         maskImageNode = maskNode.node(MASK_IMAGE_NODE_NAME);
-        maskMessagesNode = maskNode.node(MASK_WORD_MESSAGE_NODE_NAME);
+        maskMessagesNode = maskNode.node(MASK_MESSAGE_NODE_NAME);
         compNames = new HashMap<>();
         fcNodes = new HashMap<>();
         maskTextConfig = new OverlayMaskTextSettingsImpl();
         maskImageConfig = new OverlayMaskImageSettingsImpl();
+        maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
     }
     /**
      * 
@@ -729,12 +730,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public OverlayMaskImageSettings getMaskImageSettings() {
         return maskImageConfig;
     }
-//    @Override
-//    public OverlayMaskMessagesSettings getMaskMessageSettings() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-
-    
+    @Override
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        return maskMessagesConfig;
+    }
     @Override
     public double getMaskShapeWidth(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
@@ -858,42 +857,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public void setImageSize(Dimension value) {
         putDimension(IMAGE_SIZE_KEY,value);
-    }
-    @Override
-    public boolean isMaskWordAntialiased(boolean defaultValue) {
-        return getMaskPreferences().getBoolean(MASK_WORD_ANTIALIASING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskWordAntialiased(boolean value) {
-        getMaskPreferences().putBoolean(MASK_WORD_ANTIALIASING_KEY, value);
-    }
-    @Override
-    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
-        return getMaskPreferences().getBoolean(MASK_WORD_BLANK_FRAMES_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskWordAddBlankFrames(boolean value) {
-        getMaskPreferences().putBoolean(MASK_WORD_BLANK_FRAMES_KEY, value);
-    }
-    @Override
-    public int getMaskWordMessageCount() {
-        return maskMessagesNode.getInt(MASK_WORD_MESSAGE_COUNT_KEY, 0);
-    }
-    @Override
-    public void setMaskWordMessageCount(int value) {
-        maskMessagesNode.putInt(MASK_WORD_MESSAGE_COUNT_KEY, value);
-    }
-    @Override
-    public String getMaskWordMessage(int index) {
-        return maskMessagesNode.get(MASK_WORD_MESSAGE_KEY_PREFIX+index, null);
-    }
-    @Override
-    public void setMaskWordMessage(int index, String value) {
-        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
-        if (value == null)
-            maskMessagesNode.remove(key);
-        else
-            maskMessagesNode.put(key, value);
     }
     /**
      * 
@@ -1066,6 +1029,45 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         @Override
         public void setImageInterpolation(int value) {
             getNode().putInt(IMAGE_INTERPOLATION_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskMessagesSettingsImpl 
+            extends TextOverlayMaskSettingsImpl
+            implements OverlayMaskMessagesSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskMessagesPreferences();
+        }
+        @Override
+        public boolean getAddBlankFrames(boolean defaultValue) {
+            return getNode().getBoolean(ADD_BLANK_FRAMES_KEY, defaultValue);
+        }
+        @Override
+        public void setAddBlankFrames(boolean value) {
+            getNode().putBoolean(ADD_BLANK_FRAMES_KEY, value);
+        }
+        @Override
+        public int getMessageCount() {
+            return getNode().getInt(MESSAGE_COUNT_KEY, 0);
+        }
+        @Override
+        public void setMessageCount(int value) {
+            getNode().putInt(MESSAGE_COUNT_KEY, value);
+        }
+        @Override
+        public String getMessage(int index) {
+            return getNode().get(MESSAGE_KEY_PREFIX+index, null);
+        }
+        @Override
+        public void setMessage(int index, String value) {
+            String key = MESSAGE_KEY_PREFIX+index;
+            if (value == null)
+                getNode().remove(key);
+            else
+                getNode().put(key, value);
         }
     }
 }

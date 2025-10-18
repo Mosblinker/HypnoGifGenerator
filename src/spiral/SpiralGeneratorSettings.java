@@ -124,6 +124,26 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
+    @Deprecated
+    public static final String MASK_WORD_ANTIALIASING_KEY = "MaskWordAntialiasing";
+    /**
+     * 
+     */
+    @Deprecated
+    public static final String MASK_WORD_BLANK_FRAMES_KEY = "MaskWordBlankFrames";
+    /**
+     * 
+     */
+    @Deprecated
+    public static final String MASK_WORD_MESSAGE_COUNT_KEY = "MaskWordMessageCount";
+    /**
+     * 
+     */
+    @Deprecated
+    public static final String MASK_WORD_MESSAGE_KEY_PREFIX = "MaskWordMessage";
+    /**
+     * 
+     */
     public static final String MASK_SHAPE_TYPE_KEY = "MaskShapeType";
     /**
      * 
@@ -137,22 +157,6 @@ public interface SpiralGeneratorSettings {
      * 
      */
     public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
-    /**
-     * 
-     */
-    public static final String MASK_WORD_ANTIALIASING_KEY = "MaskWordAntialiasing";
-    /**
-     * 
-     */
-    public static final String MASK_WORD_BLANK_FRAMES_KEY = "MaskWordBlankFrames";
-    /**
-     * 
-     */
-    public static final String MASK_WORD_MESSAGE_COUNT_KEY = "MaskWordMessageCount";
-    /**
-     * 
-     */
-    public static final String MASK_WORD_MESSAGE_KEY_PREFIX = "MaskWordMessage";
     /**
      * 
      */
@@ -372,11 +376,11 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public OverlayMaskImageSettings getMaskImageSettings();
-//    /**
-//     * 
-//     * @return 
-//     */
-//    public OverlayMaskMessagesSettings getMaskMessageSettings();
+    /**
+     * 
+     * @return 
+     */
+    public OverlayMaskMessagesSettings getMaskMessageSettings();
     
     /**
      * 
@@ -890,6 +894,90 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
+    @Deprecated
+    public default boolean isMaskWordAntialiased(boolean defaultValue){
+        return getMaskMessageSettings().isAntialiased(defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public default boolean isMaskWordAntialiased(){
+        return isMaskWordAntialiased(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    @Deprecated
+    public default void setMaskWordAntialiased(boolean value){
+        getMaskMessageSettings().setAntialiased(value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    @Deprecated
+    public default boolean getMaskWordAddBlankFrames(boolean defaultValue){
+        return getMaskMessageSettings().getAddBlankFrames(defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public default boolean getMaskWordAddBlankFrames(){
+        return getMaskWordAddBlankFrames(false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    @Deprecated
+    public default void setMaskWordAddBlankFrames(boolean value){
+        getMaskMessageSettings().setAddBlankFrames(value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
+    public default int getMaskWordMessageCount(){
+        return getMaskMessageSettings().getMessageCount();
+    }
+    /**
+     * 
+     * @param value 
+     */
+    @Deprecated
+    public default void setMaskWordMessageCount(int value){
+        getMaskMessageSettings().setMessageCount(value);
+    }
+    /**
+     * 
+     * @param index
+     * @return 
+     */
+    @Deprecated
+    public default String getMaskWordMessage(int index){
+        return getMaskMessageSettings().getMessage(index);
+    }
+    /**
+     * 
+     * @param index
+     * @param value 
+     */
+    @Deprecated
+    public default void setMaskWordMessage(int index, String value){
+        getMaskMessageSettings().setMessage(index, value);
+    }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
     public double getMaskShapeWidth(double defaultValue);
     /**
      * 
@@ -957,64 +1045,6 @@ public interface SpiralGeneratorSettings {
      * @param value 
      */
     public void setMaskShapeType(int value);
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public boolean isMaskWordAntialiased(boolean defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default boolean isMaskWordAntialiased(){
-        return isMaskWordAntialiased(true);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskWordAntialiased(boolean value);
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public boolean getMaskWordAddBlankFrames(boolean defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default boolean getMaskWordAddBlankFrames(){
-        return getMaskWordAddBlankFrames(false);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskWordAddBlankFrames(boolean value);
-    /**
-     * 
-     * @return 
-     */
-    public int getMaskWordMessageCount();
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskWordMessageCount(int value);
-    /**
-     * 
-     * @param index
-     * @return 
-     */
-    public String getMaskWordMessage(int index);
-    /**
-     * 
-     * @param index
-     * @param value 
-     */
-    public void setMaskWordMessage(int index, String value);
     /**
      * 
      * @param defaultValue

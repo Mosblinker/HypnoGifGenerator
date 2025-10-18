@@ -35,6 +35,10 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
+    public static final String MASK_MESSAGES_KEY_PREFIX = "MaskMessages";
+    /**
+     * 
+     */
     private final OverlayMaskTextSettings maskTextConfig;
     /**
      * 
@@ -43,9 +47,14 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
+    private final OverlayMaskMessagesSettings maskMessagesConfig;
+    /**
+     * 
+     */
     public SpiralGeneratorProperties(){ 
         maskTextConfig = new OverlayMaskTextSettingsImpl();
         maskImageConfig = new OverlayMaskImageSettingsImpl();
+        maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
     }
     /**
      * 
@@ -392,10 +401,10 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public OverlayMaskImageSettings getMaskImageSettings() {
         return maskImageConfig;
     }
-//    @Override
-//    public OverlayMaskMessagesSettings getMaskMessageSettings() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
+    @Override
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        return maskMessagesConfig;
+    }
     
     
     
@@ -467,42 +476,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     @Override
     public void setImageSize(Dimension value) {
         setDimensionProperty(IMAGE_SIZE_KEY,value);
-    }
-    @Override
-    public boolean isMaskWordAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_WORD_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskWordAntialiased(boolean value) {
-        setBooleanProperty(MASK_WORD_ANTIALIASING_KEY,value);
-    }
-    @Override
-    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
-        return getBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskWordAddBlankFrames(boolean value) {
-        setBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,value);
-    }
-    @Override
-    public int getMaskWordMessageCount() {
-        return getIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,0);
-    }
-    @Override
-    public void setMaskWordMessageCount(int value) {
-        setIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,value);
-    }
-    @Override
-    public String getMaskWordMessage(int index) {
-        return getProperty(MASK_WORD_MESSAGE_KEY_PREFIX+index);
-    }
-    @Override
-    public void setMaskWordMessage(int index, String value) {
-        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
-        if (value == null)
-            remove(key);
-        else
-            setProperty(key,value);
     }
     /**
      * 
@@ -641,6 +614,45 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         @Override
         public void setImageInterpolation(int value) {
             setIntProperty(getPrefix()+IMAGE_INTERPOLATION_KEY,value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskMessagesSettingsImpl 
+            extends TextOverlayMaskSettingsImpl
+            implements OverlayMaskMessagesSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_MESSAGES_KEY_PREFIX;
+        }
+        @Override
+        public boolean getAddBlankFrames(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+ADD_BLANK_FRAMES_KEY,defaultValue);
+        }
+        @Override
+        public void setAddBlankFrames(boolean value) {
+            setBooleanProperty(getPrefix()+ADD_BLANK_FRAMES_KEY,value);
+        }
+        @Override
+        public int getMessageCount() {
+            return getIntProperty(getPrefix()+MESSAGE_COUNT_KEY,0);
+        }
+        @Override
+        public void setMessageCount(int value) {
+            setIntProperty(getPrefix()+MESSAGE_COUNT_KEY,value);
+        }
+        @Override
+        public String getMessage(int index) {
+            return getProperty(getPrefix()+MESSAGE_KEY_PREFIX+index);
+        }
+        @Override
+        public void setMessage(int index, String value) {
+            String key = getPrefix()+MESSAGE_KEY_PREFIX+index;
+            if (value == null)
+                remove(key);
+            else
+                setProperty(key,value);
         }
     }
 }
