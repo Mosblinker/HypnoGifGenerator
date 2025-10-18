@@ -1103,16 +1103,6 @@ public interface SpiralGeneratorSettings {
     }
     /**
      * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setImageWidth(int value){
-        Dimension size = getImageSize();
-        size.width = value;
-        setImageSize(size);
-    }
-    /**
-     * 
      * @param defaultValue
      * @return 
      */
@@ -1128,15 +1118,5 @@ public interface SpiralGeneratorSettings {
      */
     public default int getImageHeight(){
         return getImageHeight(SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setImageHeight(int value){
-        Dimension size = getImageSize();
-        size.height = value;
-        setImageSize(size);
     }
 }
