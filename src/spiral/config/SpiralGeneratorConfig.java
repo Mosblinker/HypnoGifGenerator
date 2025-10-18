@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package spiral;
+package spiral.config;
 
 import config.ConfigUtilities;
 import geom.GeometryMath;
@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import spiral.SpiralGenerator;
+import spiral.SpiralGenerator;
 import spiral.config.*;
 import utils.SwingExtendedUtilities;
 

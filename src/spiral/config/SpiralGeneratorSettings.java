@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package spiral;
+package spiral.config;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -10,6 +10,10 @@ import java.awt.Font;
 import java.io.File;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import spiral.SpiralGenerator;
+import spiral.SpiralGenerator;
+import spiral.SpiralGeneratorUtilities;
+import spiral.SpiralGeneratorUtilities;
 import spiral.config.*;
 import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
@@ -229,7 +233,7 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public default int getFrameDuration(){
-        return getFrameDuration(SpiralGenerator.SPIRAL_FRAME_DURATION);
+        return getFrameDuration(SpiralGenerator.DEFAULT_SPIRAL_FRAME_DURATION);
     }
     /**
      * 

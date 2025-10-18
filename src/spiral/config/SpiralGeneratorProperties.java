@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package spiral;
+package spiral.config;
 
 import config.ConfigUtilities;
 import java.awt.Color;
@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Base64;
 import java.util.Properties;
+import spiral.SpiralGenerator;
 import spiral.config.*;
 /**
  *

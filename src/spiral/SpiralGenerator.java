@@ -83,6 +83,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
+import spiral.config.*;
 import spiral.icons.RemoveIcon;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
@@ -192,11 +193,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the default width for the spiral image.
      */
-    protected static final int DEFAULT_SPIRAL_WIDTH = 450;
+    public static final int DEFAULT_SPIRAL_WIDTH = 450;
     /**
      * This is the default height for the spiral image.
      */
-    protected static final int DEFAULT_SPIRAL_HEIGHT = 450;
+    public static final int DEFAULT_SPIRAL_HEIGHT = 450;
     /**
      * This is the number of frames in the animation.
      */
@@ -209,7 +210,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the duration for each frame of animation.
      */
-    protected static final int SPIRAL_FRAME_DURATION = 20;
+    public static final int DEFAULT_SPIRAL_FRAME_DURATION = 20;
     /**
      * This is the name of the preference node used to store the settings for 
      * this program.
