@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.io.File;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
+import spiral.config.*;
 import spiral.painter.SpiralPainter;
 import utils.SwingExtendedUtilities;
 
@@ -53,30 +54,37 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_FONT_SIZE_KEY = "MaskFontSize";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_FONT_STYLE_KEY = "MaskFontStyle";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_FONT_FAMILY_KEY = "MaskFontFamily";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_FONT_NAME_KEY = "MaskFontName";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_TEXT_KEY = "MaskText";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_LINE_SPACING_KEY = "MaskLineSpacing";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_TEXT_ANTIALIASING_KEY = "MaskTextAntialiasing";
     /**
      * 
@@ -243,11 +251,59 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public boolean isMaskTextAntialiased(boolean defaultValue);
+    public double getMaskScale(double defaultValue);
     /**
      * 
      * @return 
      */
+    public default double getMaskScale(){
+        return getMaskScale(1.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskScale(double value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public int getMaskType(int defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default int getMaskType(){
+        return getMaskType(0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskType(int value);
+    
+    
+    /**
+     * 
+     * @return 
+     */
+    public OverlayMaskTextSettings getMaskTextSettings();
+    
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    @Deprecated
+    public default boolean isMaskTextAntialiased(boolean defaultValue){
+        return getMaskTextSettings().isAntialiased(defaultValue);
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Deprecated
     public default boolean isMaskTextAntialiased(){
         return isMaskTextAntialiased(true);
     }
@@ -255,17 +311,24 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskTextAntialiased(boolean value);
+    @Deprecated
+    public default void setMaskTextAntialiased(boolean value){
+        getMaskTextSettings().setAntialiased(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public double getMaskLineSpacing(double defaultValue);
+    @Deprecated
+    public default double getMaskLineSpacing(double defaultValue){
+        return getMaskTextSettings().getLineSpacing(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default double getMaskLineSpacing(){
         return getMaskLineSpacing(0.0);
     }
@@ -273,17 +336,24 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskLineSpacing(double value);
+    @Deprecated
+    public default void setMaskLineSpacing(double value){
+        getMaskTextSettings().setLineSpacing(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public float getMaskFontSize(float defaultValue);
+    @Deprecated
+    public default float getMaskFontSize(float defaultValue){
+        return getMaskTextSettings().getFontSize(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default float getMaskFontSize(){
         return getMaskFontSize(11.0f);
     }
@@ -291,11 +361,15 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskFontSize(Float value);
+    @Deprecated
+    public default void setMaskFontSize(Float value){
+        getMaskTextSettings().setFontSize(value);
+    }
     /**
      * 
      * @param font 
      */
+    @Deprecated
     public default void setMaskFontSize(Font font){
         setMaskFontSize((font == null)?null:font.getSize2D());
     }
@@ -304,11 +378,15 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public int getMaskFontStyle(int defaultValue);
+    @Deprecated
+    public default int getMaskFontStyle(int defaultValue){
+        return getMaskTextSettings().getFontStyle(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default int getMaskFontStyle(){
         return getMaskFontStyle(Font.PLAIN);
     }
@@ -316,11 +394,15 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskFontStyle(Integer value);
+    @Deprecated
+    public default void setMaskFontStyle(Integer value){
+        getMaskTextSettings().setFontStyle(value);
+    }
     /**
      * 
      * @param font 
      */
+    @Deprecated
     public default void setMaskFontStyle(Font font){
         setMaskFontStyle((font == null)?null:font.getStyle());
     }/**
@@ -328,6 +410,7 @@ public interface SpiralGeneratorSettings {
      * @param flag
      * @return 
      */
+    @Deprecated
     public default boolean getMaskFontStyleValue(int flag){
         return SpiralGeneratorUtilities.getFlag(getMaskFontStyle(),flag);
     }
@@ -336,6 +419,7 @@ public interface SpiralGeneratorSettings {
      * @param flag
      * @param value 
      */
+    @Deprecated
     public default void setMaskFontStyleValue(int flag, boolean value){
         setMaskFontStyle(SpiralGeneratorUtilities.setFlag(getMaskFontStyle(),flag,value));
     }
@@ -343,6 +427,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @return 
      */
+    @Deprecated
     public default boolean isMaskFontBold(){
         return getMaskFontStyleValue(Font.BOLD);
     }
@@ -350,6 +435,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
+    @Deprecated
     public default void setMaskFontBold(boolean value){
         setMaskFontStyleValue(Font.BOLD,value);
     }
@@ -357,6 +443,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @return 
      */
+    @Deprecated
     public default boolean isMaskFontItalic(){
         return getMaskFontStyleValue(Font.ITALIC);
     }
@@ -364,6 +451,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
+    @Deprecated
     public default void setMaskFontItalic(boolean value){
         setMaskFontStyleValue(Font.ITALIC,value);
     }
@@ -372,6 +460,7 @@ public interface SpiralGeneratorSettings {
      * @param bold
      * @param italic 
      */
+    @Deprecated
     public default void setMaskFontStyle(boolean bold, boolean italic){
             // Get the style, but without the bold and italic flags
         int value = getMaskFontStyle() & ~(Font.BOLD | Font.ITALIC);
@@ -388,11 +477,15 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public String getMaskFontFamily(String defaultValue);
+    @Deprecated
+    public default String getMaskFontFamily(String defaultValue){
+        return getMaskTextSettings().getFontName(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default String getMaskFontFamily(){
         return getMaskFontFamily(Font.SANS_SERIF);
     }
@@ -400,11 +493,15 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskFontFamily(String value);
+    @Deprecated
+    public default void setMaskFontFamily(String value){
+        getMaskTextSettings().setFontFamily(value);
+    }
     /**
      * 
      * @param font 
      */
+    @Deprecated
     public default void setMaskFontFamily(Font font){
         setMaskFontFamily((font != null) ? font.getFamily() : null);
     }
@@ -413,7 +510,10 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public String getMaskFontName(String defaultValue);
+    @Deprecated
+    public default String getMaskFontName(String defaultValue){
+        return getMaskTextSettings().getFontName(defaultValue);
+    }
     /**
      * 
      * @return 
@@ -425,11 +525,15 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskFontName(String value);
+    @Deprecated
+    public default void setMaskFontName(String value){
+        getMaskTextSettings().setFontName(value);
+    }
     /**
      * 
      * @param font 
      */
+    @Deprecated
     public default void setMaskFontName(Font font){
         setMaskFontName((font != null) ? font.getName() : null);
     }
@@ -438,6 +542,7 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
+    @Deprecated
     public default Font getMaskFont(Font defaultValue){
             // This gets the font to be returned
         Font font = SpiralGeneratorUtilities.getFont(getMaskFontFamily(null),
@@ -472,6 +577,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
+    @Deprecated
     public default void setMaskFont(Font value){
         setMaskFontSize(value);
         setMaskFontStyle(value);
@@ -483,11 +589,15 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public String getMaskText(String defaultValue);
+    @Deprecated
+    public default String getMaskText(String defaultValue){
+        return getMaskTextSettings().getText(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default String getMaskText(){
         return getMaskText("");
     }
@@ -495,25 +605,10 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskText(String value);
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public double getMaskScale(double defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default double getMaskScale(){
-        return getMaskScale(1.0);
+    @Deprecated
+    public default void setMaskText(String value){
+        getMaskTextSettings().setText(value);
     }
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskScale(double value);
     /**
      * 
      * @param defaultValue
@@ -532,24 +627,6 @@ public interface SpiralGeneratorSettings {
      * @param value 
      */
     public void setMaskImageAntialiased(boolean value);
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public int getMaskType(int defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default int getMaskType(){
-        return getMaskType(0);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskType(int value);
     /**
      * 
      * @param defaultValue
@@ -961,5 +1038,4 @@ public interface SpiralGeneratorSettings {
         size.height = value;
         setImageSize(size);
     }
-    
 }

@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import spiral.config.*;
 import utils.SwingExtendedUtilities;
 
 /**
@@ -56,13 +57,12 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_NODE_NAME = "Mask";
     
+    public static final String MASK_TEXT_NODE_NAME = "Text";
+    
+    
     public static final String MASK_WORD_MESSAGE_NODE_NAME = "Messages";
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
-    
-    
-    
-    
     /**
      * 
      */
@@ -91,6 +91,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final Preferences maskNode;
     
+    private final Preferences maskTextNode;
+    
+    private final OverlayMaskTextSettings maskTextConfig;
+    
     private final Preferences maskMessagesNode;
     
     private Preferences testDebugNode = null;
@@ -110,9 +114,11 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         this.node = Objects.requireNonNull(node);
         spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
+        maskTextNode = maskNode.node(MASK_TEXT_NODE_NAME);
         maskMessagesNode = maskNode.node(MASK_WORD_MESSAGE_NODE_NAME);
         compNames = new HashMap<>();
         fcNodes = new HashMap<>();
+        maskTextConfig = new OverlayMaskTextSettingsImpl();
     }
     /**
      * 
@@ -652,6 +658,14 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public Preferences getMaskPreferences(){
         return maskNode;
     }
+    
+    public Preferences getMaskTextPreferences(){
+        return maskTextNode;
+    }
+    
+    public Preferences getMaskMessagesPreferences(){
+        return maskMessagesNode;
+    }
     @Override
     public double getMaskScale(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
@@ -685,76 +699,19 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
     }
     @Override
-    public boolean isMaskTextAntialiased(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_TEXT_ANTIALIASING_KEY, defaultValue);
+    public OverlayMaskTextSettings getMaskTextSettings() {
+        return maskTextConfig;
     }
     @Override
-    public void setMaskTextAntialiased(boolean value){
-        getMaskPreferences().putBoolean(MASK_TEXT_ANTIALIASING_KEY, value);
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     @Override
-    public double getMaskLineSpacing(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_LINE_SPACING_KEY, defaultValue);
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    @Override
-    public void setMaskLineSpacing(double value){
-        getMaskPreferences().putDouble(MASK_LINE_SPACING_KEY, value);
-    }
-    @Override
-    public float getMaskFontSize(float defaultValue){
-        return getMaskPreferences().getFloat(MASK_FONT_SIZE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontSize(Float value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_SIZE_KEY);
-        else
-            getMaskPreferences().putFloat(MASK_FONT_SIZE_KEY, value);
-    }
-    @Override
-    public int getMaskFontStyle(int defaultValue){
-        return getMaskPreferences().getInt(MASK_FONT_STYLE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontStyle(Integer value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_STYLE_KEY);
-        else
-            getMaskPreferences().putInt(MASK_FONT_STYLE_KEY, value);
-    }
-    @Override
-    public String getMaskFontFamily(String defaultValue){
-        return getMaskPreferences().get(MASK_FONT_FAMILY_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontFamily(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_FAMILY_KEY);
-        else
-            getMaskPreferences().put(MASK_FONT_FAMILY_KEY, value);
-    }
-    @Override
-    public String getMaskFontName(String defaultValue){
-        return getMaskPreferences().get(MASK_FONT_NAME_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontName(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_NAME_KEY);
-        else
-            getMaskPreferences().put(MASK_FONT_NAME_KEY, value);
-    }
-    @Override
-    public String getMaskText(String defaultValue){
-        return getMaskPreferences().get(MASK_TEXT_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskText(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_TEXT_KEY);
-        else
-            getMaskPreferences().put(MASK_TEXT_KEY, value);
-    }
+
+    
     @Override
     public boolean isMaskImageAntialiased(boolean defaultValue){
         return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
@@ -988,6 +945,101 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                         // Store the file filter in the preference node
                     setFileFilter((JFileChooser)evt.getSource());
             }
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class AntialiasedOverlayMaskSettingsImpl implements 
+            AntialiasedOverlayMaskSettings{
+        
+        protected abstract Preferences getNode();
+        @Override
+        public boolean isAntialiased(boolean defaultValue) {
+            return getNode().getBoolean(ANTIALIASING_KEY, defaultValue);
+        }
+        @Override
+        public void setAntialiased(boolean value) {
+            getNode().putBoolean(ANTIALIASING_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class TextOverlayMaskSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements TextOverlayMaskSettings{
+        @Override
+        public float getFontSize(float defaultValue) {
+            return getNode().getFloat(FONT_SIZE_KEY, defaultValue);
+        }
+        @Override
+        public void setFontSize(Float value) {
+            if (value == null)
+                getNode().remove(FONT_SIZE_KEY);
+            else
+                getNode().putFloat(FONT_SIZE_KEY, value);
+        }
+        @Override
+        public int getFontStyle(int defaultValue) {
+            return getNode().getInt(FONT_STYLE_KEY, defaultValue);
+        }
+        @Override
+        public void setFontStyle(Integer value) {
+            if (value == null)
+                getNode().remove(FONT_STYLE_KEY);
+            else
+                getNode().putInt(FONT_STYLE_KEY, value);
+        }
+        @Override
+        public String getFontFamily(String defaultValue) {
+            return getNode().get(FONT_FAMILY_KEY, defaultValue);
+        }
+        @Override
+        public void setFontFamily(String value) {
+            if (value == null)
+                getNode().remove(FONT_FAMILY_KEY);
+            else
+                getNode().put(FONT_FAMILY_KEY, value);
+        }
+        @Override
+        public String getFontName(String defaultValue) {
+            return getNode().get(FONT_NAME_KEY, defaultValue);
+        }
+        @Override
+        public void setFontName(String value) {
+            if (value == null)
+                getNode().remove(FONT_NAME_KEY);
+            else
+                getNode().put(FONT_NAME_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskTextSettingsImpl extends TextOverlayMaskSettingsImpl 
+            implements OverlayMaskTextSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskTextPreferences();
+        }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            getNode().putDouble(LINE_SPACING_KEY, value);
+        }
+        @Override
+        public String getText(String defaultValue) {
+            return getNode().get(TEXT_KEY, defaultValue);
+        }
+        @Override
+        public void setText(String value) {
+            if (value == null)
+                getNode().remove(TEXT_KEY);
+            else
+                getNode().put(TEXT_KEY, value);
         }
     }
 }

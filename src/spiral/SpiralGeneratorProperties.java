@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Base64;
 import java.util.Properties;
-
+import spiral.config.*;
 /**
  *
  * @author Mosblinker
@@ -27,7 +27,17 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
-    public SpiralGeneratorProperties(){ }
+    public static final String MASK_TEXT_KEY_PREFIX = "MaskText";
+    /**
+     * 
+     */
+    private final OverlayMaskTextSettings maskTextConfig;
+    /**
+     * 
+     */
+    public SpiralGeneratorProperties(){ 
+        maskTextConfig = new OverlayMaskTextSettingsImpl();
+    }
     /**
      * 
      * @param key
@@ -334,62 +344,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setColorProperty(SPIRAL_COLOR_KEY_PREFIX+index,value);
     }
     @Override
-    public boolean isMaskTextAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_TEXT_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskTextAntialiased(boolean value) {
-        setBooleanProperty(MASK_TEXT_ANTIALIASING_KEY,value);
-    }
-    @Override
-    public double getMaskLineSpacing(double defaultValue) {
-        return getDoubleProperty(MASK_LINE_SPACING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskLineSpacing(double value) {
-        setDoubleProperty(MASK_LINE_SPACING_KEY,value);
-    }
-    @Override
-    public float getMaskFontSize(float defaultValue) {
-        return getFloatProperty(MASK_FONT_SIZE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontSize(Float value) {
-        setFloatProperty(MASK_FONT_SIZE_KEY,value);
-    }
-    @Override
-    public int getMaskFontStyle(int defaultValue) {
-        return getIntProperty(MASK_FONT_STYLE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontStyle(Integer value) {
-        setIntProperty(MASK_FONT_STYLE_KEY,value);
-    }
-    @Override
-    public String getMaskFontFamily(String defaultValue) {
-        return getProperty(MASK_FONT_FAMILY_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontFamily(String value) {
-        setProperty(MASK_FONT_FAMILY_KEY,value);
-    }
-    @Override
-    public String getMaskFontName(String defaultValue) {
-        return getProperty(MASK_FONT_NAME_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontName(String value) {
-        setProperty(MASK_FONT_NAME_KEY,value);
-    }
-    @Override
-    public String getMaskText(String defaultValue) {
-        return getProperty(MASK_TEXT_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskText(String value) {
-        setProperty(MASK_TEXT_KEY,value);
-    }
-    @Override
     public double getMaskScale(double defaultValue) {
         return getDoubleProperty(MASK_SCALE_KEY,defaultValue);
     }
@@ -398,20 +352,34 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setDoubleProperty(MASK_SCALE_KEY,value);
     }
     @Override
-    public boolean isMaskImageAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageAntialiased(boolean value) {
-        setBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,value);
-    }
-    @Override
     public int getMaskType(int defaultValue) {
         return getIntProperty(MASK_TYPE_KEY,defaultValue);
     }
     @Override
     public void setMaskType(int value) {
         setIntProperty(MASK_TYPE_KEY,value);
+    }
+    @Override
+    public OverlayMaskTextSettings getMaskTextSettings() {
+        return maskTextConfig;
+    }
+    @Override
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    @Override
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    
+    @Override
+    public boolean isMaskImageAntialiased(boolean defaultValue) {
+        return getBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,defaultValue);
+    }
+    @Override
+    public void setMaskImageAntialiased(boolean value) {
+        setBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,value);
     }
     @Override
     public int getMaskAlphaIndex(int defaultValue) {
@@ -580,5 +548,85 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
             remove(key);
         else
             setProperty(key,value);
+    }
+    /**
+     * 
+     */
+    private abstract class AntialiasedOverlayMaskSettingsImpl implements 
+            AntialiasedOverlayMaskSettings{
+        
+        protected abstract String getPrefix();
+        @Override
+        public boolean isAntialiased(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+ANTIALIASING_KEY,defaultValue);
+        }
+        @Override
+        public void setAntialiased(boolean value) {
+            setBooleanProperty(getPrefix()+ANTIALIASING_KEY,value);
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class TextOverlayMaskSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements TextOverlayMaskSettings{
+        @Override
+        public float getFontSize(float defaultValue) {
+            return getFloatProperty(getPrefix()+FONT_SIZE_KEY,defaultValue);
+        }
+        @Override
+        public void setFontSize(Float value) {
+            setFloatProperty(getPrefix()+FONT_SIZE_KEY,value);
+        }
+        @Override
+        public int getFontStyle(int defaultValue) {
+            return getIntProperty(getPrefix()+FONT_STYLE_KEY,defaultValue);
+        }
+        @Override
+        public void setFontStyle(Integer value) {
+            setIntProperty(getPrefix()+FONT_STYLE_KEY,value);
+        }
+        @Override
+        public String getFontFamily(String defaultValue) {
+            return getProperty(getPrefix()+FONT_FAMILY_KEY,defaultValue);
+        }
+        @Override
+        public void setFontFamily(String value) {
+            setProperty(getPrefix()+FONT_FAMILY_KEY,value);
+        }
+        @Override
+        public String getFontName(String defaultValue) {
+            return getProperty(getPrefix()+FONT_NAME_KEY,defaultValue);
+        }
+        @Override
+        public void setFontName(String value) {
+            setProperty(getPrefix()+FONT_NAME_KEY,value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskTextSettingsImpl extends TextOverlayMaskSettingsImpl 
+            implements OverlayMaskTextSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_TEXT_KEY_PREFIX;
+        }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getDoubleProperty(getPrefix()+LINE_SPACING_KEY,defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            setDoubleProperty(getPrefix()+LINE_SPACING_KEY,value);
+        }
+        @Override
+        public String getText(String defaultValue) {
+            return getProperty(getPrefix()+TEXT_KEY,defaultValue);
+        }
+        @Override
+        public void setText(String value) {
+            setProperty(getPrefix()+TEXT_KEY,value);
+        }
     }
 }
