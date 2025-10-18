@@ -702,14 +702,14 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public OverlayMaskTextSettings getMaskTextSettings() {
         return maskTextConfig;
     }
-    @Override
-    public OverlayMaskImageSettings getMaskImageSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    @Override
-    public OverlayMaskMessagesSettings getMaskMessageSettings() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+//    @Override
+//    public OverlayMaskImageSettings getMaskImageSettings() {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
+//    @Override
+//    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
 
     
     @Override

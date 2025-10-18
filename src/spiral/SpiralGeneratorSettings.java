@@ -289,6 +289,16 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public OverlayMaskTextSettings getMaskTextSettings();
+//    /**
+//     * 
+//     * @return 
+//     */
+//    public OverlayMaskImageSettings getMaskImageSettings();
+//    /**
+//     * 
+//     * @return 
+//     */
+//    public OverlayMaskMessagesSettings getMaskMessageSettings();
     
     /**
      * 
@@ -518,6 +528,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @return 
      */
+    @Deprecated
     public default String getMaskFontName(){
         return getMaskFontName(null);
     }
