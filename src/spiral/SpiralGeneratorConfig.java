@@ -59,6 +59,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_TEXT_NODE_NAME = "Text";
     
+    public static final String MASK_IMAGE_NODE_NAME = "Image";
     
     public static final String MASK_WORD_MESSAGE_NODE_NAME = "Messages";
     
@@ -95,6 +96,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final OverlayMaskTextSettings maskTextConfig;
     
+    private final Preferences maskImageNode;
+    
+    private final OverlayMaskImageSettings maskImageConfig;
+    
     private final Preferences maskMessagesNode;
     
     private Preferences testDebugNode = null;
@@ -115,10 +120,12 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
         maskTextNode = maskNode.node(MASK_TEXT_NODE_NAME);
+        maskImageNode = maskNode.node(MASK_IMAGE_NODE_NAME);
         maskMessagesNode = maskNode.node(MASK_WORD_MESSAGE_NODE_NAME);
         compNames = new HashMap<>();
         fcNodes = new HashMap<>();
         maskTextConfig = new OverlayMaskTextSettingsImpl();
+        maskImageConfig = new OverlayMaskImageSettingsImpl();
     }
     /**
      * 
@@ -654,15 +661,31 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setOptimizedForDifference(boolean value){
         node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
     }
-    
+    /**
+     * 
+     * @return 
+     */
     public Preferences getMaskPreferences(){
         return maskNode;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     public Preferences getMaskTextPreferences(){
         return maskTextNode;
     }
-    
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskImagePreferences(){
+        return maskImageNode;
+    }
+    /**
+     * 
+     * @return 
+     */
     public Preferences getMaskMessagesPreferences(){
         return maskMessagesNode;
     }
@@ -702,72 +725,16 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public OverlayMaskTextSettings getMaskTextSettings() {
         return maskTextConfig;
     }
-//    @Override
-//    public OverlayMaskImageSettings getMaskImageSettings() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
+    @Override
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        return maskImageConfig;
+    }
 //    @Override
 //    public OverlayMaskMessagesSettings getMaskMessageSettings() {
 //        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
 //    }
 
     
-    @Override
-    public boolean isMaskImageAntialiased(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageAntialiased(boolean value){
-        getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
-    }
-    @Override
-    public int getMaskAlphaIndex(int defaultValue){
-        return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskAlphaIndex(int value){
-        getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX_KEY, value);
-    }
-    @Override
-    public boolean isMaskImageInverted(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_IMAGE_INVERT_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageInverted(boolean value){
-        getMaskPreferences().putBoolean(MASK_IMAGE_INVERT_KEY, value);
-    }
-    @Override
-    public int getMaskDesaturateMode(int defaultValue){
-        return getMaskPreferences().getInt(MASK_DESATURATE_MODE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskDesaturateMode(int value){
-        getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
-    }
-    @Override
-    public File getMaskImageFile(File defaultValue){
-        return getFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageFile(File value){
-        putFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,value);
-    }
-    @Override
-    public int getMaskImageFrameIndex(){
-        return getMaskPreferences().getInt(MASK_IMAGE_FRAME_INDEX_KEY, 0);
-    }
-    @Override
-    public void setMaskImageFrameIndex(int value){
-        getMaskPreferences().putInt(MASK_IMAGE_FRAME_INDEX_KEY, value);
-    }
-    @Override
-    public int getMaskImageInterpolation(int defaultValue){
-        return getMaskPreferences().getInt(MASK_IMAGE_INTERPOLATION_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageInterpolation(int value){
-        getMaskPreferences().putInt(MASK_IMAGE_INTERPOLATION_KEY, value);
-    }
     @Override
     public double getMaskShapeWidth(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
@@ -1040,6 +1007,65 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                 getNode().remove(TEXT_KEY);
             else
                 getNode().put(TEXT_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskImageSettingsImpl 
+            extends AntialiasedOverlayMaskSettingsImpl 
+            implements OverlayMaskImageSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskImagePreferences();
+        }
+        @Override
+        public int getAlphaIndex(int defaultValue) {
+            return getNode().getInt(ALPHA_CHANNEL_INDEX_KEY, defaultValue);
+        }
+        @Override
+        public void setAlphaIndex(int value) {
+            getNode().putInt(ALPHA_CHANNEL_INDEX_KEY, value);
+        }
+        @Override
+        public boolean isImageInverted(boolean defaultValue) {
+            return getNode().getBoolean(IMAGE_INVERT_KEY, defaultValue);
+        }
+        @Override
+        public void setImageInverted(boolean value) {
+            getNode().putBoolean(IMAGE_INVERT_KEY, value);
+        }
+        @Override
+        public int getDesaturateMode(int defaultValue) {
+            return getNode().getInt(DESATURATE_MODE_KEY, defaultValue);
+        }
+        @Override
+        public void setDesaturateMode(int value) {
+            getNode().putInt(DESATURATE_MODE_KEY, value);
+        }
+        @Override
+        public File getImageFile(File defaultValue) {
+            return getFile(getNode(),IMAGE_FILE_KEY,defaultValue);
+        }
+        @Override
+        public void setImageFile(File value) {
+            putFile(getNode(),IMAGE_FILE_KEY,value);
+        }
+        @Override
+        public int getImageFrameIndex() {
+            return getNode().getInt(IMAGE_FRAME_INDEX_KEY, 0);
+        }
+        @Override
+        public void setImageFrameIndex(int value) {
+            getNode().putInt(IMAGE_FRAME_INDEX_KEY, value);
+        }
+        @Override
+        public int getImageInterpolation(int defaultValue) {
+            return getNode().getInt(IMAGE_INTERPOLATION_KEY, defaultValue);
+        }
+        @Override
+        public void setImageInterpolation(int value) {
+            getNode().putInt(IMAGE_INTERPOLATION_KEY, value);
         }
     }
 }

@@ -31,12 +31,21 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
+    public static final String MASK_IMAGE_KEY_PREFIX = "MaskImage";
+    /**
+     * 
+     */
     private final OverlayMaskTextSettings maskTextConfig;
+    /**
+     * 
+     */
+    private final OverlayMaskImageSettings maskImageConfig;
     /**
      * 
      */
     public SpiralGeneratorProperties(){ 
         maskTextConfig = new OverlayMaskTextSettingsImpl();
+        maskImageConfig = new OverlayMaskImageSettingsImpl();
     }
     /**
      * 
@@ -360,76 +369,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setIntProperty(MASK_TYPE_KEY,value);
     }
     @Override
-    public OverlayMaskTextSettings getMaskTextSettings() {
-        return maskTextConfig;
-    }
-//    @Override
-//    public OverlayMaskImageSettings getMaskImageSettings() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-//    @Override
-//    public OverlayMaskMessagesSettings getMaskMessageSettings() {
-//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-//    }
-    
-    
-    @Override
-    public boolean isMaskImageAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageAntialiased(boolean value) {
-        setBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,value);
-    }
-    @Override
-    public int getMaskAlphaIndex(int defaultValue) {
-        return getIntProperty(MASK_ALPHA_CHANNEL_INDEX_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskAlphaIndex(int value) {
-        setIntProperty(MASK_ALPHA_CHANNEL_INDEX_KEY,value);
-    }
-    @Override
-    public boolean isMaskImageInverted(boolean defaultValue) {
-        return getBooleanProperty(MASK_IMAGE_INVERT_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageInverted(boolean value) {
-        setBooleanProperty(MASK_IMAGE_INVERT_KEY,value);
-    }
-    @Override
-    public int getMaskDesaturateMode(int defaultValue) {
-        return getIntProperty(MASK_DESATURATE_MODE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskDesaturateMode(int value) {
-        setIntProperty(MASK_DESATURATE_MODE_KEY,value);
-    }
-    @Override
-    public File getMaskImageFile(File defaultValue) {
-        return getFileProperty(MASK_IMAGE_FILE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageFile(File value) {
-        setFileProperty(MASK_IMAGE_FILE_KEY,value);
-    }
-    @Override
-    public int getMaskImageFrameIndex() {
-        return getIntProperty(MASK_IMAGE_FRAME_INDEX_KEY,0);
-    }
-    @Override
-    public void setMaskImageFrameIndex(int value) {
-        setIntProperty(MASK_IMAGE_FRAME_INDEX_KEY,value);
-    }
-    @Override
-    public int getMaskImageInterpolation(int defaultValue) {
-        return getIntProperty(MASK_IMAGE_INTERPOLATION_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageInterpolation(int value) {
-        setIntProperty(MASK_IMAGE_INTERPOLATION_KEY,value);
-    }
-    @Override
     public double getMaskRotation(double defaultValue) {
         return getDoubleProperty(MASK_ROTATION_KEY,defaultValue);
     }
@@ -445,6 +384,22 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setMaskFlags(int value) {
         setIntProperty(MASK_FLAGS_KEY,value);
     }
+    @Override
+    public OverlayMaskTextSettings getMaskTextSettings() {
+        return maskTextConfig;
+    }
+    @Override
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        return maskImageConfig;
+    }
+//    @Override
+//    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//    }
+    
+    
+    
+    
     @Override
     public double getMaskShapeWidth(double defaultValue) {
         return getDoubleProperty(MASK_SHAPE_WIDTH_KEY,defaultValue);
@@ -627,6 +582,65 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         @Override
         public void setText(String value) {
             setProperty(getPrefix()+TEXT_KEY,value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskImageSettingsImpl 
+            extends AntialiasedOverlayMaskSettingsImpl 
+            implements OverlayMaskImageSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_IMAGE_KEY_PREFIX;
+        }
+        @Override
+        public int getAlphaIndex(int defaultValue) {
+            return getIntProperty(getPrefix()+ALPHA_CHANNEL_INDEX_KEY,defaultValue);
+        }
+        @Override
+        public void setAlphaIndex(int value) {
+            setIntProperty(getPrefix()+ALPHA_CHANNEL_INDEX_KEY,value);
+        }
+        @Override
+        public boolean isImageInverted(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+IMAGE_INVERT_KEY,defaultValue);
+        }
+        @Override
+        public void setImageInverted(boolean value) {
+            setBooleanProperty(getPrefix()+IMAGE_INVERT_KEY,value);
+        }
+        @Override
+        public int getDesaturateMode(int defaultValue) {
+            return getIntProperty(getPrefix()+DESATURATE_MODE_KEY,defaultValue);
+        }
+        @Override
+        public void setDesaturateMode(int value) {
+            setIntProperty(getPrefix()+DESATURATE_MODE_KEY,value);
+        }
+        @Override
+        public File getImageFile(File defaultValue) {
+            return getFileProperty(getPrefix()+IMAGE_FILE_KEY,defaultValue);
+        }
+        @Override
+        public void setImageFile(File value) {
+            setFileProperty(getPrefix()+IMAGE_FILE_KEY,value);
+        }
+        @Override
+        public int getImageFrameIndex() {
+            return getIntProperty(getPrefix()+IMAGE_FRAME_INDEX_KEY,0);
+        }
+        @Override
+        public void setImageFrameIndex(int value) {
+            setIntProperty(getPrefix()+IMAGE_FRAME_INDEX_KEY,value);
+        }
+        @Override
+        public int getImageInterpolation(int defaultValue) {
+            return getIntProperty(getPrefix()+IMAGE_INTERPOLATION_KEY,defaultValue);
+        }
+        @Override
+        public void setImageInterpolation(int value) {
+            setIntProperty(getPrefix()+IMAGE_INTERPOLATION_KEY,value);
         }
     }
 }

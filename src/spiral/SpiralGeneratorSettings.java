@@ -89,30 +89,37 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_IMAGE_ANTIALIASING_KEY = "MaskImageAntialiasing";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_ALPHA_CHANNEL_INDEX_KEY = "MaskAlphaChannelIndex";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_IMAGE_INVERT_KEY = "MaskImageInvert";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_DESATURATE_MODE_KEY = "MaskDesaturateMode";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_IMAGE_FILE_KEY = "MaskImageFile";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_IMAGE_FRAME_INDEX_KEY = "MaskImageFrameIndex";
     /**
      * 
      */
+    @Deprecated
     public static final String MASK_IMAGE_INTERPOLATION_KEY = "MaskImageInterpolation";
     /**
      * 
@@ -282,18 +289,89 @@ public interface SpiralGeneratorSettings {
      * @param value 
      */
     public void setMaskType(int value);
-    
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getMaskRotation(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getMaskRotation(){
+        return getMaskRotation(0.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskRotation(double value);
+    /**
+     * 
+     * @return 
+     */
+    public int getMaskFlags();
+    /**
+     * 
+     * @param value 
+     */
+    public void setMaskFlags(int value);
+    /**
+     * 
+     * @param flag
+     * @return 
+     */
+    public default boolean getMaskFlag(int flag){
+        return SpiralGeneratorUtilities.getFlag(getMaskFlags(),flag);
+    }
+    /**
+     * 
+     * @param flag
+     * @param value 
+     */
+    public default void setMaskFlag(int flag, boolean value){
+        setMaskFlags(SpiralGeneratorUtilities.setFlag(getMaskFlags(),flag,value));
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default boolean isMaskFlippedHorizontally(){
+        return getMaskFlag(MASK_FLIP_HORIZONTAL_FLAG);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public default void setMaskFlippedHorizontally(boolean value){
+        setMaskFlag(MASK_FLIP_HORIZONTAL_FLAG,value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default boolean isMaskFlippedVertically(){
+        return getMaskFlag(MASK_FLIP_VERTICAL_FLAG);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public default void setMaskFlippedVertically(boolean value){
+        setMaskFlag(MASK_FLIP_VERTICAL_FLAG,value);
+    }
     
     /**
      * 
      * @return 
      */
     public OverlayMaskTextSettings getMaskTextSettings();
-//    /**
-//     * 
-//     * @return 
-//     */
-//    public OverlayMaskImageSettings getMaskImageSettings();
+    /**
+     * 
+     * @return 
+     */
+    public OverlayMaskImageSettings getMaskImageSettings();
 //    /**
 //     * 
 //     * @return 
@@ -625,11 +703,15 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public boolean isMaskImageAntialiased(boolean defaultValue);
+    @Deprecated
+    public default boolean isMaskImageAntialiased(boolean defaultValue){
+        return getMaskImageSettings().isAntialiased(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default boolean isMaskImageAntialiased(){
         return isMaskImageAntialiased(true);
     }
@@ -637,17 +719,24 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskImageAntialiased(boolean value);
+    @Deprecated
+    public default void setMaskImageAntialiased(boolean value){
+        getMaskImageSettings().setAntialiased(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public int getMaskAlphaIndex(int defaultValue);
+    @Deprecated
+    public default int getMaskAlphaIndex(int defaultValue){
+        return getMaskImageSettings().getAlphaIndex(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default int getMaskAlphaIndex(){
         return getMaskAlphaIndex(0);
     }
@@ -655,6 +744,7 @@ public interface SpiralGeneratorSettings {
      * 
      * @param group 
      */
+    @Deprecated
     public default void loadMaskAlphaIndex(ButtonGroup group){
         int index = getMaskAlphaIndex(-1);
         if (index < 0 || index >= group.getButtonCount())
@@ -667,11 +757,15 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskAlphaIndex(int value);
+    @Deprecated
+    public default void setMaskAlphaIndex(int value){
+        getMaskImageSettings().setAlphaIndex(value);
+    }
     /**
      * 
      * @param group 
      */
+    @Deprecated
     public default void setMaskAlphaIndex(ButtonGroup group){
         setMaskAlphaIndex(SwingExtendedUtilities.indexOfSelected(group));
     }
@@ -680,11 +774,15 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public boolean isMaskImageInverted(boolean defaultValue);
+    @Deprecated
+    public default boolean isMaskImageInverted(boolean defaultValue){
+        return getMaskImageSettings().isImageInverted(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default boolean isMaskImageInverted(){
         return isMaskImageInverted(false);
     }
@@ -692,17 +790,24 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskImageInverted(boolean value);
+    @Deprecated
+    public default void setMaskImageInverted(boolean value){
+        getMaskImageSettings().setImageInverted(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public int getMaskDesaturateMode(int defaultValue);
+    @Deprecated
+    public default int getMaskDesaturateMode(int defaultValue){
+        return getMaskImageSettings().getDesaturateMode(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default int getMaskDesaturateMode(){
         return getMaskDesaturateMode(0);
     }
@@ -710,17 +815,24 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskDesaturateMode(int value);
+    @Deprecated
+    public default void setMaskDesaturateMode(int value){
+        getMaskImageSettings().setDesaturateMode(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public File getMaskImageFile(File defaultValue);
+    @Deprecated
+    public default File getMaskImageFile(File defaultValue){
+        return getMaskImageSettings().getImageFile(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default File getMaskImageFile(){
         return getMaskImageFile(null);
     }
@@ -728,27 +840,40 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskImageFile(File value);
+    @Deprecated
+    public default void setMaskImageFile(File value){
+        getMaskImageSettings().setImageFile(value);
+    }
     /**
      * 
      * @return 
      */
-    public int getMaskImageFrameIndex();
+    @Deprecated
+    public default int getMaskImageFrameIndex(){
+        return getMaskImageSettings().getImageFrameIndex();
+    }
     /**
      * 
      * @param value 
      */
-    public void setMaskImageFrameIndex(int value);
+    @Deprecated
+    public default void setMaskImageFrameIndex(int value){
+        getMaskImageSettings().setImageFrameIndex(value);
+    }
     /**
      * 
      * @param defaultValue
      * @return 
      */
-    public int getMaskImageInterpolation(int defaultValue);
+    @Deprecated
+    public default int getMaskImageInterpolation(int defaultValue){
+        return getMaskImageSettings().getImageInterpolation(defaultValue);
+    }
     /**
      * 
      * @return 
      */
+    @Deprecated
     public default int getMaskImageInterpolation(){
         return getMaskImageInterpolation(0);
     }
@@ -756,78 +881,9 @@ public interface SpiralGeneratorSettings {
      * 
      * @param value 
      */
-    public void setMaskImageInterpolation(int value);
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    public double getMaskRotation(double defaultValue);
-    /**
-     * 
-     * @return 
-     */
-    public default double getMaskRotation(){
-        return getMaskRotation(0.0);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskRotation(double value);
-    /**
-     * 
-     * @return 
-     */
-    public int getMaskFlags();
-    /**
-     * 
-     * @param value 
-     */
-    public void setMaskFlags(int value);
-    /**
-     * 
-     * @param flag
-     * @return 
-     */
-    public default boolean getMaskFlag(int flag){
-        return SpiralGeneratorUtilities.getFlag(getMaskFlags(),flag);
-    }
-    /**
-     * 
-     * @param flag
-     * @param value 
-     */
-    public default void setMaskFlag(int flag, boolean value){
-        setMaskFlags(SpiralGeneratorUtilities.setFlag(getMaskFlags(),flag,value));
-    }
-    /**
-     * 
-     * @return 
-     */
-    public default boolean isMaskFlippedHorizontally(){
-        return getMaskFlag(MASK_FLIP_HORIZONTAL_FLAG);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public default void setMaskFlippedHorizontally(boolean value){
-        setMaskFlag(MASK_FLIP_HORIZONTAL_FLAG,value);
-    }
-    /**
-     * 
-     * @return 
-     */
-    public default boolean isMaskFlippedVertically(){
-        return getMaskFlag(MASK_FLIP_VERTICAL_FLAG);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    public default void setMaskFlippedVertically(boolean value){
-        setMaskFlag(MASK_FLIP_VERTICAL_FLAG,value);
+    @Deprecated
+    public default void setMaskImageInterpolation(int value){
+        getMaskImageSettings().setImageInterpolation(value);
     }
     /**
      * 
