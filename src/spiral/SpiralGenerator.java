@@ -383,7 +383,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicWordToggle.setSelected(italicToggle.isSelected());
         wordAntialiasingToggle.setSelected(settings.isMaskWordAntialiased());
         blankWordFramesToggle.setSelected(settings.getMaskWordAddBlankFrames());
-        maskWordCount = settings.getMaskWordMessageCount();
+        maskWordCount = Math.max(settings.getMaskWordMessageCount(),MINIMUM_MESSAGE_COUNT);
         for (int i = 0; i < maskWordFields.length; i++){
             maskWordFields[i].setText(settings.getMaskWordMessage(i));
             maskWordFields[i].setVisible(i < maskWordCount);
@@ -3512,6 +3512,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void arrangeMaskWordFrames(){
         overlayMask.wordFrames.clear();
+        if (maskWordCount == 0)
+            return;
         int framePerMsg = Math.floorDiv(SPIRAL_FRAME_COUNT, maskWordCount);
         int extra = SPIRAL_FRAME_COUNT % maskWordCount;
         int index = 0;
