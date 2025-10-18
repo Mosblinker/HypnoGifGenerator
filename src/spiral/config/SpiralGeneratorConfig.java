@@ -18,8 +18,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import spiral.SpiralGenerator;
-import spiral.SpiralGenerator;
-import spiral.config.*;
 import utils.SwingExtendedUtilities;
 
 /**
@@ -65,6 +63,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_MESSAGE_NODE_NAME = "Messages";
     
+    public static final String MASK_SHAPE_NODE_NAME = "Shape";
+    
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     /**
      * 
@@ -104,6 +104,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final OverlayMaskMessagesSettings maskMessagesConfig;
     
+    private final Preferences maskShapeNode;
+    
+    private final OverlayMaskShapeSettings maskShapeConfig;
+    
     private Preferences testDebugNode = null;
     /**
      * 
@@ -124,11 +128,13 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         maskTextNode = maskNode.node(MASK_TEXT_NODE_NAME);
         maskImageNode = maskNode.node(MASK_IMAGE_NODE_NAME);
         maskMessagesNode = maskNode.node(MASK_MESSAGE_NODE_NAME);
+        maskShapeNode = maskNode.node(MASK_SHAPE_NODE_NAME);
         compNames = new HashMap<>();
         fcNodes = new HashMap<>();
         maskTextConfig = new OverlayMaskTextSettingsImpl();
         maskImageConfig = new OverlayMaskImageSettingsImpl();
         maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
+        maskShapeConfig = new OverlayMaskShapeSettingsImpl();
     }
     /**
      * 
@@ -692,6 +698,13 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public Preferences getMaskMessagesPreferences(){
         return maskMessagesNode;
     }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskShapePreferences(){
+        return maskShapeNode;
+    }
     @Override
     public double getMaskScale(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
@@ -738,35 +751,35 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     }
     @Override
     public double getMaskShapeWidth(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
+        return maskShapeConfig.getShapeWidth(defaultValue);
     }
     @Override
     public void setMaskShapeWidth(double value){
-        getMaskPreferences().putDouble(MASK_SHAPE_WIDTH_KEY, value);
+        maskShapeConfig.setShapeWidth(value);
     }
     @Override
     public double getMaskShapeHeight(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_SHAPE_HEIGHT_KEY, defaultValue);
+        return maskShapeConfig.getShapeHeight(defaultValue);
     }
     @Override
     public void setMaskShapeHeight(double value){
-        getMaskPreferences().putDouble(MASK_SHAPE_HEIGHT_KEY, value);
+        maskShapeConfig.setShapeHeight(value);
     }
     @Override
     public boolean isMaskShapeSizeLinked(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_SHAPE_LINK_SIZE_KEY, defaultValue);
+        return maskShapeConfig.isShapeSizeLinked(defaultValue);
     }
     @Override
     public void setMaskShapeSizeLinked(boolean value){
-        getMaskPreferences().putBoolean(MASK_SHAPE_LINK_SIZE_KEY, value);
+        maskShapeConfig.setShapeSizeLinked(value);
     }
     @Override
     public int getMaskShapeType(int defaultValue){
-        return getMaskPreferences().getInt(MASK_SHAPE_TYPE_KEY, defaultValue);
+        return maskShapeConfig.getShapeType(defaultValue);
     }
     @Override
     public void setMaskShapeType(int value){
-        getMaskPreferences().putInt(MASK_SHAPE_TYPE_KEY, value);
+        maskShapeConfig.setShapeType(value);
     }
     
     public boolean getCheckForUpdateAtStartup(boolean defaultValue){
@@ -1070,6 +1083,48 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                 getNode().remove(key);
             else
                 getNode().put(key, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskShapeSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements OverlayMaskShapeSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskShapePreferences();
+        }
+        @Override
+        public double getShapeWidth(double defaultValue){
+            return getNode().getDouble(SHAPE_WIDTH_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeWidth(double value){
+            getNode().putDouble(SHAPE_WIDTH_KEY, value);
+        }
+        @Override
+        public double getShapeHeight(double defaultValue){
+            return getNode().getDouble(SHAPE_HEIGHT_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeHeight(double value){
+            getNode().putDouble(SHAPE_HEIGHT_KEY, value);
+        }
+        @Override
+        public boolean isShapeSizeLinked(boolean defaultValue){
+            return getNode().getBoolean(SHAPE_LINK_SIZE_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeSizeLinked(boolean value){
+            getNode().putBoolean(SHAPE_LINK_SIZE_KEY, value);
+        }
+        @Override
+        public int getShapeType(int defaultValue){
+            return getNode().getInt(SHAPE_TYPE_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeType(int value){
+            getNode().putInt(SHAPE_TYPE_KEY, value);
         }
     }
 }
