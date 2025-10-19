@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package spiral;
+package spiral.config;
 
 import config.ConfigUtilities;
 import java.awt.Color;
@@ -13,7 +13,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Base64;
 import java.util.Properties;
-
+import spiral.SpiralGenerator;
 /**
  *
  * @author Mosblinker
@@ -27,7 +27,44 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
-    public SpiralGeneratorProperties(){ }
+    public static final String MASK_TEXT_KEY_PREFIX = "MaskText";
+    /**
+     * 
+     */
+    public static final String MASK_IMAGE_KEY_PREFIX = "MaskImage";
+    /**
+     * 
+     */
+    public static final String MASK_MESSAGES_KEY_PREFIX = "MaskMessages";
+    /**
+     * 
+     */
+    public static final String MASK_SHAPE_KEY_PREFIX = "MaskShape";
+    /**
+     * 
+     */
+    private final OverlayMaskTextSettings maskTextConfig;
+    /**
+     * 
+     */
+    private final OverlayMaskImageSettings maskImageConfig;
+    /**
+     * 
+     */
+    private final OverlayMaskMessagesSettings maskMessagesConfig;
+    /**
+     * 
+     */
+    private final OverlayMaskShapeSettings maskShapeConfig;
+    /**
+     * 
+     */
+    public SpiralGeneratorProperties(){ 
+        maskTextConfig = new OverlayMaskTextSettingsImpl();
+        maskImageConfig = new OverlayMaskImageSettingsImpl();
+        maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
+        maskShapeConfig = new OverlayMaskShapeSettingsImpl();
+    }
     /**
      * 
      * @param key
@@ -334,62 +371,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setColorProperty(SPIRAL_COLOR_KEY_PREFIX+index,value);
     }
     @Override
-    public boolean isMaskTextAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_TEXT_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskTextAntialiased(boolean value) {
-        setBooleanProperty(MASK_TEXT_ANTIALIASING_KEY,value);
-    }
-    @Override
-    public double getMaskLineSpacing(double defaultValue) {
-        return getDoubleProperty(MASK_LINE_SPACING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskLineSpacing(double value) {
-        setDoubleProperty(MASK_LINE_SPACING_KEY,value);
-    }
-    @Override
-    public float getMaskFontSize(float defaultValue) {
-        return getFloatProperty(MASK_FONT_SIZE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontSize(Float value) {
-        setFloatProperty(MASK_FONT_SIZE_KEY,value);
-    }
-    @Override
-    public int getMaskFontStyle(int defaultValue) {
-        return getIntProperty(MASK_FONT_STYLE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontStyle(Integer value) {
-        setIntProperty(MASK_FONT_STYLE_KEY,value);
-    }
-    @Override
-    public String getMaskFontFamily(String defaultValue) {
-        return getProperty(MASK_FONT_FAMILY_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontFamily(String value) {
-        setProperty(MASK_FONT_FAMILY_KEY,value);
-    }
-    @Override
-    public String getMaskFontName(String defaultValue) {
-        return getProperty(MASK_FONT_NAME_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskFontName(String value) {
-        setProperty(MASK_FONT_NAME_KEY,value);
-    }
-    @Override
-    public String getMaskText(String defaultValue) {
-        return getProperty(MASK_TEXT_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskText(String value) {
-        setProperty(MASK_TEXT_KEY,value);
-    }
-    @Override
     public double getMaskScale(double defaultValue) {
         return getDoubleProperty(MASK_SCALE_KEY,defaultValue);
     }
@@ -398,68 +379,12 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setDoubleProperty(MASK_SCALE_KEY,value);
     }
     @Override
-    public boolean isMaskImageAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageAntialiased(boolean value) {
-        setBooleanProperty(MASK_IMAGE_ANTIALIASING_KEY,value);
-    }
-    @Override
     public int getMaskType(int defaultValue) {
         return getIntProperty(MASK_TYPE_KEY,defaultValue);
     }
     @Override
     public void setMaskType(int value) {
         setIntProperty(MASK_TYPE_KEY,value);
-    }
-    @Override
-    public int getMaskAlphaIndex(int defaultValue) {
-        return getIntProperty(MASK_ALPHA_CHANNEL_INDEX_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskAlphaIndex(int value) {
-        setIntProperty(MASK_ALPHA_CHANNEL_INDEX_KEY,value);
-    }
-    @Override
-    public boolean isMaskImageInverted(boolean defaultValue) {
-        return getBooleanProperty(MASK_IMAGE_INVERT_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageInverted(boolean value) {
-        setBooleanProperty(MASK_IMAGE_INVERT_KEY,value);
-    }
-    @Override
-    public int getMaskDesaturateMode(int defaultValue) {
-        return getIntProperty(MASK_DESATURATE_MODE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskDesaturateMode(int value) {
-        setIntProperty(MASK_DESATURATE_MODE_KEY,value);
-    }
-    @Override
-    public File getMaskImageFile(File defaultValue) {
-        return getFileProperty(MASK_IMAGE_FILE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageFile(File value) {
-        setFileProperty(MASK_IMAGE_FILE_KEY,value);
-    }
-    @Override
-    public int getMaskImageFrameIndex() {
-        return getIntProperty(MASK_IMAGE_FRAME_INDEX_KEY,0);
-    }
-    @Override
-    public void setMaskImageFrameIndex(int value) {
-        setIntProperty(MASK_IMAGE_FRAME_INDEX_KEY,value);
-    }
-    @Override
-    public int getMaskImageInterpolation(int defaultValue) {
-        return getIntProperty(MASK_IMAGE_INTERPOLATION_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageInterpolation(int value) {
-        setIntProperty(MASK_IMAGE_INTERPOLATION_KEY,value);
     }
     @Override
     public double getMaskRotation(double defaultValue) {
@@ -478,36 +403,20 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setIntProperty(MASK_FLAGS_KEY,value);
     }
     @Override
-    public double getMaskShapeWidth(double defaultValue) {
-        return getDoubleProperty(MASK_SHAPE_WIDTH_KEY,defaultValue);
+    public OverlayMaskTextSettings getMaskTextSettings() {
+        return maskTextConfig;
     }
     @Override
-    public void setMaskShapeWidth(double value) {
-        setDoubleProperty(MASK_SHAPE_WIDTH_KEY,value);
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        return maskImageConfig;
     }
     @Override
-    public double getMaskShapeHeight(double defaultValue) {
-        return getDoubleProperty(MASK_SHAPE_HEIGHT_KEY,defaultValue);
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        return maskMessagesConfig;
     }
     @Override
-    public void setMaskShapeHeight(double value) {
-        setDoubleProperty(MASK_SHAPE_HEIGHT_KEY,value);
-    }
-    @Override
-    public boolean isMaskShapeSizeLinked(boolean defaultValue) {
-        return getBooleanProperty(MASK_SHAPE_LINK_SIZE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskShapeSizeLinked(boolean value) {
-        setBooleanProperty(MASK_SHAPE_LINK_SIZE_KEY,value);
-    }
-    @Override
-    public int getMaskShapeType(int defaultValue) {
-        return getIntProperty(MASK_SHAPE_TYPE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskShapeType(int value) {
-        setIntProperty(MASK_SHAPE_TYPE_KEY,value);
+    public OverlayMaskShapeSettings getMaskShapeSettings(){
+        return maskShapeConfig;
     }
     /**
      * 
@@ -545,40 +454,224 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setImageSize(Dimension value) {
         setDimensionProperty(IMAGE_SIZE_KEY,value);
     }
-    @Override
-    public boolean isMaskWordAntialiased(boolean defaultValue) {
-        return getBooleanProperty(MASK_WORD_ANTIALIASING_KEY,defaultValue);
+    /**
+     * 
+     */
+    private abstract class AntialiasedOverlayMaskSettingsImpl implements 
+            AntialiasedOverlayMaskSettings{
+        
+        protected abstract String getPrefix();
+        @Override
+        public boolean isAntialiased(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+ANTIALIASING_KEY,defaultValue);
+        }
+        @Override
+        public void setAntialiased(boolean value) {
+            setBooleanProperty(getPrefix()+ANTIALIASING_KEY,value);
+        }
     }
-    @Override
-    public void setMaskWordAntialiased(boolean value) {
-        setBooleanProperty(MASK_WORD_ANTIALIASING_KEY,value);
+    /**
+     * 
+     */
+    private abstract class TextOverlayMaskSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements TextOverlayMaskSettings{
+        @Override
+        public float getFontSize(float defaultValue) {
+            return getFloatProperty(getPrefix()+FONT_SIZE_KEY,defaultValue);
+        }
+        @Override
+        public void setFontSize(Float value) {
+            setFloatProperty(getPrefix()+FONT_SIZE_KEY,value);
+        }
+        @Override
+        public int getFontStyle(int defaultValue) {
+            return getIntProperty(getPrefix()+FONT_STYLE_KEY,defaultValue);
+        }
+        @Override
+        public void setFontStyle(Integer value) {
+            setIntProperty(getPrefix()+FONT_STYLE_KEY,value);
+        }
+        @Override
+        public String getFontFamily(String defaultValue) {
+            return getProperty(getPrefix()+FONT_FAMILY_KEY,defaultValue);
+        }
+        @Override
+        public void setFontFamily(String value) {
+            setProperty(getPrefix()+FONT_FAMILY_KEY,value);
+        }
+        @Override
+        public String getFontName(String defaultValue) {
+            return getProperty(getPrefix()+FONT_NAME_KEY,defaultValue);
+        }
+        @Override
+        public void setFontName(String value) {
+            setProperty(getPrefix()+FONT_NAME_KEY,value);
+        }
     }
-    @Override
-    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
-        return getBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,defaultValue);
+    /**
+     * 
+     */
+    private class OverlayMaskTextSettingsImpl extends TextOverlayMaskSettingsImpl 
+            implements OverlayMaskTextSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_TEXT_KEY_PREFIX;
+        }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getDoubleProperty(getPrefix()+LINE_SPACING_KEY,defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            setDoubleProperty(getPrefix()+LINE_SPACING_KEY,value);
+        }
+        @Override
+        public String getText(String defaultValue) {
+            return getProperty(getPrefix()+TEXT_KEY,defaultValue);
+        }
+        @Override
+        public void setText(String value) {
+            setProperty(getPrefix()+TEXT_KEY,value);
+        }
     }
-    @Override
-    public void setMaskWordAddBlankFrames(boolean value) {
-        setBooleanProperty(MASK_WORD_BLANK_FRAMES_KEY,value);
+    /**
+     * 
+     */
+    private class OverlayMaskImageSettingsImpl 
+            extends AntialiasedOverlayMaskSettingsImpl 
+            implements OverlayMaskImageSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_IMAGE_KEY_PREFIX;
+        }
+        @Override
+        public int getAlphaIndex(int defaultValue) {
+            return getIntProperty(getPrefix()+ALPHA_CHANNEL_INDEX_KEY,defaultValue);
+        }
+        @Override
+        public void setAlphaIndex(int value) {
+            setIntProperty(getPrefix()+ALPHA_CHANNEL_INDEX_KEY,value);
+        }
+        @Override
+        public boolean isImageInverted(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+IMAGE_INVERT_KEY,defaultValue);
+        }
+        @Override
+        public void setImageInverted(boolean value) {
+            setBooleanProperty(getPrefix()+IMAGE_INVERT_KEY,value);
+        }
+        @Override
+        public int getDesaturateMode(int defaultValue) {
+            return getIntProperty(getPrefix()+DESATURATE_MODE_KEY,defaultValue);
+        }
+        @Override
+        public void setDesaturateMode(int value) {
+            setIntProperty(getPrefix()+DESATURATE_MODE_KEY,value);
+        }
+        @Override
+        public File getImageFile(File defaultValue) {
+            return getFileProperty(getPrefix()+IMAGE_FILE_KEY,defaultValue);
+        }
+        @Override
+        public void setImageFile(File value) {
+            setFileProperty(getPrefix()+IMAGE_FILE_KEY,value);
+        }
+        @Override
+        public int getImageFrameIndex() {
+            return getIntProperty(getPrefix()+IMAGE_FRAME_INDEX_KEY,0);
+        }
+        @Override
+        public void setImageFrameIndex(int value) {
+            setIntProperty(getPrefix()+IMAGE_FRAME_INDEX_KEY,value);
+        }
+        @Override
+        public int getImageInterpolation(int defaultValue) {
+            return getIntProperty(getPrefix()+IMAGE_INTERPOLATION_KEY,defaultValue);
+        }
+        @Override
+        public void setImageInterpolation(int value) {
+            setIntProperty(getPrefix()+IMAGE_INTERPOLATION_KEY,value);
+        }
     }
-    @Override
-    public int getMaskWordMessageCount() {
-        return getIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,0);
+    /**
+     * 
+     */
+    private class OverlayMaskMessagesSettingsImpl 
+            extends TextOverlayMaskSettingsImpl
+            implements OverlayMaskMessagesSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_MESSAGES_KEY_PREFIX;
+        }
+        @Override
+        public boolean getAddBlankFrames(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+ADD_BLANK_FRAMES_KEY,defaultValue);
+        }
+        @Override
+        public void setAddBlankFrames(boolean value) {
+            setBooleanProperty(getPrefix()+ADD_BLANK_FRAMES_KEY,value);
+        }
+        @Override
+        public int getMessageCount() {
+            return getIntProperty(getPrefix()+MESSAGE_COUNT_KEY,0);
+        }
+        @Override
+        public void setMessageCount(int value) {
+            setIntProperty(getPrefix()+MESSAGE_COUNT_KEY,value);
+        }
+        @Override
+        public String getMessage(int index) {
+            return getProperty(getPrefix()+MESSAGE_KEY_PREFIX+index);
+        }
+        @Override
+        public void setMessage(int index, String value) {
+            String key = getPrefix()+MESSAGE_KEY_PREFIX+index;
+            if (value == null)
+                remove(key);
+            else
+                setProperty(key,value);
+        }
     }
-    @Override
-    public void setMaskWordMessageCount(int value) {
-        setIntProperty(MASK_WORD_MESSAGE_COUNT_KEY,value);
-    }
-    @Override
-    public String getMaskWordMessage(int index) {
-        return getProperty(MASK_WORD_MESSAGE_KEY_PREFIX+index);
-    }
-    @Override
-    public void setMaskWordMessage(int index, String value) {
-        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
-        if (value == null)
-            remove(key);
-        else
-            setProperty(key,value);
+    /**
+     * 
+     */
+    private class OverlayMaskShapeSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements OverlayMaskShapeSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_SHAPE_KEY_PREFIX;
+        }
+        @Override
+        public double getShapeWidth(double defaultValue) {
+            return getDoubleProperty(getPrefix()+SHAPE_WIDTH_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeWidth(double value) {
+            setDoubleProperty(getPrefix()+SHAPE_WIDTH_KEY,value);
+        }
+        @Override
+        public double getShapeHeight(double defaultValue) {
+            return getDoubleProperty(getPrefix()+SHAPE_HEIGHT_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeHeight(double value) {
+            setDoubleProperty(getPrefix()+SHAPE_HEIGHT_KEY,value);
+        }
+        @Override
+        public boolean isShapeSizeLinked(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+SHAPE_LINK_SIZE_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeSizeLinked(boolean value) {
+            setBooleanProperty(getPrefix()+SHAPE_LINK_SIZE_KEY,value);
+        }
+        @Override
+        public int getShapeType(int defaultValue) {
+            return getIntProperty(getPrefix()+SHAPE_TYPE_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeType(int value) {
+            setIntProperty(getPrefix()+SHAPE_TYPE_KEY,value);
+        }
     }
 }

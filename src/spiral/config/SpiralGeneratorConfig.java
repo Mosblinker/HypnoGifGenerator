@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package spiral;
+package spiral.config;
 
 import config.ConfigUtilities;
 import geom.GeometryMath;
@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+import spiral.SpiralGenerator;
 import utils.SwingExtendedUtilities;
 
 /**
@@ -56,24 +57,15 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_NODE_NAME = "Mask";
     
-    public static final String MASK_WORD_MESSAGE_NODE_NAME = "Messages";
+    public static final String MASK_TEXT_NODE_NAME = "Text";
+    
+    public static final String MASK_IMAGE_NODE_NAME = "Image";
+    
+    public static final String MASK_MESSAGE_NODE_NAME = "Messages";
+    
+    public static final String MASK_SHAPE_NODE_NAME = "Shape";
     
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
-    
-    @Deprecated
-    public static final String SPIRAL_RADIUS_KEY = "Radius";
-    
-    @Deprecated
-    public static final String SPIRAL_BASE_KEY = "Base";
-    
-    @Deprecated
-    public static final String SPIRAL_THICKNESS_KEY = "Thickness";
-    
-    @Deprecated
-    public static final String SPIRAL_CLOCKWISE_KEY = "Clockwise";
-    
-    @Deprecated
-    public static final String SPIN_CLOCKWISE_KEY = "SpinClockwise";
     /**
      * 
      */
@@ -84,8 +76,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public static final String MASK_FONT_SELECTOR_NAME = "MaskFontSelector";
     
     public static final String CHECK_FOR_UPDATES_AT_START_KEY = "CheckForUpdatesAtStartup";
-
-    
     
     public static final String TEST_SPIRAL_IMAGE_KEY = "TestImage";
     
@@ -102,7 +92,21 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final Preferences maskNode;
     
+    private final Preferences maskTextNode;
+    
+    private final OverlayMaskTextSettings maskTextConfig;
+    
+    private final Preferences maskImageNode;
+    
+    private final OverlayMaskImageSettings maskImageConfig;
+    
     private final Preferences maskMessagesNode;
+    
+    private final OverlayMaskMessagesSettings maskMessagesConfig;
+    
+    private final Preferences maskShapeNode;
+    
+    private final OverlayMaskShapeSettings maskShapeConfig;
     
     private Preferences testDebugNode = null;
     /**
@@ -121,9 +125,16 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         this.node = Objects.requireNonNull(node);
         spiralNode = node.node(SPIRAL_NODE_NAME);
         maskNode = node.node(MASK_NODE_NAME);
-        maskMessagesNode = maskNode.node(MASK_WORD_MESSAGE_NODE_NAME);
+        maskTextNode = maskNode.node(MASK_TEXT_NODE_NAME);
+        maskImageNode = maskNode.node(MASK_IMAGE_NODE_NAME);
+        maskMessagesNode = maskNode.node(MASK_MESSAGE_NODE_NAME);
+        maskShapeNode = maskNode.node(MASK_SHAPE_NODE_NAME);
         compNames = new HashMap<>();
         fcNodes = new HashMap<>();
+        maskTextConfig = new OverlayMaskTextSettingsImpl();
+        maskImageConfig = new OverlayMaskImageSettingsImpl();
+        maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
+        maskShapeConfig = new OverlayMaskShapeSettingsImpl();
     }
     /**
      * 
@@ -568,34 +579,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setSpiralData(String key, byte[] data){
         getSpiralPreferences().putByteArray(key, data);
     }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     * @deprecated 
-     */
-    @Deprecated
-    public boolean isSpinClockwise(boolean defaultValue){
-        return getPreferences().getBoolean(SPIN_CLOCKWISE_KEY, defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     * @deprecated 
-     */
-    @Deprecated
-    public boolean isSpinClockwise(){
-        return isSpinClockwise(true);
-    }
-    /**
-     * 
-     * @param value 
-     * @deprecated 
-     */
-    @Deprecated
-    public void setSpinClockwise(boolean value){
-        getPreferences().putBoolean(SPIN_CLOCKWISE_KEY, value);
-    }
     @Override
     public int getSpiralType(int defaultValue){
         return getPreferences().getInt(SPIRAL_TYPE_KEY, defaultValue);
@@ -643,88 +626,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     }
     /**
      * 
-     * @param value 
-     */
-    public void setOptimizedForDifference(boolean value){
-        node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
-    }
-    
-    public Preferences getMaskPreferences(){
-        return maskNode;
-    }
-    @Override
-    public boolean isMaskTextAntialiased(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_TEXT_ANTIALIASING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskTextAntialiased(boolean value){
-        getMaskPreferences().putBoolean(MASK_TEXT_ANTIALIASING_KEY, value);
-    }
-    @Override
-    public double getMaskLineSpacing(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_LINE_SPACING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskLineSpacing(double value){
-        getMaskPreferences().putDouble(MASK_LINE_SPACING_KEY, value);
-    }
-    @Override
-    public float getMaskFontSize(float defaultValue){
-        return getMaskPreferences().getFloat(MASK_FONT_SIZE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontSize(Float value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_SIZE_KEY);
-        else
-            getMaskPreferences().putFloat(MASK_FONT_SIZE_KEY, value);
-    }
-    @Override
-    public int getMaskFontStyle(int defaultValue){
-        return getMaskPreferences().getInt(MASK_FONT_STYLE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontStyle(Integer value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_STYLE_KEY);
-        else
-            getMaskPreferences().putInt(MASK_FONT_STYLE_KEY, value);
-    }
-    @Override
-    public String getMaskFontFamily(String defaultValue){
-        return getMaskPreferences().get(MASK_FONT_FAMILY_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontFamily(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_FAMILY_KEY);
-        else
-            getMaskPreferences().put(MASK_FONT_FAMILY_KEY, value);
-    }
-    @Override
-    public String getMaskFontName(String defaultValue){
-        return getMaskPreferences().get(MASK_FONT_NAME_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskFontName(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_FONT_NAME_KEY);
-        else
-            getMaskPreferences().put(MASK_FONT_NAME_KEY, value);
-    }
-    @Override
-    public String getMaskText(String defaultValue){
-        return getMaskPreferences().get(MASK_TEXT_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskText(String value){
-        if (value == null)
-            getMaskPreferences().remove(MASK_TEXT_KEY);
-        else
-            getMaskPreferences().put(MASK_TEXT_KEY, value);
-    }
-    /**
-     * 
      * @return 
      */
     public Dimension getMaskFontSelectorSize(){
@@ -762,6 +663,48 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setMaskFontSelectorSize(Component comp){
         putDimension(MASK_FONT_SELECTOR_NAME+COMPONENT_SIZE_KEY,comp);
     }
+    /**
+     * 
+     * @param value 
+     */
+    public void setOptimizedForDifference(boolean value){
+        node.putBoolean(OPTIMIZE_FOR_DIFFERENCE_KEY, value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskPreferences(){
+        return maskNode;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskTextPreferences(){
+        return maskTextNode;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskImagePreferences(){
+        return maskImageNode;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskMessagesPreferences(){
+        return maskMessagesNode;
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getMaskShapePreferences(){
+        return maskShapeNode;
+    }
     @Override
     public double getMaskScale(double defaultValue){
         return getMaskPreferences().getDouble(MASK_SCALE_KEY, defaultValue);
@@ -771,68 +714,12 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         getMaskPreferences().putDouble(MASK_SCALE_KEY, value);
     }
     @Override
-    public boolean isMaskImageAntialiased(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_IMAGE_ANTIALIASING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageAntialiased(boolean value){
-        getMaskPreferences().putBoolean(MASK_IMAGE_ANTIALIASING_KEY, value);
-    }
-    @Override
     public int getMaskType(int defaultValue){
         return getMaskPreferences().getInt(MASK_TYPE_KEY, defaultValue);
     }
     @Override
     public void setMaskType(int value){
         getMaskPreferences().putInt(MASK_TYPE_KEY, value);
-    }
-    @Override
-    public int getMaskAlphaIndex(int defaultValue){
-        return getMaskPreferences().getInt(MASK_ALPHA_CHANNEL_INDEX_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskAlphaIndex(int value){
-        getMaskPreferences().putInt(MASK_ALPHA_CHANNEL_INDEX_KEY, value);
-    }
-    @Override
-    public boolean isMaskImageInverted(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_IMAGE_INVERT_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageInverted(boolean value){
-        getMaskPreferences().putBoolean(MASK_IMAGE_INVERT_KEY, value);
-    }
-    @Override
-    public int getMaskDesaturateMode(int defaultValue){
-        return getMaskPreferences().getInt(MASK_DESATURATE_MODE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskDesaturateMode(int value){
-        getMaskPreferences().putInt(MASK_DESATURATE_MODE_KEY, value);
-    }
-    @Override
-    public File getMaskImageFile(File defaultValue){
-        return getFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,defaultValue);
-    }
-    @Override
-    public void setMaskImageFile(File value){
-        putFile(getMaskPreferences(),MASK_IMAGE_FILE_KEY,value);
-    }
-    @Override
-    public int getMaskImageFrameIndex(){
-        return getMaskPreferences().getInt(MASK_IMAGE_FRAME_INDEX_KEY, 0);
-    }
-    @Override
-    public void setMaskImageFrameIndex(int value){
-        getMaskPreferences().putInt(MASK_IMAGE_FRAME_INDEX_KEY, value);
-    }
-    @Override
-    public int getMaskImageInterpolation(int defaultValue){
-        return getMaskPreferences().getInt(MASK_IMAGE_INTERPOLATION_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskImageInterpolation(int value){
-        getMaskPreferences().putInt(MASK_IMAGE_INTERPOLATION_KEY, value);
     }
     @Override
     public double getMaskRotation(double defaultValue){
@@ -851,36 +738,20 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         getMaskPreferences().putInt(MASK_FLAGS_KEY, value);
     }
     @Override
-    public double getMaskShapeWidth(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_SHAPE_WIDTH_KEY, defaultValue);
+    public OverlayMaskTextSettings getMaskTextSettings() {
+        return maskTextConfig;
     }
     @Override
-    public void setMaskShapeWidth(double value){
-        getMaskPreferences().putDouble(MASK_SHAPE_WIDTH_KEY, value);
+    public OverlayMaskImageSettings getMaskImageSettings() {
+        return maskImageConfig;
     }
     @Override
-    public double getMaskShapeHeight(double defaultValue){
-        return getMaskPreferences().getDouble(MASK_SHAPE_HEIGHT_KEY, defaultValue);
+    public OverlayMaskMessagesSettings getMaskMessageSettings() {
+        return maskMessagesConfig;
     }
     @Override
-    public void setMaskShapeHeight(double value){
-        getMaskPreferences().putDouble(MASK_SHAPE_HEIGHT_KEY, value);
-    }
-    @Override
-    public boolean isMaskShapeSizeLinked(boolean defaultValue){
-        return getMaskPreferences().getBoolean(MASK_SHAPE_LINK_SIZE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskShapeSizeLinked(boolean value){
-        getMaskPreferences().putBoolean(MASK_SHAPE_LINK_SIZE_KEY, value);
-    }
-    @Override
-    public int getMaskShapeType(int defaultValue){
-        return getMaskPreferences().getInt(MASK_SHAPE_TYPE_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskShapeType(int value){
-        getMaskPreferences().putInt(MASK_SHAPE_TYPE_KEY, value);
+    public OverlayMaskShapeSettings getMaskShapeSettings(){
+        return maskShapeConfig;
     }
     
     public boolean getCheckForUpdateAtStartup(boolean defaultValue){
@@ -974,42 +845,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setImageSize(Dimension value) {
         putDimension(IMAGE_SIZE_KEY,value);
     }
-    @Override
-    public boolean isMaskWordAntialiased(boolean defaultValue) {
-        return getMaskPreferences().getBoolean(MASK_WORD_ANTIALIASING_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskWordAntialiased(boolean value) {
-        getMaskPreferences().putBoolean(MASK_WORD_ANTIALIASING_KEY, value);
-    }
-    @Override
-    public boolean getMaskWordAddBlankFrames(boolean defaultValue) {
-        return getMaskPreferences().getBoolean(MASK_WORD_BLANK_FRAMES_KEY, defaultValue);
-    }
-    @Override
-    public void setMaskWordAddBlankFrames(boolean value) {
-        getMaskPreferences().putBoolean(MASK_WORD_BLANK_FRAMES_KEY, value);
-    }
-    @Override
-    public int getMaskWordMessageCount() {
-        return maskMessagesNode.getInt(MASK_WORD_MESSAGE_COUNT_KEY, 0);
-    }
-    @Override
-    public void setMaskWordMessageCount(int value) {
-        maskMessagesNode.putInt(MASK_WORD_MESSAGE_COUNT_KEY, value);
-    }
-    @Override
-    public String getMaskWordMessage(int index) {
-        return maskMessagesNode.get(MASK_WORD_MESSAGE_KEY_PREFIX+index, null);
-    }
-    @Override
-    public void setMaskWordMessage(int index, String value) {
-        String key = MASK_WORD_MESSAGE_KEY_PREFIX+index;
-        if (value == null)
-            maskMessagesNode.remove(key);
-        else
-            maskMessagesNode.put(key, value);
-    }
     /**
      * 
      */
@@ -1027,6 +862,241 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                         // Store the file filter in the preference node
                     setFileFilter((JFileChooser)evt.getSource());
             }
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class AntialiasedOverlayMaskSettingsImpl implements 
+            AntialiasedOverlayMaskSettings{
+        
+        protected abstract Preferences getNode();
+        @Override
+        public boolean isAntialiased(boolean defaultValue) {
+            return getNode().getBoolean(ANTIALIASING_KEY, defaultValue);
+        }
+        @Override
+        public void setAntialiased(boolean value) {
+            getNode().putBoolean(ANTIALIASING_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private abstract class TextOverlayMaskSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements TextOverlayMaskSettings{
+        @Override
+        public float getFontSize(float defaultValue) {
+            return getNode().getFloat(FONT_SIZE_KEY, defaultValue);
+        }
+        @Override
+        public void setFontSize(Float value) {
+            if (value == null)
+                getNode().remove(FONT_SIZE_KEY);
+            else
+                getNode().putFloat(FONT_SIZE_KEY, value);
+        }
+        @Override
+        public int getFontStyle(int defaultValue) {
+            return getNode().getInt(FONT_STYLE_KEY, defaultValue);
+        }
+        @Override
+        public void setFontStyle(Integer value) {
+            if (value == null)
+                getNode().remove(FONT_STYLE_KEY);
+            else
+                getNode().putInt(FONT_STYLE_KEY, value);
+        }
+        @Override
+        public String getFontFamily(String defaultValue) {
+            return getNode().get(FONT_FAMILY_KEY, defaultValue);
+        }
+        @Override
+        public void setFontFamily(String value) {
+            if (value == null)
+                getNode().remove(FONT_FAMILY_KEY);
+            else
+                getNode().put(FONT_FAMILY_KEY, value);
+        }
+        @Override
+        public String getFontName(String defaultValue) {
+            return getNode().get(FONT_NAME_KEY, defaultValue);
+        }
+        @Override
+        public void setFontName(String value) {
+            if (value == null)
+                getNode().remove(FONT_NAME_KEY);
+            else
+                getNode().put(FONT_NAME_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskTextSettingsImpl extends TextOverlayMaskSettingsImpl 
+            implements OverlayMaskTextSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskTextPreferences();
+        }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            getNode().putDouble(LINE_SPACING_KEY, value);
+        }
+        @Override
+        public String getText(String defaultValue) {
+            return getNode().get(TEXT_KEY, defaultValue);
+        }
+        @Override
+        public void setText(String value) {
+            if (value == null)
+                getNode().remove(TEXT_KEY);
+            else
+                getNode().put(TEXT_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskImageSettingsImpl 
+            extends AntialiasedOverlayMaskSettingsImpl 
+            implements OverlayMaskImageSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskImagePreferences();
+        }
+        @Override
+        public int getAlphaIndex(int defaultValue) {
+            return getNode().getInt(ALPHA_CHANNEL_INDEX_KEY, defaultValue);
+        }
+        @Override
+        public void setAlphaIndex(int value) {
+            getNode().putInt(ALPHA_CHANNEL_INDEX_KEY, value);
+        }
+        @Override
+        public boolean isImageInverted(boolean defaultValue) {
+            return getNode().getBoolean(IMAGE_INVERT_KEY, defaultValue);
+        }
+        @Override
+        public void setImageInverted(boolean value) {
+            getNode().putBoolean(IMAGE_INVERT_KEY, value);
+        }
+        @Override
+        public int getDesaturateMode(int defaultValue) {
+            return getNode().getInt(DESATURATE_MODE_KEY, defaultValue);
+        }
+        @Override
+        public void setDesaturateMode(int value) {
+            getNode().putInt(DESATURATE_MODE_KEY, value);
+        }
+        @Override
+        public File getImageFile(File defaultValue) {
+            return getFile(getNode(),IMAGE_FILE_KEY,defaultValue);
+        }
+        @Override
+        public void setImageFile(File value) {
+            putFile(getNode(),IMAGE_FILE_KEY,value);
+        }
+        @Override
+        public int getImageFrameIndex() {
+            return getNode().getInt(IMAGE_FRAME_INDEX_KEY, 0);
+        }
+        @Override
+        public void setImageFrameIndex(int value) {
+            getNode().putInt(IMAGE_FRAME_INDEX_KEY, value);
+        }
+        @Override
+        public int getImageInterpolation(int defaultValue) {
+            return getNode().getInt(IMAGE_INTERPOLATION_KEY, defaultValue);
+        }
+        @Override
+        public void setImageInterpolation(int value) {
+            getNode().putInt(IMAGE_INTERPOLATION_KEY, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskMessagesSettingsImpl 
+            extends TextOverlayMaskSettingsImpl
+            implements OverlayMaskMessagesSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskMessagesPreferences();
+        }
+        @Override
+        public boolean getAddBlankFrames(boolean defaultValue) {
+            return getNode().getBoolean(ADD_BLANK_FRAMES_KEY, defaultValue);
+        }
+        @Override
+        public void setAddBlankFrames(boolean value) {
+            getNode().putBoolean(ADD_BLANK_FRAMES_KEY, value);
+        }
+        @Override
+        public int getMessageCount() {
+            return getNode().getInt(MESSAGE_COUNT_KEY, 0);
+        }
+        @Override
+        public void setMessageCount(int value) {
+            getNode().putInt(MESSAGE_COUNT_KEY, value);
+        }
+        @Override
+        public String getMessage(int index) {
+            return getNode().get(MESSAGE_KEY_PREFIX+index, null);
+        }
+        @Override
+        public void setMessage(int index, String value) {
+            String key = MESSAGE_KEY_PREFIX+index;
+            if (value == null)
+                getNode().remove(key);
+            else
+                getNode().put(key, value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskShapeSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements OverlayMaskShapeSettings{
+        @Override
+        protected Preferences getNode() {
+            return getMaskShapePreferences();
+        }
+        @Override
+        public double getShapeWidth(double defaultValue){
+            return getNode().getDouble(SHAPE_WIDTH_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeWidth(double value){
+            getNode().putDouble(SHAPE_WIDTH_KEY, value);
+        }
+        @Override
+        public double getShapeHeight(double defaultValue){
+            return getNode().getDouble(SHAPE_HEIGHT_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeHeight(double value){
+            getNode().putDouble(SHAPE_HEIGHT_KEY, value);
+        }
+        @Override
+        public boolean isShapeSizeLinked(boolean defaultValue){
+            return getNode().getBoolean(SHAPE_LINK_SIZE_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeSizeLinked(boolean value){
+            getNode().putBoolean(SHAPE_LINK_SIZE_KEY, value);
+        }
+        @Override
+        public int getShapeType(int defaultValue){
+            return getNode().getInt(SHAPE_TYPE_KEY, defaultValue);
+        }
+        @Override
+        public void setShapeType(int value){
+            getNode().putInt(SHAPE_TYPE_KEY, value);
         }
     }
 }

@@ -5,9 +5,12 @@
 package spiral;
 
 import geom.GeometryMath;
+import io.github.dheid.fontchooser.FontFamilies;
+import io.github.dheid.fontchooser.FontFamily;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -21,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -760,5 +764,44 @@ public final class SpiralGeneratorUtilities {
     public static BufferedImage getImageDifference(BufferedImage image1, 
             BufferedImage image2){
         return getImageDifference(image1,image2,0);
+    }
+    /**
+     * 
+     * @param familyName
+     * @param fontName
+     * @return 
+     */
+    public static Font getFont(String familyName, String fontName){
+            // If there is no font family name provided
+        if (familyName == null)
+            return null;
+            // Get the font family with the name
+        FontFamily family = FontFamilies.getInstance().get(familyName);
+            // If there is no font family with that name
+        if (family == null)
+            return null;
+            // Get an iterator to go through the fonts in the font family to 
+            // find a matching font
+        Iterator<Font> fontItr = family.iterator();
+            // This gets the first font in the iterator, used as a fall-back in 
+            // case the font name does not match any of the fonts
+        Font firstFont = null;
+            // While the iterator still has elements and the font with the 
+            // matching name has not been found
+        while (fontItr.hasNext()){
+                // Get the current font
+            Font temp = fontItr.next();
+                // If the given font name is null (use the first font in the 
+                // iterator) or the current font's name matches the given font 
+                // name
+            if (fontName == null || fontName.equals(temp.getName()))
+                    // Use this font
+                return temp;
+                // If the first font is null (this will be false for all fonts 
+                // after this)
+            if (firstFont == null)
+                firstFont = temp;
+        }   // If no font with a matching name was found, return the first font
+        return firstFont;
     }
 }

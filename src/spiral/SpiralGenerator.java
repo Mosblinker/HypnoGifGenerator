@@ -83,6 +83,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.*;
 import net.coobird.thumbnailator.Thumbnailator;
 import static spiral.SpiralGeneratorUtilities.*;
+import spiral.config.*;
 import spiral.icons.RemoveIcon;
 import spiral.painter.*;
 import swing.CenteredTextPainter;
@@ -192,11 +193,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the default width for the spiral image.
      */
-    protected static final int DEFAULT_SPIRAL_WIDTH = 450;
+    public static final int DEFAULT_SPIRAL_WIDTH = 450;
     /**
      * This is the default height for the spiral image.
      */
-    protected static final int DEFAULT_SPIRAL_HEIGHT = 450;
+    public static final int DEFAULT_SPIRAL_HEIGHT = 450;
     /**
      * This is the number of frames in the animation.
      */
@@ -209,7 +210,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     /**
      * This is the duration for each frame of animation.
      */
-    protected static final int SPIRAL_FRAME_DURATION = 20;
+    public static final int DEFAULT_SPIRAL_FRAME_DURATION = 20;
     /**
      * This is the name of the preference node used to store the settings for 
      * this program.
@@ -327,9 +328,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Configure the overlay mask's text painter's settings from the 
             // preferences
         overlayMask.textPainter.setAntialiasingEnabled(
-                settings.isMaskTextAntialiased(true));
+                settings.getMaskTextSettings().isAntialiased());
         fontAntialiasingToggle.setSelected(overlayMask.textPainter.isAntialiasingEnabled());
-        overlayMask.textPainter.setLineSpacing(settings.getMaskLineSpacing(0));
+        overlayMask.textPainter.setLineSpacing(settings.getMaskTextSettings().
+                getLineSpacing(0));
         lineSpacingSpinner.setValue(overlayMask.textPainter.getLineSpacing());
         
         spiralTypeCombo.setSelectedIndex(Math.max(Math.min(spiralType, 
@@ -337,18 +339,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane.setSelectedIndex(Math.max(Math.min(maskType, 
                 maskTabbedPane.getTabCount()-1), 0));
         maskAlphaToggle.setSelected(true);
-        settings.loadMaskAlphaIndex(maskAlphaButtons);
-        maskAlphaInvertToggle.setSelected(settings.isMaskImageInverted());
+        settings.getMaskImageSettings().loadAlphaIndex(maskAlphaButtons);
+        maskAlphaInvertToggle.setSelected(settings.getMaskImageSettings().
+                isImageInverted());
         maskDesaturateCombo.setSelectedIndex(Math.max(Math.min(
-                settings.getMaskDesaturateMode(), 
+                settings.getMaskImageSettings().getDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
         updateMaskAlphaControlsEnabled();
-        maskShapeLinkSizeToggle.setSelected(settings.isMaskShapeSizeLinked());
-        maskShapeWidthSpinner.setValue(settings.getMaskShapeWidth());
-        maskShapeHeightSpinner.setValue(settings.getMaskShapeHeight());
+        maskShapeLinkSizeToggle.setSelected(settings.getMaskShapeSettings().isShapeSizeLinked());
+        maskShapeWidthSpinner.setValue(settings.getMaskShapeSettings().getShapeWidth());
+        maskShapeHeightSpinner.setValue(settings.getMaskShapeSettings().getShapeHeight());
         updateMaskShapeControlsEnabled();
         
-        imgMaskAntialiasingToggle.setSelected(settings.isMaskImageAntialiased());
+        imgMaskAntialiasingToggle.setSelected(settings.getMaskImageSettings().
+                isAntialiased());
         maskScaleSpinner.setValue(settings.getMaskScale());
         delaySpinner.setValue(settings.getFrameDuration());
             // Get the mask's rotation
@@ -363,29 +367,33 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         maskFlipHorizToggle.setSelected(settings.isMaskFlippedHorizontally());
         maskFlipVertToggle.setSelected(settings.isMaskFlippedVertically());
-        maskImgScaleMethodCombo.setSelectedIndex(settings.getMaskImageInterpolation(4));
+        maskImgScaleMethodCombo.setSelectedIndex(settings.getMaskImageSettings()
+                .getImageInterpolation(4));
         maskShapeCombo.setSelectedIndex(Math.max(Math.min(
-                settings.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
+                settings.getMaskShapeSettings().getShapeType(),
+                maskShapeCombo.getItemCount()-1), 0));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
         loadSpiralPainter();
         
             // Get the font for the text mask from the preferences
-        Font font = settings.getMaskFont(maskTextPane.getFont());
+        Font font = settings.getMaskTextSettings().getFont(maskTextPane.getFont());
         maskTextPane.setFont(font);
         boldToggle.setSelected(font.isBold());
         italicToggle.setSelected(font.isItalic());
             // Load the text for the mask from the preferences
-        maskTextPane.setText(settings.getMaskText());
+        maskTextPane.setText(settings.getMaskTextSettings().getText());
         
         boldWordToggle.setSelected(boldToggle.isSelected());
         italicWordToggle.setSelected(italicToggle.isSelected());
-        wordAntialiasingToggle.setSelected(settings.isMaskWordAntialiased());
-        blankWordFramesToggle.setSelected(settings.getMaskWordAddBlankFrames());
-        maskWordCount = Math.max(settings.getMaskWordMessageCount(),MINIMUM_MESSAGE_COUNT);
+        overlayMask.wordPainter.setAntialiasingEnabled(settings.getMaskMessageSettings()
+                .isAntialiased());
+        wordAntialiasingToggle.setSelected(overlayMask.wordPainter.isAntialiasingEnabled());
+        blankWordFramesToggle.setSelected(settings.getMaskMessageSettings().getAddBlankFrames());
+        maskWordCount = Math.max(settings.getMaskMessageSettings().getMessageCount(),MINIMUM_MESSAGE_COUNT);
         for (int i = 0; i < maskWordFields.length; i++){
-            maskWordFields[i].setText(settings.getMaskWordMessage(i));
+            maskWordFields[i].setText(settings.getMaskMessageSettings().getMessage(i));
             maskWordFields[i].setVisible(i < maskWordCount);
         }
         setMaskWordRemoveButtonsVisible(maskWordCount > MINIMUM_MESSAGE_COUNT);
@@ -684,7 +692,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         frameSlider.setMaximum(SPIRAL_FRAME_COUNT-1);
             // Update the number for the frame being displayed
         updateFrameNumberDisplayed();
-        animationTimer = new javax.swing.Timer(SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
+        animationTimer = new javax.swing.Timer(DEFAULT_SPIRAL_FRAME_DURATION, (ActionEvent e) -> {
             progressAnimation(e);
         });
         previewLabel.setIcon(spiralIcon);
@@ -758,17 +766,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the mask is an image
         if (overlayMask.getMaskType() == IMAGE_OVERLAY_MASK_INDEX){
                 // Get the overlay mask image file from the preferences
-            File file = config.getMaskImageFile();
+            File file = config.getMaskImageSettings().getImageFile();
                 // If the overlay mask image file is not null and does exist
             if (file != null && file.exists()){
                     // Load the image file from the preferences
                 fileWorker = new ImageLoader(file, true, 
-                        config.getMaskImageFrameIndex());
+                        config.getMaskImageSettings().getImageFrameIndex());
                 fileWorker.execute();
             }
         } else {
-            config.setMaskImageFile(null);
-            config.setMaskImageFrameIndex(0);
+            config.getMaskImageSettings().setImageFile(null);
+            config.getMaskImageSettings().setImageFrameIndex(0);
         }
         
             // If the program is in debug mode
@@ -2880,7 +2888,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // Get the selected font and set its style
             Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
             maskTextPane.setFont(font);
-            config.setMaskFont(font);
+            config.getMaskTextSettings().setFont(font);
             resetMask(WORD_OVERLAY_MASK_INDEX);
                 // Refresh the text mask and preview
             refreshPreview(TEXT_OVERLAY_MASK_INDEX);
@@ -2896,7 +2904,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void styleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_styleToggleActionPerformed
             // Get the font's style
         int style = getFontStyle();
-        config.setMaskFontStyle(style);
+        config.getMaskTextSettings().setFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
         resetMask(WORD_OVERLAY_MASK_INDEX);
             // Refresh the text mask and preview
@@ -2952,7 +2960,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
-        config.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
+        config.getMaskImageSettings().setAntialiased(imgMaskAntialiasingToggle.isSelected());
             // Refresh the image mask and preview
         refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_imgMaskAntialiasingToggleActionPerformed
@@ -3067,20 +3075,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_spiralShapeComboActionPerformed
 
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
-        config.setMaskAlphaIndex(maskAlphaButtons);
+        config.getMaskImageSettings().setAlphaIndex(maskAlphaButtons);
         updateMaskAlphaControlsEnabled();
             // Refresh the image mask and preview
         refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskAlphaToggleActionPerformed
 
     private void maskAlphaInvertToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaInvertToggleActionPerformed
-        config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
+        config.getMaskImageSettings().setImageInverted(maskAlphaInvertToggle.isSelected());
             // Refresh the image mask and preview
         refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskAlphaInvertToggleActionPerformed
 
     private void maskDesaturateComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskDesaturateComboActionPerformed
-        config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        config.getMaskImageSettings().setDesaturateMode(maskDesaturateCombo.getSelectedIndex());
             // Refresh the image mask and preview
         refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskDesaturateComboActionPerformed
@@ -3106,22 +3114,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskAlphaInvertToggle.setSelected(false);
                 maskDesaturateCombo.setSelectedIndex(0);
                 updateMaskAlphaControlsEnabled();
-                config.setMaskAlphaIndex(maskAlphaButtons);
-                config.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
-                config.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
-                config.setMaskImageFile(null);
+                config.getMaskImageSettings().setAlphaIndex(maskAlphaButtons);
+                config.getMaskImageSettings().setImageInverted(maskAlphaInvertToggle.isSelected());
+                config.getMaskImageSettings().setDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+                config.getMaskImageSettings().setImageFile(null);
                 imgAspectRatioButton.setEnabled(false);
                 maskImgScaleMethodCombo.setSelectedIndex(SpiralGeneratorUtilities.IMAGE_SCALING_METHOD_THUMBNAILATOR);
-                config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+                config.getMaskImageSettings().setImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
                 break;
                 // If the mask is a shape
             case(SHAPE_OVERLAY_MASK_INDEX):
                 maskShapeLinkSizeToggle.setSelected(true);
                 maskShapeWidthSpinner.setValue(0.1);
                 updateMaskShapeControlsEnabled();
-                config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+                config.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
                 maskShapeCombo.setSelectedIndex(0);
-                config.setMaskShapeType(0);
+                config.getMaskShapeSettings().setShapeType(0);
                 break;
             case(WORD_OVERLAY_MASK_INDEX):
                 maskWordCount = MINIMUM_MESSAGE_COUNT;
@@ -3130,9 +3138,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 for (int i = MINIMUM_MESSAGE_COUNT; i < maskWordFields.length; i++)
                     maskWordFields[i].setVisible(false);
                 setMaskWordRemoveButtonsVisible(false);
-                config.setMaskWordMessageCount(maskWordCount);
+                config.getMaskMessageSettings().setMessageCount(maskWordCount);
                 blankWordFramesToggle.setSelected(false);
-                config.setMaskWordAddBlankFrames(false);
+                config.getMaskMessageSettings().setAddBlankFrames(false);
                 arrangeMaskWordFrames();
         }
         overlayMask.reset(overlayMask.getMaskType());
@@ -3147,7 +3155,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
             // Get the value for the width of the mask shape
         double value = (double) maskShapeWidthSpinner.getValue();
-        config.setMaskShapeWidth(value);
+        config.getMaskShapeSettings().setShapeWidth(value);
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
                 // Set the height of the mask shape to the width
@@ -3157,7 +3165,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeWidthSpinnerStateChanged
 
     private void maskShapeHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeHeightSpinnerStateChanged
-        config.setMaskShapeHeight((double) maskShapeHeightSpinner.getValue());
+        config.getMaskShapeSettings().setShapeHeight((double) maskShapeHeightSpinner.getValue());
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
             return;
@@ -3167,7 +3175,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
         updateMaskShapeControlsEnabled();
-        config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        config.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
@@ -3254,7 +3262,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskFrameNextButtonActionPerformed
 
     private void maskImgScaleMethodComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskImgScaleMethodComboActionPerformed
-        config.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+        config.getMaskImageSettings().setImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
             // Refresh the image mask and preview
         refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskImgScaleMethodComboActionPerformed
@@ -3271,7 +3279,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_aboutPanelActionPerformed
 
     private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
-        config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        config.getMaskShapeSettings().setShapeType(maskShapeCombo.getSelectedIndex());
         refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskShapeComboActionPerformed
 
@@ -3332,7 +3340,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_italicToggleActionPerformed
 
     private void blankWordFramesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blankWordFramesToggleActionPerformed
-        config.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
+        config.getMaskMessageSettings().setAddBlankFrames(blankWordFramesToggle.isSelected());
         arrangeMaskWordFrames();
     }//GEN-LAST:event_blankWordFramesToggleActionPerformed
 
@@ -3419,7 +3427,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the image is not null, use it.
             imgMaskPreview.setIcon((img!=null)?new ImageIcon(img):null);
             maskFrameLabel.setText((index+1)+"/"+overlayImages.size());
-            config.setMaskImageFrameIndex(index);
+            config.getMaskImageSettings().setImageFrameIndex(index);
             updateMaskFrameControlsEnabled();
                 // Refresh the image mask and preview
             refreshPreview(IMAGE_OVERLAY_MASK_INDEX);
@@ -3471,7 +3479,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordScrollPane.validate();
             maskWordFieldPanel.scrollRectToVisible(maskWordFields[maskWordCount-1].getBounds());
         }
-        config.setMaskWordMessageCount(maskWordCount);
+        config.getMaskMessageSettings().setMessageCount(maskWordCount);
         arrangeMaskWordFrames();
     }
     
@@ -3490,7 +3498,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (maskWordCount == MINIMUM_MESSAGE_COUNT){
             setMaskWordRemoveButtonsVisible(false);
         }
-        config.setMaskWordMessageCount(maskWordCount);
+        config.getMaskMessageSettings().setMessageCount(maskWordCount);
         arrangeMaskWordFrames();
     }
     
@@ -3603,13 +3611,13 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private void refreshMaskText(){
-        config.setMaskText(maskTextPane.getText());
+        config.getMaskTextSettings().setText(maskTextPane.getText());
             // Refresh the text mask and preview
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }
     
     private void refreshMaskWordField(int index){
-        config.setMaskWordMessage(index, maskWordFields[index].getText());
+        config.getMaskMessageSettings().setMessage(index, maskWordFields[index].getText());
         overlayMask.wordMasks.remove(index);
         try{
             Integer temp = overlayMask.wordFrames.get(frameIndex);
@@ -4358,30 +4366,30 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setMaskRotation((double)maskRotateSpinner.getValue());
         prop.setMaskFlippedHorizontally(maskFlipHorizToggle.isSelected());
         prop.setMaskFlippedVertically((maskFlipVertToggle.isSelected()));
-        prop.setMaskText(maskTextPane.getText());
-        prop.setMaskFont(maskTextPane.getFont());
-        prop.setMaskTextAntialiased(fontAntialiasingToggle.isSelected());
-        prop.setMaskLineSpacing((double)lineSpacingSpinner.getValue());
-        prop.setMaskImageAntialiased(imgMaskAntialiasingToggle.isSelected());
-        prop.setMaskAlphaIndex(maskAlphaButtons);
-        prop.setMaskDesaturateMode(maskDesaturateCombo.getSelectedIndex());
-        prop.setMaskImageInverted(maskAlphaInvertToggle.isSelected());
-        prop.setMaskImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
-        prop.setMaskImageFrameIndex(overlayImageIndex);
+        prop.getMaskTextSettings().setText(maskTextPane.getText());
+        prop.getMaskTextSettings().setFont(maskTextPane.getFont());
+        prop.getMaskTextSettings().setAntialiased(fontAntialiasingToggle.isSelected());
+        prop.getMaskTextSettings().setLineSpacing((double)lineSpacingSpinner.getValue());
+        prop.getMaskImageSettings().setAntialiased(imgMaskAntialiasingToggle.isSelected());
+        prop.getMaskImageSettings().setAlphaIndex(maskAlphaButtons);
+        prop.getMaskImageSettings().setDesaturateMode(maskDesaturateCombo.getSelectedIndex());
+        prop.getMaskImageSettings().setImageInverted(maskAlphaInvertToggle.isSelected());
+        prop.getMaskImageSettings().setImageInterpolation(maskImgScaleMethodCombo.getSelectedIndex());
+        prop.getMaskImageSettings().setImageFrameIndex(overlayImageIndex);
         File imgFile = overlayFile;
         if (imgFile != null && file != null){
             imgFile = FilesExtended.relativize(imgFile, file);
         }
-        prop.setMaskImageFile(imgFile);
-        prop.setMaskShapeType(maskShapeCombo.getSelectedIndex());
-        prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
-        prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
-        prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
-        prop.setMaskWordAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
-        prop.setMaskWordAddBlankFrames(blankWordFramesToggle.isSelected());
-        prop.setMaskWordMessageCount(maskWordCount);
+        prop.getMaskImageSettings().setImageFile(imgFile);
+        prop.getMaskShapeSettings().setShapeType(maskShapeCombo.getSelectedIndex());
+        prop.getMaskShapeSettings().setShapeWidth((double)maskShapeWidthSpinner.getValue());
+        prop.getMaskShapeSettings().setShapeHeight((double)maskShapeHeightSpinner.getValue());
+        prop.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        prop.getMaskMessageSettings().setAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
+        prop.getMaskMessageSettings().setAddBlankFrames(blankWordFramesToggle.isSelected());
+        prop.getMaskMessageSettings().setMessageCount(maskWordCount);
         for (int i = 0; i < maskWordCount; i++){
-            prop.setMaskWordMessage(i, maskWordFields[i].getText());
+            prop.getMaskMessageSettings().setMessage(i, maskWordFields[i].getText());
         }
         
         return prop;
@@ -4445,7 +4453,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the program is not loading this image at the start of the 
             // program
         if (!initLoad)
-            config.setMaskImageFile(file);
+            config.getMaskImageSettings().setImageFile(file);
         setOverlayImage(Math.max(Math.min(index, overlayImages.size()-1), 0));
     }
     
@@ -4967,16 +4975,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(CenteredTextPainter.ANTIALIASING_PROPERTY_CHANGED):
                     switch(maskTypeChanged){
                         case(TEXT_OVERLAY_MASK_INDEX):
-                            config.setMaskTextAntialiased(overlayMask.textPainter.isAntialiasingEnabled());
+                            config.getMaskTextSettings().setAntialiased(
+                                    overlayMask.textPainter.isAntialiasingEnabled());
                             break;
                         case(WORD_OVERLAY_MASK_INDEX):
-                            config.setMaskWordAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
+                            config.getMaskMessageSettings().setAntialiased(
+                                    overlayMask.wordPainter.isAntialiasingEnabled());
                     }
                     break;
                 case(CenteredTextPainter.LINE_SPACING_PROPERTY_CHANGED):
                     switch(maskTypeChanged){
                         case(TEXT_OVERLAY_MASK_INDEX):
-                            config.setMaskLineSpacing(overlayMask.textPainter.getLineSpacing());
+                            config.getMaskTextSettings().setLineSpacing(
+                                    overlayMask.textPainter.getLineSpacing());
                             break;
                         case(WORD_OVERLAY_MASK_INDEX):
                             // TODO: Add code to store changed value in config if this value is stored
@@ -6268,8 +6279,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 // If the program failed to load the image mask at the start of 
                 // the program
             } else if (initLoad){
-                config.setMaskImageFile(null);
-                config.setMaskImageFrameIndex(0);
+                config.getMaskImageSettings().setImageFile(null);
+                config.getMaskImageSettings().setImageFrameIndex(0);
             }
             super.done();
         }
@@ -6469,10 +6480,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             if (!propLoaded){
                 try (FileReader in = new FileReader(file)){
                     prop.load(in);
-                    imgFile = prop.getMaskImageFile();
+                    imgFile = prop.getMaskImageSettings().getImageFile();
                     if (imgFile != null)
                         imgFile = FilesExtended.resolve(file,imgFile);
-                    imgIndex = prop.getMaskImageFrameIndex();
+                    imgIndex = prop.getMaskImageSettings().getImageFrameIndex();
                     propLoaded = true;
                     setProgressString(getProgressString());
                     showFileNotFound = true;
@@ -6524,8 +6535,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     setOverlayImages(imgs,imgIndex,imgFile,false);
                 } else {
                     overlayFile = null;
-                    config.setMaskImageFile(null);
-                    config.setMaskImageFrameIndex(0);
+                    config.getMaskImageSettings().setImageFile(null);
+                    config.getMaskImageSettings().setImageFrameIndex(0);
                 }
                 config.setSpiralType(spiralTypeCombo.getSelectedIndex());
                 for (int i = 0; i < colorIcons.length; i++){
@@ -6533,16 +6544,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 }
                 config.setMaskType(prop.getMaskType());
                 config.setMaskFlags(prop.getMaskFlags());
-                config.setMaskDesaturateMode(prop.getMaskDesaturateMode());
-                config.setMaskImageInverted(prop.isMaskImageInverted());
-                config.setMaskAlphaIndex(prop.getMaskAlphaIndex());
-                config.setMaskImageInterpolation(prop.getMaskImageInterpolation());
-                config.setMaskImageAntialiased(prop.isMaskImageAntialiased());
-                config.setMaskShapeType(prop.getMaskShapeType());
-                config.setMaskShapeSizeLinked(prop.isMaskShapeSizeLinked());
-                config.setMaskWordAntialiased(prop.isMaskWordAntialiased());
-                config.setMaskWordAddBlankFrames(prop.getMaskWordAddBlankFrames());
-                config.setMaskWordMessageCount(prop.getMaskWordMessageCount());
+                config.getMaskImageSettings().setDesaturateMode(
+                        prop.getMaskImageSettings().getDesaturateMode());
+                config.getMaskImageSettings().setImageInverted(
+                        prop.getMaskImageSettings().isImageInverted());
+                config.getMaskImageSettings().setAlphaIndex(
+                        prop.getMaskImageSettings().getAlphaIndex());
+                config.getMaskImageSettings().setImageInterpolation(
+                        prop.getMaskImageSettings().getImageInterpolation());
+                config.getMaskImageSettings().setAntialiased(
+                        prop.getMaskImageSettings().isAntialiased());
+                config.getMaskMessageSettings().setAntialiased(
+                        prop.getMaskMessageSettings().isAntialiased());
+                config.getMaskMessageSettings().setAddBlankFrames(
+                        prop.getMaskMessageSettings().getAddBlankFrames());
+                config.getMaskMessageSettings().setMessageCount(maskWordCount);
+                config.getMaskShapeSettings().setShapeType(
+                        prop.getMaskShapeSettings().getShapeType());
+                config.getMaskShapeSettings().setShapeSizeLinked(
+                        prop.getMaskShapeSettings().isShapeSizeLinked());
             }
             super.done();
         }
