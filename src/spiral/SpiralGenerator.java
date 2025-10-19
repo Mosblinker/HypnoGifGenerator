@@ -346,9 +346,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 settings.getMaskImageSettings().getDesaturateMode(), 
                 maskDesaturateCombo.getItemCount()-1), 0));
         updateMaskAlphaControlsEnabled();
-        maskShapeLinkSizeToggle.setSelected(settings.isMaskShapeSizeLinked());
-        maskShapeWidthSpinner.setValue(settings.getMaskShapeWidth());
-        maskShapeHeightSpinner.setValue(settings.getMaskShapeHeight());
+        maskShapeLinkSizeToggle.setSelected(settings.getMaskShapeSettings().isShapeSizeLinked());
+        maskShapeWidthSpinner.setValue(settings.getMaskShapeSettings().getShapeWidth());
+        maskShapeHeightSpinner.setValue(settings.getMaskShapeSettings().getShapeHeight());
         updateMaskShapeControlsEnabled();
         
         imgMaskAntialiasingToggle.setSelected(settings.getMaskImageSettings().
@@ -370,7 +370,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskImgScaleMethodCombo.setSelectedIndex(settings.getMaskImageSettings()
                 .getImageInterpolation(4));
         maskShapeCombo.setSelectedIndex(Math.max(Math.min(
-                settings.getMaskShapeType(),maskShapeCombo.getItemCount()-1), 0));
+                settings.getMaskShapeSettings().getShapeType(),
+                maskShapeCombo.getItemCount()-1), 0));
         
             // Load the values for the components for controlling the spiral 
             // from the current spiral painter
@@ -3126,9 +3127,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskShapeLinkSizeToggle.setSelected(true);
                 maskShapeWidthSpinner.setValue(0.1);
                 updateMaskShapeControlsEnabled();
-                config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+                config.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
                 maskShapeCombo.setSelectedIndex(0);
-                config.setMaskShapeType(0);
+                config.getMaskShapeSettings().setShapeType(0);
                 break;
             case(WORD_OVERLAY_MASK_INDEX):
                 maskWordCount = MINIMUM_MESSAGE_COUNT;
@@ -3154,7 +3155,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void maskShapeWidthSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeWidthSpinnerStateChanged
             // Get the value for the width of the mask shape
         double value = (double) maskShapeWidthSpinner.getValue();
-        config.setMaskShapeWidth(value);
+        config.getMaskShapeSettings().setShapeWidth(value);
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
                 // Set the height of the mask shape to the width
@@ -3164,7 +3165,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_maskShapeWidthSpinnerStateChanged
 
     private void maskShapeHeightSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_maskShapeHeightSpinnerStateChanged
-        config.setMaskShapeHeight((double) maskShapeHeightSpinner.getValue());
+        config.getMaskShapeSettings().setShapeHeight((double) maskShapeHeightSpinner.getValue());
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected())
             return;
@@ -3174,7 +3175,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void maskShapeLinkSizeToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeLinkSizeToggleActionPerformed
         updateMaskShapeControlsEnabled();
-        config.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        config.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
             // If the width and height are linked
         if (maskShapeLinkSizeToggle.isSelected()){
             maskShapeHeightSpinner.setValue((double) maskShapeWidthSpinner.getValue());
@@ -3278,7 +3279,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_aboutPanelActionPerformed
 
     private void maskShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskShapeComboActionPerformed
-        config.setMaskShapeType(maskShapeCombo.getSelectedIndex());
+        config.getMaskShapeSettings().setShapeType(maskShapeCombo.getSelectedIndex());
         refreshPreview(SHAPE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_maskShapeComboActionPerformed
 
@@ -4380,10 +4381,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             imgFile = FilesExtended.relativize(imgFile, file);
         }
         prop.getMaskImageSettings().setImageFile(imgFile);
-        prop.setMaskShapeType(maskShapeCombo.getSelectedIndex());
-        prop.setMaskShapeWidth((double)maskShapeWidthSpinner.getValue());
-        prop.setMaskShapeHeight((double)maskShapeHeightSpinner.getValue());
-        prop.setMaskShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
+        prop.getMaskShapeSettings().setShapeType(maskShapeCombo.getSelectedIndex());
+        prop.getMaskShapeSettings().setShapeWidth((double)maskShapeWidthSpinner.getValue());
+        prop.getMaskShapeSettings().setShapeHeight((double)maskShapeHeightSpinner.getValue());
+        prop.getMaskShapeSettings().setShapeSizeLinked(maskShapeLinkSizeToggle.isSelected());
         prop.getMaskMessageSettings().setAntialiased(overlayMask.wordPainter.isAntialiasingEnabled());
         prop.getMaskMessageSettings().setAddBlankFrames(blankWordFramesToggle.isSelected());
         prop.getMaskMessageSettings().setMessageCount(maskWordCount);
@@ -6558,8 +6559,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.getMaskMessageSettings().setAddBlankFrames(
                         prop.getMaskMessageSettings().getAddBlankFrames());
                 config.getMaskMessageSettings().setMessageCount(maskWordCount);
-                config.setMaskShapeType(prop.getMaskShapeType());
-                config.setMaskShapeSizeLinked(prop.isMaskShapeSizeLinked());
+                config.getMaskShapeSettings().setShapeType(
+                        prop.getMaskShapeSettings().getShapeType());
+                config.getMaskShapeSettings().setShapeSizeLinked(
+                        prop.getMaskShapeSettings().isShapeSizeLinked());
             }
             super.done();
         }
