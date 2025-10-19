@@ -50,26 +50,6 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    @Deprecated
-    public static final String MASK_SHAPE_TYPE_KEY = "MaskShapeType";
-    /**
-     * 
-     */
-    @Deprecated
-    public static final String MASK_SHAPE_WIDTH_KEY = "MaskShapeWidth";
-    /**
-     * 
-     */
-    @Deprecated
-    public static final String MASK_SHAPE_HEIGHT_KEY = "MaskShapeHeight";
-    /**
-     * 
-     */
-    @Deprecated
-    public static final String MASK_SHAPE_LINK_SIZE_KEY = "MaskShapeLinkSize";
-    /**
-     * 
-     */
     public static final int MASK_FLIP_HORIZONTAL_FLAG = 0x01;
     /**
      * 
@@ -295,106 +275,6 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public OverlayMaskShapeSettings getMaskShapeSettings();
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    @Deprecated
-    public default double getMaskShapeWidth(double defaultValue){
-        return getMaskShapeSettings().getShapeWidth(defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     */
-    @Deprecated
-    public default double getMaskShapeWidth(){
-        return getMaskShapeWidth(0.1);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setMaskShapeWidth(double value){
-        getMaskShapeSettings().setShapeWidth(value);
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    @Deprecated
-    public default double getMaskShapeHeight(double defaultValue){
-        return getMaskShapeSettings().getShapeHeight(defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     */
-    @Deprecated
-    public default double getMaskShapeHeight(){
-        return getMaskShapeHeight(0.1);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setMaskShapeHeight(double value){
-        getMaskShapeSettings().setShapeHeight(value);
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    @Deprecated
-    public default boolean isMaskShapeSizeLinked(boolean defaultValue){
-        return getMaskShapeSettings().isShapeSizeLinked(defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     */
-    @Deprecated
-    public default boolean isMaskShapeSizeLinked(){
-        return isMaskShapeSizeLinked(true);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setMaskShapeSizeLinked(boolean value){
-        getMaskShapeSettings().setShapeSizeLinked(value);
-    }
-    /**
-     * 
-     * @param defaultValue
-     * @return 
-     */
-    @Deprecated
-    public default int getMaskShapeType(int defaultValue){
-        return getMaskShapeSettings().getShapeType(defaultValue);
-    }
-    /**
-     * 
-     * @return 
-     */
-    @Deprecated
-    public default int getMaskShapeType(){
-        return getMaskShapeType(0);
-    }
-    /**
-     * 
-     * @param value 
-     */
-    @Deprecated
-    public default void setMaskShapeType(int value){
-        getMaskShapeSettings().setShapeType(value);
-    }
     /**
      * 
      * @param defaultValue
