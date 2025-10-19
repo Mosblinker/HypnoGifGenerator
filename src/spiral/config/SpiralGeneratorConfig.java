@@ -753,38 +753,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public OverlayMaskShapeSettings getMaskShapeSettings(){
         return maskShapeConfig;
     }
-    @Override
-    public double getMaskShapeWidth(double defaultValue){
-        return maskShapeConfig.getShapeWidth(defaultValue);
-    }
-    @Override
-    public void setMaskShapeWidth(double value){
-        maskShapeConfig.setShapeWidth(value);
-    }
-    @Override
-    public double getMaskShapeHeight(double defaultValue){
-        return maskShapeConfig.getShapeHeight(defaultValue);
-    }
-    @Override
-    public void setMaskShapeHeight(double value){
-        maskShapeConfig.setShapeHeight(value);
-    }
-    @Override
-    public boolean isMaskShapeSizeLinked(boolean defaultValue){
-        return maskShapeConfig.isShapeSizeLinked(defaultValue);
-    }
-    @Override
-    public void setMaskShapeSizeLinked(boolean value){
-        maskShapeConfig.setShapeSizeLinked(value);
-    }
-    @Override
-    public int getMaskShapeType(int defaultValue){
-        return maskShapeConfig.getShapeType(defaultValue);
-    }
-    @Override
-    public void setMaskShapeType(int value){
-        maskShapeConfig.setShapeType(value);
-    }
     
     public boolean getCheckForUpdateAtStartup(boolean defaultValue){
         return getPreferences().getBoolean(CHECK_FOR_UPDATES_AT_START_KEY, defaultValue);
