@@ -750,6 +750,10 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         return maskMessagesConfig;
     }
     @Override
+    public OverlayMaskShapeSettings getMaskShapeSettings(){
+        return maskShapeConfig;
+    }
+    @Override
     public double getMaskShapeWidth(double defaultValue){
         return maskShapeConfig.getShapeWidth(defaultValue);
     }

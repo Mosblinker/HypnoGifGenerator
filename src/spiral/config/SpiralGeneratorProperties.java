@@ -414,10 +414,10 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public OverlayMaskMessagesSettings getMaskMessageSettings() {
         return maskMessagesConfig;
     }
-    
-    
-    
-    
+    @Override
+    public OverlayMaskShapeSettings getMaskShapeSettings(){
+        return maskShapeConfig;
+    }
     @Override
     public double getMaskShapeWidth(double defaultValue) {
         return maskShapeConfig.getShapeWidth(defaultValue);

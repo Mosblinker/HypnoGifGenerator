@@ -6,14 +6,9 @@ package spiral.config;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.io.File;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
 import spiral.SpiralGenerator;
 import spiral.SpiralGeneratorUtilities;
 import spiral.painter.SpiralPainter;
-import utils.SwingExtendedUtilities;
 
 /**
  *
@@ -276,7 +271,6 @@ public interface SpiralGeneratorSettings {
     public default void setMaskFlippedVertically(boolean value){
         setMaskFlag(MASK_FLIP_VERTICAL_FLAG,value);
     }
-    
     /**
      * 
      * @return 
@@ -292,6 +286,11 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public OverlayMaskMessagesSettings getMaskMessageSettings();
+    /**
+     * 
+     * @return 
+     */
+    public OverlayMaskShapeSettings getMaskShapeSettings();
     /**
      * 
      * @param defaultValue
