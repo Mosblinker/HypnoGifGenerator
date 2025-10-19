@@ -14,7 +14,6 @@ import java.io.Writer;
 import java.util.Base64;
 import java.util.Properties;
 import spiral.SpiralGenerator;
-import spiral.config.*;
 /**
  *
  * @author Mosblinker
@@ -40,6 +39,10 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
+    public static final String MASK_SHAPE_KEY_PREFIX = "MaskShape";
+    /**
+     * 
+     */
     private final OverlayMaskTextSettings maskTextConfig;
     /**
      * 
@@ -52,10 +55,15 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     /**
      * 
      */
+    private final OverlayMaskShapeSettings maskShapeConfig;
+    /**
+     * 
+     */
     public SpiralGeneratorProperties(){ 
         maskTextConfig = new OverlayMaskTextSettingsImpl();
         maskImageConfig = new OverlayMaskImageSettingsImpl();
         maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
+        maskShapeConfig = new OverlayMaskShapeSettingsImpl();
     }
     /**
      * 
@@ -412,35 +420,35 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     
     @Override
     public double getMaskShapeWidth(double defaultValue) {
-        return getDoubleProperty(MASK_SHAPE_WIDTH_KEY,defaultValue);
+        return maskShapeConfig.getShapeWidth(defaultValue);
     }
     @Override
     public void setMaskShapeWidth(double value) {
-        setDoubleProperty(MASK_SHAPE_WIDTH_KEY,value);
+        maskShapeConfig.setShapeWidth(value);
     }
     @Override
     public double getMaskShapeHeight(double defaultValue) {
-        return getDoubleProperty(MASK_SHAPE_HEIGHT_KEY,defaultValue);
+        return maskShapeConfig.getShapeHeight(defaultValue);
     }
     @Override
     public void setMaskShapeHeight(double value) {
-        setDoubleProperty(MASK_SHAPE_HEIGHT_KEY,value);
+        maskShapeConfig.setShapeHeight(value);
     }
     @Override
     public boolean isMaskShapeSizeLinked(boolean defaultValue) {
-        return getBooleanProperty(MASK_SHAPE_LINK_SIZE_KEY,defaultValue);
+        return maskShapeConfig.isShapeSizeLinked(defaultValue);
     }
     @Override
     public void setMaskShapeSizeLinked(boolean value) {
-        setBooleanProperty(MASK_SHAPE_LINK_SIZE_KEY,value);
+        maskShapeConfig.setShapeSizeLinked(value);
     }
     @Override
     public int getMaskShapeType(int defaultValue) {
-        return getIntProperty(MASK_SHAPE_TYPE_KEY,defaultValue);
+        return maskShapeConfig.getShapeType(defaultValue);
     }
     @Override
     public void setMaskShapeType(int value) {
-        setIntProperty(MASK_SHAPE_TYPE_KEY,value);
+        maskShapeConfig.setShapeType(value);
     }
     /**
      * 
@@ -654,6 +662,48 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
                 remove(key);
             else
                 setProperty(key,value);
+        }
+    }
+    /**
+     * 
+     */
+    private class OverlayMaskShapeSettingsImpl extends 
+            AntialiasedOverlayMaskSettingsImpl implements OverlayMaskShapeSettings{
+        @Override
+        protected String getPrefix() {
+            return MASK_SHAPE_KEY_PREFIX;
+        }
+        @Override
+        public double getShapeWidth(double defaultValue) {
+            return getDoubleProperty(getPrefix()+SHAPE_WIDTH_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeWidth(double value) {
+            setDoubleProperty(getPrefix()+SHAPE_WIDTH_KEY,value);
+        }
+        @Override
+        public double getShapeHeight(double defaultValue) {
+            return getDoubleProperty(getPrefix()+SHAPE_HEIGHT_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeHeight(double value) {
+            setDoubleProperty(getPrefix()+SHAPE_HEIGHT_KEY,value);
+        }
+        @Override
+        public boolean isShapeSizeLinked(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+SHAPE_LINK_SIZE_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeSizeLinked(boolean value) {
+            setBooleanProperty(getPrefix()+SHAPE_LINK_SIZE_KEY,value);
+        }
+        @Override
+        public int getShapeType(int defaultValue) {
+            return getIntProperty(getPrefix()+SHAPE_TYPE_KEY,defaultValue);
+        }
+        @Override
+        public void setShapeType(int value) {
+            setIntProperty(getPrefix()+SHAPE_TYPE_KEY,value);
         }
     }
 }
