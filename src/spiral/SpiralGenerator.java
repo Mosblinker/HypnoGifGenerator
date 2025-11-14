@@ -1666,7 +1666,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskTabbedPane.addTab("Shape", shapeMaskCtrlPanel);
 
         maskWordScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        maskWordScrollPane.setToolTipText("");
 
         maskWordFieldPanel.setLayout(new java.awt.GridBagLayout());
         maskWordScrollPane.setViewportView(maskWordFieldPanel);
