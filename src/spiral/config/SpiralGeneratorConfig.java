@@ -1056,6 +1056,17 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
             else
                 getNode().put(key, value);
         }
+        @Override
+        public String getPrompt() {
+            return getNode().get(PROMPT_KEY, null);
+        }
+        @Override
+        public void setPrompt(String value) {
+            if (value == null)
+                getNode().remove(PROMPT_KEY);
+            else
+                getNode().put(PROMPT_KEY, value);
+        }
     }
     /**
      * 

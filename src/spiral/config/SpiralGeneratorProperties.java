@@ -631,6 +631,18 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
             else
                 setProperty(key,value);
         }
+        @Override
+        public String getPrompt() {
+            return getProperty(getPrefix()+PROMPT_KEY);
+        }
+        @Override
+        public void setPrompt(String value) {
+            String key = getPrefix()+PROMPT_KEY;
+            if (value == null)
+                remove(key);
+            else
+                setProperty(key,value);
+        }
     }
     /**
      * 
