@@ -198,7 +198,7 @@
                                   <Component id="lineSpacingLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lineSpacingSpinner" min="-2" pref="73" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="112" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="122" max="32767" attributes="0"/>
                               </Group>
                               <Component id="maskTextScrollPane" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -907,9 +907,8 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="blankWordFramesToggle" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="maskWordReorderButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="wordAlwaysShowPromptToggle" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Component id="fontWordButton" min="-2" max="-2" attributes="0"/>
@@ -923,7 +922,9 @@
                                   <Component id="wordLineSpacingLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="wordLineSpacingSpinner" min="-2" pref="73" max="-2" attributes="0"/>
-                                  <EmptySpace pref="79" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="maskWordReorderButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="addMaskWordButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="maskWordScrollPane" max="32767" attributes="0"/>
@@ -936,7 +937,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="maskWordScrollPane" pref="287" max="32767" attributes="0"/>
+                          <Component id="maskWordScrollPane" pref="285" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="addMaskWordButton" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -948,13 +949,14 @@
                                   <Group type="103" alignment="3" groupAlignment="3" attributes="0">
                                       <Component id="wordLineSpacingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="wordLineSpacingSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="maskWordReorderButton" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="blankWordFramesToggle" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="maskWordReorderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="wordAlwaysShowPromptToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       </Group>
@@ -1076,6 +1078,16 @@
                   </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="wordLineSpacingSpinnerStateChanged"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="wordAlwaysShowPromptToggle">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Always Show Prompt"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Always show the prompt, even on blank frames."/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wordAlwaysShowPromptToggleActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
