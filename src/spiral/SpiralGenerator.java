@@ -400,6 +400,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         setMaskWordRemoveButtonsVisible(maskWordCount > MINIMUM_MESSAGE_COUNT);
         arrangeMaskWordFrames();
         overlayMask.wordPainter.setLineSpacing(settings.getMaskMessageSettings().getLineSpacing());
+        wordLineSpacingSpinner.setValue(overlayMask.wordPainter.getLineSpacing());
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -1092,6 +1093,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         wordAntialiasingToggle = new javax.swing.JCheckBox();
         blankWordFramesToggle = new javax.swing.JCheckBox();
         maskWordReorderButton = new javax.swing.JButton();
+        wordLineSpacingLabel = new javax.swing.JLabel();
+        wordLineSpacingSpinner = new javax.swing.JSpinner();
         maskScaleLabel = new javax.swing.JLabel();
         maskScaleSpinner = new javax.swing.JSpinner();
         resetMaskButton = new javax.swing.JButton();
@@ -1744,6 +1747,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             }
         });
 
+        wordLineSpacingLabel.setLabelFor(wordLineSpacingSpinner);
+        wordLineSpacingLabel.setText("Line Spacing:");
+
+        wordLineSpacingSpinner.setModel(new javax.swing.SpinnerNumberModel(0.0d, null, null, 1.0d));
+        wordLineSpacingSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                wordLineSpacingSpinnerStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout maskWordCtrlPanelLayout = new javax.swing.GroupLayout(maskWordCtrlPanel);
         maskWordCtrlPanel.setLayout(maskWordCtrlPanelLayout);
         maskWordCtrlPanelLayout.setHorizontalGroup(
@@ -1751,6 +1764,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             .addGroup(maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(maskWordCtrlPanelLayout.createSequentialGroup()
+                        .addComponent(blankWordFramesToggle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(maskWordReorderButton)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(maskWordCtrlPanelLayout.createSequentialGroup()
                         .addComponent(fontWordButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1760,10 +1778,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(wordAntialiasingToggle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(blankWordFramesToggle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(maskWordReorderButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addComponent(wordLineSpacingLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(wordLineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                         .addComponent(addMaskWordButton))
                     .addComponent(maskWordScrollPane))
                 .addContainerGap())
@@ -1772,7 +1790,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, maskWordCtrlPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                .addComponent(maskWordScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addMaskWordButton, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1781,9 +1799,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(boldWordToggle)
                         .addComponent(italicWordToggle)
                         .addComponent(wordAntialiasingToggle)
-                        .addComponent(blankWordFramesToggle)
-                        .addComponent(maskWordReorderButton)))
-                .addContainerGap())
+                        .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(wordLineSpacingLabel)
+                            .addComponent(wordLineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(blankWordFramesToggle)
+                    .addComponent(maskWordReorderButton))
+                .addGap(7, 7, 7))
         );
 
         maskTabbedPane.addTab("Multiple Messages", maskWordCtrlPanel);
@@ -3388,6 +3411,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordManipulator.setPreferredSize(maskWordManipulator.getSize());
         config.setComponentSize(maskWordManipulator);
     }//GEN-LAST:event_maskWordReorderButtonActionPerformed
+
+    private void wordLineSpacingSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_wordLineSpacingSpinnerStateChanged
+        overlayMask.wordPainter.setLineSpacing((double)wordLineSpacingSpinner.getValue());
+    }//GEN-LAST:event_wordLineSpacingSpinnerStateChanged
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -3643,8 +3670,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void refreshMaskWordField(int index){
         if (index == maskWordFields.length){
             config.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
-            overlayMask.reset(MESSAGE_OVERLAY_MASK_INDEX);
-            maskPreviewLabel.repaint();
+            refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
             refreshPreview();
         } else if (index >= 0 && index < maskWordFields.length){
             config.getMaskMessageSettings().setMessage(index, maskWordFields[index].getText());
@@ -4278,6 +4304,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel widthLabel;
     private javax.swing.JSpinner widthSpinner;
     private javax.swing.JCheckBox wordAntialiasingToggle;
+    private javax.swing.JLabel wordLineSpacingLabel;
+    private javax.swing.JSpinner wordLineSpacingSpinner;
     // End of variables declaration//GEN-END:variables
     /**
      * 
@@ -4366,6 +4394,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (JTextField field : maskWordFields)
             field.setEnabled(enabled);
         maskWordPromptField.setEnabled(enabled);
+        wordLineSpacingSpinner.setEnabled(enabled);
         fontWordButton.setEnabled(enabled);
         boldWordToggle.setEnabled(enabled);
         italicWordToggle.setEnabled(enabled);
