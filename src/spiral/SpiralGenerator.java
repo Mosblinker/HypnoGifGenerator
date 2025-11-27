@@ -2943,7 +2943,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // If the user did not cancel the font selection
         if (!fontSelector.isCancelSelected()){
                 // Get the selected font and set its style
-            Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle());
+            Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle(boldToggle,italicToggle));
             maskTextPane.setFont(font);
             config.getMaskTextSettings().setFont(font);
             resetMask(MESSAGE_OVERLAY_MASK_INDEX);
@@ -2960,7 +2960,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
     private void styleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_styleToggleActionPerformed
             // Get the font's style
-        int style = getFontStyle();
+        int style = getFontStyle(boldToggle,italicToggle);
         config.getMaskTextSettings().setFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
         resetMask(MESSAGE_OVERLAY_MASK_INDEX);
@@ -3512,7 +3512,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This returns the style set for the font.
      * @return The style for the font.
      */
-    private int getFontStyle(){
+    private int getFontStyle(AbstractButton boldToggle, AbstractButton italicToggle){
         return ((boldToggle.isSelected())?Font.BOLD:0) | 
                 ((italicToggle.isSelected())?Font.ITALIC:0);
     }
