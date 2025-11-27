@@ -401,6 +401,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         arrangeMaskWordFrames();
         overlayMask.wordPainter.setLineSpacing(settings.getMaskMessageSettings().getLineSpacing());
         wordLineSpacingSpinner.setValue(overlayMask.wordPainter.getLineSpacing());
+        wordAlwaysShowPromptToggle.setSelected(settings.getMaskMessageSettings().getAlwaysShowPrompt());
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -3199,6 +3200,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 config.getMaskMessageSettings().setAddBlankFrames(false);
                 arrangeMaskWordFrames();
                 maskWordPromptField.setText("");
+                wordAlwaysShowPromptToggle.setSelected(true);
+                config.getMaskMessageSettings().setAlwaysShowPrompt(true);
         }
         overlayMask.reset(overlayMask.getMaskType());
         maskScaleSpinner.setValue(1.0);
@@ -3429,7 +3432,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_wordLineSpacingSpinnerStateChanged
 
     private void wordAlwaysShowPromptToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordAlwaysShowPromptToggleActionPerformed
-        // TODO add your handling code here:
+        config.getMaskMessageSettings().setAlwaysShowPrompt(wordAlwaysShowPromptToggle.isSelected());
+        Integer temp = overlayMask.wordFrames.get(frameIndex);
+        if (temp == null){
+            maskPreviewLabel.repaint();
+            refreshPreview();
+        }
     }//GEN-LAST:event_wordAlwaysShowPromptToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -4432,6 +4440,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             field.setEnabled(enabled);
         maskWordPromptField.setEnabled(enabled);
         wordLineSpacingSpinner.setEnabled(enabled);
+        wordAlwaysShowPromptToggle.setEnabled(enabled);
         fontWordButton.setEnabled(enabled);
         boldWordToggle.setEnabled(enabled);
         italicWordToggle.setEnabled(enabled);
