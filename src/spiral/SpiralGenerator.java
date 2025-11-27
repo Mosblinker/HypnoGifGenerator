@@ -3642,24 +3642,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (index == maskWordFields.length){
             config.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
             overlayMask.wordMasks.clear();
+            maskPreviewLabel.repaint();
+            refreshPreview();
         } else if (index >= 0 && index < maskWordFields.length){
             config.getMaskMessageSettings().setMessage(index, maskWordFields[index].getText());
             overlayMask.wordMasks.remove(index);
-        } else
-            return;
-        try{
-            Integer temp = overlayMask.wordFrames.get(frameIndex);
-            if (temp != null && (index == maskWordFields.length || temp == index)){
+            try{
+                Integer temp = overlayMask.wordFrames.get(frameIndex);
+                if (temp != null && temp == index){
+                    maskPreviewLabel.repaint();
+                    refreshPreview();
+                }
+            } catch (NullPointerException ex){
+                getLogger().log(Level.WARNING, 
+                        "Null encountered refreshing for message " + index + 
+                        " on frame " + frameIndex, ex);
                 maskPreviewLabel.repaint();
                 refreshPreview();
             }
-        } catch (NullPointerException ex){
-            getLogger().log(Level.WARNING, 
-                    "Null encountered refreshing for message " + index + 
-                    " on frame " + frameIndex, ex);
-            maskPreviewLabel.repaint();
-            refreshPreview();
-        }
+        } else
+            return;
     }
     
     private void resetMask(int index){
