@@ -3595,6 +3595,21 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         refreshPreview();
     }
     /**
+     * 
+     * @param index
+     * @return 
+     */
+    private String getMessageText(Integer index){
+        String prompt = maskWordPromptField.getText();
+        if (prompt == null || prompt.isEmpty())
+            prompt = "";
+        else
+            prompt += "\n";
+        if (index == null || index < 0 || index >= maskWordCount)
+            return prompt;
+        return prompt + maskWordFields[index].getText();
+    }
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
