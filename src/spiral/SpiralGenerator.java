@@ -5422,10 +5422,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     // The mask is using multiple messages
                 case(MESSAGE_OVERLAY_MASK_INDEX):
                     Integer i = getMessageIndexForFrame(index);
-                    if (i == null || i < 0 || i >= maskWordCount)
-                        return false;
-                    String msg = getMessageText(i);
-                    return msg != null && !msg.isBlank();
+                    if (i != null && i >= 0 && (i < maskWordCount || i == MAXIMUM_MESSAGE_COUNT)){
+                        String msg = getMessageText(i);
+                        return msg != null && !msg.isBlank();
+                    }
             }
             return false;
         }
