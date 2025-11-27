@@ -5389,7 +5389,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     Integer i = wordFrames.get(index);
                     if (i == null || i < 0 || i >= maskWordCount)
                         return false;
-                    String msg = maskWordFields[i].getText();
+                    String msg = getMessageText(i);
                     return msg != null && !msg.isBlank();
             }
             return false;
@@ -5428,7 +5428,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     BufferedImage wordMask = wordMasks.get(i);
                     if (wordMask == null){
                         wordMask = getTextMaskImage(width,height,
-                                maskWordFields[i].getText(),null,wordPainter);
+                                getMessageText(i),null,wordPainter);
                         wordMasks.put(i, wordMask);
                     }
                     return wordMask;
@@ -5589,8 +5589,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             (double)maskShapeHeightSpinner.getValue(),path);
                     break;
                 case(MESSAGE_OVERLAY_MASK_INDEX):
-                    Integer i = wordFrames.get(index);
-                    paintTextMask(imgG,width,height,maskWordFields[i].getText(),
+                    paintTextMask(imgG,width,height,getMessageText(wordFrames.get(index)),
                             wordPainter);
             }   // If this rendered to an image as a buffer 
             if (img != null){
