@@ -643,6 +643,14 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
             else
                 setProperty(key,value);
         }
+        @Override
+        public boolean getAlwaysShowPrompt(boolean defaultValue) {
+            return getBooleanProperty(getPrefix()+ALWAYS_SHOW_PROMPT_KEY,defaultValue);
+        }
+        @Override
+        public void setAlwaysShowPrompt(boolean value) {
+            setBooleanProperty(getPrefix()+ALWAYS_SHOW_PROMPT_KEY,value);
+        }
     }
     /**
      * 

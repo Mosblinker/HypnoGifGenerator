@@ -1067,6 +1067,14 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
             else
                 getNode().put(PROMPT_KEY, value);
         }
+        @Override
+        public boolean getAlwaysShowPrompt(boolean defaultValue) {
+            return getNode().getBoolean(ALWAYS_SHOW_PROMPT_KEY, defaultValue);
+        }
+        @Override
+        public void setAlwaysShowPrompt(boolean value) {
+            getNode().putBoolean(ALWAYS_SHOW_PROMPT_KEY, value);
+        }
     }
     /**
      * 
