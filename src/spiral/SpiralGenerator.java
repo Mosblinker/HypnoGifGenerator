@@ -4500,6 +4500,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         for (int i = 0; i < maskWordCount; i++){
             prop.getMaskMessageSettings().setMessage(i, maskWordFields[i].getText());
         }
+        prop.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
+        prop.getMaskMessageSettings().setLineSpacing((double)wordLineSpacingSpinner.getValue());
+        prop.getMaskMessageSettings().setAlwaysShowPrompt(wordAlwaysShowPromptToggle.isSelected());
         
         return prop;
     }
