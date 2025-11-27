@@ -929,6 +929,14 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
             else
                 getNode().put(FONT_NAME_KEY, value);
         }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            getNode().putDouble(LINE_SPACING_KEY, value);
+        }
     }
     /**
      * 
@@ -938,14 +946,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         @Override
         protected Preferences getNode() {
             return getMaskTextPreferences();
-        }
-        @Override
-        public double getLineSpacing(double defaultValue) {
-            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
-        }
-        @Override
-        public void setLineSpacing(double value) {
-            getNode().putDouble(LINE_SPACING_KEY, value);
         }
         @Override
         public String getText(String defaultValue) {

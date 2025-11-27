@@ -507,6 +507,14 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         public void setFontName(String value) {
             setProperty(getPrefix()+FONT_NAME_KEY,value);
         }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getDoubleProperty(getPrefix()+LINE_SPACING_KEY,defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            setDoubleProperty(getPrefix()+LINE_SPACING_KEY,value);
+        }
     }
     /**
      * 
@@ -516,14 +524,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         @Override
         protected String getPrefix() {
             return MASK_TEXT_KEY_PREFIX;
-        }
-        @Override
-        public double getLineSpacing(double defaultValue) {
-            return getDoubleProperty(getPrefix()+LINE_SPACING_KEY,defaultValue);
-        }
-        @Override
-        public void setLineSpacing(double value) {
-            setDoubleProperty(getPrefix()+LINE_SPACING_KEY,value);
         }
         @Override
         public String getText(String defaultValue) {

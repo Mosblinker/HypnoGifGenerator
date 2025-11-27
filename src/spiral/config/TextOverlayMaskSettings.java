@@ -30,6 +30,10 @@ public interface TextOverlayMaskSettings extends AntialiasedOverlayMaskSettings{
     public static final String FONT_NAME_KEY = "FontName";
     /**
      * 
+     */
+    public static final String LINE_SPACING_KEY = "LineSpacing";
+    /**
+     * 
      * @param defaultValue
      * @return 
      */
@@ -232,4 +236,22 @@ public interface TextOverlayMaskSettings extends AntialiasedOverlayMaskSettings{
         setFontFamily(value);
         setFontName(value);
     }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getLineSpacing(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getLineSpacing(){
+        return getLineSpacing(0.0);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setLineSpacing(double value);
 }
