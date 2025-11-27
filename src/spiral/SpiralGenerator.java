@@ -396,6 +396,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordFields[i].setText(settings.getMaskMessageSettings().getMessage(i));
             maskWordFields[i].setVisible(i < maskWordCount);
         }
+        maskWordPromptField.setText(settings.getMaskMessageSettings().getPrompt());
         setMaskWordRemoveButtonsVisible(maskWordCount > MINIMUM_MESSAGE_COUNT);
         arrangeMaskWordFrames();
         
@@ -565,6 +566,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.weighty = 0.9;
         maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(0, 0), 
                 new Dimension(0, 0), new Dimension(0, 32767)),gridBagConstraints);
+        maskWordPromptField.getDocument().addDocumentListener(maskWordHandler);
         
         addMaskWordButton.setToolTipText(String.format(
                 addMaskWordButton.getToolTipText(), MAXIMUM_MESSAGE_COUNT));
@@ -3521,6 +3523,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private int getIndexOfMaskWordField(JTextField field){
+        if (maskWordPromptField.equals(field))
+            return maskWordFields.length;
         for (int i = 0; i < maskWordFields.length; i++){
             if (maskWordFields[i].equals(field))
                 return i;
@@ -3635,11 +3639,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private void refreshMaskWordField(int index){
-        config.getMaskMessageSettings().setMessage(index, maskWordFields[index].getText());
-        overlayMask.wordMasks.remove(index);
+        if (index == maskWordFields.length){
+            config.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
+            overlayMask.wordMasks.clear();
+        } else if (index >= 0 && index < maskWordFields.length){
+            config.getMaskMessageSettings().setMessage(index, maskWordFields[index].getText());
+            overlayMask.wordMasks.remove(index);
+        } else
+            return;
         try{
             Integer temp = overlayMask.wordFrames.get(frameIndex);
-            if (temp != null && temp == index){
+            if (temp != null && (index == maskWordFields.length || temp == index)){
                 maskPreviewLabel.repaint();
                 refreshPreview();
             }
