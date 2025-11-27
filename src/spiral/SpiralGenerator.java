@@ -399,6 +399,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordPromptField.setText(settings.getMaskMessageSettings().getPrompt());
         setMaskWordRemoveButtonsVisible(maskWordCount > MINIMUM_MESSAGE_COUNT);
         arrangeMaskWordFrames();
+        overlayMask.wordPainter.setLineSpacing(settings.getMaskMessageSettings().getLineSpacing());
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -5023,7 +5024,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                                     overlayMask.textPainter.getLineSpacing());
                             break;
                         case(MESSAGE_OVERLAY_MASK_INDEX):
-                            // TODO: Add code to store changed value in config if this value is stored
+                            config.getMaskMessageSettings().setLineSpacing(
+                                    overlayMask.wordPainter.getLineSpacing());
                     }
                     break;
                 case(SpiralPainter.SPIRAL_RADIUS_PROPERTY_CHANGED):
