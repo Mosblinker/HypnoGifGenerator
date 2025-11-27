@@ -3162,6 +3162,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 blankWordFramesToggle.setSelected(false);
                 config.getMaskMessageSettings().setAddBlankFrames(false);
                 arrangeMaskWordFrames();
+                maskWordPromptField.setText("");
         }
         overlayMask.reset(overlayMask.getMaskType());
         maskScaleSpinner.setValue(1.0);
@@ -3641,7 +3642,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void refreshMaskWordField(int index){
         if (index == maskWordFields.length){
             config.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
-            overlayMask.wordMasks.clear();
+            overlayMask.reset(MESSAGE_OVERLAY_MASK_INDEX);
             maskPreviewLabel.repaint();
             refreshPreview();
         } else if (index >= 0 && index < maskWordFields.length){
