@@ -385,9 +385,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Load the text for the mask from the preferences
         maskTextPane.setText(settings.getMaskTextSettings().getText());
         
-        boldWordToggle.setSelected(boldToggle.isSelected());
-        italicWordToggle.setSelected(italicToggle.isSelected());
         maskWordFont = settings.getMaskMessageSettings().getFont(font);
+        boldWordToggle.setSelected(maskWordFont.isBold());
+        italicWordToggle.setSelected(maskWordFont.isItalic());
         overlayMask.wordPainter.setAntialiasingEnabled(settings.getMaskMessageSettings()
                 .isAntialiased());
         wordAntialiasingToggle.setSelected(overlayMask.wordPainter.isAntialiasingEnabled());
@@ -1279,7 +1279,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boldToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 styleToggleActionPerformed(evt);
-                boldToggleActionPerformed(evt);
             }
         });
 
@@ -1287,7 +1286,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         italicToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 styleToggleActionPerformed(evt);
-                italicToggleActionPerformed(evt);
             }
         });
 
@@ -1717,14 +1715,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         boldWordToggle.setText("Bold");
         boldWordToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boldWordToggleActionPerformed(evt);
+                styleWordToggleActionPerformed(evt);
             }
         });
 
         italicWordToggle.setText("Italic");
         italicWordToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                italicWordTogglestyleToggleActionPerformed(evt);
+                styleWordToggleActionPerformed(evt);
             }
         });
 
@@ -2945,7 +2943,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         int style = getFontStyle(boldToggle,italicToggle);
         config.getMaskTextSettings().setFontStyle(style);
         maskTextPane.setFont(maskTextPane.getFont().deriveFont(style));
-        resetMask(MESSAGE_OVERLAY_MASK_INDEX);
             // Refresh the text mask and preview
         refreshPreview(TEXT_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_styleToggleActionPerformed
@@ -3359,27 +3356,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         addMaskWordField("");
     }//GEN-LAST:event_addMaskWordButtonActionPerformed
 
-    private void boldWordToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boldWordToggleActionPerformed
-        boldToggle.setSelected(boldWordToggle.isSelected());
-        styleToggleActionPerformed(evt);
-    }//GEN-LAST:event_boldWordToggleActionPerformed
-
-    private void italicWordTogglestyleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italicWordTogglestyleToggleActionPerformed
-        italicToggle.setSelected(italicWordToggle.isSelected());
-        styleToggleActionPerformed(evt);
-    }//GEN-LAST:event_italicWordTogglestyleToggleActionPerformed
-
     private void wordAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordAntialiasingToggleActionPerformed
         overlayMask.wordPainter.setAntialiasingEnabled(wordAntialiasingToggle.isSelected());
     }//GEN-LAST:event_wordAntialiasingToggleActionPerformed
-
-    private void boldToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boldToggleActionPerformed
-        boldWordToggle.setSelected(boldToggle.isSelected());
-    }//GEN-LAST:event_boldToggleActionPerformed
-
-    private void italicToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_italicToggleActionPerformed
-        italicWordToggle.setSelected(italicToggle.isSelected());
-    }//GEN-LAST:event_italicToggleActionPerformed
 
     private void blankWordFramesToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_blankWordFramesToggleActionPerformed
         config.getMaskMessageSettings().setAddBlankFrames(blankWordFramesToggle.isSelected());
@@ -3433,6 +3412,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
         }
     }//GEN-LAST:event_fontWordButtonActionPerformed
+
+    private void styleWordToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_styleWordToggleActionPerformed
+            // Get the font's style
+        int style = getFontStyle(boldWordToggle,italicWordToggle);
+        config.getMaskMessageSettings().setFontStyle(style);
+        maskWordFont = maskWordFont.deriveFont(style);
+            // Refresh the multi-message mask and preview
+        refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
+    }//GEN-LAST:event_styleWordToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
