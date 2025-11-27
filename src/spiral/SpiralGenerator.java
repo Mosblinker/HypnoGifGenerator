@@ -3562,6 +3562,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }
     
     private int getIndexOfMaskWordField(Document document){
+        if (maskWordPromptField.getDocument().equals(document))
+            return maskWordFields.length;
         for (int i = 0; i < maskWordFields.length; i++){
             if (maskWordFields[i].getDocument().equals(document))
                 return i;
