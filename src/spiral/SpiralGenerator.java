@@ -387,6 +387,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         
         boldWordToggle.setSelected(boldToggle.isSelected());
         italicWordToggle.setSelected(italicToggle.isSelected());
+        maskWordFont = settings.getMaskMessageSettings().getFont(font);
         overlayMask.wordPainter.setAntialiasingEnabled(settings.getMaskMessageSettings()
                 .isAntialiased());
         wordAntialiasingToggle.setSelected(overlayMask.wordPainter.isAntialiasingEnabled());
@@ -1709,7 +1710,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         fontWordButton.setText("Select Font");
         fontWordButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fontButtonActionPerformed(evt);
+                fontWordButtonActionPerformed(evt);
             }
         });
 
@@ -1807,14 +1808,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(addMaskWordButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(wordLineSpacingLabel)
+                        .addComponent(wordLineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(maskWordReorderButton))
+                    .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(fontWordButton)
                         .addComponent(boldWordToggle)
                         .addComponent(italicWordToggle)
-                        .addComponent(wordAntialiasingToggle)
-                        .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(wordLineSpacingLabel)
-                            .addComponent(wordLineSpacingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(maskWordReorderButton))))
+                        .addComponent(wordAntialiasingToggle)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(maskWordCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(blankWordFramesToggle)
@@ -2930,7 +2931,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (font != null){
             maskTextPane.setFont(font);
             config.getMaskTextSettings().setFont(font);
-            resetMask(MESSAGE_OVERLAY_MASK_INDEX);
                 // Refresh the text mask and preview
             refreshPreview(TEXT_OVERLAY_MASK_INDEX);
         }
@@ -3421,6 +3421,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             refreshPreview();
         }
     }//GEN-LAST:event_wordAlwaysShowPromptToggleActionPerformed
+
+    private void fontWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontWordButtonActionPerformed
+            // Show the font dialog and get the selected font
+        Font font = showFontDialog(maskWordFont,getFontStyle(boldWordToggle,italicWordToggle));
+            // If a font was selected
+        if (font != null){
+            maskWordFont = font;
+            config.getMaskMessageSettings().setFont(font);
+                // Refresh the multi-message mask and preview
+            refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
+        }
+    }//GEN-LAST:event_fontWordButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4225,6 +4237,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * This is the number of messages that will be displayed one after another.
      */
     private int maskWordCount = MINIMUM_MESSAGE_COUNT;
+    /**
+     * This is the font used for the messages overlay.
+     */
+    private Font maskWordFont = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aboutButton;
     private javax.swing.JDialog aboutDialog;
@@ -4527,6 +4543,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.getMaskMessageSettings().setPrompt(maskWordPromptField.getText());
         prop.getMaskMessageSettings().setLineSpacing((double)wordLineSpacingSpinner.getValue());
         prop.getMaskMessageSettings().setAlwaysShowPrompt(wordAlwaysShowPromptToggle.isSelected());
+        prop.getMaskMessageSettings().setFont(maskWordFont);
         
         return prop;
     }
@@ -4640,9 +4657,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @param painter 
      */
     private void paintTextMask(Graphics2D g, int width, int height, String text, 
-            CenteredTextPainter painter){
+            Font font, CenteredTextPainter painter){
             // Set the graphics context font to the mask font
-        g.setFont(maskTextPane.getFont());
+        g.setFont(font);
             // Paint the mask's text to the graphics context
         painter.paint(g, text, width, height);
     }
@@ -4656,7 +4673,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      * @return 
      */
     private BufferedImage getTextMaskImage(int width, int height, String text, 
-            BufferedImage mask, CenteredTextPainter painter){
+            Font font, BufferedImage mask, CenteredTextPainter painter){
             // If the text is null or blank
         if (text == null || text.isBlank())
             return null;
@@ -4672,7 +4689,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Create the graphics context for the image
         Graphics2D g = mask.createGraphics();
             // Paint the mask's text
-        paintTextMask(g,width,height,text,painter);
+        paintTextMask(g,width,height,text,font,painter);
             // Dispose of the graphics context
         g.dispose();
         return mask;
@@ -5471,7 +5488,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case (TEXT_OVERLAY_MASK_INDEX):
                         // Use the text mask, creating it if need be
                     return textMask = getTextMaskImage(width,height,
-                            maskTextPane.getText(),textMask,textPainter);
+                            maskTextPane.getText(),maskTextPane.getFont(),
+                            textMask,textPainter);
                     // The mask is an image
                 case(IMAGE_OVERLAY_MASK_INDEX):
                         // Get the alpha channel for the overlay image, creating 
@@ -5490,7 +5508,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     BufferedImage wordMask = wordMasks.get(i);
                     if (wordMask == null){
                         wordMask = getTextMaskImage(width,height,
-                                getMessageText(i),null,wordPainter);
+                                getMessageText(i),maskWordFont,null,wordPainter);
                         wordMasks.put(i, wordMask);
                     }
                     return wordMask;
@@ -5634,7 +5652,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(TEXT_OVERLAY_MASK_INDEX):
                         // Paint the text mask
                     paintTextMask(imgG,width,height,maskTextPane.getText(),
-                            textPainter);
+                            maskTextPane.getFont(),textPainter);
                     break;
                     // The mask is an image
                 case(IMAGE_OVERLAY_MASK_INDEX):
@@ -5653,7 +5671,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 case(MESSAGE_OVERLAY_MASK_INDEX):
                     paintTextMask(imgG,width,height,
                             getMessageText(getMessageIndexForFrame(index)),
-                            wordPainter);
+                            maskWordFont,wordPainter);
             }   // If this rendered to an image as a buffer 
             if (img != null){
                 imgG.dispose();
