@@ -3660,8 +3660,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 maskPreviewLabel.repaint();
                 refreshPreview();
             }
-        } else
-            return;
+        }
     }
     
     private void resetMask(int index){
