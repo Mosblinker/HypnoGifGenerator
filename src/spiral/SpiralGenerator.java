@@ -1080,6 +1080,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordCtrlPanel = new javax.swing.JPanel();
         maskWordScrollPane = new javax.swing.JScrollPane();
         maskWordFieldPanel = new javax.swing.JPanel();
+        maskWordPromptLabel = new javax.swing.JLabel();
+        maskWordPromptField = new javax.swing.JTextField();
         addMaskWordButton = new javax.swing.JButton();
         fontWordButton = new javax.swing.JButton();
         boldWordToggle = new javax.swing.JCheckBox();
@@ -1668,6 +1670,23 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         maskWordScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         maskWordFieldPanel.setLayout(new java.awt.GridBagLayout());
+
+        maskWordPromptLabel.setLabelFor(maskWordPromptField);
+        maskWordPromptLabel.setText("Prompt:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 6, 7, 6);
+        maskWordFieldPanel.add(maskWordPromptLabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(3, 0, 7, 6);
+        maskWordFieldPanel.add(maskWordPromptField, gridBagConstraints);
+
         maskWordScrollPane.setViewportView(maskWordFieldPanel);
 
         addMaskWordButton.setIcon(new spiral.icons.AddIcon());
@@ -4198,6 +4217,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel maskWordCtrlPanel;
     private javax.swing.JPanel maskWordFieldPanel;
     private components.JListManipulator<String> maskWordManipulator;
+    private javax.swing.JTextField maskWordPromptField;
+    private javax.swing.JLabel maskWordPromptLabel;
     private javax.swing.JButton maskWordReorderButton;
     private javax.swing.JScrollPane maskWordScrollPane;
     private javax.swing.JCheckBox optimizeDifferenceToggle;
