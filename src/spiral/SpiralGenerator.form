@@ -198,7 +198,7 @@
                                   <Component id="lineSpacingLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lineSpacingSpinner" min="-2" pref="73" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="112" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="122" max="32767" attributes="0"/>
                               </Group>
                               <Component id="maskTextScrollPane" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -906,6 +906,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
+                                  <Component id="blankWordFramesToggle" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="wordAlwaysShowPromptToggle" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" attributes="0">
                                   <Component id="fontWordButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="boldWordToggle" min="-2" max="-2" attributes="0"/>
@@ -914,10 +919,12 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="wordAntialiasingToggle" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="blankWordFramesToggle" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="wordLineSpacingLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="wordLineSpacingSpinner" min="-2" pref="73" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="maskWordReorderButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="53" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="addMaskWordButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="maskWordScrollPane" max="32767" attributes="0"/>
@@ -930,7 +937,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Component id="maskWordScrollPane" pref="313" max="32767" attributes="0"/>
+                          <Component id="maskWordScrollPane" pref="285" max="32767" attributes="0"/>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="addMaskWordButton" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -939,11 +946,19 @@
                                   <Component id="boldWordToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="italicWordToggle" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="wordAntialiasingToggle" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="blankWordFramesToggle" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="maskWordReorderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                                      <Component id="wordLineSpacingLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="wordLineSpacingSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="maskWordReorderButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="blankWordFramesToggle" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="wordAlwaysShowPromptToggle" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -959,6 +974,28 @@
                     <Container class="javax.swing.JPanel" name="maskWordFieldPanel">
 
                       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JLabel" name="maskWordPromptLabel">
+                          <Properties>
+                            <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                              <ComponentRef name="maskWordPromptField"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="Prompt:"/>
+                          </Properties>
+                          <Constraints>
+                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                              <GridBagConstraints gridX="0" gridY="0" gridWidth="1" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="6" insetsBottom="7" insetsRight="6" anchor="10" weightX="0.0" weightY="0.0"/>
+                            </Constraint>
+                          </Constraints>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="maskWordPromptField">
+                          <Constraints>
+                            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                              <GridBagConstraints gridX="1" gridY="0" gridWidth="2" gridHeight="1" fill="1" ipadX="0" ipadY="0" insetsTop="3" insetsLeft="0" insetsBottom="7" insetsRight="6" anchor="10" weightX="0.0" weightY="0.0"/>
+                            </Constraint>
+                          </Constraints>
+                        </Component>
+                      </SubComponents>
                     </Container>
                   </SubComponents>
                 </Container>
@@ -1023,6 +1060,34 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskWordReorderButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="wordLineSpacingLabel">
+                  <Properties>
+                    <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                      <ComponentRef name="wordLineSpacingSpinner"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Line Spacing:"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JSpinner" name="wordLineSpacingSpinner">
+                  <Properties>
+                    <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+                      <SpinnerModel initial="0.0" numberType="java.lang.Double" stepSize="1.0" type="number"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="wordLineSpacingSpinnerStateChanged"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="wordAlwaysShowPromptToggle">
+                  <Properties>
+                    <Property name="selected" type="boolean" value="true"/>
+                    <Property name="text" type="java.lang.String" value="Always Show Prompt"/>
+                    <Property name="toolTipText" type="java.lang.String" value="Always show the prompt, even on blank frames."/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="wordAlwaysShowPromptToggleActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

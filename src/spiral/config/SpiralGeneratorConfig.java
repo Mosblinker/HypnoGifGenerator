@@ -929,6 +929,14 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
             else
                 getNode().put(FONT_NAME_KEY, value);
         }
+        @Override
+        public double getLineSpacing(double defaultValue) {
+            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
+        }
+        @Override
+        public void setLineSpacing(double value) {
+            getNode().putDouble(LINE_SPACING_KEY, value);
+        }
     }
     /**
      * 
@@ -938,14 +946,6 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         @Override
         protected Preferences getNode() {
             return getMaskTextPreferences();
-        }
-        @Override
-        public double getLineSpacing(double defaultValue) {
-            return getNode().getDouble(LINE_SPACING_KEY, defaultValue);
-        }
-        @Override
-        public void setLineSpacing(double value) {
-            getNode().putDouble(LINE_SPACING_KEY, value);
         }
         @Override
         public String getText(String defaultValue) {
@@ -1055,6 +1055,25 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
                 getNode().remove(key);
             else
                 getNode().put(key, value);
+        }
+        @Override
+        public String getPrompt() {
+            return getNode().get(PROMPT_KEY, null);
+        }
+        @Override
+        public void setPrompt(String value) {
+            if (value == null)
+                getNode().remove(PROMPT_KEY);
+            else
+                getNode().put(PROMPT_KEY, value);
+        }
+        @Override
+        public boolean getAlwaysShowPrompt(boolean defaultValue) {
+            return getNode().getBoolean(ALWAYS_SHOW_PROMPT_KEY, defaultValue);
+        }
+        @Override
+        public void setAlwaysShowPrompt(boolean value) {
+            getNode().putBoolean(ALWAYS_SHOW_PROMPT_KEY, value);
         }
     }
     /**

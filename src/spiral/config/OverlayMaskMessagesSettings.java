@@ -23,6 +23,14 @@ public interface OverlayMaskMessagesSettings extends TextOverlayMaskSettings{
     public static final String MESSAGE_KEY_PREFIX = "Message";
     /**
      * 
+     */
+    public static final String PROMPT_KEY = "Prompt";
+    /**
+     * 
+     */
+    public static final String ALWAYS_SHOW_PROMPT_KEY = "AlwaysShowPrompt";
+    /**
+     * 
      * @param defaultValue
      * @return 
      */
@@ -61,4 +69,32 @@ public interface OverlayMaskMessagesSettings extends TextOverlayMaskSettings{
      * @param value 
      */
     public void setMessage(int index, String value);
+    /**
+     * 
+     * @return 
+     */
+    public String getPrompt();
+    /**
+     * 
+     * @param value 
+     */
+    public void setPrompt(String value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean getAlwaysShowPrompt(boolean defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default boolean getAlwaysShowPrompt(){
+        return getAlwaysShowPrompt(true);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setAlwaysShowPrompt(boolean value);
 }
