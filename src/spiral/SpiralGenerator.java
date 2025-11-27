@@ -531,20 +531,20 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             maskWordRemoveButtonIndexes.put(removeButton, i);
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.gridx = 0;
-            constraints.gridy = i;
+            constraints.gridy = i+1;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
             maskWordFieldPanel.add(label,constraints);
             constraints = new GridBagConstraints();
             constraints.gridx = 1;
-            constraints.gridy = i;
+            constraints.gridy = i+1;
             constraints.weightx = 0.9;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
             maskWordFieldPanel.add(maskWordFields[i],constraints);
             constraints = new GridBagConstraints();
             constraints.gridx = 2;
-            constraints.gridy = i;
+            constraints.gridy = i+1;
             constraints.fill = GridBagConstraints.BOTH;
             constraints.insets = new Insets((i==0)?0:3,0,0,6);
             maskWordFieldPanel.add(removeButton,constraints);
@@ -553,14 +553,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT;
+        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT+1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 6);
         maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(24, 0), 
                 new Dimension(24, 0), new Dimension(24, 32767)),gridBagConstraints);
         gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT;
+        gridBagConstraints.gridy = MAXIMUM_MESSAGE_COUNT+1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.9;
         maskWordFieldPanel.add(new javax.swing.Box.Filler(new Dimension(0, 0), 
