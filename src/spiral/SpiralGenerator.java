@@ -5388,6 +5388,15 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         }
         /**
          * 
+         * @param index
+         * @return 
+         */
+        protected Integer getMessageIndexForFrame(int index){
+            return wordFrames.getOrDefault(index, 
+                    (wordAlwaysShowPromptToggle.isSelected())?MAXIMUM_MESSAGE_COUNT:null);
+        }
+        /**
+         * 
          * @return 
          */
         public boolean isOverlayRendered(int index){
@@ -5412,7 +5421,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             maskShapeCombo.getSelectedIndex() >= 0;
                     // The mask is using multiple messages
                 case(MESSAGE_OVERLAY_MASK_INDEX):
-                    Integer i = wordFrames.get(index);
+                    Integer i = getMessageIndexForFrame(index);
                     if (i == null || i < 0 || i >= maskWordCount)
                         return false;
                     String msg = getMessageText(i);
@@ -5450,7 +5459,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         path = new Path2D.Double();
                     return shapeMask = getShapeMaskImage(width,height,shapeMask,path);
                 case (MESSAGE_OVERLAY_MASK_INDEX):
-                    Integer i = wordFrames.get(index);
+                    Integer i = getMessageIndexForFrame(index);
                     BufferedImage wordMask = wordMasks.get(i);
                     if (wordMask == null){
                         wordMask = getTextMaskImage(width,height,
@@ -5615,7 +5624,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                             (double)maskShapeHeightSpinner.getValue(),path);
                     break;
                 case(MESSAGE_OVERLAY_MASK_INDEX):
-                    paintTextMask(imgG,width,height,getMessageText(wordFrames.get(index)),
+                    paintTextMask(imgG,width,height,
+                            getMessageText(getMessageIndexForFrame(index)),
                             wordPainter);
             }   // If this rendered to an image as a buffer 
             if (img != null){
