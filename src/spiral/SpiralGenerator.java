@@ -2922,36 +2922,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         getSpiralPainter().setRotation((double)angleSpinner.getValue());
         refreshPreview();
     }//GEN-LAST:event_angleSpinnerStateChanged
-
+    
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
-            // Create a font dialog to select the font to use
-        FontDialog fontSelector = new FontDialog(this,"Select Font For Overlay",true);
-            // If the font selector's size is not null
-        if (fontDim != null){
-            fontDim.width = Math.max(fontDim.width, 540);
-            fontDim.height = Math.max(fontDim.height, 400);
-        } else
-            fontDim = new Dimension(540, 400);
-            // Set the size for the font dialog
-        SwingExtendedUtilities.setComponentSize(fontSelector, fontDim);
-            // Set the font dialog's location to be relative to this program
-        fontSelector.setLocationRelativeTo(this);
-            // Set the currently selected font to the current font
-        fontSelector.setSelectedFont(maskTextPane.getFont().deriveFont(Font.PLAIN));
-            // Show the font dialog
-        fontSelector.setVisible(true);
-            // If the user did not cancel the font selection
-        if (!fontSelector.isCancelSelected()){
-                // Get the selected font and set its style
-            Font font = fontSelector.getSelectedFont().deriveFont(getFontStyle(boldToggle,italicToggle));
+            // Show the font dialog and get the selected font
+        Font font = showFontDialog(maskTextPane.getFont(),getFontStyle(boldToggle,italicToggle));
+            // If a font was selected
+        if (font != null){
             maskTextPane.setFont(font);
             config.getMaskTextSettings().setFont(font);
             resetMask(MESSAGE_OVERLAY_MASK_INDEX);
                 // Refresh the text mask and preview
             refreshPreview(TEXT_OVERLAY_MASK_INDEX);
         }
-        fontDim = fontSelector.getSize(fontDim);
-        config.setMaskFontSelectorSize(fontDim);
     }//GEN-LAST:event_fontButtonActionPerformed
 
     private void maskDialogComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_maskDialogComponentResized
@@ -3507,6 +3489,48 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         } catch (IndexOutOfBoundsException ex){
             getLogger().log(Level.WARNING, "Index out of bounds for overlay image", ex);
         }
+    }
+    /**
+     * 
+     * @param font
+     * @param style 
+     * @param title 
+     * @return 
+     */
+    private Font showFontDialog(Font font, int style, String title){
+            // Create a font dialog to select the font to use
+        FontDialog fontSelector = new FontDialog(this,title,true);
+            // If the font selector's size is not null
+        if (fontDim != null){
+            fontDim.width = Math.max(fontDim.width, 540);
+            fontDim.height = Math.max(fontDim.height, 400);
+        } else
+            fontDim = new Dimension(540, 400);
+            // Set the size for the font dialog
+        SwingExtendedUtilities.setComponentSize(fontSelector, fontDim);
+            // Set the font dialog's location to be relative to this program
+        fontSelector.setLocationRelativeTo(this);
+            // Set the currently selected font to the current font
+        fontSelector.setSelectedFont(font.deriveFont(Font.PLAIN));
+            // Show the font dialog
+        fontSelector.setVisible(true);
+            // If the user canceled the font selection
+        if (fontSelector.isCancelSelected())
+            font = null;
+        else    // Get the selected font and set its style
+            font = fontSelector.getSelectedFont().deriveFont(style);
+        fontDim = fontSelector.getSize(fontDim);
+        config.setMaskFontSelectorSize(fontDim);
+        return font;
+    }
+    /**
+     * 
+     * @param font
+     * @param style
+     * @return 
+     */
+    private Font showFontDialog(Font font, int style){
+        return showFontDialog(font,style,"Select Font For Overlay");
     }
     /**
      * This returns the style set for the font.
