@@ -1191,10 +1191,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spinLabel = new javax.swing.JLabel();
         spinDirCombo = new javax.swing.JComboBox<>();
         spiralColorPanel = new javax.swing.JPanel();
-        javax.swing.JButton color1Button = colorButtons.get(colorIcons[0]);
-        javax.swing.JButton color2Button = colorButtons.get(colorIcons[1]);
-        javax.swing.JButton color3Button = colorButtons.get(colorIcons[2]);
-        javax.swing.JButton color4Button = colorButtons.get(colorIcons[3]);
+        color1Button = colorButtons.get(colorIcons[0]);
+        color2Button = colorButtons.get(colorIcons[1]);
+        color3Button = colorButtons.get(colorIcons[2]);
+        color4Button = colorButtons.get(colorIcons[3]);
         spiralTypeLabel = new javax.swing.JLabel();
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
@@ -2490,7 +2490,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         ctrlTabsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         ctrlTabsPanel.setLayout(new java.awt.BorderLayout());
 
-        spiralCtrlPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(7, 0, 0, 0));
         spiralCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
         radiusLabel.setLabelFor(radiusSpinner);
@@ -2676,7 +2675,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 6);
         spiralCtrlPanel.add(spiralTypeLabel, gridBagConstraints);
 
         spiralTypeCombo.setModel(new DefaultComboBoxModel<>(spiralPainters));
@@ -2691,7 +2690,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.9;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
         spiralCtrlPanel.add(spiralTypeCombo, gridBagConstraints);
 
         spiralShapeLabel.setLabelFor(spiralShapeCombo);
@@ -2885,26 +2884,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateProgramBoundsInConfig(evt);
     }//GEN-LAST:event_formComponentMoved
 
-    private void radiusSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiusSpinnerStateChanged
-            // Set the radius for the currently selected spiral painter
-        getSpiralPainter().setSpiralRadius((double) radiusSpinner.getValue());
-    }//GEN-LAST:event_radiusSpinnerStateChanged
-
-    private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
-            // Get the currently selected spiral painter
-        SpiralPainter painter = getSpiralPainter();
-            // If the spiral painter is logarithmic in nature
-        if (painter instanceof LogarithmicSpiral){
-                // Set the spiral's base
-            ((LogarithmicSpiral) painter).setBase((double) baseSpinner.getValue());
-        }
-    }//GEN-LAST:event_baseSpinnerStateChanged
-
-    private void balanceSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_balanceSpinnerStateChanged
-            // Set the balance for the currently selected spiral painter
-        getSpiralPainter().setBalance((double) balanceSpinner.getValue());
-    }//GEN-LAST:event_balanceSpinnerStateChanged
-
     private void alwaysScaleToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alwaysScaleToggleActionPerformed
         previewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
         maskPreviewLabel.setImageAlwaysScaled(alwaysScaleToggle.isSelected());
@@ -2914,22 +2893,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void printFPSToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printFPSToggleActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_printFPSToggleActionPerformed
-
-    private void dirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dirComboActionPerformed
-            // Set the direction for the currently selected spiral
-        getSpiralPainter().setClockwise(dirCombo.getSelectedIndex() == 0);
-    }//GEN-LAST:event_dirComboActionPerformed
-
-    private void spinDirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinDirComboActionPerformed
-            // Set the spin direction for the currently selected spiral
-        getSpiralPainter().setSpinClockwise(spinDirCombo.getSelectedIndex() == 0);
-    }//GEN-LAST:event_spinDirComboActionPerformed
-
-    private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
-            // Set the base rotation for the currently selected spiral painter
-        getSpiralPainter().setRotation((double)angleSpinner.getValue());
-        refreshPreview();
-    }//GEN-LAST:event_angleSpinnerStateChanged
     
     private void fontButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fontButtonActionPerformed
             // Show the font dialog and get the selected font
@@ -2987,22 +2950,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Refresh the mask and preview
         refreshPreview(-1);
     }//GEN-LAST:event_imageSizeSpinnerStateChanged
-
-    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
-            // Go through the color icons
-        for (int i = 0; i < colorIcons.length; i++){
-            colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
-            config.setSpiralColor(i, null);
-            colorButtons.get(colorIcons[i]).repaint();
-        }
-        widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
-        heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
-            // Go through the spiral painters
-        for (SpiralPainter painter : spiralPainters){
-            painter.reset();
-        }
-        loadSpiralPainter();
-    }//GEN-LAST:event_resetButtonActionPerformed
 
     private void imgMaskAntialiasingToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imgMaskAntialiasingToggleActionPerformed
         config.getMaskImageSettings().setAntialiased(imgMaskAntialiasingToggle.isSelected());
@@ -3084,14 +3031,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setDebugTestScale((double)testScaleSpinner.getValue());
     }//GEN-LAST:event_testScaleSpinnerStateChanged
 
-    private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
-        getLogger().log(Level.FINE, "Setting spiral type to type {0}", 
-                spiralTypeCombo.getSelectedIndex());
-        config.setSpiralType(spiralTypeCombo.getSelectedIndex());
-        loadSpiralPainter();
-        refreshPreview();
-    }//GEN-LAST:event_spiralTypeComboActionPerformed
-
     private void delaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_delaySpinnerStateChanged
             // Get the value for the duration from the duration spinner
         int value = ((Integer) delaySpinner.getValue());
@@ -3107,17 +3046,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         animationTimer.setDelay(value);
         animationTimer.setInitialDelay(value);
     }//GEN-LAST:event_delaySpinnerStateChanged
-
-    private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
-            // Get the currently selected spiral painter
-        SpiralPainter painter = getSpiralPainter();
-            // If the spiral is shaped
-        if (painter instanceof ShapedSpiral){
-                // Set the shape of the spiral for the currently selected spiral
-            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(
-                    spiralShapeCombo.getSelectedIndex()));
-        }
-    }//GEN-LAST:event_spiralShapeComboActionPerformed
 
     private void maskAlphaToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskAlphaToggleActionPerformed
         config.getMaskImageSettings().setAlphaIndex(maskAlphaButtons);
@@ -3430,6 +3358,77 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Refresh the multi-message mask and preview
         refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_styleWordToggleActionPerformed
+
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        // Go through the color icons
+        for (int i = 0; i < colorIcons.length; i++){
+            colorIcons[i].setColor(DEFAULT_SPIRAL_COLORS[i]);
+            config.setSpiralColor(i, null);
+            colorButtons.get(colorIcons[i]).repaint();
+        }
+        widthSpinner.setValue(DEFAULT_SPIRAL_WIDTH);
+        heightSpinner.setValue(DEFAULT_SPIRAL_HEIGHT);
+        // Go through the spiral painters
+        for (SpiralPainter painter : spiralPainters){
+            painter.reset();
+        }
+        loadSpiralPainter();
+    }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void spiralShapeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralShapeComboActionPerformed
+        // Get the currently selected spiral painter
+        SpiralPainter painter = getSpiralPainter();
+        // If the spiral is shaped
+        if (painter instanceof ShapedSpiral){
+            // Set the shape of the spiral for the currently selected spiral
+            ((ShapedSpiral) painter).setShape(spiralShapeCombo.getItemAt(
+                spiralShapeCombo.getSelectedIndex()));
+        }
+    }//GEN-LAST:event_spiralShapeComboActionPerformed
+
+    private void spiralTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spiralTypeComboActionPerformed
+        getLogger().log(Level.FINE, "Setting spiral type to type {0}",
+            spiralTypeCombo.getSelectedIndex());
+        config.setSpiralType(spiralTypeCombo.getSelectedIndex());
+        loadSpiralPainter();
+        refreshPreview();
+    }//GEN-LAST:event_spiralTypeComboActionPerformed
+
+    private void spinDirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spinDirComboActionPerformed
+        // Set the spin direction for the currently selected spiral
+        getSpiralPainter().setSpinClockwise(spinDirCombo.getSelectedIndex() == 0);
+    }//GEN-LAST:event_spinDirComboActionPerformed
+
+    private void angleSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_angleSpinnerStateChanged
+        // Set the base rotation for the currently selected spiral painter
+        getSpiralPainter().setRotation((double)angleSpinner.getValue());
+        refreshPreview();
+    }//GEN-LAST:event_angleSpinnerStateChanged
+
+    private void dirComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dirComboActionPerformed
+        // Set the direction for the currently selected spiral
+        getSpiralPainter().setClockwise(dirCombo.getSelectedIndex() == 0);
+    }//GEN-LAST:event_dirComboActionPerformed
+
+    private void balanceSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_balanceSpinnerStateChanged
+        // Set the balance for the currently selected spiral painter
+        getSpiralPainter().setBalance((double) balanceSpinner.getValue());
+    }//GEN-LAST:event_balanceSpinnerStateChanged
+
+    private void baseSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_baseSpinnerStateChanged
+        // Get the currently selected spiral painter
+        SpiralPainter painter = getSpiralPainter();
+        // If the spiral painter is logarithmic in nature
+        if (painter instanceof LogarithmicSpiral){
+            // Set the spiral's base
+            ((LogarithmicSpiral) painter).setBase((double) baseSpinner.getValue());
+        }
+    }//GEN-LAST:event_baseSpinnerStateChanged
+
+    private void radiusSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_radiusSpinnerStateChanged
+        // Set the radius for the currently selected spiral painter
+        getSpiralPainter().setSpiralRadius((double) radiusSpinner.getValue());
+    }//GEN-LAST:event_radiusSpinnerStateChanged
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4254,6 +4253,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox boldToggle;
     private javax.swing.JCheckBox boldWordToggle;
     private javax.swing.JCheckBox checkUpdatesAtStartToggle;
+    private javax.swing.JButton color1Button;
+    private javax.swing.JButton color2Button;
+    private javax.swing.JButton color3Button;
+    private javax.swing.JButton color4Button;
     private components.JColorSelector colorSelector;
     private javax.swing.JPanel configButtonPanel;
     private javax.swing.JFileChooser configFC;
