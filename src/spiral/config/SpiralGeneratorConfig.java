@@ -869,7 +869,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public double getSwingLeftBound(double defaultValue) {
         return Math.min(Math.max(swingNode.getDouble(SWING_LEFT_BOUND_KEY, 
-                defaultValue), 0.0), 0.5);
+                defaultValue), 0.0), 1.0);
     }
     @Override
     public void setSwingLeftBound(double value) {
@@ -878,7 +878,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public double getSwingRightBound(double defaultValue) {
         return Math.min(Math.max(swingNode.getDouble(SWING_RIGHT_BOUND_KEY, 
-                defaultValue), 0.5), 1.0);
+                defaultValue), 0.0), 1.0);
     }
     @Override
     public void setSwingRightBound(double value) {
@@ -887,7 +887,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public double getSwingTopBound(double defaultValue) {
         return Math.min(Math.max(swingNode.getDouble(SWING_TOP_BOUND_KEY, 
-                defaultValue), 0.0), 0.5);
+                defaultValue), 0.0), 1.0);
     }
     @Override
     public void setSwingTopBound(double value) {
@@ -896,7 +896,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public double getSwingBottomBound(double defaultValue) {
         return Math.min(Math.max(swingNode.getDouble(SWING_BOTTOM_BOUND_KEY, 
-                defaultValue), 0.5), 1.0);
+                defaultValue), 0), 1.0);
     }
     @Override
     public void setSwingBottomBound(double value) {

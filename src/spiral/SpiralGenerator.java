@@ -414,6 +414,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         setSwingBoundSlider(bottomBound,bottomBoundSlider);
         setSwingBoundSlider(leftBound,leftBoundSlider);
         setSwingBoundSlider(topBound,topBoundSlider);
+        System.out.println(leftBound + " " + rightBound + " " + topBound + " " + bottomBound);
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -3622,11 +3623,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_swingEnableToggleActionPerformed
 
     private double getSwingBound(int value){
-        return value / 200.0;
+        return value / 100.0;
     }
     
     private void setSwingBoundSlider(double value, JSlider slider){
-        slider.setValue(Math.max(Math.min(100, (int)Math.round(value*200)), 0));
+        slider.setValue(Math.max(Math.min(100, (int)Math.round(value*100)), 0));
     }
     
     private void leftBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_leftBoundSliderStateChanged
@@ -3637,7 +3638,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_leftBoundSliderStateChanged
 
     private void rightBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rightBoundSliderStateChanged
-        rightBound = 1-getSwingBound(rightBoundSlider.getValue());
+        rightBound = getSwingBound(rightBoundSlider.getValue());
         config.setSwingRightBound(rightBound);
     }//GEN-LAST:event_rightBoundSliderStateChanged
 
@@ -3649,7 +3650,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_topBoundSliderStateChanged
 
     private void bottomBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bottomBoundSliderStateChanged
-        bottomBound = 1-getSwingBound(bottomBoundSlider.getValue());
+        bottomBound = getSwingBound(bottomBoundSlider.getValue());
         config.setSwingBottomBound(bottomBound);
     }//GEN-LAST:event_bottomBoundSliderStateChanged
 
