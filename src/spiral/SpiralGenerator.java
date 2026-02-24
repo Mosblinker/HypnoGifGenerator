@@ -3621,6 +3621,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void swingEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swingEnableToggleActionPerformed
         config.setSwingingEnabled(swingEnableToggle.isSelected());
         updateSwingControlsEnabled();
+        refreshPreview();
     }//GEN-LAST:event_swingEnableToggleActionPerformed
 
     private double getSwingBound(int value){
@@ -3634,13 +3635,16 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void leftBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_leftBoundSliderStateChanged
         leftBound = getSwingBound(leftBoundSlider.getValue());
         config.setSwingLeftBound(leftBound);
-        if (leftRightLinkedToggle.isSelected())
+        
             rightBoundSlider.setValue(100-leftBoundSlider.getValue());
+        refreshPreview();
     }//GEN-LAST:event_leftBoundSliderStateChanged
 
     private void rightBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rightBoundSliderStateChanged
         rightBound = getSwingBound(rightBoundSlider.getValue());
         config.setSwingRightBound(rightBound);
+        if (!leftRightLinkedToggle.isSelected())
+            refreshPreview();
     }//GEN-LAST:event_rightBoundSliderStateChanged
 
     private void topBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_topBoundSliderStateChanged
@@ -3648,11 +3652,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         config.setSwingTopBound(topBound);
         if (topBottomLinkedToggle.isSelected())
             bottomBoundSlider.setValue(100-topBoundSlider.getValue());
+        refreshPreview();
     }//GEN-LAST:event_topBoundSliderStateChanged
 
     private void bottomBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bottomBoundSliderStateChanged
         bottomBound = getSwingBound(bottomBoundSlider.getValue());
         config.setSwingBottomBound(bottomBound);
+        if (!topBottomLinkedToggle.isSelected())
+            refreshPreview();
     }//GEN-LAST:event_bottomBoundSliderStateChanged
 
     private void leftRightLinkedToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftRightLinkedToggleActionPerformed
@@ -3660,6 +3667,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (leftRightLinkedToggle.isSelected())
             rightBoundSlider.setValue(100-leftBoundSlider.getValue());
         config.setSwingLeftAndRightBoundsLinked(leftRightLinkedToggle.isSelected());
+        refreshPreview();
     }//GEN-LAST:event_leftRightLinkedToggleActionPerformed
 
     private void topBottomLinkedToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topBottomLinkedToggleActionPerformed
@@ -3667,6 +3675,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         if (topBottomLinkedToggle.isSelected())
             bottomBoundSlider.setValue(100-topBoundSlider.getValue());
         config.setSwingTopAndBottomBoundsLinked(topBottomLinkedToggle.isSelected());
+        refreshPreview();
     }//GEN-LAST:event_topBottomLinkedToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -5280,6 +5289,28 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         public void setRotation(double angle) {
             this.rotation = angle;
         }
+        @Override
+        public double getCenterX(){
+            if (swingEnableToggle.isSelected()){
+                double value = (Math.cos(Math.toRadians(getRotation()))+1)/2;
+                return adjustSpiralCenter(value,leftBound,rightBound);
+            } else
+                return 0.5;
+        }
+        @Override
+        public double getCenterY(){
+            if (swingEnableToggle.isSelected()){
+                double value = Math.abs(Math.sin(Math.toRadians(getRotation())));
+                return adjustSpiralCenter(value,topBound,bottomBound);
+            } else
+                return 0.5;
+        }
+    }
+    
+    private double adjustSpiralCenter(double value, double lowerBound, double upperBound){
+        lowerBound /= 2.0;
+        upperBound = (upperBound+1)/2.0;
+        return (value*(upperBound-lowerBound))+lowerBound;
     }
     
     private class SpiralIcon implements Icon2D{
