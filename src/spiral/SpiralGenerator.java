@@ -403,6 +403,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.wordPainter.setLineSpacing(settings.getMaskMessageSettings().getLineSpacing());
         wordLineSpacingSpinner.setValue(overlayMask.wordPainter.getLineSpacing());
         wordAlwaysShowPromptToggle.setSelected(settings.getMaskMessageSettings().getAlwaysShowPrompt());
+        swingEnableToggle.setSelected(settings.isSwingingEnabled());
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -3452,7 +3453,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     }//GEN-LAST:event_radiusSpinnerStateChanged
 
     private void swingEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swingEnableToggleActionPerformed
-        // TODO add your handling code here:
+        config.setSwingingEnabled(swingEnableToggle.isSelected());
     }//GEN-LAST:event_swingEnableToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -4574,6 +4575,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.getMaskMessageSettings().setLineSpacing((double)wordLineSpacingSpinner.getValue());
         prop.getMaskMessageSettings().setAlwaysShowPrompt(wordAlwaysShowPromptToggle.isSelected());
         prop.getMaskMessageSettings().setFont(maskWordFont);
+        prop.setSwingingEnabled(swingEnableToggle.isSelected());
         
         return prop;
     }

@@ -57,6 +57,10 @@ public interface SpiralGeneratorSettings {
     public static final int MASK_FLIP_VERTICAL_FLAG = 0x02;
     /**
      * 
+     */
+    public static final String SWINGING_ENABLED_KEY = "SwingingEnabled";
+    /**
+     * 
      * @param key
      * @return 
      */
@@ -345,4 +349,22 @@ public interface SpiralGeneratorSettings {
     public default int getImageHeight(){
         return getImageHeight(SpiralGenerator.DEFAULT_SPIRAL_HEIGHT);
     }
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public boolean isSwingingEnabled(boolean defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default boolean isSwingingEnabled(){
+        return isSwingingEnabled(false);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public void setSwingingEnabled(boolean value);
 }

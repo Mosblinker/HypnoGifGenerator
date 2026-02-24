@@ -454,6 +454,14 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setImageSize(Dimension value) {
         setDimensionProperty(IMAGE_SIZE_KEY,value);
     }
+    @Override
+    public boolean isSwingingEnabled(boolean defaultValue) {
+        return getBooleanProperty(SWINGING_ENABLED_KEY,defaultValue);
+    }
+    @Override
+    public void setSwingingEnabled(boolean value) {
+        setBooleanProperty(SWINGING_ENABLED_KEY,value);
+    }
     /**
      * 
      */

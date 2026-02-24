@@ -65,6 +65,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     public static final String MASK_SHAPE_NODE_NAME = "Shape";
     
+    public static final String SWING_NODE_NAME = "Swing";
+    
     public static final String TEST_SPIRAL_NODE_NAME = "DebugTest";
     /**
      * 
@@ -108,6 +110,8 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     
     private final OverlayMaskShapeSettings maskShapeConfig;
     
+    private final Preferences swingNode;
+    
     private Preferences testDebugNode = null;
     /**
      * 
@@ -135,6 +139,7 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
         maskImageConfig = new OverlayMaskImageSettingsImpl();
         maskMessagesConfig = new OverlayMaskMessagesSettingsImpl();
         maskShapeConfig = new OverlayMaskShapeSettingsImpl();
+        swingNode = node.node(SWING_NODE_NAME);
     }
     /**
      * 
@@ -844,6 +849,22 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     @Override
     public void setImageSize(Dimension value) {
         putDimension(IMAGE_SIZE_KEY,value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public Preferences getSwingPreferences(){
+        return swingNode;
+    }
+    @Override
+    public boolean isSwingingEnabled(boolean defaultValue) {
+        return swingNode.getBoolean(SWINGING_ENABLED_KEY, defaultValue);
+    }
+
+    @Override
+    public void setSwingingEnabled(boolean value) {
+        swingNode.putBoolean(SWINGING_ENABLED_KEY, value);
     }
     /**
      * 
