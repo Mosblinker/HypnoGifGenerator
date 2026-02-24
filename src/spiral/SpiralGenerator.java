@@ -1202,6 +1202,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         resetButton = new javax.swing.JButton();
         spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
         swingCtrlPanel = new javax.swing.JPanel();
+        swingEnableToggle = new javax.swing.JCheckBox();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2739,16 +2740,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         ctrlTabbedPane.addTab("Spiral Controls", spiralCtrlPanel);
 
-        javax.swing.GroupLayout swingCtrlPanelLayout = new javax.swing.GroupLayout(swingCtrlPanel);
-        swingCtrlPanel.setLayout(swingCtrlPanelLayout);
-        swingCtrlPanelLayout.setHorizontalGroup(
-            swingCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 238, Short.MAX_VALUE)
-        );
-        swingCtrlPanelLayout.setVerticalGroup(
-            swingCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 381, Short.MAX_VALUE)
-        );
+        swingCtrlPanel.setLayout(new java.awt.GridBagLayout());
+
+        swingEnableToggle.setText("Enable Swinging");
+        swingEnableToggle.setToolTipText("Enables the center of the spiral to swing back and forth.");
+        swingEnableToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                swingEnableToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 7, 0);
+        swingCtrlPanel.add(swingEnableToggle, gridBagConstraints);
 
         ctrlTabbedPane.addTab("Swing Controls", swingCtrlPanel);
 
@@ -3443,6 +3450,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         // Set the radius for the currently selected spiral painter
         getSpiralPainter().setSpiralRadius((double) radiusSpinner.getValue());
     }//GEN-LAST:event_radiusSpinnerStateChanged
+
+    private void swingEnableToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_swingEnableToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_swingEnableToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4390,6 +4401,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JComboBox<SpiralPainter> spiralTypeCombo;
     private javax.swing.JLabel spiralTypeLabel;
     private javax.swing.JPanel swingCtrlPanel;
+    private javax.swing.JCheckBox swingEnableToggle;
     private javax.swing.JDialog testDialog;
     private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testScaleSpinner;
@@ -4510,6 +4522,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         optimizeDifferenceToggle.setEnabled(enabled);
         saveConfigButton.setEnabled(enabled);
         loadConfigButton.setEnabled(enabled);
+        swingEnableToggle.setEnabled(enabled);
     }
     /**
      * 
