@@ -2908,6 +2908,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         topBottomLinkedToggle.setSelected(true);
         topBottomLinkedToggle.setText("Link upper and lower bounds");
+        topBottomLinkedToggle.setEnabled(false);
         topBottomLinkedToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 topBottomLinkedToggleActionPerformed(evt);
