@@ -1180,10 +1180,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralTypeCombo = new javax.swing.JComboBox<>();
         spiralShapeLabel = new javax.swing.JLabel();
         spiralShapeCombo = new javax.swing.JComboBox<>();
-        spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
-        spiralButtonPanel = new javax.swing.JPanel();
         resetButton = new javax.swing.JButton();
-        editSwingButton = new javax.swing.JButton();
+        spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
         imageCtrlPanel = new javax.swing.JPanel();
         widthLabel = new javax.swing.JLabel();
         widthSpinner = new javax.swing.JSpinner();
@@ -2558,14 +2556,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.ipady = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralShapeCombo, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
-
-        spiralButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 7, 0));
 
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2573,21 +2563,18 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                 resetButtonActionPerformed(evt);
             }
         });
-        spiralButtonPanel.add(resetButton);
-
-        editSwingButton.setText("Swing");
-        editSwingButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editSwingButtonActionPerformed(evt);
-            }
-        });
-        spiralButtonPanel.add(editSwingButton);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
-        spiralCtrlPanel.add(spiralButtonPanel, gridBagConstraints);
+        gridBagConstraints.ipadx = 10;
+        spiralCtrlPanel.add(resetButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
 
         imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -3434,10 +3421,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
             // Refresh the multi-message mask and preview
         refreshPreview(MESSAGE_OVERLAY_MASK_INDEX);
     }//GEN-LAST:event_styleWordToggleActionPerformed
-
-    private void editSwingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSwingButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_editSwingButtonActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4273,7 +4256,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JSpinner delaySpinner;
     private javax.swing.JComboBox<String> dirCombo;
     private javax.swing.JLabel dirLabel;
-    private javax.swing.JButton editSwingButton;
     private javax.swing.JCheckBox fontAntialiasingToggle;
     private javax.swing.JButton fontButton;
     private javax.swing.JButton fontWordButton;
@@ -4372,7 +4354,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox showTestSpiralToggle;
     private javax.swing.JComboBox<String> spinDirCombo;
     private javax.swing.JLabel spinLabel;
-    private javax.swing.JPanel spiralButtonPanel;
     private javax.swing.JPanel spiralColorPanel;
     private javax.swing.Box.Filler spiralCtrlFiller;
     private javax.swing.JPanel spiralCtrlPanel;
@@ -4500,7 +4481,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         optimizeDifferenceToggle.setEnabled(enabled);
         saveConfigButton.setEnabled(enabled);
         loadConfigButton.setEnabled(enabled);
-        editSwingButton.setEnabled(enabled);
     }
     /**
      * 
