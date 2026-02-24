@@ -58,7 +58,15 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
-    public static final String SWINGING_ENABLED_KEY = "SwingingEnabled";
+    public static final String SWING_FLAGS_KEY = "SwingFlags";
+    /**
+     * 
+     */
+    public static final int DEFAULT_SWING_FLAGS = 0x06;
+    /**
+     * 
+     */
+    public static final int SWINGING_ENABLED_FLAG = 0x01;
     /**
      * 
      */
@@ -370,19 +378,49 @@ public interface SpiralGeneratorSettings {
      * @param defaultValue
      * @return 
      */
-    public boolean isSwingingEnabled(boolean defaultValue);
+    public int getSwingFlags(int defaultValue);
     /**
      * 
      * @return 
      */
-    public default boolean isSwingingEnabled(){
-        return isSwingingEnabled(false);
+    public default int getSwingFlags(){
+        return getSwingFlags(DEFAULT_SWING_FLAGS);
     }
     /**
      * 
      * @param value 
      */
-    public void setSwingingEnabled(boolean value);
+    public void setSwingFlags(int value);
+    /**
+     * 
+     * @param flag
+     * @return 
+     */
+    public default boolean getSwingFlag(int flag){
+        return SpiralGeneratorUtilities.getFlag(getSwingFlags(),flag);
+    }
+    /**
+     * 
+     * @param flag
+     * @param value 
+     */
+    public default void setSwingFlag(int flag, boolean value){
+        setSwingFlags(SpiralGeneratorUtilities.setFlag(getSwingFlags(),flag,value));
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default boolean isSwingingEnabled(){
+        return getSwingFlag(SWINGING_ENABLED_FLAG);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public default void setSwingingEnabled(boolean value){
+        setSwingFlag(SWINGING_ENABLED_FLAG,value);
+    }
     /**
      * 
      * @param defaultValue

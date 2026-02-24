@@ -455,14 +455,6 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
         setDimensionProperty(IMAGE_SIZE_KEY,value);
     }
     @Override
-    public boolean isSwingingEnabled(boolean defaultValue) {
-        return getBooleanProperty(SWINGING_ENABLED_KEY,defaultValue);
-    }
-    @Override
-    public void setSwingingEnabled(boolean value) {
-        setBooleanProperty(SWINGING_ENABLED_KEY,value);
-    }
-    @Override
     public double getSwingLeftBound(double defaultValue) {
         return Math.min(Math.max(getDoubleProperty(SWING_LEFT_BOUND_KEY, 
                 defaultValue), 0.0), 1.0);
@@ -497,6 +489,14 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     @Override
     public void setSwingBottomBound(double value) {
         setDoubleProperty(SWING_BOTTOM_BOUND_KEY, value);
+    }
+    @Override
+    public int getSwingFlags(int defaultValue) {
+        return getIntProperty(SWING_FLAGS_KEY,defaultValue);
+    }
+    @Override
+    public void setSwingFlags(int value) {
+        setIntProperty(SWING_FLAGS_KEY,value);
     }
     /**
      * 
