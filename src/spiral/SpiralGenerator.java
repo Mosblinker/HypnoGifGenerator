@@ -2743,7 +2743,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         swingCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
-        swingEnableToggle.setText("Enable Swinging");
+        swingEnableToggle.setText("Spiral Swings");
         swingEnableToggle.setToolTipText("Enables the center of the spiral to swing back and forth.");
         swingEnableToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

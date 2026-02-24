@@ -2614,7 +2614,7 @@
               <SubComponents>
                 <Component class="javax.swing.JCheckBox" name="swingEnableToggle">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Enable Swinging"/>
+                    <Property name="text" type="java.lang.String" value="Spiral Swings"/>
                     <Property name="toolTipText" type="java.lang.String" value="Enables the center of the spiral to swing back and forth."/>
                   </Properties>
                   <Events>
