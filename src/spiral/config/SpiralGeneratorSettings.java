@@ -70,6 +70,14 @@ public interface SpiralGeneratorSettings {
     /**
      * 
      */
+    public static final int SWING_LINK_LEFT_AND_RIGHT_FLAG = 0x02;
+    /**
+     * 
+     */
+    public static final int SWING_LINK_TOP_AND_BOTTOM_FLAG = 0x04;
+    /**
+     * 
+     */
     public static final String SWING_LEFT_BOUND_KEY = "SwingLeftBound";
     /**
      * 
@@ -420,6 +428,34 @@ public interface SpiralGeneratorSettings {
      */
     public default void setSwingingEnabled(boolean value){
         setSwingFlag(SWINGING_ENABLED_FLAG,value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default boolean getSwingLeftAndRightBoundsLinked(){
+        return getSwingFlag(SWING_LINK_LEFT_AND_RIGHT_FLAG);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public default void setSwingLeftAndRightBoundsLinked(boolean value){
+        setSwingFlag(SWING_LINK_LEFT_AND_RIGHT_FLAG,value);
+    }
+    /**
+     * 
+     * @return 
+     */
+    public default boolean getSwingTopAndBottomBoundsLinked(){
+        return getSwingFlag(SWING_LINK_TOP_AND_BOTTOM_FLAG);
+    }
+    /**
+     * 
+     * @param value 
+     */
+    public default void setSwingTopAndBottomBoundsLinked(boolean value){
+        setSwingFlag(SWING_LINK_TOP_AND_BOTTOM_FLAG,value);
     }
     /**
      * 

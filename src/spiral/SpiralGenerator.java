@@ -412,9 +412,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         bottomBound = settings.getSwingBottomBound();
         setSwingBoundSlider(rightBound,rightBoundSlider);
         setSwingBoundSlider(bottomBound,bottomBoundSlider);
+        leftRightLinkedToggle.setSelected(settings.getSwingLeftAndRightBoundsLinked());
+        topBottomLinkedToggle.setSelected(settings.getSwingTopAndBottomBoundsLinked());
         setSwingBoundSlider(leftBound,leftBoundSlider);
         setSwingBoundSlider(topBound,topBoundSlider);
-        System.out.println(leftBound + " " + rightBound + " " + topBound + " " + bottomBound);
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -3658,12 +3659,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         updateSwingControlsEnabled();
         if (leftRightLinkedToggle.isSelected())
             rightBoundSlider.setValue(100-leftBoundSlider.getValue());
+        config.setSwingLeftAndRightBoundsLinked(leftRightLinkedToggle.isSelected());
     }//GEN-LAST:event_leftRightLinkedToggleActionPerformed
 
     private void topBottomLinkedToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topBottomLinkedToggleActionPerformed
         updateSwingControlsEnabled();
         if (topBottomLinkedToggle.isSelected())
             bottomBoundSlider.setValue(100-topBoundSlider.getValue());
+        config.setSwingTopAndBottomBoundsLinked(topBottomLinkedToggle.isSelected());
     }//GEN-LAST:event_topBottomLinkedToggleActionPerformed
     /**
      * This returns the width for the image.
@@ -4819,6 +4822,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.setSwingRightBound(rightBound);
         prop.setSwingTopBound(topBound);
         prop.setSwingBottomBound(bottomBound);
+        prop.setSwingLeftAndRightBoundsLinked(leftRightLinkedToggle.isSelected());
+        prop.setSwingTopAndBottomBoundsLinked(topBottomLinkedToggle.isSelected());
         
         return prop;
     }
