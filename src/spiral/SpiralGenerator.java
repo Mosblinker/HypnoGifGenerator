@@ -1201,6 +1201,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralShapeCombo = new javax.swing.JComboBox<>();
         resetButton = new javax.swing.JButton();
         spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
+        swingCtrlPanel = new javax.swing.JPanel();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2737,6 +2738,19 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
 
         ctrlTabbedPane.addTab("Spiral Controls", spiralCtrlPanel);
+
+        javax.swing.GroupLayout swingCtrlPanelLayout = new javax.swing.GroupLayout(swingCtrlPanel);
+        swingCtrlPanel.setLayout(swingCtrlPanelLayout);
+        swingCtrlPanelLayout.setHorizontalGroup(
+            swingCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 238, Short.MAX_VALUE)
+        );
+        swingCtrlPanelLayout.setVerticalGroup(
+            swingCtrlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 381, Short.MAX_VALUE)
+        );
+
+        ctrlTabbedPane.addTab("Swing Controls", swingCtrlPanel);
 
         ctrlTabsPanel.add(ctrlTabbedPane, java.awt.BorderLayout.CENTER);
 
@@ -4375,6 +4389,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel spiralShapeLabel;
     private javax.swing.JComboBox<SpiralPainter> spiralTypeCombo;
     private javax.swing.JLabel spiralTypeLabel;
+    private javax.swing.JPanel swingCtrlPanel;
     private javax.swing.JDialog testDialog;
     private javax.swing.JSpinner testRotateSpinner;
     private javax.swing.JSpinner testScaleSpinner;
