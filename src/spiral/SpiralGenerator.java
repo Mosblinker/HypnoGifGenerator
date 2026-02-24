@@ -410,10 +410,10 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         rightBound = settings.getSwingRightBound();
         topBound = settings.getSwingTopBound();
         bottomBound = settings.getSwingBottomBound();
-        setSwingBoundSlider(leftBound,leftBoundSlider);
         setSwingBoundSlider(rightBound,rightBoundSlider);
-        setSwingBoundSlider(topBound,topBoundSlider);
         setSwingBoundSlider(bottomBound,bottomBoundSlider);
+        setSwingBoundSlider(leftBound,leftBoundSlider);
+        setSwingBoundSlider(topBound,topBoundSlider);
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -1223,6 +1223,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         rightBoundLabel = new javax.swing.JLabel();
         topBoundLabel = new javax.swing.JLabel();
         bottomBoundLabel = new javax.swing.JLabel();
+        leftRightLinkedToggle = new javax.swing.JCheckBox();
+        topBottomLinkedToggle = new javax.swing.JCheckBox();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2796,6 +2798,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         rightBoundSlider.setMinorTickSpacing(5);
         rightBoundSlider.setPaintTicks(true);
         rightBoundSlider.setValue(50);
+        rightBoundSlider.setEnabled(false);
         rightBoundSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rightBoundSliderStateChanged(evt);
@@ -2818,7 +2821,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         swingCtrlPanel.add(topBoundSlider, gridBagConstraints);
@@ -2827,6 +2830,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         bottomBoundSlider.setMinorTickSpacing(5);
         bottomBoundSlider.setPaintTicks(true);
         bottomBoundSlider.setValue(50);
+        bottomBoundSlider.setEnabled(false);
         bottomBoundSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 bottomBoundSliderStateChanged(evt);
@@ -2834,7 +2838,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         swingCtrlPanel.add(bottomBoundSlider, gridBagConstraints);
@@ -2865,7 +2869,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         topBoundLabel.setText("Upper Bound:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -2876,12 +2880,43 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         bottomBoundLabel.setText("Lower Bound:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         swingCtrlPanel.add(bottomBoundLabel, gridBagConstraints);
+
+        leftRightLinkedToggle.setSelected(true);
+        leftRightLinkedToggle.setText("Link left and right bounds");
+        leftRightLinkedToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leftRightLinkedToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        swingCtrlPanel.add(leftRightLinkedToggle, gridBagConstraints);
+
+        topBottomLinkedToggle.setSelected(true);
+        topBottomLinkedToggle.setText("Link upper and lower bounds");
+        topBottomLinkedToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                topBottomLinkedToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 10;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        swingCtrlPanel.add(topBottomLinkedToggle, gridBagConstraints);
 
         ctrlTabbedPane.addTab("Swing Controls", swingCtrlPanel);
 
@@ -3593,6 +3628,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void leftBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_leftBoundSliderStateChanged
         leftBound = getSwingBound(leftBoundSlider.getValue());
         config.setSwingLeftBound(leftBound);
+        if (leftRightLinkedToggle.isSelected())
+            rightBoundSlider.setValue(100-leftBoundSlider.getValue());
     }//GEN-LAST:event_leftBoundSliderStateChanged
 
     private void rightBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rightBoundSliderStateChanged
@@ -3603,12 +3640,26 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void topBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_topBoundSliderStateChanged
         topBound = getSwingBound(topBoundSlider.getValue());
         config.setSwingTopBound(topBound);
+        if (topBottomLinkedToggle.isSelected())
+            bottomBoundSlider.setValue(100-topBoundSlider.getValue());
     }//GEN-LAST:event_topBoundSliderStateChanged
 
     private void bottomBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bottomBoundSliderStateChanged
         bottomBound = 1-getSwingBound(bottomBoundSlider.getValue());
         config.setSwingBottomBound(bottomBound);
     }//GEN-LAST:event_bottomBoundSliderStateChanged
+
+    private void leftRightLinkedToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftRightLinkedToggleActionPerformed
+        updateSwingControlsEnabled();
+        if (leftRightLinkedToggle.isSelected())
+            rightBoundSlider.setValue(100-leftBoundSlider.getValue());
+    }//GEN-LAST:event_leftRightLinkedToggleActionPerformed
+
+    private void topBottomLinkedToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_topBottomLinkedToggleActionPerformed
+        updateSwingControlsEnabled();
+        if (topBottomLinkedToggle.isSelected())
+            bottomBoundSlider.setValue(100-topBoundSlider.getValue());
+    }//GEN-LAST:event_topBottomLinkedToggleActionPerformed
     /**
      * This returns the width for the image.
      * @return The width for the image.
@@ -4043,9 +4094,11 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private void updateSwingControlsEnabled(){
         boolean enabled = swingEnableToggle.isEnabled() && swingEnableToggle.isSelected();
         leftBoundSlider.setEnabled(enabled);
-        rightBoundSlider.setEnabled(enabled);
+        rightBoundSlider.setEnabled(enabled && !leftRightLinkedToggle.isSelected());
         topBoundSlider.setEnabled(enabled);
-        bottomBoundSlider.setEnabled(enabled);
+        bottomBoundSlider.setEnabled(enabled && !topBottomLinkedToggle.isSelected());
+        leftRightLinkedToggle.setEnabled(enabled);
+        topBottomLinkedToggle.setEnabled(enabled);
     }
     /**
      * 
@@ -4493,6 +4546,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JLabel latestVersTextLabel;
     private javax.swing.JLabel leftBoundLabel;
     private javax.swing.JSlider leftBoundSlider;
+    private javax.swing.JCheckBox leftRightLinkedToggle;
     private javax.swing.JLabel lineSpacingLabel;
     private javax.swing.JSpinner lineSpacingSpinner;
     private javax.swing.JButton loadConfigButton;
@@ -4584,6 +4638,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JCheckBox testShowRadiusToggle;
     private javax.swing.JSpinner testSpiralImageSpinner;
     private javax.swing.JPanel textMaskCtrlPanel;
+    private javax.swing.JCheckBox topBottomLinkedToggle;
     private javax.swing.JLabel topBoundLabel;
     private javax.swing.JSlider topBoundSlider;
     private javax.swing.JDialog updateCheckDialog;
