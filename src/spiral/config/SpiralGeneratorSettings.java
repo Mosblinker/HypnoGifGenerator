@@ -468,7 +468,7 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public default double getSwingLeftBound(){
-        return getSwingLeftBound(0.5);
+        return getSwingLeftBound(0.25);
     }
     /**
      * 
@@ -486,7 +486,7 @@ public interface SpiralGeneratorSettings {
      * @return 
      */
     public default double getSwingRightBound(){
-        return getSwingRightBound(0.5);
+        return getSwingRightBound(0.75);
     }
     /**
      * 
