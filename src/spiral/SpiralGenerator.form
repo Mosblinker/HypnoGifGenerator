@@ -2631,6 +2631,7 @@
                     <Property name="majorTickSpacing" type="int" value="10"/>
                     <Property name="minorTickSpacing" type="int" value="5"/>
                     <Property name="paintTicks" type="boolean" value="true"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="leftBoundSliderStateChanged"/>
@@ -2663,6 +2664,7 @@
                     <Property name="majorTickSpacing" type="int" value="10"/>
                     <Property name="minorTickSpacing" type="int" value="5"/>
                     <Property name="paintTicks" type="boolean" value="true"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="topBoundSliderStateChanged"/>
@@ -2746,6 +2748,7 @@
                   <Properties>
                     <Property name="selected" type="boolean" value="true"/>
                     <Property name="text" type="java.lang.String" value="Link left and right bounds"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leftRightLinkedToggleActionPerformed"/>

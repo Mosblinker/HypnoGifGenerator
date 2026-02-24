@@ -2782,6 +2782,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         leftBoundSlider.setMajorTickSpacing(10);
         leftBoundSlider.setMinorTickSpacing(5);
         leftBoundSlider.setPaintTicks(true);
+        leftBoundSlider.setEnabled(false);
         leftBoundSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 leftBoundSliderStateChanged(evt);
@@ -2814,6 +2815,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         topBoundSlider.setMajorTickSpacing(10);
         topBoundSlider.setMinorTickSpacing(5);
         topBoundSlider.setPaintTicks(true);
+        topBoundSlider.setEnabled(false);
         topBoundSlider.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 topBoundSliderStateChanged(evt);
@@ -2889,6 +2891,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         leftRightLinkedToggle.setSelected(true);
         leftRightLinkedToggle.setText("Link left and right bounds");
+        leftRightLinkedToggle.setEnabled(false);
         leftRightLinkedToggle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 leftRightLinkedToggleActionPerformed(evt);
