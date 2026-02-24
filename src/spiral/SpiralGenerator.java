@@ -403,8 +403,17 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         overlayMask.wordPainter.setLineSpacing(settings.getMaskMessageSettings().getLineSpacing());
         wordLineSpacingSpinner.setValue(overlayMask.wordPainter.getLineSpacing());
         wordAlwaysShowPromptToggle.setSelected(settings.getMaskMessageSettings().getAlwaysShowPrompt());
+        
         swingEnableToggle.setSelected(settings.isSwingingEnabled());
         updateSwingControlsEnabled();
+        leftBound = settings.getSwingLeftBound();
+        rightBound = settings.getSwingRightBound();
+        topBound = settings.getSwingTopBound();
+        bottomBound = settings.getSwingBottomBound();
+        setSwingBoundSlider(leftBound,leftBoundSlider);
+        setSwingBoundSlider(rightBound,rightBoundSlider);
+        setSwingBoundSlider(topBound,topBoundSlider);
+        setSwingBoundSlider(bottomBound,bottomBoundSlider);
         
         getLogger().exiting(this.getClass().getName(), "loadFromSettings");
     }
@@ -429,6 +438,7 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
      */
     public SpiralGenerator(boolean debugMode) {
         getLogger().entering(this.getClass().getName(), "<init>");
+        leftBound=rightBound=topBound=bottomBound=0;
         this.debugMode = debugMode;
         try{    // Try to get the preference node used for the program
             config = new SpiralGeneratorConfig(Preferences.userRoot()
@@ -3582,18 +3592,22 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     
     private void leftBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_leftBoundSliderStateChanged
         leftBound = getSwingBound(leftBoundSlider.getValue());
+        config.setSwingLeftBound(leftBound);
     }//GEN-LAST:event_leftBoundSliderStateChanged
 
     private void rightBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rightBoundSliderStateChanged
         rightBound = 1-getSwingBound(rightBoundSlider.getValue());
+        config.setSwingRightBound(rightBound);
     }//GEN-LAST:event_rightBoundSliderStateChanged
 
     private void topBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_topBoundSliderStateChanged
         topBound = getSwingBound(topBoundSlider.getValue());
+        config.setSwingTopBound(topBound);
     }//GEN-LAST:event_topBoundSliderStateChanged
 
     private void bottomBoundSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bottomBoundSliderStateChanged
         bottomBound = 1-getSwingBound(bottomBoundSlider.getValue());
+        config.setSwingBottomBound(bottomBound);
     }//GEN-LAST:event_bottomBoundSliderStateChanged
     /**
      * This returns the width for the image.
@@ -4739,7 +4753,12 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         prop.getMaskMessageSettings().setLineSpacing((double)wordLineSpacingSpinner.getValue());
         prop.getMaskMessageSettings().setAlwaysShowPrompt(wordAlwaysShowPromptToggle.isSelected());
         prop.getMaskMessageSettings().setFont(maskWordFont);
+        
         prop.setSwingingEnabled(swingEnableToggle.isSelected());
+        prop.setSwingLeftBound(leftBound);
+        prop.setSwingRightBound(rightBound);
+        prop.setSwingTopBound(topBound);
+        prop.setSwingBottomBound(bottomBound);
         
         return prop;
     }

@@ -462,6 +462,42 @@ public class SpiralGeneratorProperties extends Properties implements SpiralGener
     public void setSwingingEnabled(boolean value) {
         setBooleanProperty(SWINGING_ENABLED_KEY,value);
     }
+    @Override
+    public double getSwingLeftBound(double defaultValue) {
+        return Math.min(Math.max(getDoubleProperty(SWING_LEFT_BOUND_KEY, 
+                defaultValue), 0.0), 0.5);
+    }
+    @Override
+    public void setSwingLeftBound(double value) {
+        setDoubleProperty(SWING_LEFT_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingRightBound(double defaultValue) {
+        return Math.min(Math.max(getDoubleProperty(SWING_RIGHT_BOUND_KEY, 
+                defaultValue), 0.5), 1.0);
+    }
+    @Override
+    public void setSwingRightBound(double value) {
+        setDoubleProperty(SWING_RIGHT_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingTopBound(double defaultValue) {
+        return Math.min(Math.max(getDoubleProperty(SWING_TOP_BOUND_KEY, 
+                defaultValue), 0.0), 0.5);
+    }
+    @Override
+    public void setSwingTopBound(double value) {
+        setDoubleProperty(SWING_TOP_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingBottomBound(double defaultValue) {
+        return Math.min(Math.max(getDoubleProperty(SWING_BOTTOM_BOUND_KEY, 
+                defaultValue), 0.5), 1.0);
+    }
+    @Override
+    public void setSwingBottomBound(double value) {
+        setDoubleProperty(SWING_BOTTOM_BOUND_KEY, value);
+    }
     /**
      * 
      */

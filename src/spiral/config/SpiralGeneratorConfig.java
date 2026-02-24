@@ -866,6 +866,42 @@ public class SpiralGeneratorConfig implements SpiralGeneratorSettings{
     public void setSwingingEnabled(boolean value) {
         swingNode.putBoolean(SWINGING_ENABLED_KEY, value);
     }
+    @Override
+    public double getSwingLeftBound(double defaultValue) {
+        return Math.min(Math.max(swingNode.getDouble(SWING_LEFT_BOUND_KEY, 
+                defaultValue), 0.0), 0.5);
+    }
+    @Override
+    public void setSwingLeftBound(double value) {
+        swingNode.putDouble(SWING_LEFT_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingRightBound(double defaultValue) {
+        return Math.min(Math.max(swingNode.getDouble(SWING_RIGHT_BOUND_KEY, 
+                defaultValue), 0.5), 1.0);
+    }
+    @Override
+    public void setSwingRightBound(double value) {
+        swingNode.putDouble(SWING_RIGHT_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingTopBound(double defaultValue) {
+        return Math.min(Math.max(swingNode.getDouble(SWING_TOP_BOUND_KEY, 
+                defaultValue), 0.0), 0.5);
+    }
+    @Override
+    public void setSwingTopBound(double value) {
+        swingNode.putDouble(SWING_TOP_BOUND_KEY, value);
+    }
+    @Override
+    public double getSwingBottomBound(double defaultValue) {
+        return Math.min(Math.max(swingNode.getDouble(SWING_BOTTOM_BOUND_KEY, 
+                defaultValue), 0.5), 1.0);
+    }
+    @Override
+    public void setSwingBottomBound(double value) {
+        swingNode.putDouble(SWING_BOTTOM_BOUND_KEY, value);
+    }
     /**
      * 
      */

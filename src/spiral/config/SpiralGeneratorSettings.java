@@ -61,6 +61,22 @@ public interface SpiralGeneratorSettings {
     public static final String SWINGING_ENABLED_KEY = "SwingingEnabled";
     /**
      * 
+     */
+    public static final String SWING_LEFT_BOUND_KEY = "SwingLeftBound";
+    /**
+     * 
+     */
+    public static final String SWING_RIGHT_BOUND_KEY = "SwingRightBound";
+    /**
+     * 
+     */
+    public static final String SWING_TOP_BOUND_KEY = "SwingTopBound";
+    /**
+     * 
+     */
+    public static final String SWING_BOTTOM_BOUND_KEY = "SwingBottomBound";
+    /**
+     * 
      * @param key
      * @return 
      */
@@ -367,4 +383,76 @@ public interface SpiralGeneratorSettings {
      * @param value 
      */
     public void setSwingingEnabled(boolean value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSwingLeftBound(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getSwingLeftBound(){
+        return getSwingLeftBound(0.25);
+    }
+    /**
+     * 
+     * @param value
+     */
+    public void setSwingLeftBound(double value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSwingRightBound(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getSwingRightBound(){
+        return getSwingRightBound(0.75);
+    }
+    /**
+     * 
+     * @param value
+     */
+    public void setSwingRightBound(double value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSwingTopBound(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getSwingTopBound(){
+        return getSwingTopBound(0.25);
+    }
+    /**
+     * 
+     * @param value
+     */
+    public void setSwingTopBound(double value);
+    /**
+     * 
+     * @param defaultValue
+     * @return 
+     */
+    public double getSwingBottomBound(double defaultValue);
+    /**
+     * 
+     * @return 
+     */
+    public default double getSwingBottomBound(){
+        return getSwingBottomBound(0.75);
+    }
+    /**
+     * 
+     * @param value
+     */
+    public void setSwingBottomBound(double value);
 }
