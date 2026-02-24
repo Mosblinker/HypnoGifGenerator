@@ -1158,6 +1158,25 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         previewLabel = new components.JThumbnailLabel();
         previewMaskPanel = new javax.swing.JPanel();
         maskPreviewLabel = new components.JThumbnailLabel();
+        imageCtrlPanel = new javax.swing.JPanel();
+        widthLabel = new javax.swing.JLabel();
+        widthSpinner = new javax.swing.JSpinner();
+        heightLabel = new javax.swing.JLabel();
+        heightSpinner = new javax.swing.JSpinner();
+        delayLabel = new javax.swing.JLabel();
+        delaySpinner = new javax.swing.JSpinner();
+        alwaysScaleToggle = new javax.swing.JCheckBox();
+        optimizeDifferenceToggle = new javax.swing.JCheckBox();
+        progressBar = new javax.swing.JProgressBar();
+        maskEditButton = new javax.swing.JButton();
+        ctrlButtonPanel = new javax.swing.JPanel();
+        saveButton = new javax.swing.JButton();
+        aboutButton = new javax.swing.JButton();
+        configButtonPanel = new javax.swing.JPanel();
+        saveConfigButton = new javax.swing.JButton();
+        loadConfigButton = new javax.swing.JButton();
+        ctrlTabsPanel = new javax.swing.JPanel();
+        ctrlTabbedPane = new javax.swing.JTabbedPane();
         spiralCtrlPanel = new javax.swing.JPanel();
         radiusLabel = new javax.swing.JLabel();
         radiusSpinner = new javax.swing.JSpinner();
@@ -1182,23 +1201,6 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         spiralShapeCombo = new javax.swing.JComboBox<>();
         resetButton = new javax.swing.JButton();
         spiralCtrlFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 28), new java.awt.Dimension(0, 28), new java.awt.Dimension(32767, 28));
-        imageCtrlPanel = new javax.swing.JPanel();
-        widthLabel = new javax.swing.JLabel();
-        widthSpinner = new javax.swing.JSpinner();
-        heightLabel = new javax.swing.JLabel();
-        heightSpinner = new javax.swing.JSpinner();
-        delayLabel = new javax.swing.JLabel();
-        delaySpinner = new javax.swing.JSpinner();
-        alwaysScaleToggle = new javax.swing.JCheckBox();
-        optimizeDifferenceToggle = new javax.swing.JCheckBox();
-        progressBar = new javax.swing.JProgressBar();
-        maskEditButton = new javax.swing.JButton();
-        ctrlButtonPanel = new javax.swing.JPanel();
-        saveButton = new javax.swing.JButton();
-        aboutButton = new javax.swing.JButton();
-        configButtonPanel = new javax.swing.JPanel();
-        saveConfigButton = new javax.swing.JButton();
-        loadConfigButton = new javax.swing.JButton();
 
         printTestButton.setText("Print Data");
         printTestButton.addActionListener(new java.awt.event.ActionListener() {
@@ -2329,7 +2331,166 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
 
         previewPanel.add(previewMaskPanel);
 
-        spiralCtrlPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Spiral Controls"));
+        imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
+
+        widthLabel.setLabelFor(widthSpinner);
+        widthLabel.setText("Width:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(widthLabel, gridBagConstraints);
+
+        widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
+        widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                imageSizeSpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = -9;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(widthSpinner, gridBagConstraints);
+
+        heightLabel.setLabelFor(heightSpinner);
+        heightLabel.setText("Height:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
+        imageCtrlPanel.add(heightLabel, gridBagConstraints);
+
+        heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
+        heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                imageSizeSpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
+        imageCtrlPanel.add(heightSpinner, gridBagConstraints);
+
+        delayLabel.setLabelFor(delaySpinner);
+        delayLabel.setText("Duration:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        imageCtrlPanel.add(delayLabel, gridBagConstraints);
+
+        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
+        delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
+        delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                delaySpinnerStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 6);
+        imageCtrlPanel.add(delaySpinner, gridBagConstraints);
+
+        alwaysScaleToggle.setText("Scale Preview");
+        alwaysScaleToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                alwaysScaleToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
+
+        optimizeDifferenceToggle.setText("Optimize for Difference");
+        optimizeDifferenceToggle.setToolTipText("This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
+        optimizeDifferenceToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optimizeDifferenceToggleActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
+        imageCtrlPanel.add(optimizeDifferenceToggle, gridBagConstraints);
+
+        progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                progressBarStateChanged(evt);
+            }
+        });
+        progressBar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                progressBarPropertyChange(evt);
+            }
+        });
+
+        maskEditButton.setText("Edit Overlay");
+        maskEditButton.setToolTipText("Edit the overlay that appears over the spiral.");
+        maskEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maskEditButtonActionPerformed(evt);
+            }
+        });
+
+        ctrlButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        ctrlButtonPanel.add(saveButton);
+
+        aboutButton.setText("About");
+        aboutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aboutButtonActionPerformed(evt);
+            }
+        });
+        ctrlButtonPanel.add(aboutButton);
+
+        configButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
+
+        saveConfigButton.setText("Save Config");
+        saveConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(saveConfigButton);
+
+        loadConfigButton.setText("Load Config");
+        loadConfigButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadConfigButtonActionPerformed(evt);
+            }
+        });
+        configButtonPanel.add(loadConfigButton);
+
+        ctrlTabsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        ctrlTabsPanel.setLayout(new java.awt.BorderLayout());
+
+        spiralCtrlPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(7, 0, 0, 0));
         spiralCtrlPanel.setLayout(new java.awt.GridBagLayout());
 
         radiusLabel.setLabelFor(radiusSpinner);
@@ -2576,161 +2737,9 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
         spiralCtrlPanel.add(spiralCtrlFiller, gridBagConstraints);
 
-        imageCtrlPanel.setLayout(new java.awt.GridBagLayout());
+        ctrlTabbedPane.addTab("Spiral Controls", spiralCtrlPanel);
 
-        widthLabel.setLabelFor(widthSpinner);
-        widthLabel.setText("Width:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        imageCtrlPanel.add(widthLabel, gridBagConstraints);
-
-        widthSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
-        widthSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                imageSizeSpinnerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = -9;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        imageCtrlPanel.add(widthSpinner, gridBagConstraints);
-
-        heightLabel.setLabelFor(heightSpinner);
-        heightLabel.setText("Height:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 6);
-        imageCtrlPanel.add(heightLabel, gridBagConstraints);
-
-        heightSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 9999, 1));
-        heightSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                imageSizeSpinnerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.5;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 7, 0);
-        imageCtrlPanel.add(heightSpinner, gridBagConstraints);
-
-        delayLabel.setLabelFor(delaySpinner);
-        delayLabel.setText("Duration:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        imageCtrlPanel.add(delayLabel, gridBagConstraints);
-
-        delaySpinner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
-        delaySpinner.setToolTipText("This is the duration for each frame of animation, in milliseconds.");
-        delaySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                delaySpinnerStateChanged(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 6);
-        imageCtrlPanel.add(delaySpinner, gridBagConstraints);
-
-        alwaysScaleToggle.setText("Scale Preview");
-        alwaysScaleToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                alwaysScaleToggleActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        imageCtrlPanel.add(alwaysScaleToggle, gridBagConstraints);
-
-        optimizeDifferenceToggle.setText("Optimize for Difference");
-        optimizeDifferenceToggle.setToolTipText("This indicates whether the animation will be optimized for the difference between frames. This may reduce the file size at the cost of quality.");
-        optimizeDifferenceToggle.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                optimizeDifferenceToggleActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.insets = new java.awt.Insets(7, 0, 0, 0);
-        imageCtrlPanel.add(optimizeDifferenceToggle, gridBagConstraints);
-
-        progressBar.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                progressBarStateChanged(evt);
-            }
-        });
-        progressBar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                progressBarPropertyChange(evt);
-            }
-        });
-
-        maskEditButton.setText("Edit Overlay");
-        maskEditButton.setToolTipText("Edit the overlay that appears over the spiral.");
-        maskEditButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maskEditButtonActionPerformed(evt);
-            }
-        });
-
-        ctrlButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-        ctrlButtonPanel.add(saveButton);
-
-        aboutButton.setText("About");
-        aboutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aboutButtonActionPerformed(evt);
-            }
-        });
-        ctrlButtonPanel.add(aboutButton);
-
-        configButtonPanel.setLayout(new java.awt.GridLayout(1, 0, 6, 0));
-
-        saveConfigButton.setText("Save Config");
-        saveConfigButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveConfigButtonActionPerformed(evt);
-            }
-        });
-        configButtonPanel.add(saveConfigButton);
-
-        loadConfigButton.setText("Load Config");
-        loadConfigButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadConfigButtonActionPerformed(evt);
-            }
-        });
-        configButtonPanel.add(loadConfigButton);
+        ctrlTabsPanel.add(ctrlTabbedPane, java.awt.BorderLayout.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -2743,14 +2752,14 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                     .addComponent(previewPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(maskEditButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ctrlButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(imageCtrlPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(configButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(configButtonPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ctrlTabsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2762,8 +2771,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
                         .addComponent(previewPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(framesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(spiralCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ctrlTabsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(imageCtrlPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -4249,6 +4258,8 @@ public class SpiralGenerator extends javax.swing.JFrame implements DebugCapable{
     private javax.swing.JPanel configButtonPanel;
     private javax.swing.JFileChooser configFC;
     private javax.swing.JPanel ctrlButtonPanel;
+    private javax.swing.JTabbedPane ctrlTabbedPane;
+    private javax.swing.JPanel ctrlTabsPanel;
     private javax.swing.JLabel currentVersLabel;
     private javax.swing.JLabel currentVersTextLabel;
     private javax.swing.JPopupMenu debugPopup;
